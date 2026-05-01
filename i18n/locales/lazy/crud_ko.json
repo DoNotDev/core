@@ -1,0 +1,370 @@
+{
+  "actions": {
+    "label": "작업",
+    "create": "생성",
+    "update": "업데이트",
+    "delete": "삭제",
+    "cancel": "취소",
+    "save": "저장",
+    "confirm": "확인",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "search": "검색",
+    "searchPlaceholder": "검색...",
+    "filter": "필터",
+    "clear": "지우기",
+    "reset": "재설정",
+    "apply": "적용",
+    "select": "선택",
+    "selectYear": "연도 선택 또는 입력",
+    "upload": "업로드",
+    "download": "다운로드",
+    "close": "닫기",
+    "email": "이메일",
+    "call": "전화",
+    "copyEmail": "이메일 복사",
+    "copyPhone": "전화번호 복사",
+    "copyIban": "IBAN 복사",
+    "replySubject": "Re: 문의사항",
+    "markResponded": "응답 완료로 표시",
+    "selectOptions": "옵션 선택...",
+    "use": "이 주소 사용"
+  },
+  "address": {
+    "placeholder": "주소 입력...",
+    "noResults": "주소를 찾을 수 없습니다"
+  },
+  "export": "내보내기",
+  "noInquiries": "문의사항을 찾을 수 없습니다.",
+  "customer": "고객",
+  "noCustomer": "연결된 고객 없음",
+  "status": {
+    "draft": "초안",
+    "available": "사용 가능",
+    "deleted": "삭제됨",
+    "sold": "판매됨"
+  },
+  "fields": {
+    "array": "배열",
+    "boolean": "불린",
+    "checkbox": "체크박스",
+    "date": "날짜",
+    "datetime-local": "날짜 및 시간",
+    "email": "이메일",
+    "file": "파일",
+    "geopoint": "위치",
+    "image": "이미지",
+    "map": "지도",
+    "multiselect": "다중 선택",
+    "number": "숫자",
+    "password": "비밀번호",
+    "phone": "전화번호",
+    "radio": "라디오 버튼",
+    "range": "범위",
+    "reference": "참조",
+    "select": "선택",
+    "tel": "전화번호",
+    "text": "텍스트",
+    "textarea": "텍스트 영역",
+    "timestamp": "타임스탬프",
+    "url": "URL",
+    "status": "상태",
+    "id": "ID",
+    "createdAt": "생성일",
+    "updatedAt": "수정일",
+    "createdById": "생성자",
+    "updatedById": "수정자"
+  },
+  "text": {
+    "required": "{{field}}은(는) 필수입니다",
+    "minLength": "{{field}}은(는) 최소 {{min}}자 이상이어야 합니다",
+    "maxLength": "{{field}}은(는) {{max}}자를 초과할 수 없습니다",
+    "email": "유효한 이메일 주소를 입력해 주세요",
+    "url": "유효한 URL을 입력해 주세요",
+    "matches": "{{field}}은(는) 패턴 {{pattern}}과 일치해야 합니다",
+    "unique": "{{field}}은(는) 고유해야 합니다",
+    "alphanumeric": "{{field}}은(는) 문자와 숫자만 포함해야 합니다",
+    "lettersOnly": "{{field}}은(는) 문자만 포함해야 합니다"
+  },
+  "number": {
+    "required": "{{field}}은(는) 필수입니다",
+    "min": "{{field}}은(는) 최소 {{min}} 이상이어야 합니다",
+    "max": "{{field}}은(는) {{max}}을(를) 초과할 수 없습니다",
+    "integer": "{{field}}은(는) 정수여야 합니다",
+    "positive": "{{field}}은(는) 양수여야 합니다",
+    "negative": "{{field}}은(는) 음수여야 합니다",
+    "between": "{{field}}은(는) {{min}}과 {{max}} 사이여야 합니다",
+    "precision": "{{field}}은(는) 최대 {{precision}}자리 소수점을 가져야 합니다"
+  },
+  "date": {
+    "required": "{{field}}은(는) 필수입니다",
+    "min": "{{field}}은(는) {{min}} 이후여야 합니다",
+    "max": "{{field}}은(는) {{max}} 이전이어야 합니다",
+    "between": "{{field}}은(는) {{min}}과 {{max}} 사이여야 합니다",
+    "format": "유효한 날짜를 입력해 주세요",
+    "future": "{{field}}은(는) 미래여야 합니다",
+    "past": "{{field}}은(는) 과거여야 합니다",
+    "today": "{{field}}은(는) 오늘이어야 합니다"
+  },
+  "select": {
+    "required": "{{field}}을(를) 선택해 주세요",
+    "invalid": "{{field}}에 대한 잘못된 선택입니다",
+    "min": "최소 {{min}}개의 옵션을 선택해 주세요",
+    "max": "최대 {{max}}개의 옵션만 선택할 수 있습니다"
+  },
+  "boolean": {
+    "required": "{{field}}을(를) 선택해야 합니다"
+  },
+  "array": {
+    "required": "최소 하나의 {{field}}이(가) 필요합니다",
+    "minItems": "최소 {{min}}개의 {{field}}을(를) 선택해 주세요",
+    "maxItems": "{{max}}개 이상의 {{field}}을(를) 선택할 수 없습니다",
+    "uniqueItems": "모든 {{field}}은(는) 고유해야 합니다"
+  },
+  "file": {
+    "required": "파일을 선택해 주세요",
+    "maxSize": "파일 크기는 {{max}}을(를) 초과할 수 없습니다",
+    "minSize": "파일 크기는 최소 {{min}} 이상이어야 합니다",
+    "type": "파일 유형은 {{types}}이어야 합니다",
+    "dimensions": "이미지 크기는 {{width}}x{{height}}이어야 합니다",
+    "upload": {
+      "ariaLabel": "파일 업로드",
+      "ariaLabelSingle": "파일 업로드",
+      "ariaLabelMultiple": "파일 업로드",
+      "dragDropSingle": "드래그 앤 드롭, 붙여넣기 또는 클릭하여 파일 업로드",
+      "dragDropMultiple": "드래그 앤 드롭, 붙여넣기 또는 클릭하여 파일 업로드"
+    },
+    "delete": {
+      "ariaLabel": "파일 삭제",
+      "failed": "파일 삭제 실패"
+    },
+    "errors": {
+      "maxFiles": "최대 {{max}}파일까지 허용됩니다",
+      "exceedsSize": "{{fileName}}은(는) {{size}}MB 제한을 초과합니다"
+    }
+  },
+  "document": {
+    "upload": {
+      "ariaLabel": "문서 업로드",
+      "hint": "드래그 앤 드롭, 붙여넣기 또는 클릭하여 문서 업로드"
+    },
+    "delete": {
+      "ariaLabel": "문서 삭제",
+      "failed": "문서 삭제 실패"
+    },
+    "preview": {
+      "ariaLabel": "문서 미리보기",
+      "title": "문서 미리보기"
+    },
+    "errors": {
+      "maxFiles": "최대 {{max}}문서까지 허용됩니다",
+      "invalidType": "유효하지 않은 문서 유형: {{fileName}}",
+      "exceedsSize": "{{fileName}}은(는) {{size}}MB 제한을 초과합니다"
+    }
+  },
+  "image": {
+    "undo": {
+      "ariaLabel": "마지막 작업 실행 취소",
+      "title": "실행 취소 (Ctrl+Z)"
+    },
+    "redo": {
+      "ariaLabel": "마지막 작업 다시 실행",
+      "title": "다시 실행 (Ctrl+Shift+Z)"
+    },
+    "upload": {
+      "ariaLabel": "{{type}} 업로드",
+      "ariaLabelSingle": "이미지 업로드",
+      "ariaLabelMultiple": "이미지 업로드",
+      "selectAriaLabel": "업로드할 {{type}} 선택",
+      "selectAriaLabelSingle": "업로드할 이미지 선택",
+      "selectAriaLabelMultiple": "업로드할 이미지 선택",
+      "dropzone": "드래그 앤 드롭, 붙여넣기 또는 클릭하여 {{type}} 업로드",
+      "dropzoneSingle": "드래그 앤 드롭, 붙여넣기 또는 클릭하여 이미지 업로드",
+      "dropzoneMultiple": "드래그 앤 드롭, 붙여넣기 또는 클릭하여 이미지 업로드",
+      "maxFiles": "최대 {{max}}개 이미지, 각각 {{size}}MB",
+      "maxSize": "각각 {{size}}MB",
+      "progress": "업로드 진행률: {{progress}}%",
+      "pending": "업로드 대기 중",
+      "uploaded": "{{count}}개의 {{type}} 업로드됨",
+      "uploadedSingle": "{{count}}개의 이미지 업로드됨",
+      "uploadedMultiple": "{{count}}개의 이미지 업로드됨",
+      "failed": "{{fileName}} 업로드 실패"
+    },
+    "delete": {
+      "ariaLabel": "이미지 {{index}} 삭제",
+      "title": "삭제 (Delete/Backspace)",
+      "failed": "이미지 삭제 실패"
+    },
+    "reorder": {
+      "ariaLabel": "드래그하여 재정렬"
+    },
+    "rotate": {
+      "failed": "이미지 회전 실패"
+    },
+    "errors": {
+      "maxFiles": "최대 {{max}}개의 이미지가 허용됩니다",
+      "singleOnly": "이미지는 하나만 허용됩니다",
+      "notImage": "{{fileName}}은(는) 이미지가 아닙니다",
+      "exceedsSize": "{{fileName}}은(는) {{size}}MB 제한을 초과합니다"
+    },
+    "warnings": {
+      "duplicates": "중복된 이미지 건너뜀: {{files}}"
+    },
+    "alt": {
+      "upload": "업로드 {{index}}",
+      "uploaded": "{{label}} {{index}}{{suffix}} (업로드됨)",
+      "pending": "{{label}} {{index}}{{suffix}} (업로드 대기 중)"
+    },
+    "editor": {
+      "title": "이미지 편집",
+      "titleWithIndex": "이미지 {{current}} / {{total}}",
+      "description": "자르기, 회전, 확대/축소 도구로 이미지 보기 및 편집",
+      "editButton": "이미지 편집",
+      "aspectRatio": "종횡비",
+      "aspectFree": "자유",
+      "zoom": "확대/축소",
+      "rotation": "회전",
+      "rotateLeft": "왼쪽으로 회전",
+      "rotateRight": "오른쪽으로 회전",
+      "fitToView": "보기에 맞추기",
+      "showGrid": "격자 표시",
+      "hideGrid": "격자 숨기기",
+      "reset": "재설정",
+      "apply": "적용",
+      "processing": "처리 중...",
+      "cancel": "취소",
+      "deleteImage": "이미지 삭제",
+      "deleteConfirm": "이 이미지를 영구적으로 삭제하시겠습니까?",
+      "previousImage": "이전 이미지",
+      "nextImage": "다음 이미지"
+    }
+  },
+  "messages": {
+    "createSuccess": "{{entity}}이(가) 성공적으로 생성되었습니다",
+    "updateSuccess": "{{entity}}이(가) 성공적으로 업데이트되었습니다",
+    "deleteSuccess": "{{entity}}이(가) 성공적으로 삭제되었습니다",
+    "createError": "{{entity}} 생성에 실패했습니다",
+    "updateError": "{{entity}} 업데이트에 실패했습니다",
+    "deleteError": "{{entity}} 삭제에 실패했습니다",
+    "error": "오류가 발생했습니다",
+    "loading": "로딩 중...",
+    "noResults": "결과를 찾을 수 없습니다",
+    "confirmDelete": "이 {{entity}}을(를) 삭제하시겠습니까?",
+    "unsavedChanges": "저장되지 않은 변경사항이 있습니다",
+    "unsavedChangesDiscard": "저장되지 않은 변경사항이 있습니다. 삭제하시겠습니까?",
+    "unsavedChangesLeave": "저장되지 않은 변경사항이 있습니다. 정말 나가시겠습니까?",
+    "sessionExpired": "세션이 만료되었습니다",
+    "networkError": "네트워크 오류가 발생했습니다",
+    "unauthorized": "권한이 없는 액세스",
+    "forbidden": "액세스가 금지되었습니다",
+    "serverError": "서버 오류가 발생했습니다"
+  },
+  "form": {
+    "submit": "제출",
+    "cancel": "취소",
+    "submitting": "제출 중...",
+    "loading": "로딩 중...",
+    "add": "추가",
+    "remove": "제거",
+    "typeAndPressAdd": "입력하고 추가를 누르세요...",
+    "enterLocationData": "위치 데이터 입력 (JSON)",
+    "uploading": "업로드 중 {{progress}}%...",
+    "processing": "처리 중...",
+    "validating": "검증 중...",
+    "saving": "저장 중..."
+  },
+  "gdprConsent": {
+    "consent": "나는",
+    "privacyPolicy": "개인정보 보호정책",
+    "terms": "이용약관",
+    "and": "에 동의하며 개인 데이터 처리에 동의합니다.",
+    "required": "계속하려면 개인정보 보호정책에 동의해 주세요"
+  },
+  "custom": {
+    "passwordMatch": "비밀번호가 일치해야 합니다",
+    "phoneNumber": "유효한 전화번호를 입력해 주세요",
+    "postalCode": "유효한 우편번호를 입력해 주세요",
+    "currency": "유효한 금액을 입력해 주세요",
+    "color": "유효한 색상 코드를 입력해 주세요"
+  },
+  "favorites": {
+    "title": "즐겨찾기",
+    "add": "즐겨찾기에 추가",
+    "remove": "즐겨찾기에서 제거",
+    "saved": "저장됨",
+    "save": "저장",
+    "showAll": "모두 표시",
+    "showFavorites": "즐겨찾기 표시",
+    "myFavorites": "내 즐겨찾기",
+    "noFavorites": "아직 즐겨찾기가 없습니다"
+  },
+  "pagination": {
+    "showing": "{{from}}부터 {{to}}까지 (총 {{total}}개 중)",
+    "previous": "이전",
+    "next": "다음",
+    "page": "{{page}} / {{total}}페이지",
+    "itemsPerPagePlaceholder": "페이지당 항목 수:"
+  },
+  "filters": {
+    "title": "{{entity}} 찾아보기 - 필터",
+    "apply": "필터 적용",
+    "clear": "필터 지우기",
+    "noResults": "필터와 일치하는 결과가 없습니다",
+    "selected": "{{count}}개 선택됨"
+  },
+  "filter": {
+    "placeholder": "필터...",
+    "selectPlaceholder": "전체",
+    "min": "최소",
+    "max": "최대",
+    "from": "시작",
+    "to": "종료",
+    "today": "오늘",
+    "yesterday": "어제",
+    "tomorrow": "내일",
+    "last7Days": "지난 7일",
+    "last30Days": "지난 30일",
+    "next7Days": "다음 7일",
+    "next30Days": "다음 30일",
+    "thisMonthStart": "이번 달 초",
+    "thisMonthEnd": "이번 달 말",
+    "thisWeek": "이번 주",
+    "thisMonth": "이번 달",
+    "clear": "지우기",
+    "pick": "선택",
+    "time": "시간"
+  },
+  "duration": {
+    "15m": "15분",
+    "30m": "30분",
+    "45m": "45분",
+    "1h": "1시간",
+    "1h30": "1시간 30분",
+    "2h": "2시간",
+    "2h30": "2시간 30분",
+    "3h": "3시간",
+    "custom": "사용자 지정",
+    "zero": "—",
+    "minutes": "{{count}}분",
+    "hoursMinutes": "{{hours}}시간 {{minutes}}분"
+  },
+  "results": {
+    "title": {
+      "fetching": "가져오는 중...",
+      "count_one": "{{count}}개 발견됨",
+      "count_other": "{{count}}개 발견됨"
+    }
+  },
+  "visibility": {
+    "viewAs": "다음으로 보기",
+    "preview": "미리보기"
+  },
+  "price": {
+    "vatIncluded": "부가세 포함",
+    "discountPercent": "-{{percent}}%"
+  },
+  "recommendations": {
+    "title": "이런 것도 좋아하실 수 있어요"
+  }
+}

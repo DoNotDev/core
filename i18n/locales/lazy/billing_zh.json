@@ -1,0 +1,93 @@
+{
+  "errors": {
+    "unauthenticated": "请登录以继续结账。",
+    "checkout_failed": "无法启动结账。请重试或联系支持团队。",
+    "cancel_failed": "取消订阅失败。请重试或联系支持团队。",
+    "change_plan_failed": "更改计划失败。请重试或联系支持团队。",
+    "refresh_failed": "刷新订阅状态失败。请重试。",
+    "portal_failed": "打开客户门户失败。请重试或联系支持团队。",
+    "not_available": "计费功能暂不可用。",
+    "server_error": "服务器返回错误。请重试。",
+    "no_checkout_url": "未收到结账链接。请重试。"
+  },
+  "security": {
+    "title": "安全的支付处理",
+    "description": "您的支付信息由 Stripe 安全处理，Stripe 是 PCI DSS 一级认证的支付处理商。",
+    "encrypted": "256 位 SSL 加密",
+    "stripe": "由 Stripe 提供支持",
+    "dismiss": "关闭安全通知"
+  },
+  "templates": {
+    "purchase": {
+      "title": "立即开始",
+      "subtitle": "选择您的一次性购买选项"
+    },
+    "subscription": {
+      "title": "选择您的计划",
+      "subtitle": "选择最适合您需求的计划",
+      "billingToggle": {
+        "monthly": "月度",
+        "yearly": "年度",
+        "save20": "节省 20%"
+      }
+    },
+    "checkout": {
+      "title": "完成您的购买",
+      "description": "由 Stripe 提供支持的安全结账",
+      "completePurchase": "完成购买",
+      "startSubscription": "开始订阅"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "最受欢迎",
+      "limitedTime": "限时优惠",
+      "exclVat": "不含增值税",
+      "purchaseNow": "立即购买",
+      "subscribeNow": "立即订阅"
+    },
+    "buttons": {
+      "purchase": "购买",
+      "subscribe": "订阅",
+      "processing": "处理中...",
+      "signInToPurchase": "登录以购买",
+      "signInToSubscribe": "登录以订阅"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "重定向到 Stripe",
+        "message": "正在初始化安全支付...",
+        "subtitle": "首次加载时可能需要一些时间",
+        "ariaLabel": "准备安全结账，请稍候"
+      },
+      "portal": {
+        "title": "重定向到 Stripe",
+        "message": "正在打开计费门户...",
+        "subtitle": "管理您的订阅和发票",
+        "ariaLabel": "正在打开计费门户，请稍候"
+      }
+    },
+    "subscriptionManager": {
+      "title": "订阅管理",
+      "signInRequired": "请登录以管理您的订阅。",
+      "noSubscription": "您没有活跃的订阅。",
+      "currentPlan": "当前计划",
+      "ends": "结束于",
+      "managePaymentMethod": "管理付款方式",
+      "cancelSubscription": "取消订阅",
+      "cancelConfirm": "确定要取消吗？您将保有访问权限直到 {{date}}。",
+      "yesCancel": "是的，取消",
+      "noKeep": "不，保留",
+      "changePlan": "更改计划",
+      "current": "当前",
+      "subscriptionEnds": "订阅将于 {{date}} 结束",
+      "planChanged": "计划已成功更改！",
+      "status": {
+        "active": "活跃",
+        "cancelled": "已取消",
+        "pastDue": "逾期",
+        "trialing": "试用中"
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "homeTemplate": {
+    "hero": {
+      "title": "Velkommen til DoNotDev",
+      "subtitle": "Byg, udrul og skaler apps med vores TypeScript- og Firebase-ramme.",
+      "getStarted": "Kom i gang",
+      "learnMore": "Læs mere",
+      "viewDemo": "Se demo"
+    },
+    "features": {
+      "title": "Hvorfor DoNotDev?",
+      "subtitle": "Alt hvad du skal bruge til moderne, skalerbare applikationer",
+      "modern": {
+        "title": "Moderne stack",
+        "description": "TypeScript, React og moderne webteknikker"
+      },
+      "scalable": {
+        "title": "Skalerbar arkitektur",
+        "description": "Firebase-baseret backend der skalerer med dig"
+      },
+      "fast": {
+        "title": "Hurtig",
+        "description": "Optimeret for hastighed og udvikleroplevelse"
+      },
+      "secure": {
+        "title": "Sikkerhed",
+        "description": "Login, rettigheder og sikkerhed indbygget"
+      }
+    },
+    "cta": {
+      "title": "Klar til at komme i gang?",
+      "subtitle": "Følg tusindvis af udviklere der bygger gode apps",
+      "signUp": "Opret konto gratis",
+      "contactSales": "Kontakt salg",
+      "viewDocumentation": "Se dokumentation"
+    },
+    "footer": {
+      "description": "Framework til skalerbare applikationer",
+      "links": {
+        "product": "Produkt",
+        "developers": "Udviklere",
+        "company": "Virksomhed",
+        "support": "Support"
+      },
+      "legal": {
+        "privacy": "Privatlivspolitik",
+        "terms": "Servicevilkår",
+        "cookies": "Cookiepolitik"
+      }
+    }
+  }
+}

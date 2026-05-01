@@ -1,0 +1,9 @@
+{
+  "connectServices": "Diensten koppelen",
+  "chooseService": "Kies een dienst om te koppelen aan je account",
+  "noProvidersEnabled": "Geen OAuth-providers",
+  "noProvidersMessage": "Er zijn momenteel geen inlogproviders ingeschakeld. Controleer je configuratie.",
+  "checkConfiguration": "Controleer je OAuth-configuratie.",
+  "noProviders": "Geen OAuth-providers",
+  "aria": { "connectionOptions": "Inlogopties" }
+}

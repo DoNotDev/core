@@ -1,0 +1,25 @@
+{
+  "errors": {
+    "not_available": "AI is not available.",
+    "unauthenticated": "Please sign in to use AI features.",
+    "send_failed": "Failed to send message. Please try again.",
+    "conversation_truncated": "Conversation was truncated to fit within the model's context limit."
+  },
+  "chat": {
+    "empty": "Start a conversation",
+    "you": "You",
+    "assistant": "Assistant",
+    "thinking": "Thinking...",
+    "placeholder": "Type a message...",
+    "input_label": "Chat message input",
+    "send": "Send",
+    "abort": "Stop",
+    "tokens": "tokens",
+    "last_usage": "Last",
+    "total": "Total",
+    "unavailable": "AI chat is not available."
+  },
+  "cost": {
+    "tokens": "tokens"
+  }
+}

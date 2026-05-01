@@ -1,0 +1,200 @@
+{
+  "title": "Términos de Servicio",
+  "lastUpdated": "Última actualización",
+  "common": {
+    "we": "nosotros",
+    "our": "nuestro",
+    "or": "o",
+    "us": "nosotros"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introducción",
+      "welcome": "Bienvenido a",
+      "govern": "Estos Términos de Servicio (\"Términos\") rigen su uso de nuestro framework de desarrollo, herramientas y servicios (colectivamente, el \"Servicio\"). Al acceder o utilizar nuestro Servicio, usted acepta estar sujeto a estos Términos.",
+      "organization": "Si está utilizando nuestro Servicio en nombre de una organización, usted declara que tiene la autoridad para vincular a esa organización a estos Términos. Si no está de acuerdo con estos Términos, por favor no utilice nuestro Servicio."
+    },
+    "service": {
+      "title": "2. Descripción del Servicio",
+      "description": "es un framework de desarrollo integral que proporciona herramientas, componentes e infraestructura para construir aplicaciones web modernas. Nuestro Servicio incluye:",
+      "framework": "Framework de desarrollo y bibliotecas",
+      "ui": "Componentes UI y sistema de diseño",
+      "auth": "Servicios de autenticación y autorización",
+      "i18n": "Herramientas de internacionalización y localización",
+      "billing": "Gestión de facturación y suscripciones",
+      "docs": "Documentación y recursos de soporte"
+    },
+    "account": {
+      "title": "3. Registro de Cuenta y Seguridad",
+      "creation": {
+        "title": "3.1 Creación de Cuenta",
+        "desc": "Para acceder a ciertas funciones de nuestro Servicio, debe crear una cuenta. Usted acepta proporcionar información precisa, actual y completa durante el registro y actualizar dicha información para mantenerla precisa, actual y completa."
+      },
+      "security": {
+        "title": "3.2 Seguridad de la Cuenta",
+        "desc": "Usted es responsable de salvaguardar las credenciales de su cuenta y de todas las actividades que ocurran bajo su cuenta. Usted acepta notificarnos inmediatamente de cualquier uso no autorizado de su cuenta o cualquier otra violación de seguridad."
+      },
+      "eligibility": {
+        "title": "3.3 Elegibilidad de la Cuenta",
+        "desc": "Debe tener al menos 13 años de edad para utilizar nuestro Servicio. Si es menor de 18 años, debe tener el consentimiento de los padres o tutor para utilizar nuestro Servicio."
+      }
+    },
+    "acceptable": {
+      "title": "4. Política de Uso Aceptable",
+      "intro": "Usted acepta utilizar nuestro Servicio solo para fines legales y de acuerdo con estos Términos. Usted acepta no:",
+      "laws": "Utilizar el Servicio para violar cualquier ley o regulación aplicable",
+      "infringe": "Infringir los derechos de propiedad intelectual de otros",
+      "harmful": "Transmitir contenido dañino, ofensivo o inapropiado",
+      "unauthorized": "Intentar obtener acceso no autorizado a nuestros sistemas o cuentas de otros usuarios",
+      "spam": "Utilizar el Servicio para spam, phishing u otras actividades maliciosas",
+      "disrupt": "Interferir o interrumpir el Servicio o los servidores",
+      "reverse": "Hacer ingeniería inversa, descompilar o desensamblar nuestro software",
+      "automated": "Utilizar sistemas automatizados para acceder al Servicio sin permiso",
+      "share": "Compartir las credenciales de su cuenta con otros",
+      "competing": "Utilizar el Servicio para construir productos o servicios competidores"
+    },
+    "payment": {
+      "title": "5. Términos de Suscripción y Pago",
+      "plans": {
+        "title": "5.1 Planes de Suscripción",
+        "desc": "Ofrecemos varios planes de suscripción con diferentes funciones y precios. Los detalles de la suscripción, incluidos precios y funciones, están disponibles en nuestro sitio web y pueden actualizarse de vez en cuando."
+      },
+      "processing": {
+        "title": "5.2 Procesamiento de Pagos",
+        "desc": "Los pagos se procesan a través de procesadores de pago seguros de terceros. Usted nos autoriza a cargar su método de pago por todas las tarifas asociadas con su suscripción."
+      },
+      "billing": {
+        "title": "5.3 Facturación y Renovación",
+        "desc": "Las suscripciones se renuevan automáticamente a menos que se cancelen antes de la fecha de renovación. Se le cobrará la tarifa de suscripción aplicable en cada fecha de renovación."
+      },
+      "refunds": {
+        "title": "5.4 Reembolsos y Cancelación",
+        "desc": "Puede cancelar su suscripción en cualquier momento a través de la configuración de su cuenta. Los reembolsos se proporcionan de acuerdo con nuestra política de reembolso, que puede variar según el plan y el uso."
+      }
+    },
+    "ip": {
+      "title": "6. Derechos de Propiedad Intelectual",
+      "ours": {
+        "title": "6.1 Nuestra Propiedad Intelectual",
+        "desc": "El Servicio, incluido todo el software, contenido y materiales, es propiedad nuestra o de nuestros licenciantes y está protegido por las leyes de propiedad intelectual. Le otorgamos una licencia limitada, no exclusiva y no transferible para utilizar el Servicio de acuerdo con estos Términos."
+      },
+      "yours": {
+        "title": "6.2 Su Contenido",
+        "desc": "Usted conserva la propiedad de cualquier contenido que cree utilizando nuestro Servicio. Nos otorga una licencia para usar, almacenar y procesar su contenido únicamente para proporcionar y mejorar nuestro Servicio."
+      },
+      "opensource": {
+        "title": "6.3 Componentes de Código Abierto",
+        "desc": "Nuestro Servicio puede incluir componentes de software de código abierto. El uso de dichos componentes está sujeto a sus respectivas licencias de código abierto."
+      }
+    },
+    "privacy": {
+      "title": "7. Privacidad y Protección de Datos",
+      "desc": "Su privacidad es importante para nosotros. Nuestra recopilación y uso de su información personal se rige por nuestra Política de Privacidad, que se incorpora a estos Términos por referencia."
+    },
+    "availability": {
+      "title": "8. Disponibilidad del Servicio y Soporte",
+      "service": {
+        "title": "8.1 Disponibilidad del Servicio",
+        "desc": "Nos esforzamos por mantener una alta disponibilidad del servicio pero no garantizamos acceso ininterrumpido. El Servicio puede estar temporalmente no disponible debido a mantenimiento, actualizaciones u otros factores fuera de nuestro control."
+      },
+      "support": {
+        "title": "8.2 Servicios de Soporte",
+        "desc": "La disponibilidad del soporte varía según el plan de suscripción. Proporcionamos soporte a través de documentación, foros de la comunidad y canales de soporte directo según se especifica en su plan."
+      },
+      "updates": {
+        "title": "8.3 Actualizaciones y Cambios",
+        "desc": "Podemos actualizar el Servicio de vez en cuando para mejorar la funcionalidad, seguridad o experiencia del usuario. Proporcionaremos aviso razonable de cambios significativos que puedan afectar su uso del Servicio."
+      }
+    },
+    "termination": {
+      "title": "9. Terminación y Suspensión",
+      "you": {
+        "title": "9.1 Terminación por Usted",
+        "desc": "Puede terminar su cuenta en cualquier momento cancelando su suscripción y eliminando su cuenta a través de la configuración de su cuenta."
+      },
+      "us": {
+        "title": "9.2 Terminación por Nosotros",
+        "desc": "Podemos terminar o suspender su cuenta inmediatamente si viola estos Términos, se involucra en actividad fraudulenta o por cualquier otra razón a nuestra exclusiva discreción."
+      },
+      "effect": {
+        "title": "9.3 Efecto de la Terminación",
+        "desc": "Al terminar, su derecho a utilizar el Servicio cesa inmediatamente. Podemos eliminar los datos de su cuenta de acuerdo con nuestras políticas de retención de datos."
+      }
+    },
+    "disclaimers": {
+      "title": "10. Exenciones y Limitaciones",
+      "service": {
+        "title": "10.1 Exenciones del Servicio",
+        "desc": "EL SERVIDO SE PROPORCIONA \"TAL CUAL\" Y \"SEGÚN DISPONIBILIDAD\" SIN GARANTÍAS DE NINGÚN TIPO, YA SEAN EXPRESAS O IMPLÍCITAS, INCLUYENDO PERO NO LIMITADO A GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN."
+      },
+      "liability": {
+        "title": "10.2 Limitación de Responsabilidad",
+        "desc": "EN LA MÁXIMA MEDIDA PERMITIDA POR LA LEY, NO SEREMOS RESPONSABLES DE CUALQUIER DAÑO INDIRECTO, INCIDENTAL, ESPECIAL, CONSECUENCIAL O PUNITIVO, INCLUYENDO PERO NO LIMITADO A PÉRDIDA DE GANANCIAS, DATOS O USO, INCURRIDOS POR USTED O CUALQUIER TERCERO."
+      },
+      "maximum": {
+        "title": "10.3 Responsabilidad Máxima",
+        "desc": "NUESTRA RESPONSABILIDAD TOTAL HACIA USTED POR CUALQUIER RECLAMACIÓN DERIVADA DE O RELACIONADA CON ESTOS TÉRMINOS O EL SERVICIO NO EXCEDERÁ LA CANTIDAD PAGADA POR USTED POR EL SERVICIO EN LOS DOCE MESES ANTERIORES A LA RECLAMACIÓN."
+      }
+    },
+    "indemnification": {
+      "title": "11. Indemnización",
+      "desc": "Usted acepta indemnizar, defender y mantener indemnes a nosotros y a nuestros funcionarios, directores, empleados y agentes de y contra cualquier reclamo, daño, pérdida y gasto que surja de o esté relacionado con su uso del Servicio o violación de estos Términos."
+    },
+    "governing": {
+      "title": "12. Ley Aplicable y Resolución de Disputas",
+      "law": {
+        "title": "12.1 Ley Aplicable",
+        "desc": "Estos Términos se rigen e interpretan de acuerdo con las leyes de",
+        "without": "sin tener en cuenta sus principios de conflicto de leyes."
+      },
+      "dispute": {
+        "title": "12.2 Resolución de Disputas",
+        "desc": "Cualquier disputa que surja de o esté relacionada con estos Términos o el Servicio se resolverá mediante arbitraje vinculante de acuerdo con las reglas de",
+        "location": "El arbitraje se llevará a cabo en"
+      },
+      "class": {
+        "title": "12.3 Renuncia a Acción Colectiva",
+        "desc": "Usted acepta que cualquier arbitraje o procedimiento legal se llevará a cabo de forma individual y no como una acción colectiva o representativa."
+      }
+    },
+    "miscellaneous": {
+      "title": "13. Miscelánea",
+      "entire": {
+        "title": "13.1 Acuerdo Completo",
+        "desc": "Estos Términos, junto con nuestra Política de Privacidad, constituyen el acuerdo completo entre usted y nosotros con respecto al Servicio y reemplazan todos los acuerdos y entendimientos anteriores."
+      },
+      "severability": {
+        "title": "13.2 Separabilidad",
+        "desc": "Si alguna disposición de estos Términos se considera inválida o inaplicable, las disposiciones restantes continuarán en pleno vigor y efecto."
+      },
+      "waiver": {
+        "title": "13.3 Renuncia",
+        "desc": "Nuestro incumplimiento de hacer cumplir cualquier disposición de estos Términos no constituye una renuncia a esa disposición o cualquier otra disposición."
+      },
+      "assignment": {
+        "title": "13.4 Cesión",
+        "desc": "No puede ceder o transferir sus derechos u obligaciones bajo estos Términos sin nuestro consentimiento por escrito. Podemos ceder estos Términos sin restricciones."
+      },
+      "force": {
+        "title": "13.5 Fuerza Mayor",
+        "desc": "No seremos responsables de cualquier incumplimiento de nuestras obligaciones debido a circunstancias fuera de nuestro control razonable, incluyendo pero no limitado a desastres naturales, guerra, terrorismo o acciones gubernamentales."
+      }
+    },
+    "changes": {
+      "title": "14. Cambios a Estos Términos",
+      "desc": "Podemos actualizar estos Términos de vez en cuando para reflejar cambios en nuestras prácticas o leyes aplicables. Le notificaremos de cualquier cambio material publicando los Términos actualizados en nuestro sitio web y actualizando la fecha \"Última actualización\"."
+    },
+    "contact": {
+      "title": "15. Contáctenos",
+      "intro": "Si tiene alguna pregunta sobre estos Términos de Servicio, por favor contáctenos:",
+      "email": "Correo Electrónico",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "support": "Correo de Soporte"
+    }
+  },
+  "footer": {
+    "effective": "Estos Términos de Servicio son efectivos a partir del",
+    "remain": "y permanecerán en vigor excepto con respecto a cualquier cambio en sus disposiciones en el futuro."
+  }
+}

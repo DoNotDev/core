@@ -1,0 +1,11 @@
+{
+  "connectServices": "连接服务",
+  "chooseService": "选择一个服务以连接到您的账户",
+  "noProvidersEnabled": "没有 OAuth 提供商",
+  "noProvidersMessage": "目前没有启用任何 OAuth 提供商。请检查您的配置。",
+  "checkConfiguration": "请检查您的 OAuth 提供商配置。",
+  "noProviders": "没有 OAuth 提供商",
+  "aria": {
+    "connectionOptions": "OAuth 连接选项"
+  }
+}

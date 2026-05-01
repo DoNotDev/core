@@ -1,0 +1,370 @@
+{
+  "actions": {
+    "label": "Aktionen",
+    "create": "Erstellen",
+    "update": "Aktualisieren",
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "confirm": "Bestätigen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Vorherige",
+    "search": "Suchen",
+    "searchPlaceholder": "Suchen...",
+    "filter": "Filtern",
+    "clear": "Löschen",
+    "reset": "Zurücksetzen",
+    "apply": "Anwenden",
+    "select": "Auswählen",
+    "selectYear": "Jahr auswählen oder eingeben",
+    "upload": "Hochladen",
+    "download": "Herunterladen",
+    "close": "Schließen",
+    "email": "E-Mail",
+    "call": "Anrufen",
+    "copyEmail": "E-Mail kopieren",
+    "copyPhone": "Telefon kopieren",
+    "copyIban": "IBAN kopieren",
+    "replySubject": "Re: Ihre Anfrage",
+    "markResponded": "Als beantwortet markieren",
+    "selectOptions": "Optionen auswählen...",
+    "use": "Diese Adresse verwenden"
+  },
+  "address": {
+    "placeholder": "Adresse eingeben...",
+    "noResults": "Keine Adressen gefunden"
+  },
+  "export": "Exportieren",
+  "noInquiries": "Keine Anfragen gefunden.",
+  "customer": "Kunde",
+  "noCustomer": "Kein Kunde verknüpft",
+  "status": {
+    "draft": "Entwurf",
+    "available": "Verfügbar",
+    "deleted": "Gelöscht",
+    "sold": "Verkauft"
+  },
+  "fields": {
+    "array": "Array",
+    "boolean": "Boolean",
+    "checkbox": "Kontrollkästchen",
+    "date": "Datum",
+    "datetime-local": "Datum und Uhrzeit",
+    "email": "E-Mail",
+    "file": "Datei",
+    "geopoint": "Standort",
+    "image": "Bild",
+    "map": "Karte",
+    "multiselect": "Mehrfachauswahl",
+    "number": "Zahl",
+    "password": "Passwort",
+    "phone": "Telefonnummer",
+    "radio": "Optionsfelder",
+    "range": "Bereich",
+    "reference": "Referenz",
+    "select": "Auswählen",
+    "tel": "Telefonnummer",
+    "text": "Text",
+    "textarea": "Textbereich",
+    "timestamp": "Zeitstempel",
+    "url": "URL",
+    "status": "Status",
+    "id": "ID",
+    "createdAt": "Erstellt am",
+    "updatedAt": "Aktualisiert am",
+    "createdById": "Erstellt von",
+    "updatedById": "Aktualisiert von"
+  },
+  "text": {
+    "required": "{{field}} ist erforderlich",
+    "minLength": "{{field}} muss mindestens {{min}} Zeichen lang sein",
+    "maxLength": "{{field}} darf {{max}} Zeichen nicht überschreiten",
+    "email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "url": "Bitte geben Sie eine gültige URL ein",
+    "matches": "{{field}} muss dem Muster {{pattern}} entsprechen",
+    "unique": "{{field}} muss eindeutig sein",
+    "alphanumeric": "{{field}} darf nur Buchstaben und Zahlen enthalten",
+    "lettersOnly": "{{field}} darf nur Buchstaben enthalten"
+  },
+  "number": {
+    "required": "{{field}} ist erforderlich",
+    "min": "{{field}} muss mindestens {{min}} sein",
+    "max": "{{field}} darf {{max}} nicht überschreiten",
+    "integer": "{{field}} muss eine ganze Zahl sein",
+    "positive": "{{field}} muss positiv sein",
+    "negative": "{{field}} muss negativ sein",
+    "between": "{{field}} muss zwischen {{min}} und {{max}} liegen",
+    "precision": "{{field}} darf höchstens {{precision}} Dezimalstellen haben"
+  },
+  "date": {
+    "required": "{{field}} ist erforderlich",
+    "min": "{{field}} muss nach {{min}} sein",
+    "max": "{{field}} muss vor {{max}} sein",
+    "between": "{{field}} muss zwischen {{min}} und {{max}} liegen",
+    "format": "Bitte geben Sie ein gültiges Datum ein",
+    "future": "{{field}} muss in der Zukunft liegen",
+    "past": "{{field}} muss in der Vergangenheit liegen",
+    "today": "{{field}} muss heute sein"
+  },
+  "select": {
+    "required": "Bitte wählen Sie ein {{field}} aus",
+    "invalid": "Ungültige Auswahl für {{field}}",
+    "min": "Bitte wählen Sie mindestens {{min}} Optionen aus",
+    "max": "Bitte wählen Sie höchstens {{max}} Optionen aus"
+  },
+  "boolean": {
+    "required": "{{field}} muss ausgewählt werden"
+  },
+  "array": {
+    "required": "Mindestens ein {{field}} ist erforderlich",
+    "minItems": "Bitte wählen Sie mindestens {{min}} {{field}} aus",
+    "maxItems": "Es können nicht mehr als {{max}} {{field}} ausgewählt werden",
+    "uniqueItems": "Alle {{field}} müssen eindeutig sein"
+  },
+  "file": {
+    "required": "Bitte wählen Sie eine Datei aus",
+    "maxSize": "Die Dateigröße darf {{max}} nicht überschreiten",
+    "minSize": "Die Dateigröße muss mindestens {{min}} sein",
+    "type": "Der Dateityp muss {{types}} sein",
+    "dimensions": "Die Bildabmessungen müssen {{width}}x{{height}} sein",
+    "upload": {
+      "ariaLabel": "Datei hochladen",
+      "ariaLabelSingle": "Eine Datei hochladen",
+      "ariaLabelMultiple": "Dateien hochladen",
+      "dragDropSingle": "Ziehen und ablegen, einfügen oder klicken, um eine Datei hochzuladen",
+      "dragDropMultiple": "Ziehen und ablegen, einfügen oder klicken, um Dateien hochzuladen"
+    },
+    "delete": {
+      "ariaLabel": "Datei löschen",
+      "failed": "Fehler beim Löschen der Datei"
+    },
+    "errors": {
+      "maxFiles": "Maximal {{max}} Dateien erlaubt",
+      "exceedsSize": "{{fileName}} überschreitet das Limit von {{size}}MB"
+    }
+  },
+  "document": {
+    "upload": {
+      "ariaLabel": "Dokument hochladen",
+      "hint": "Ziehen und ablegen, einfügen oder klicken, um Dokumente hochzuladen"
+    },
+    "delete": {
+      "ariaLabel": "Dokument löschen",
+      "failed": "Fehler beim Löschen des Dokuments"
+    },
+    "preview": {
+      "ariaLabel": "Dokumentvorschau",
+      "title": "Dokumentvorschau"
+    },
+    "errors": {
+      "maxFiles": "Maximal {{max}} Dokumente erlaubt",
+      "invalidType": "Ungültiger Dokumenttyp: {{fileName}}",
+      "exceedsSize": "{{fileName}} überschreitet das Limit von {{size}}MB"
+    }
+  },
+  "image": {
+    "undo": {
+      "ariaLabel": "Letzte Aktion rückgängig machen",
+      "title": "Rückgängig (Strg+Z)"
+    },
+    "redo": {
+      "ariaLabel": "Letzte Aktion wiederholen",
+      "title": "Wiederholen (Strg+Umschalt+Z)"
+    },
+    "upload": {
+      "ariaLabel": "{{type}} hochladen",
+      "ariaLabelSingle": "Ein Bild hochladen",
+      "ariaLabelMultiple": "Bilder hochladen",
+      "selectAriaLabel": "{{type}} zum Hochladen auswählen",
+      "selectAriaLabelSingle": "Ein Bild zum Hochladen auswählen",
+      "selectAriaLabelMultiple": "Bilder zum Hochladen auswählen",
+      "dropzone": "Ziehen und ablegen, einfügen oder klicken, um {{type}} hochzuladen",
+      "dropzoneSingle": "Ziehen und ablegen, einfügen oder klicken, um ein Bild hochzuladen",
+      "dropzoneMultiple": "Ziehen und ablegen, einfügen oder klicken, um Bilder hochzuladen",
+      "maxFiles": "Max {{max}} Bilder, {{size}}MB jeweils",
+      "maxSize": "{{size}}MB jeweils",
+      "progress": "Upload-Fortschritt: {{progress}}%",
+      "pending": "Upload ausstehend",
+      "uploaded": "{{count}} {{type}} hochgeladen",
+      "uploadedSingle": "{{count}} Bild hochgeladen",
+      "uploadedMultiple": "{{count}} Bilder hochgeladen",
+      "failed": "Fehler beim Hochladen von {{fileName}}"
+    },
+    "delete": {
+      "ariaLabel": "Bild {{index}} löschen",
+      "title": "Löschen (Entf/Rücktaste)",
+      "failed": "Fehler beim Löschen des Bildes"
+    },
+    "reorder": {
+      "ariaLabel": "Zum Neuordnen ziehen"
+    },
+    "rotate": {
+      "failed": "Fehler beim Drehen des Bildes"
+    },
+    "errors": {
+      "maxFiles": "Maximal {{max}} Bilder erlaubt",
+      "singleOnly": "Nur ein Bild erlaubt",
+      "notImage": "{{fileName}} ist kein Bild",
+      "exceedsSize": "{{fileName}} überschreitet das Limit von {{size}}MB"
+    },
+    "warnings": {
+      "duplicates": "Doppelte Bilder übersprungen: {{files}}"
+    },
+    "alt": {
+      "upload": "Hochladen {{index}}",
+      "uploaded": "{{label}} {{index}}{{suffix}} (hochgeladen)",
+      "pending": "{{label}} {{index}}{{suffix}} (Upload ausstehend)"
+    },
+    "editor": {
+      "title": "Bild bearbeiten",
+      "titleWithIndex": "Bild {{current}} von {{total}}",
+      "description": "Bild anzeigen und bearbeiten mit Zuschneiden-, Drehen- und Zoom-Tools",
+      "editButton": "Bild bearbeiten",
+      "aspectRatio": "Seitenverhältnis",
+      "aspectFree": "Frei",
+      "zoom": "Zoom",
+      "rotation": "Rotation",
+      "rotateLeft": "Nach links drehen",
+      "rotateRight": "Nach rechts drehen",
+      "fitToView": "An Ansicht anpassen",
+      "showGrid": "Raster anzeigen",
+      "hideGrid": "Raster ausblenden",
+      "reset": "Zurücksetzen",
+      "apply": "Anwenden",
+      "processing": "Verarbeitung...",
+      "cancel": "Abbrechen",
+      "deleteImage": "Bild löschen",
+      "deleteConfirm": "Dieses Bild dauerhaft löschen?",
+      "previousImage": "Vorheriges Bild",
+      "nextImage": "Nächstes Bild"
+    }
+  },
+  "messages": {
+    "createSuccess": "{{entity}} erfolgreich erstellt",
+    "updateSuccess": "{{entity}} erfolgreich aktualisiert",
+    "deleteSuccess": "{{entity}} erfolgreich gelöscht",
+    "createError": "{{entity}} konnte nicht erstellt werden",
+    "updateError": "{{entity}} konnte nicht aktualisiert werden",
+    "deleteError": "{{entity}} konnte nicht gelöscht werden",
+    "error": "Ein Fehler ist aufgetreten",
+    "loading": "Laden...",
+    "noResults": "Keine Ergebnisse gefunden",
+    "confirmDelete": "Möchten Sie dieses {{entity}} wirklich löschen?",
+    "unsavedChanges": "Sie haben nicht gespeicherte Änderungen",
+    "unsavedChangesDiscard": "Sie haben nicht gespeicherte Änderungen. Verwerfen?",
+    "unsavedChangesLeave": "Sie haben nicht gespeicherte Änderungen. Möchten Sie wirklich verlassen?",
+    "sessionExpired": "Ihre Sitzung ist abgelaufen",
+    "networkError": "Netzwerkfehler aufgetreten",
+    "unauthorized": "Nicht autorisierter Zugriff",
+    "forbidden": "Zugriff verboten",
+    "serverError": "Serverfehler aufgetreten"
+  },
+  "form": {
+    "submit": "Absenden",
+    "cancel": "Abbrechen",
+    "submitting": "Wird gesendet...",
+    "loading": "Laden...",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "typeAndPressAdd": "Tippen und Hinzufügen drücken...",
+    "enterLocationData": "Standortdaten eingeben (JSON)",
+    "uploading": "Hochladen {{progress}}%...",
+    "processing": "Verarbeitung...",
+    "validating": "Validierung...",
+    "saving": "Speichern..."
+  },
+  "gdprConsent": {
+    "consent": "Ich stimme der",
+    "privacyPolicy": "Datenschutzerklärung",
+    "terms": "Nutzungsbedingungen",
+    "and": "zu und stimme der Verarbeitung meiner personenbezogenen Daten zu.",
+    "required": "Bitte akzeptieren Sie die Datenschutzerklärung, um fortzufahren"
+  },
+  "custom": {
+    "passwordMatch": "Passwörter müssen übereinstimmen",
+    "phoneNumber": "Bitte geben Sie eine gültige Telefonnummer ein",
+    "postalCode": "Bitte geben Sie eine gültige Postleitzahl ein",
+    "currency": "Bitte geben Sie einen gültigen Betrag ein",
+    "color": "Bitte geben Sie einen gültigen Farbcode ein"
+  },
+  "favorites": {
+    "title": "Favoriten",
+    "add": "Zu Favoriten hinzufügen",
+    "remove": "Aus Favoriten entfernen",
+    "saved": "Gespeichert",
+    "save": "Speichern",
+    "showAll": "Alle anzeigen",
+    "showFavorites": "Favoriten anzeigen",
+    "myFavorites": "Meine Favoriten",
+    "noFavorites": "Noch keine Favoriten"
+  },
+  "pagination": {
+    "showing": "Zeige {{from}} bis {{to}} von {{total}} Einträgen",
+    "previous": "Vorherige",
+    "next": "Nächste",
+    "page": "Seite {{page}} von {{total}}",
+    "itemsPerPagePlaceholder": "Elemente pro Seite:"
+  },
+  "filters": {
+    "title": "{{entity}} durchsuchen - Filter",
+    "apply": "Filter anwenden",
+    "clear": "Filter löschen",
+    "noResults": "Keine Ergebnisse entsprechen Ihren Filtern",
+    "selected": "{{count}} ausgewählt"
+  },
+  "filter": {
+    "placeholder": "Filtern...",
+    "selectPlaceholder": "Alle",
+    "min": "Min",
+    "max": "Max",
+    "from": "Ab",
+    "to": "Bis",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "tomorrow": "Morgen",
+    "last7Days": "Letzte 7 Tage",
+    "last30Days": "Letzte 30 Tage",
+    "next7Days": "Nächste 7 Tage",
+    "next30Days": "Nächste 30 Tage",
+    "thisMonthStart": "Monatsanfang",
+    "thisMonthEnd": "Monatsende",
+    "thisWeek": "Diese Woche",
+    "thisMonth": "Dieser Monat",
+    "clear": "Löschen",
+    "pick": "Auswählen",
+    "time": "Uhrzeit"
+  },
+  "duration": {
+    "15m": "15 Min.",
+    "30m": "30 Min.",
+    "45m": "45 Min.",
+    "1h": "1 Std.",
+    "1h30": "1 Std. 30",
+    "2h": "2 Std.",
+    "2h30": "2 Std. 30",
+    "3h": "3 Std.",
+    "custom": "Benutzerdefiniert",
+    "zero": "—",
+    "minutes": "{{count}} Min.",
+    "hoursMinutes": "{{hours}} Std. {{minutes}} Min."
+  },
+  "results": {
+    "title": {
+      "fetching": "Laden...",
+      "count_one": "{{count}} Vorkommen gefunden",
+      "count_other": "{{count}} Vorkommen gefunden"
+    }
+  },
+  "visibility": {
+    "viewAs": "Anzeigen als",
+    "preview": "Vorschau"
+  },
+  "price": {
+    "vatIncluded": "inkl. MwSt.",
+    "discountPercent": "-{{percent}}%"
+  },
+  "recommendations": {
+    "title": "Das könnte Ihnen auch gefallen"
+  }
+}

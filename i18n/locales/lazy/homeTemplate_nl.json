@@ -1,0 +1,52 @@
+{
+  "homeTemplate": {
+    "hero": {
+      "title": "Welkom bij DoNotDev",
+      "subtitle": "Bouw, deploy en schaal krachtige apps met onze TypeScript- en Firebase-boilerplate.",
+      "getStarted": "Aan de slag",
+      "learnMore": "Meer info",
+      "viewDemo": "Demo bekijken"
+    },
+    "features": {
+      "title": "Waarom DoNotDev?",
+      "subtitle": "Alles om moderne, schaalbare applicaties te bouwen",
+      "modern": {
+        "title": "Moderne stack",
+        "description": "TypeScript, React en moderne webtechnologie"
+      },
+      "scalable": {
+        "title": "Schaalbare architectuur",
+        "description": "Firebase-backend die meegroeit met je behoeften"
+      },
+      "fast": {
+        "title": "Razor snel",
+        "description": "Geoptimaliseerd voor prestaties en developer experience"
+      },
+      "secure": {
+        "title": "Enterprise-beveiliging",
+        "description": "Authenticatie, autorisatie en beveiliging ingebouwd"
+      }
+    },
+    "cta": {
+      "title": "Klaar om te beginnen?",
+      "subtitle": "Sluit je aan bij duizenden ontwikkelaars",
+      "signUp": "Gratis registreren",
+      "contactSales": "Contact verkoop",
+      "viewDocumentation": "Documentatie bekijken"
+    },
+    "footer": {
+      "description": "Het framework voor schaalbare applicaties",
+      "links": {
+        "product": "Product",
+        "developers": "Ontwikkelaars",
+        "company": "Bedrijf",
+        "support": "Support"
+      },
+      "legal": {
+        "privacy": "Privacybeleid",
+        "terms": "Algemene voorwaarden",
+        "cookies": "Cookiebeleid"
+      }
+    }
+  }
+}

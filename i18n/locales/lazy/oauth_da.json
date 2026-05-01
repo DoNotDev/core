@@ -1,0 +1,9 @@
+{
+  "connectServices": "Tilslut tjenester",
+  "chooseService": "Vælg en tjeneste at koble til din konto",
+  "noProvidersEnabled": "Ingen login-leverandører",
+  "noProvidersMessage": "Der er ingen login-leverandører aktiveret. Tjek konfigurationen.",
+  "checkConfiguration": "Tjek konfigurationen af din login-leverandør.",
+  "noProviders": "Ingen login-leverandører",
+  "aria": { "connectionOptions": "Loginmuligheder" }
+}

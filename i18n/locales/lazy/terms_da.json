@@ -1,0 +1,200 @@
+{
+  "title": "Servicevilkår",
+  "lastUpdated": "Sidst opdateret",
+  "common": {
+    "we": "vi",
+    "our": "vores",
+    "or": "eller",
+    "us": "os"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introduktion",
+      "welcome": "Velkommen til",
+      "govern": "Disse servicevilkår (\"Vilkårene\") styrer din brug af vores udviklingsframework, værktøjer og tjenester (sammen \"Tjenesten\"). Ved at tilgå eller bruge vores tjeneste accepterer du at være bundet af disse vilkår.",
+      "organization": "Hvis du bruger vores tjeneste på vegne af en organisation, bekræfter du, at du har myndighed til at binde den organisation til disse vilkår. Hvis du ikke accepterer vilkårene, må du ikke bruge vores tjeneste."
+    },
+    "service": {
+      "title": "2. Beskrivelse af tjenesten",
+      "description": "er et udviklingsframework, der leverer værktøjer, komponenter og infrastruktur til at bygge moderne webapplikationer. Tjenesten omfatter bl.a.:",
+      "framework": "Udviklingsframework og biblioteker",
+      "ui": "UI-komponenter og designsystem",
+      "auth": "Login og adgangskontrol",
+      "i18n": "Sprog og oversættelser",
+      "billing": "Fakturering og abonnementer",
+      "docs": "Dokumentation og support"
+    },
+    "account": {
+      "title": "3. Konto og sikkerhed",
+      "creation": {
+        "title": "3.1 Oprettelse af konto",
+        "desc": "For at bruge visse funktioner skal du oprette en konto. Du accepterer at oplyse korrekte og fuldstændige oplysninger ved registrering og at holde dem opdateret."
+      },
+      "security": {
+        "title": "3.2 Kontosikkerhed",
+        "desc": "Du er ansvarlig for at beskytte dine loginoplysninger og for alt, der sker på din konto. Du skal straks give os besked om uautoriseret brug eller andre sikkerhedsbrud."
+      },
+      "eligibility": {
+        "title": "3.3 Alder",
+        "desc": "Du skal være mindst 13 år for at bruge tjenesten. Under 18 år skal du have forældres eller værges samtykke."
+      }
+    },
+    "acceptable": {
+      "title": "4. Anvendelse af tjenesten",
+      "intro": "Du må kun bruge tjenesten lovligt og i overensstemmelse med vilkårene. Du må bl.a. ikke:",
+      "laws": "Bruge tjenesten til at overtræde gældende lovgivning",
+      "infringe": "Krænke andres immaterielle rettigheder",
+      "harmful": "Sende skadeligt, stødende eller upassende indhold",
+      "unauthorized": "Forsøge uautoriseret adgang til vores systemer eller andres konti",
+      "spam": "Bruge tjenesten til spam, phishing eller anden skadelig aktivitet",
+      "disrupt": "Forstyrre eller lægge tjenesten eller serverne ned",
+      "reverse": "Reverse-engineere, dekompilere eller disassemblere vores software",
+      "automated": "Bruge automatiserede systemer til adgang uden tilladelse",
+      "share": "Dele dine loginoplysninger med andre",
+      "competing": "Bruge tjenesten til at bygge konkurrerende produkter eller tjenester"
+    },
+    "payment": {
+      "title": "5. Abonnement og betaling",
+      "plans": {
+        "title": "5.1 Abonnementspakker",
+        "desc": "Vi tilbyder forskellige abonnementspakker med forskellige funktioner og priser. Detaljer findes på vores hjemmeside og kan ændres."
+      },
+      "processing": {
+        "title": "5.2 Betalingsbehandling",
+        "desc": "Betalinger håndteres af sikre tredjepartsbetalingsudbydere. Du giver os tilladelse til at debitere din betalingsmetode for alle gebyrer i forbindelse med dit abonnement."
+      },
+      "billing": {
+        "title": "5.3 Fakturering og fornyelse",
+        "desc": "Abonnementer fornyes automatisk, medmindre du opsiger før fornyelsesdatoen. Du bliver opkrævet den gældende abonnementspris ved hver fornyelse."
+      },
+      "refunds": {
+        "title": "5.4 Refusion og opsigelse",
+        "desc": "Du kan til enhver tid opsige dit abonnement via kontoindstillingerne. Refusioner gives i henhold til vores refusionspolitik, som kan variere efter pakke og brug."
+      }
+    },
+    "ip": {
+      "title": "6. Immaterielle rettigheder",
+      "ours": {
+        "title": "6.1 Vores rettigheder",
+        "desc": "Tjenesten, herunder al software, indhold og materialer, tilhører os eller vores licensgivere og er beskyttet af loven. Vi giver dig en begrænset, ikke-eksklusiv, ikke-overførbar licens til at bruge tjenesten i overensstemmelse med vilkårene."
+      },
+      "yours": {
+        "title": "6.2 Dit indhold",
+        "desc": "Du beholder ejendomsretten til indhold, du skaber med tjenesten. Du giver os en licens til at bruge, lagre og behandle dit indhold udelukkende for at levere og forbedre tjenesten."
+      },
+      "opensource": {
+        "title": "6.3 Open source",
+        "desc": "Tjenesten kan indeholde open source-komponenter. Brugen heraf er underlagt deres respektive licenser."
+      }
+    },
+    "privacy": {
+      "title": "7. Privatliv og databeskyttelse",
+      "desc": "Dit privatliv er vigtigt for os. Hvordan vi indsamler og bruger dine personoplysninger, fremgår af vores privatlivspolitik, som er en del af disse vilkår."
+    },
+    "availability": {
+      "title": "8. Tilgængelighed og support",
+      "service": {
+        "title": "8.1 Drift",
+        "desc": "Vi bestræber os på høj tilgængelighed, men garanterer ikke uafbrudt adgang. Tjenesten kan midlertidigt være utilgængelig pga. vedligeholdelse, opdateringer eller andre forhold uden for vores kontrol."
+      },
+      "support": {
+        "title": "8.2 Support",
+        "desc": "Support afhænger af din abonnementspakke. Vi tilbyder support via dokumentation, fællesskabsforum og direkte kanaler som angivet i din pakke."
+      },
+      "updates": {
+        "title": "8.3 Opdateringer",
+        "desc": "Vi kan fra tid til anden opdatere tjenesten. Ved væsentlige ændringer, der påvirker din brug, giver vi rimeligt varsel."
+      }
+    },
+    "termination": {
+      "title": "9. Opsigelse og suspendering",
+      "you": {
+        "title": "9.1 Opsigelse af dig",
+        "desc": "Du kan til enhver tid lukke din konto ved at opsige abonnementet og slette kontoen under kontoindstillingerne."
+      },
+      "us": {
+        "title": "9.2 Opsigelse fra vores side",
+        "desc": "Vi kan med øjeblikkelig virkning opsige eller suspendere din konto, hvis du overtræder vilkårene, begår bedrageri eller af andre årsager efter vores skøn."
+      },
+      "effect": {
+        "title": "9.3 Virkning af opsigelse",
+        "desc": "Ved opsigelse ophører din ret til at bruge tjenesten straks. Vi kan slette dine kontodata i henhold til vores opbevaringspolitik."
+      }
+    },
+    "disclaimers": {
+      "title": "10. Ansvarsbegrænsning",
+      "service": {
+        "title": "10.1 Tjenesten som den er",
+        "desc": "TJENESTEN LEVERES \"SOM DEN ER\" OG \"SÅDAN DEN TILBYDES\" UDEN GARANTIER AF NOGEN ART, HVERKEN UDTryKKELIGE ELLER STILTIFIEDE, HERUNDER MEN IKKE BEGRÆNSET TIL HANDELSVENLIGHED, EGNETHED TIL BESTEMT FORMÅL OG MANGLENDE KRÆNKELSE AF TREDJEMANDS RETTIGHEDER."
+      },
+      "liability": {
+        "title": "10.2 Begrænset ansvar",
+        "desc": "INDEN FOR DET LOVE TILLADTE HOLDER VI OS IKKE ANSVARLIGE FOR INDIREKTE, TILFÆLDIGE, SÆRSKILTE, FØLGE- ELLER PUNITIVE SKADER, HERUNDER TAB AF FORTJENESTE, DATA ELLER BRUG, SOM DU ELLER TREDJEMAND LIDER."
+      },
+      "maximum": {
+        "title": "10.3 Maksimalt ansvar",
+        "desc": "VORES SAMLEDE ANSVAR OVER FOR DIG FOR KRAV I FORBINDELSE MED DISSE VILKÅR ELLER TJENESTEN OVERSTIGER IKKE DET BELØB, DU HAR BETALT FOR TJENESTEN I DE TOLV MÅNEDER FØR KRAVET."
+      }
+    },
+    "indemnification": {
+      "title": "11. Erstatning",
+      "desc": "Du erholdt os og vores ledelse, direktører, medarbejdere og agenter skadesløse for krav, skader, tab og omkostninger, der skyldes din brug af tjenesten eller overtrædelse af disse vilkår."
+    },
+    "governing": {
+      "title": "12. Lovvalg og tvister",
+      "law": {
+        "title": "12.1 Lovvalg",
+        "desc": "Disse vilkår er underlagt loven i",
+        "without": "uden hensyn til lovvalgsprincipper."
+      },
+      "dispute": {
+        "title": "12.2 Tvisteløsning",
+        "desc": "Tvister i forbindelse med vilkårene eller tjenesten afgøres ved bindende voldgift i henhold til reglerne for",
+        "location": "Voldgiften finder sted i"
+      },
+      "class": {
+        "title": "12.3 Afkald på gruppesager",
+        "desc": "Du accepterer, at voldgift eller retslige skridt finder sted individuelt og ikke som gruppesag eller repræsentativ sag."
+      }
+    },
+    "miscellaneous": {
+      "title": "13. Øvrige bestemmelser",
+      "entire": {
+        "title": "13.1 Hele aftalen",
+        "desc": "Disse vilkår sammen med vores privatlivspolitik udgør hele aftalen mellem dig og os om tjenesten og erstatter tidligere aftaler og forståelser."
+      },
+      "severability": {
+        "title": "13.2 Ugyldige bestemmelser",
+        "desc": "Hvis en bestemmelse findes ugyldig eller ugennemførlig, forbliver de øvrige i kraft."
+      },
+      "waiver": {
+        "title": "13.3 Afkald",
+        "desc": "At vi ikke håndhæver en bestemmelse, udgør ikke afkald på den eller andre bestemmelser."
+      },
+      "assignment": {
+        "title": "13.4 Overdragelse",
+        "desc": "Du må ikke overdrage dine rettigheder eller forpligtelser uden vores skriftlige samtykke. Vi kan overdrage vilkårene uden begrænsning."
+      },
+      "force": {
+        "title": "13.5 Force majeure",
+        "desc": "Vi er ikke ansvarlige for manglende opfyldelse pga. forhold uden for vores rimelige kontrol, herunder naturkatastrofer, krig, terror eller myndighedernes indgreb."
+      }
+    },
+    "changes": {
+      "title": "14. Ændringer af vilkårene",
+      "desc": "Vi kan opdatere vilkårene for at afspejle ændringer i vores praksis eller gældende lov. Ved væsentlige ændringer giver vi besked ved at offentliggøre de opdaterede vilkår og opdatere \"Sidst opdateret\"."
+    },
+    "contact": {
+      "title": "15. Kontakt",
+      "intro": "Har du spørgsmål til servicevilkårene, er du velkommen til at kontakte os:",
+      "email": "E-mail",
+      "address": "Adresse",
+      "phone": "Telefon",
+      "support": "Support-e-mail"
+    }
+  },
+  "footer": {
+    "effective": "Disse servicevilkår træder i kraft den",
+    "remain": "og gælder until videre, medmindre bestemmelserne ændres."
+  }
+}

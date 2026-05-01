@@ -1,0 +1,535 @@
+{
+  "actions": {
+    "label": "操作",
+    "create": "创建",
+    "update": "更新",
+    "delete": "删除",
+    "cancel": "取消",
+    "save": "保存",
+    "confirm": "确认",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "search": "搜索",
+    "searchPlaceholder": "搜索...",
+    "filter": "筛选",
+    "clear": "清空",
+    "reset": "重置",
+    "apply": "应用",
+    "select": "选择",
+    "selectYear": "选择或输入年份",
+    "upload": "上传",
+    "download": "下载",
+    "close": "关闭",
+    "email": "电子邮件",
+    "call": "拨打",
+    "copyEmail": "复制邮箱",
+    "copyPhone": "复制电话",
+    "copyIban": "复制 IBAN",
+    "replySubject": "回复：您的询问",
+    "markResponded": "标记为已回复",
+    "selectOptions": "选择选项...",
+    "use": "使用此地址"
+  },
+  "address": {
+    "placeholder": "输入地址...",
+    "noResults": "未找到地址"
+  },
+  "export": "导出",
+  "noInquiries": "未找到询问。",
+  "customer": "客户",
+  "noCustomer": "未关联客户",
+  "status": {
+    "draft": "草稿",
+    "available": "可用",
+    "deleted": "已删除",
+    "sold": "已售"
+  },
+  "messages": {
+    "createSuccess": "{{entity}} 创建成功",
+    "updateSuccess": "{{entity}} 更新成功",
+    "deleteSuccess": "{{entity}} 删除成功",
+    "createError": "创建 {{entity}} 失败",
+    "updateError": "更新 {{entity}} 失败",
+    "deleteError": "删除 {{entity}} 失败",
+    "error": "发生错误",
+    "loading": "加载中...",
+    "noResults": "未找到结果",
+    "confirmDelete": "确定要删除此 {{entity}} 吗？",
+    "unsavedChanges": "您有未保存的更改",
+    "unsavedChangesDiscard": "您有未保存的更改。是否要放弃？",
+    "unsavedChangesLeave": "您有未保存的更改。确定要离开吗？",
+    "sessionExpired": "您的会话已过期",
+    "networkError": "发生网络错误",
+    "unauthorized": "未授权访问",
+    "forbidden": "禁止访问",
+    "serverError": "发生服务器错误",
+    "notFound": {
+      "title": "页面未找到",
+      "description": "您要查找的页面不存在或已被移除。",
+      "suggestions": "您可能在查找：",
+      "goHome": "返回首页",
+      "goBack": "返回上一页"
+    }
+  },
+  "pagination": {
+    "showing": "显示第 {{from}} 到 {{to}} 条，共 {{total}} 条",
+    "previous": "上一页",
+    "next": "下一页",
+    "page": "第 {{page}} 页，共 {{total}} 页",
+    "itemsPerPagePlaceholder": "每页显示："
+  },
+  "filters": {
+    "title": "浏览 {{entity}} - 筛选",
+    "apply": "应用筛选",
+    "clear": "清空筛选",
+    "noResults": "没有符合筛选条件的结果",
+    "selected": "已选择 {{count}} 项"
+  },
+  "filter": {
+    "placeholder": "筛选...",
+    "selectPlaceholder": "全部",
+    "min": "最小值",
+    "max": "最大值",
+    "from": "从",
+    "to": "至",
+    "today": "今天",
+    "yesterday": "昨天",
+    "tomorrow": "明天",
+    "last7Days": "过去 7 天",
+    "last30Days": "过去 30 天",
+    "next7Days": "接下来 7 天",
+    "next30Days": "接下来 30 天",
+    "thisMonthStart": "本月开始",
+    "thisMonthEnd": "本月结束",
+    "thisWeek": "本周",
+    "thisMonth": "本月",
+    "clear": "清空",
+    "pick": "选择",
+    "time": "时间"
+  },
+  "duration": {
+    "15m": "15 分钟",
+    "30m": "30 分钟",
+    "45m": "45 分钟",
+    "1h": "1 小时",
+    "1h30": "1 小时 30 分钟",
+    "2h": "2 小时",
+    "2h30": "2 小时 30 分钟",
+    "3h": "3 小时",
+    "custom": "自定义",
+    "zero": "—",
+    "minutes": "{{count}} 分钟",
+    "hoursMinutes": "{{hours}} 小时 {{minutes}} 分钟"
+  },
+  "results": {
+    "title": {
+      "fetching": "获取中...",
+      "count_one": "找到 {{count}} 个结果",
+      "count_other": "找到 {{count}} 个结果"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "theme": "主题",
+    "language": "语言",
+    "clearCache": {
+      "title": "清空缓存",
+      "localStorage": "本地存储",
+      "sessionStorage": "会话存储",
+      "applicationCache": "应用缓存",
+      "serviceWorker": "Service Worker",
+      "cookies": "Cookie",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "内存缓存",
+      "button": "清空缓存",
+      "clearing": "清空中...",
+      "error": "清空缓存出错",
+      "success": "缓存已成功清空：{{items}}",
+      "noItemsCleared": "未清空任何缓存项"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "DoNotDev App"
+    },
+    "defaultTitle": "页面",
+    "defaultDescription": "页面描述",
+    "locale": "zh_CN",
+    "themeSelector": {
+      "changeTheme": "更改主题",
+      "tooltipWithTransition": "更改主题：{{current}} → {{next}}",
+      "tooltipWithCurrent": "更改主题：{{current}}",
+      "tooltipWithNext": "更改主题：切换为 {{next}}"
+    },
+    "languageSelector": {
+      "changeLanguage": "更改语言"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "公司",
+        "description": "使用我们的综合开发平台，更快速地构建更好的产品。"
+      },
+      "social": {
+        "twitter": "Twitter",
+        "github": "GitHub",
+        "discord": "Discord"
+      },
+      "sections": {
+        "product": {
+          "title": "产品",
+          "features": "功能",
+          "pricing": "价格",
+          "docs": "文档",
+          "updates": "更新"
+        },
+        "support": {
+          "title": "支持",
+          "help": "帮助",
+          "contact": "联系",
+          "status": "状态",
+          "community": "社区"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "版权所有。",
+      "cookieSettings": "Cookie 设置",
+      "legalNotice": "法律声明",
+      "privacyPolicy": "隐私政策",
+      "termsOfService": "服务条款",
+      "builtWith": "由 ❤️ 与 DoNotDev © 构建",
+      "collapse": "折叠页脚",
+      "expand": "展开页脚"
+    }
+  },
+  "search": {
+    "ariaLabel": "搜索",
+    "label": "搜索"
+  },
+  "goTo": {
+    "ariaLabel": "前往页面",
+    "label": "前往"
+  },
+  "globalGoTo": {
+    "placeholder": "筛选路由或导航至页面...",
+    "noResults": "未找到路由。",
+    "favorites": "收藏夹",
+    "allPages": "所有页面",
+    "addFavorite": "添加到收藏夹",
+    "removeFavorite": "从收藏夹移除"
+  },
+  "favorites": {
+    "title": "收藏夹",
+    "add": "添加到收藏夹",
+    "remove": "从收藏夹移除",
+    "saved": "已保存",
+    "save": "保存",
+    "showAll": "显示全部",
+    "showFavorites": "显示收藏夹",
+    "myFavorites": "我的收藏夹",
+    "noFavorites": "暂无收藏"
+  },
+  "copyToClipboard": "复制到剪贴板",
+  "copied": "已复制！",
+  "copyPassword": "复制密码",
+  "table": {
+    "searchPlaceholder": "搜索...",
+    "filters": "筛选",
+    "selectAllRows": "选择所有行",
+    "selectRow": "选择第 {{index}} 行",
+    "showingResults": "显示第 {{from}} 到 {{to}} 条，共 {{total}} 条结果",
+    "previous": "上一页",
+    "next": "下一页",
+    "page": "第 {{current}} 页，共 {{total}} 页"
+  },
+  "language": {
+    "selectLanguage": "选择语言",
+    "searchLanguages": "搜索语言...",
+    "noLanguagesFound": "未找到语言",
+    "changeLanguage": "更改语言"
+  },
+  "form": {
+    "submit": "提交",
+    "cancel": "取消",
+    "submitting": "提交中...",
+    "loading": "加载中...",
+    "add": "添加",
+    "remove": "移除",
+    "typeAndPressAdd": "输入并按添加...",
+    "enterLocationData": "输入位置数据 (JSON)",
+    "uploading": "上传中 {{progress}}%...",
+    "processing": "处理中...",
+    "validating": "验证中...",
+    "saving": "保存中..."
+  },
+  "navigation": {
+    "more": "更多",
+    "home": "首页"
+  },
+  "pwa": {
+    "update": {
+      "title": "有可用更新",
+      "description": "新版本已就绪。刷新以更新。",
+      "button": "更新",
+      "altText": "更新应用"
+    }
+  },
+  "code": {
+    "copyCode": "复制代码",
+    "copied": "已复制！",
+    "copyCodeToClipboard": "复制代码到剪贴板"
+  },
+  "video": {
+    "clickToWatch": "点击观看视频",
+    "watchVideo": "观看视频"
+  },
+  "inspector": {
+    "pageSource": "页面源代码",
+    "inspectPageSourceCode": "检查页面源代码"
+  },
+  "routeError": {
+    "title": "出了点问题",
+    "description": "加载此页面时遇到错误。",
+    "dataSafe": "别担心，您的数据是安全的。",
+    "errorId": "错误 ID",
+    "errorMessage": "错误消息",
+    "copied": "已复制",
+    "copyDetails": "复制详情",
+    "tryAgain": "重试",
+    "goHome": "返回首页",
+    "goBack": "返回上一页",
+    "contactSupport": "如果问题仍然存在，请联系支持。"
+  },
+  "fields": {
+    "array": "数组",
+    "boolean": "布尔值",
+    "checkbox": "复选框",
+    "date": "日期",
+    "datetime-local": "日期和时间",
+    "email": "电子邮件",
+    "file": "文件",
+    "geopoint": "位置",
+    "image": "图片",
+    "map": "地图",
+    "multiselect": "多选",
+    "number": "数字",
+    "password": "密码",
+    "phone": "电话号码",
+    "radio": "单选按钮",
+    "range": "范围",
+    "reference": "引用",
+    "select": "选择",
+    "tel": "电话号码",
+    "text": "文本",
+    "textarea": "文本区域",
+    "timestamp": "时间戳",
+    "url": "URL",
+    "status": "状态",
+    "id": "ID",
+    "createdAt": "创建于",
+    "updatedAt": "更新于",
+    "createdById": "创建者",
+    "updatedById": "更新者"
+  },
+  "text": {
+    "required": "{{field}} 为必填项",
+    "minLength": "{{field}} 至少需要 {{min}} 个字符",
+    "maxLength": "{{field}} 不能超过 {{max}} 个字符",
+    "email": "请输入有效的电子邮件地址",
+    "url": "请输入有效的 URL",
+    "matches": "{{field}} 必须与模式 {{pattern}} 匹配",
+    "unique": "{{field}} 必须唯一",
+    "alphanumeric": "{{field}} 只能包含字母和数字",
+    "lettersOnly": "{{field}} 只能包含字母"
+  },
+  "number": {
+    "required": "{{field}} 为必填项",
+    "min": "{{field}} 必须至少为 {{min}}",
+    "max": "{{field}} 不能超过 {{max}}",
+    "integer": "{{field}} 必须是整数",
+    "positive": "{{field}} 必须为正数",
+    "negative": "{{field}} 必须为负数",
+    "between": "{{field}} 必须在 {{min}} 和 {{max}} 之间",
+    "precision": "{{field}} 最多只能有 {{precision}} 位小数"
+  },
+  "date": {
+    "required": "{{field}} 为必填项",
+    "min": "{{field}} 必须在 {{min}} 之后",
+    "max": "{{field}} 必须在 {{max}} 之前",
+    "between": "{{field}} 必须在 {{min}} 和 {{max}} 之间",
+    "format": "请输入有效的日期",
+    "future": "{{field}} 必须是未来日期",
+    "past": "{{field}} 必须是过去日期",
+    "today": "{{field}} 必须是今天"
+  },
+  "select": {
+    "required": "请选择一个 {{field}}",
+    "invalid": "{{field}} 的选择无效",
+    "min": "请至少选择 {{min}} 个选项",
+    "max": "最多只能选择 {{max}} 个选项"
+  },
+  "boolean": {
+    "required": "{{field}} 必须被选中"
+  },
+  "array": {
+    "required": "至少需要一个 {{field}}",
+    "minItems": "请至少选择 {{min}} 个 {{field}}",
+    "maxItems": "最多只能选择 {{max}} 个 {{field}}",
+    "uniqueItems": "所有 {{field}} 必须唯一"
+  },
+  "file": {
+    "required": "请选择一个文件",
+    "maxSize": "文件大小不能超过 {{max}}",
+    "minSize": "文件大小至少为 {{min}}",
+    "type": "文件类型必须是 {{types}}",
+    "dimensions": "图片尺寸必须是 {{width}}x{{height}}",
+    "upload": {
+      "ariaLabel": "上传文件",
+      "ariaLabelSingle": "上传一个文件",
+      "ariaLabelMultiple": "上传多个文件",
+      "dragDropSingle": "拖放、粘贴或点击上传一个文件",
+      "dragDropMultiple": "拖放、粘贴或点击上传多个文件"
+    },
+    "delete": {
+      "ariaLabel": "删除文件",
+      "failed": "删除文件失败"
+    },
+    "errors": {
+      "maxFiles": "最多允许 {{max}} 个文件",
+      "exceedsSize": "{{fileName}} 超过 {{size}}MB 限制"
+    }
+  },
+  "document": {
+    "upload": {
+      "ariaLabel": "上传文档",
+      "hint": "拖放、粘贴或点击上传文档"
+    },
+    "delete": {
+      "ariaLabel": "删除文档",
+      "failed": "删除文档失败"
+    },
+    "preview": {
+      "ariaLabel": "预览文档",
+      "title": "文档预览"
+    },
+    "errors": {
+      "maxFiles": "最多允许 {{max}} 个文档",
+      "invalidType": "无效的文档类型：{{fileName}}",
+      "exceedsSize": "{{fileName}} 超过 {{size}}MB 限制"
+    }
+  },
+  "image": {
+    "undo": {
+      "ariaLabel": "撤销上一步操作",
+      "title": "撤销 (Ctrl+Z)"
+    },
+    "redo": {
+      "ariaLabel": "重做上一步操作",
+      "title": "重做 (Ctrl+Shift+Z)"
+    },
+    "upload": {
+      "ariaLabel": "上传 {{type}}",
+      "ariaLabelSingle": "上传一张图片",
+      "ariaLabelMultiple": "上传多张图片",
+      "selectAriaLabel": "选择 {{type}} 上传",
+      "selectAriaLabelSingle": "选择一张图片上传",
+      "selectAriaLabelMultiple": "选择多张图片上传",
+      "dropzone": "拖放、粘贴或点击上传 {{type}}",
+      "dropzoneSingle": "拖放、粘贴或点击上传一张图片",
+      "dropzoneMultiple": "拖放、粘贴或点击上传多张图片",
+      "maxFiles": "最多 {{max}} 张图片，每张 {{size}}MB",
+      "maxSize": "每张 {{size}}MB",
+      "progress": "上传进度：{{progress}}%",
+      "pending": "等待上传",
+      "uploaded": "{{count}} 张 {{type}} 已上传",
+      "uploadedSingle": "{{count}} 张图片已上传",
+      "uploadedMultiple": "{{count}} 张图片已上传",
+      "failed": "上传 {{fileName}} 失败"
+    },
+    "delete": {
+      "ariaLabel": "删除第 {{index}} 张图片",
+      "title": "删除 (Delete/Backspace)",
+      "failed": "删除图片失败"
+    },
+    "reorder": {
+      "ariaLabel": "拖动以重新排序"
+    },
+    "rotate": {
+      "failed": "旋转图片失败"
+    },
+    "errors": {
+      "maxFiles": "最多允许 {{max}} 张图片",
+      "singleOnly": "只允许一张图片",
+      "notImage": "{{fileName}} 不是图片",
+      "exceedsSize": "{{fileName}} 超过 {{size}}MB 限制"
+    },
+    "warnings": {
+      "duplicates": "重复图片已跳过：{{files}}"
+    },
+    "alt": {
+      "upload": "上传 {{index}}",
+      "uploaded": "{{label}} {{index}}{{suffix}} (已上传)",
+      "pending": "{{label}} {{index}}{{suffix}} (等待上传)"
+    },
+    "editor": {
+      "title": "编辑图片",
+      "titleWithIndex": "第 {{current}} 张，共 {{total}} 张",
+      "description": "使用裁剪、旋转和缩放工具查看和编辑图片",
+      "editButton": "编辑图片",
+      "aspectRatio": "宽高比",
+      "aspectFree": "自由",
+      "zoom": "缩放",
+      "rotation": "旋转",
+      "rotateLeft": "向左旋转",
+      "rotateRight": "向右旋转",
+      "fitToView": "适应视图",
+      "showGrid": "显示网格",
+      "hideGrid": "隐藏网格",
+      "reset": "重置",
+      "apply": "应用",
+      "processing": "处理中...",
+      "cancel": "取消",
+      "deleteImage": "删除图片",
+      "deleteConfirm": "永久删除此图片？",
+      "previousImage": "上一张图片",
+      "nextImage": "下一张图片"
+    }
+  },
+  "gdprConsent": {
+    "consent": "我同意",
+    "privacyPolicy": "隐私政策",
+    "terms": "使用条款",
+    "and": "并同意处理我的个人数据。",
+    "required": "请接受隐私政策以继续"
+  },
+  "custom": {
+    "passwordMatch": "密码必须匹配",
+    "phoneNumber": "请输入有效的电话号码",
+    "postalCode": "请输入有效的邮政编码",
+    "currency": "请输入有效的金额",
+    "color": "请输入有效的颜色代码"
+  },
+  "errors": {
+    "fieldUpdate": "更新 {{field}} 失败",
+    "hiddenField": "渲染隐藏字段 {{field}} 出错",
+    "unsupportedFieldType": "不支持的字段类型：{{type}}",
+    "fieldRendering": "渲染字段 {{field}} 出错",
+    "fallingBackToTextField": "为不支持的类型 {{type}} 使用文本字段",
+    "invalidFieldProps": "字段 {{field}} 的配置无效"
+  },
+  "visibility": {
+    "viewAs": "查看为",
+    "preview": "预览"
+  },
+  "price": {
+    "vatIncluded": "含税",
+    "discountPercent": "-{{percent}}%"
+  },
+  "recommendations": {
+    "title": "您可能也喜欢"
+  }
+}

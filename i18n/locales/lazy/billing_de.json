@@ -1,0 +1,82 @@
+{
+  "security": {
+    "title": "Sichere Zahlungsabwicklung",
+    "description": "Ihre Zahlungsinformationen werden sicher von Stripe verarbeitet, einem PCI DSS Level 1 zertifizierten Zahlungsdienstleister.",
+    "encrypted": "256-Bit SSL-Verschlüsselung",
+    "stripe": "Unterstützt von Stripe",
+    "dismiss": "Sicherheitshinweis schließen"
+  },
+  "templates": {
+    "purchase": {
+      "title": "Loslegen",
+      "subtitle": "Wählen Sie Ihre einmalige Kaufoption"
+    },
+    "subscription": {
+      "title": "Wählen Sie Ihren Plan",
+      "subtitle": "Wählen Sie den perfekten Plan für Ihre Bedürfnisse",
+      "billingToggle": {
+        "monthly": "Monatlich",
+        "yearly": "Jährlich",
+        "save20": "20% sparen"
+      }
+    },
+    "checkout": {
+      "title": "Kauf abschließen",
+      "description": "Sicherer Checkout unterstützt von Stripe",
+      "completePurchase": "Kauf abschließen",
+      "startSubscription": "Abonnement starten"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "Beliebteste",
+      "limitedTime": "Begrenzte Zeit",
+      "exclVat": "zzgl. MwSt.",
+      "purchaseNow": "Jetzt kaufen",
+      "subscribeNow": "Jetzt abonnieren"
+    },
+    "buttons": {
+      "purchase": "Kaufen",
+      "subscribe": "Abonnieren",
+      "processing": "Wird verarbeitet...",
+      "signInToPurchase": "Anmelden zum Kaufen",
+      "signInToSubscribe": "Anmelden zum Abonnieren"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Weiterleitung zu Stripe",
+        "message": "Sichere Zahlung wird initialisiert...",
+        "subtitle": "Dies kann beim ersten Laden einen Moment dauern",
+        "ariaLabel": "Sichere Zahlung wird vorbereitet, bitte warten"
+      },
+      "portal": {
+        "title": "Weiterleitung zu Stripe",
+        "message": "Abrechnungsportal wird geöffnet...",
+        "subtitle": "Verwalten Sie Ihr Abonnement und Ihre Rechnungen",
+        "ariaLabel": "Abrechnungsportal wird geöffnet, bitte warten"
+      }
+    },
+    "subscriptionManager": {
+      "title": "Abonnementverwaltung",
+      "signInRequired": "Bitte melden Sie sich an, um Ihr Abonnement zu verwalten.",
+      "noSubscription": "Sie haben kein aktives Abonnement.",
+      "currentPlan": "Aktueller Plan",
+      "ends": "Endet",
+      "managePaymentMethod": "Zahlungsmethode verwalten",
+      "cancelSubscription": "Abonnement kündigen",
+      "cancelConfirm": "Sind Sie sicher, dass Sie kündigen möchten? Sie behalten den Zugang bis zum {{date}}.",
+      "yesCancel": "Ja, Kündigen",
+      "noKeep": "Nein, Behalten",
+      "changePlan": "Plan ändern",
+      "current": "Aktuell",
+      "subscriptionEnds": "Das Abonnement endet am {{date}}",
+      "planChanged": "Plan erfolgreich geändert!",
+      "status": {
+        "active": "Aktiv",
+        "cancelled": "Gekündigt",
+        "pastDue": "Überfällig",
+        "trialing": "Testphase"
+      }
+    }
+  }
+}

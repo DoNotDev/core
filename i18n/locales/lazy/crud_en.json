@@ -1,0 +1,536 @@
+{
+  "addNew": "Add",
+  "actions": {
+    "label": "Actions",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "searchPlaceholder": "Search...",
+    "filter": "Filter",
+    "clear": "Clear",
+    "reset": "Reset",
+    "apply": "Apply",
+    "select": "Select",
+    "selectYear": "Select or type year",
+    "upload": "Upload",
+    "download": "Download",
+    "close": "Close",
+    "email": "Email",
+    "call": "Call",
+    "copyEmail": "Copy email",
+    "copyPhone": "Copy phone",
+    "copyIban": "Copy IBAN",
+    "replySubject": "Re: Your inquiry",
+    "markResponded": "Mark responded",
+    "selectOptions": "Select options...",
+    "use": "Use this address"
+  },
+  "address": {
+    "placeholder": "Enter address...",
+    "noResults": "No addresses found"
+  },
+  "export": "Export",
+  "noInquiries": "No inquiries found.",
+  "customer": "Customer",
+  "noCustomer": "No customer linked",
+  "status": {
+    "draft": "Draft",
+    "available": "Available",
+    "deleted": "Deleted",
+    "sold": "Sold"
+  },
+  "messages": {
+    "createSuccess": "{{entity}} created successfully",
+    "updateSuccess": "{{entity}} updated successfully",
+    "deleteSuccess": "{{entity}} deleted successfully",
+    "createError": "Failed to create {{entity}}",
+    "updateError": "Failed to update {{entity}}",
+    "deleteError": "Failed to delete {{entity}}",
+    "error": "An error occurred",
+    "loading": "Loading...",
+    "noResults": "No results found",
+    "confirmDelete": "Are you sure you want to delete this {{entity}}?",
+    "unsavedChanges": "You have unsaved changes",
+    "unsavedChangesDiscard": "You have unsaved changes. Discard them?",
+    "unsavedChangesLeave": "You have unsaved changes. Are you sure you want to leave?",
+    "sessionExpired": "Your session has expired",
+    "networkError": "Network error occurred",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "serverError": "Server error occurred",
+    "notFound": {
+      "title": "Page Not Found",
+      "description": "The page you're looking for doesn't exist or has been moved.",
+      "suggestions": "You might be looking for:",
+      "goHome": "Go Home",
+      "goBack": "Go Back"
+    }
+  },
+  "pagination": {
+    "showing": "Showing {{from}} to {{to}} of {{total}} entries",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{page}} of {{total}}",
+    "itemsPerPagePlaceholder": "Items per page:"
+  },
+  "filters": {
+    "title": "Browse {{entity}} - Filters",
+    "apply": "Apply Filters",
+    "clear": "Clear Filters",
+    "noResults": "No results match your filters",
+    "selected": "{{count}} selected"
+  },
+  "filter": {
+    "placeholder": "Filter...",
+    "selectPlaceholder": "All",
+    "min": "Min",
+    "max": "Max",
+    "from": "From",
+    "to": "To",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "next7Days": "Next 7 Days",
+    "next30Days": "Next 30 Days",
+    "thisMonthStart": "This Month Start",
+    "thisMonthEnd": "This Month End",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "clear": "Clear",
+    "pick": "Pick",
+    "time": "Time"
+  },
+  "duration": {
+    "15m": "15m",
+    "30m": "30m",
+    "45m": "45m",
+    "1h": "1h",
+    "1h30": "1h 30",
+    "2h": "2h",
+    "2h30": "2h 30",
+    "3h": "3h",
+    "custom": "Custom",
+    "zero": "—",
+    "minutes": "{{count}} min",
+    "hoursMinutes": "{{hours}}h {{minutes}}min"
+  },
+  "results": {
+    "title": {
+      "fetching": "Fetching...",
+      "count_one": "Found {{count}} occurrence",
+      "count_other": "Found {{count}} occurrences"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "language": "Language",
+    "clearCache": {
+      "title": "Clear Cache",
+      "localStorage": "Local Storage",
+      "sessionStorage": "Session Storage",
+      "applicationCache": "Application Cache",
+      "serviceWorker": "Service Worker",
+      "cookies": "Cookies",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "Memory Cache",
+      "button": "Clear Cache",
+      "clearing": "Clearing...",
+      "error": "Error clearing cache",
+      "success": "Cache cleared successfully: {{items}}",
+      "noItemsCleared": "No cache items were cleared"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "DoNotDev App"
+    },
+    "defaultTitle": "Page",
+    "defaultDescription": "Page description",
+    "locale": "en_US",
+    "themeSelector": {
+      "changeTheme": "Change Theme",
+      "tooltipWithTransition": "Change Theme: {{current}} → {{next}}",
+      "tooltipWithCurrent": "Change Theme: {{current}}",
+      "tooltipWithNext": "Change Theme: Switch to {{next}}"
+    },
+    "languageSelector": {
+      "changeLanguage": "Change Language"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "Company",
+        "description": "Build better products faster with our comprehensive development platform."
+      },
+      "social": {
+        "twitter": "Twitter",
+        "github": "GitHub",
+        "discord": "Discord"
+      },
+      "sections": {
+        "product": {
+          "title": "Product",
+          "features": "Features",
+          "pricing": "Pricing",
+          "docs": "Docs",
+          "updates": "Updates"
+        },
+        "support": {
+          "title": "Support",
+          "help": "Help",
+          "contact": "Contact",
+          "status": "Status",
+          "community": "Community"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "All rights reserved.",
+      "cookieSettings": "Cookie Settings",
+      "legalNotice": "Legal Notice",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "builtWith": "Made with ❤️ & DoNotDev ©",
+      "collapse": "Collapse footer",
+      "expand": "Expand footer"
+    }
+  },
+  "search": {
+    "ariaLabel": "Search",
+    "label": "Search"
+  },
+  "goTo": {
+    "ariaLabel": "Go to page",
+    "label": "Go to"
+  },
+  "globalGoTo": {
+    "placeholder": "Filter routes or navigate to a page...",
+    "noResults": "No routes found.",
+    "favorites": "Favorites",
+    "allPages": "All Pages",
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "add": "Add to favorites",
+    "remove": "Remove from favorites",
+    "saved": "Saved",
+    "save": "Save",
+    "showAll": "Show All",
+    "showFavorites": "Show Favorites",
+    "myFavorites": "My Favorites",
+    "noFavorites": "No favorites yet"
+  },
+  "copyToClipboard": "Copy to clipboard",
+  "copied": "Copied!",
+  "copyPassword": "Copy password",
+  "table": {
+    "searchPlaceholder": "Search...",
+    "filters": "Filters",
+    "selectAllRows": "Select all rows",
+    "selectRow": "Select row {{index}}",
+    "showingResults": "Showing {{from}} to {{to}} of {{total}} results",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{total}}"
+  },
+  "language": {
+    "selectLanguage": "Select Language",
+    "searchLanguages": "Search languages...",
+    "noLanguagesFound": "No languages found",
+    "changeLanguage": "Change Language"
+  },
+  "form": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "submitting": "Submitting...",
+    "loading": "Loading...",
+    "add": "Add",
+    "remove": "Remove",
+    "typeAndPressAdd": "Type and press Add...",
+    "enterLocationData": "Enter location data (JSON)",
+    "uploading": "Uploading {{progress}}%...",
+    "processing": "Processing...",
+    "validating": "Validating...",
+    "saving": "Saving..."
+  },
+  "navigation": {
+    "more": "More",
+    "home": "Home"
+  },
+  "pwa": {
+    "update": {
+      "title": "Update available",
+      "description": "A new version is ready. Refresh to update.",
+      "button": "Update",
+      "altText": "Update application"
+    }
+  },
+  "code": {
+    "copyCode": "Copy code",
+    "copied": "Copied!",
+    "copyCodeToClipboard": "Copy code to clipboard"
+  },
+  "video": {
+    "clickToWatch": "Click to watch video",
+    "watchVideo": "Watch Video"
+  },
+  "inspector": {
+    "pageSource": "Page Source",
+    "inspectPageSourceCode": "Inspect page source code"
+  },
+  "routeError": {
+    "title": "Something went wrong",
+    "description": "We encountered an error while loading this page.",
+    "dataSafe": "Don't worry, your data is safe.",
+    "errorId": "Error ID",
+    "errorMessage": "Error Message",
+    "copied": "Copied",
+    "copyDetails": "Copy Details",
+    "tryAgain": "Try Again",
+    "goHome": "Go Home",
+    "goBack": "Go Back",
+    "contactSupport": "If the problem persists, please contact support."
+  },
+  "fields": {
+    "array": "Array",
+    "boolean": "Boolean",
+    "checkbox": "Checkbox",
+    "date": "Date",
+    "datetime-local": "Date and Time",
+    "email": "Email",
+    "file": "File",
+    "geopoint": "Location",
+    "image": "Image",
+    "map": "Map",
+    "multiselect": "Multiple Select",
+    "number": "Number",
+    "password": "Password",
+    "phone": "Phone Number",
+    "radio": "Radio Buttons",
+    "range": "Range",
+    "reference": "Reference",
+    "select": "Select",
+    "tel": "Phone Number",
+    "text": "Text",
+    "textarea": "Text Area",
+    "timestamp": "Timestamp",
+    "url": "URL",
+    "status": "Status",
+    "id": "ID",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "createdById": "Created By",
+    "updatedById": "Updated By"
+  },
+  "text": {
+    "required": "{{field}} is required",
+    "minLength": "{{field}} must be at least {{min}} characters",
+    "maxLength": "{{field}} must not exceed {{max}} characters",
+    "email": "Please enter a valid email address",
+    "url": "Please enter a valid URL",
+    "matches": "{{field}} must match the pattern {{pattern}}",
+    "unique": "{{field}} must be unique",
+    "alphanumeric": "{{field}} must only contain letters and numbers",
+    "lettersOnly": "{{field}} must only contain letters"
+  },
+  "number": {
+    "required": "{{field}} is required",
+    "min": "{{field}} must be at least {{min}}",
+    "max": "{{field}} must not exceed {{max}}",
+    "integer": "{{field}} must be a whole number",
+    "positive": "{{field}} must be positive",
+    "negative": "{{field}} must be negative",
+    "between": "{{field}} must be between {{min}} and {{max}}",
+    "precision": "{{field}} must have at most {{precision}} decimal places"
+  },
+  "date": {
+    "required": "{{field}} is required",
+    "min": "{{field}} must be after {{min}}",
+    "max": "{{field}} must be before {{max}}",
+    "between": "{{field}} must be between {{min}} and {{max}}",
+    "format": "Please enter a valid date",
+    "future": "{{field}} must be in the future",
+    "past": "{{field}} must be in the past",
+    "today": "{{field}} must be today"
+  },
+  "select": {
+    "required": "Please select a {{field}}",
+    "invalid": "Invalid selection for {{field}}",
+    "min": "Please select at least {{min}} options",
+    "max": "Please select no more than {{max}} options"
+  },
+  "boolean": {
+    "required": "{{field}} must be selected"
+  },
+  "array": {
+    "required": "At least one {{field}} is required",
+    "minItems": "Please select at least {{min}} {{field}}",
+    "maxItems": "Cannot select more than {{max}} {{field}}",
+    "uniqueItems": "All {{field}} must be unique"
+  },
+  "file": {
+    "required": "Please select a file",
+    "maxSize": "File size must not exceed {{max}}",
+    "minSize": "File size must be at least {{min}}",
+    "type": "File type must be {{types}}",
+    "dimensions": "Image dimensions must be {{width}}x{{height}}",
+    "upload": {
+      "ariaLabel": "Upload file",
+      "ariaLabelSingle": "Upload a file",
+      "ariaLabelMultiple": "Upload files",
+      "dragDropSingle": "Drag & drop, paste, or click to upload a file",
+      "dragDropMultiple": "Drag & drop, paste, or click to upload files"
+    },
+    "delete": {
+      "ariaLabel": "Delete file",
+      "failed": "Failed to delete file"
+    },
+    "errors": {
+      "maxFiles": "Maximum {{max}} files allowed",
+      "exceedsSize": "{{fileName}} exceeds {{size}}MB limit"
+    }
+  },
+  "document": {
+    "upload": {
+      "ariaLabel": "Upload document",
+      "hint": "Drag & drop, paste, or click to upload documents"
+    },
+    "delete": {
+      "ariaLabel": "Delete document",
+      "failed": "Failed to delete document"
+    },
+    "preview": {
+      "ariaLabel": "Preview document",
+      "title": "Document Preview"
+    },
+    "errors": {
+      "maxFiles": "Maximum {{max}} documents allowed",
+      "invalidType": "Invalid document type: {{fileName}}",
+      "exceedsSize": "{{fileName}} exceeds {{size}}MB limit"
+    }
+  },
+  "image": {
+    "undo": {
+      "ariaLabel": "Undo last action",
+      "title": "Undo (Ctrl+Z)"
+    },
+    "redo": {
+      "ariaLabel": "Redo last action",
+      "title": "Redo (Ctrl+Shift+Z)"
+    },
+    "upload": {
+      "ariaLabel": "Upload {{type}}",
+      "ariaLabelSingle": "Upload an image",
+      "ariaLabelMultiple": "Upload images",
+      "selectAriaLabel": "Select {{type}} to upload",
+      "selectAriaLabelSingle": "Select an image to upload",
+      "selectAriaLabelMultiple": "Select images to upload",
+      "dropzone": "Drag & drop, paste, or click to upload {{type}}",
+      "dropzoneSingle": "Drag & drop, paste, or click to upload an image",
+      "dropzoneMultiple": "Drag & drop, paste, or click to upload images",
+      "maxFiles": "Max {{max}} images, {{size}}MB each",
+      "maxSize": "{{size}}MB each",
+      "progress": "Upload progress: {{progress}}%",
+      "pending": "Pending upload",
+      "uploaded": "{{count}} {{type}} uploaded",
+      "uploadedSingle": "{{count}} image uploaded",
+      "uploadedMultiple": "{{count}} images uploaded",
+      "failed": "Failed to upload {{fileName}}"
+    },
+    "delete": {
+      "ariaLabel": "Delete image {{index}}",
+      "title": "Delete (Delete/Backspace)",
+      "failed": "Failed to delete image"
+    },
+    "reorder": {
+      "ariaLabel": "Drag to reorder"
+    },
+    "rotate": {
+      "failed": "Failed to rotate image"
+    },
+    "errors": {
+      "maxFiles": "Maximum {{max}} images allowed",
+      "singleOnly": "Only one image allowed",
+      "notImage": "{{fileName}} is not an image",
+      "exceedsSize": "{{fileName}} exceeds {{size}}MB limit"
+    },
+    "warnings": {
+      "duplicates": "Duplicate images skipped: {{files}}"
+    },
+    "alt": {
+      "upload": "Upload {{index}}",
+      "uploaded": "{{label}} {{index}}{{suffix}} (uploaded)",
+      "pending": "{{label}} {{index}}{{suffix}} (pending upload)"
+    },
+    "editor": {
+      "title": "Edit Image",
+      "titleWithIndex": "Image {{current}} of {{total}}",
+      "description": "View and edit image with crop, rotation, and zoom tools",
+      "editButton": "Edit Image",
+      "aspectRatio": "Aspect Ratio",
+      "aspectFree": "Free",
+      "zoom": "Zoom",
+      "rotation": "Rotation",
+      "rotateLeft": "Rotate left",
+      "rotateRight": "Rotate right",
+      "fitToView": "Fit to view",
+      "showGrid": "Show grid",
+      "hideGrid": "Hide grid",
+      "reset": "Reset",
+      "apply": "Apply",
+      "processing": "Processing...",
+      "cancel": "Cancel",
+      "deleteImage": "Delete Image",
+      "deleteConfirm": "Delete this image permanently?",
+      "previousImage": "Previous image",
+      "nextImage": "Next image"
+    }
+  },
+  "gdprConsent": {
+    "consent": "I agree to the",
+    "privacyPolicy": "privacy policy",
+    "terms": "terms of use",
+    "and": "and consent to the processing of my personal data.",
+    "required": "Please accept the privacy policy to continue"
+  },
+  "custom": {
+    "passwordMatch": "Passwords must match",
+    "phoneNumber": "Please enter a valid phone number",
+    "postalCode": "Please enter a valid postal code",
+    "currency": "Please enter a valid amount",
+    "color": "Please enter a valid color code"
+  },
+  "errors": {
+    "fieldUpdate": "Failed to update {{field}}",
+    "hiddenField": "Error rendering hidden field {{field}}",
+    "unsupportedFieldType": "Unsupported field type: {{type}}",
+    "fieldRendering": "Error rendering field {{field}}",
+    "fallingBackToTextField": "Using text field for unsupported type {{type}}",
+    "invalidFieldProps": "Invalid configuration for field {{field}}"
+  },
+  "visibility": {
+    "viewAs": "View as",
+    "preview": "Preview"
+  },
+  "price": {
+    "vatIncluded": "VAT Incl.",
+    "discountPercent": "-{{percent}}%"
+  },
+  "recommendations": {
+    "title": "You may also like"
+  }
+}

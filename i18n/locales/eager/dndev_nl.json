@@ -1,0 +1,616 @@
+{
+  "signIn": "Inloggen",
+  "choosePlatform": "Kies een manier om in te loggen",
+  "providers": {
+    "google": "Google",
+    "facebook": "Facebook",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "microsoft": "Microsoft",
+    "yahoo": "Yahoo",
+    "apple": "Apple"
+  },
+  "buttons": {
+    "signIn": "Inloggen met {{provider}}",
+    "continue": "Doorgaan met {{provider}}",
+    "verify": "E-mail verifiëren",
+    "sendVerification": "Verificatiemail sturen",
+    "signOut": "Uitloggen",
+    "loading": "Laden..."
+  },
+  "accountLinking": {
+    "title": "Accounts koppelen",
+    "message": "Dit e-mailadres hoort al bij andere inlogmethodes ({{methods}}). Log in met één van die methodes om je accounts te koppelen.",
+    "instruction": "Log in met één van onderstaande methodes om je accounts te koppelen:",
+    "explanation": "Na het inloggen worden je accounts automatisch gekoppeld. Je kunt daarna beide methodes gebruiken.",
+    "success": "Accounts zijn gekoppeld.",
+    "error": "Koppelen mislukt. Probeer het opnieuw.",
+    "emailLabel": "E-mail:"
+  },
+  "emailVerification": {
+    "title": "E-mail verifiëren",
+    "status": {
+      "verified": "Je e-mail is geverifieerd.",
+      "unverified": "Verifieer je e-mail om alles te kunnen gebruiken."
+    },
+    "sending": "Verificatiemail wordt verstuurd...",
+    "success": "Verificatiemail verstuurd. Bekijk je inbox.",
+    "alreadyVerified": "Je e-mail is al geverifieerd.",
+    "notSignedIn": "Log in om je e-mail te verifiëren.",
+    "error": "Verificatiemail kon niet worden verstuurd. Probeer het opnieuw."
+  },
+  "errors": {
+    "auth/popup-closed-by-user": "Het inlogvenster is gesloten voordat je klaar was.",
+    "auth/cancelled-popup-request": "Inloggen geannuleerd.",
+    "auth/popup-blocked": "De browser blokkeert het inlogvenster.",
+    "auth/email-already-in-use": "Dit e-mailadres is al in gebruik.",
+    "auth/invalid-email": "Ongeldig e-mailadres.",
+    "auth/operation-not-allowed": "Deze inlogmethode is niet ingeschakeld.",
+    "auth/weak-password": "Wachtwoord is te zwak.",
+    "auth/user-disabled": "Dit account is uitgeschakeld.",
+    "auth/user-not-found": "Geen account met dit e-mailadres.",
+    "auth/wrong-password": "Verkeerd wachtwoord.",
+    "auth/network-request-failed": "Netwerkfout. Probeer het opnieuw.",
+    "auth/internal-error": "Er ging iets mis. Probeer het opnieuw.",
+    "auth/invalid-credential": "Ongeldige inloggegevens.",
+    "auth/account-exists-with-different-credential": "Er bestaat al een account met dit e-mailadres maar andere inloggegevens.",
+    "auth/provider-not-enabled": "Inloggen met {{provider}} is niet ingeschakeld",
+    "auth/unknown-provider": "Onbekende dienst: {{provider}}",
+    "auth/missing-provider": "Inlogprovider is niet geconfigureerd",
+    "auth/no-user-signed-in": "Niemand is ingelogd",
+    "auth/oauth-incomplete": "Inloggen werd onderbroken. Probeer het opnieuw.",
+    "fallback": {
+      "title": "Inloggen vereist",
+      "description": "Log in om deze pagina te bekijken.",
+      "chooseProvider": "Kies hoe je wilt inloggen",
+      "authOptions": "Inlogopties",
+      "secure": "Je gegevens zijn beveiligd en versleuteld.",
+      "terms": "Door in te loggen ga je akkoord met onze voorwaarden."
+    },
+    "genericError": "Inloggen mislukt. Probeer het opnieuw.",
+    "fieldUpdate": "Kon {{field}} niet bijwerken",
+    "hiddenField": "Fout bij veld {{field}}",
+    "unsupportedFieldType": "Veldtype {{type}} wordt niet ondersteund",
+    "fieldRendering": "Fout bij veld {{field}}",
+    "fallingBackToTextField": "Tekstveld in plaats van {{type}}",
+    "invalidFieldProps": "Ongeldige instelling voor {{field}}"
+  },
+  "status": {
+    "loading": "Laden...",
+    "authenticating": "Bezig met inloggen...",
+    "verifying": "Controleren...",
+    "checking": "Rechten controleren..."
+  },
+  "aria": {
+    "signInOptions": "Inlogopties",
+    "signInButton": "Inloggen met {{provider}}",
+    "loadingState": "Bezig met inloggen",
+    "errorAlert": "Inlogfout",
+    "successAlert": "Gelukt",
+    "accountLinkingRequired": "Accounts koppelen vereist",
+    "verificationRequired": "E-mailverificatie vereist"
+  },
+  "home": {
+    "title": "DoNotDev",
+    "description": "DoNotDev is een platform om webapps te bouwen met TypeScript en pure CSS.",
+    "getStarted": "Aan de slag",
+    "whyChooseDoNotDev": "Waarom DoNotDev?",
+    "openSource": "Open source",
+    "freeAndOpenSource": "Gratis en open source met een actieve community.",
+    "customizable": "Aanpasbaar",
+    "flexibleComponents": "Flexibele componenten voor jouw project.",
+    "developerFocused": "Voor ontwikkelaars",
+    "scalableArchitecture": "Schaalbaar",
+    "secureByDesign": "Veiligheid voorop",
+    "fastIntegration": "Snel geïntegreerd",
+    "scaleEffortlessly": "Van prototype tot grote oplossing.",
+    "header": {
+      "purchase": "Kopen"
+    }
+  },
+  "actions": {
+    "create": "Aanmaken",
+    "update": "Bijwerken",
+    "delete": "Verwijderen",
+    "cancel": "Annuleren",
+    "save": "Opslaan",
+    "confirm": "Bevestigen",
+    "back": "Terug",
+    "next": "Volgende",
+    "previous": "Vorige",
+    "search": "Zoeken",
+    "searchPlaceholder": "Zoeken...",
+    "filter": "Filter",
+    "clear": "Wissen",
+    "reset": "Resetten",
+    "apply": "Toepassen",
+    "select": "Selecteren",
+    "upload": "Uploaden",
+    "download": "Downloaden",
+    "close": "Sluiten"
+  },
+  "guard": {
+    "signInRequired": "Log in om toegang te krijgen tot deze pagina"
+  },
+  "messages": {
+    "createSuccess": "{{entity}} is aangemaakt.",
+    "updateSuccess": "{{entity}} is bijgewerkt.",
+    "deleteSuccess": "{{entity}} is verwijderd.",
+    "error": "Er ging iets mis",
+    "loading": "Laden...",
+    "noResults": "Geen resultaten",
+    "confirmDelete": "Weet je zeker dat je deze {{entity}} wilt verwijderen?",
+    "unsavedChanges": "Je hebt niet-opgeslagen wijzigingen",
+    "sessionExpired": "Je sessie is verlopen",
+    "networkError": "Netwerkfout",
+    "unauthorized": "Geen toegang",
+    "forbidden": "Toegang geweigerd",
+    "serverError": "Serverfout",
+    "notFound": {
+      "title": "Pagina niet gevonden",
+      "description": "Deze pagina bestaat niet of is verplaatst.",
+      "suggestions": "Misschien bedoel je:",
+      "goHome": "Naar start",
+      "goBack": "Terug"
+    }
+  },
+  "nav": {
+    "signIn": "Inloggen"
+  },
+  "pagination": {
+    "showing": "{{from}} tot {{to}} van {{total}}",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "page": "Pagina {{page}} van {{total}}"
+  },
+  "filters": {
+    "title": "Filters",
+    "apply": "Toepassen",
+    "clear": "Wissen",
+    "noResults": "Geen resultaten",
+    "selected": "{{count}} geselecteerd"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "theme": "Thema",
+    "language": "Taal",
+    "clearCache": {
+      "title": "Cache legen",
+      "localStorage": "Lokale opslag",
+      "sessionStorage": "Sessie",
+      "applicationCache": "App-cache",
+      "serviceWorker": "Service Worker",
+      "cookies": "Cookies",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "Geheugen",
+      "button": "Cache legen",
+      "clearing": "Bezig met legen...",
+      "error": "Cache legen mislukt",
+      "success": "Cache geleegd: {{items}}",
+      "noItemsCleared": "Niets geleegd"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "DoNotDev App"
+    },
+    "defaultTitle": "Pagina",
+    "defaultDescription": "Paginabeschrijving",
+    "locale": "nl_NL",
+    "themeSelector": {
+      "changeTheme": "Thema wijzigen",
+      "tooltipWithTransition": "Thema: {{current}} → {{next}}",
+      "tooltipWithCurrent": "Thema: {{current}}",
+      "tooltipWithNext": "Wissel naar {{next}}"
+    },
+    "languageSelector": {
+      "changeLanguage": "Taal wijzigen"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "Bedrijf",
+        "description": "Bouw sneller betere producten met ons platform."
+      },
+      "social": {
+        "twitter": "Twitter",
+        "github": "GitHub",
+        "discord": "Discord"
+      },
+      "sections": {
+        "product": {
+          "title": "Product",
+          "features": "Functies",
+          "pricing": "Prijzen",
+          "docs": "Documentatie",
+          "updates": "Updates"
+        },
+        "support": {
+          "title": "Support",
+          "help": "Help",
+          "contact": "Contact",
+          "status": "Status",
+          "community": "Community"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "Alle rechten voorbehouden.",
+      "cookieSettings": "Cookie-instellingen",
+      "legalNotice": "Juridische informatie",
+      "privacyPolicy": "Privacybeleid",
+      "termsOfService": "Algemene voorwaarden",
+      "builtWith": "Gemaakt met ❤️ en DoNotDev ©",
+      "collapse": "Footer inklappen",
+      "expand": "Footer uitklappen"
+    }
+  },
+  "search": {
+    "ariaLabel": "Zoeken",
+    "label": "Zoeken"
+  },
+  "goTo": {
+    "ariaLabel": "Ga naar pagina",
+    "label": "Ga naar"
+  },
+  "globalGoTo": {
+    "placeholder": "Zoek of ga naar een pagina...",
+    "noResults": "Geen pagina's gevonden.",
+    "favorites": "Favorieten",
+    "allPages": "Alle pagina's",
+    "addFavorite": "Toevoegen aan favorieten",
+    "removeFavorite": "Verwijderen uit favorieten"
+  },
+  "copyToClipboard": "Kopiëren",
+  "copied": "Gekopieerd!",
+  "copyPassword": "Wachtwoord kopiëren",
+  "table": {
+    "searchPlaceholder": "Zoeken...",
+    "filters": "Filters",
+    "selectAllRows": "Alles selecteren",
+    "selectRow": "Rij {{index}} selecteren",
+    "showingResults": "{{from}} tot {{to}} van {{total}}",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "page": "Pagina {{current}} van {{total}}"
+  },
+  "language": {
+    "selectLanguage": "Taal kiezen",
+    "searchLanguages": "Taal zoeken...",
+    "noLanguagesFound": "Geen talen gevonden",
+    "changeLanguage": "Taal wijzigen"
+  },
+  "form": {
+    "submit": "Versturen",
+    "cancel": "Annuleren",
+    "submitting": "Bezig met versturen...",
+    "loading": "Laden...",
+    "add": "Toevoegen",
+    "remove": "Verwijderen",
+    "typeAndPressAdd": "Typ en druk op Toevoegen...",
+    "enterLocationData": "Locatiegegevens invoeren (JSON)"
+  },
+  "navigation": {
+    "more": "Meer",
+    "home": "Start"
+  },
+  "pwa": {
+    "update": {
+      "title": "Nieuwe versie beschikbaar",
+      "description": "Ververs de pagina om te updaten.",
+      "button": "Updaten",
+      "altText": "App updaten"
+    }
+  },
+  "document": {
+    "upload": {
+      "hint": "Klik of sleep bestanden om te uploaden",
+      "ariaLabel": "Document uploaden"
+    },
+    "preview": {
+      "title": "Documentvoorbeeld",
+      "ariaLabel": "Document bekijken"
+    },
+    "delete": {
+      "ariaLabel": "Document verwijderen",
+      "failed": "Document verwijderen mislukt"
+    },
+    "errors": {
+      "maxFiles": "Maximaal {{max}} bestanden toegestaan",
+      "invalidType": "\"{{fileName}}\" is geen toegestaan bestandstype",
+      "exceedsSize": "\"{{fileName}}\" overschrijdt de maximale grootte van {{size}} MB"
+    }
+  },
+  "image": {
+    "alt": {
+      "upload": "Afbeelding {{index}} uploaden"
+    },
+    "upload": {
+      "pending": "Wachtend",
+      "dropzoneMultiple": "Sleep afbeeldingen hierheen of klik om te uploaden",
+      "dropzoneSingle": "Sleep een afbeelding hierheen of klik om te uploaden"
+    }
+  },
+  "code": {
+    "copyCode": "Code kopiëren",
+    "copied": "Gekopieerd!",
+    "copyCodeToClipboard": "Code kopiëren"
+  },
+  "video": {
+    "clickToWatch": "Klik om te bekijken",
+    "watchVideo": "Bekijk video"
+  },
+  "inspector": {
+    "pageSource": "Pagina bron",
+    "inspectPageSourceCode": "Broncode bekijken"
+  },
+  "sheet": {
+    "navigation": "Navigatie",
+    "codeInspector": "Code-inspector",
+    "debugPanel": "Debugpanel"
+  },
+  "routeError": {
+    "title": "Er ging iets mis",
+    "description": "Deze pagina kon niet worden geladen.",
+    "dataSafe": "Je gegevens zijn veilig.",
+    "errorId": "Fout-ID",
+    "errorMessage": "Foutmelding",
+    "copied": "Gekopieerd",
+    "copyDetails": "Details kopiëren",
+    "tryAgain": "Opnieuw proberen",
+    "goHome": "Naar start",
+    "goBack": "Terug",
+    "contactSupport": "Neem contact op met support als het probleem blijft."
+  },
+  "redirectOverlay": {
+    "phases": {
+      "connecting": "Verbinden...",
+      "preparing": "Voorbereiden...",
+      "redirecting": "Doorverwijzen...",
+      "timeout": "Dit duurt langer dan verwacht..."
+    },
+    "cancel": "Annuleren",
+    "doNotRefresh": "Ververs niet en ga niet terug",
+    "default": {
+      "title": "Doorverwijzen",
+      "message": "Even geduld...",
+      "subtitle": "Een moment",
+      "ariaLabel": "Doorverwijzen"
+    },
+    "stripe-checkout": {
+      "title": "Naar betaling",
+      "message": "Beveiligde betaling voorbereiden...",
+      "subtitle": "Een moment",
+      "ariaLabel": "Betaling voorbereiden"
+    },
+    "stripe-portal": {
+      "title": "Naar facturering",
+      "message": "Je account openen...",
+      "subtitle": "Beheer abonnement en facturen",
+      "ariaLabel": "Facturering openen"
+    },
+    "oauth-google": {
+      "title": "Inloggen met Google",
+      "message": "Verbinden met Google...",
+      "subtitle": "Je wordt doorgestuurd",
+      "ariaLabel": "Inloggen met Google"
+    },
+    "oauth-github": {
+      "title": "Inloggen met GitHub",
+      "message": "Verbinden met GitHub...",
+      "subtitle": "Je wordt doorgestuurd",
+      "ariaLabel": "Inloggen met GitHub"
+    },
+    "oauth-apple": {
+      "title": "Inloggen met Apple",
+      "message": "Verbinden met Apple...",
+      "subtitle": "Je wordt doorgestuurd",
+      "ariaLabel": "Inloggen met Apple"
+    },
+    "oauth-microsoft": {
+      "title": "Inloggen met Microsoft",
+      "message": "Verbinden met Microsoft...",
+      "subtitle": "Je wordt doorgestuurd",
+      "ariaLabel": "Inloggen met Microsoft"
+    },
+    "oauth-facebook": {
+      "title": "Inloggen met Facebook",
+      "message": "Verbinden met Facebook...",
+      "subtitle": "Je wordt doorgestuurd",
+      "ariaLabel": "Inloggen met Facebook"
+    },
+    "auth-email-link": {
+      "title": "Verificatie sturen",
+      "message": "Bevestigingslink voorbereiden...",
+      "subtitle": "Bekijk je inbox",
+      "ariaLabel": "Verificatiemail sturen"
+    }
+  },
+  "templates": {
+    "home": {
+      "hero": {
+        "badge": "Welkom",
+        "title": "Bouw iets geweldigs",
+        "subtitle": "Een modern platform om je volgende project te lanceren, te laten groeien en te schalen - sneller dan ooit.",
+        "primaryAction": "Aan de slag",
+        "secondaryAction": "Meer weten"
+      },
+      "features": {
+        "title": "Functies",
+        "feature1": {
+          "title": "Bliksemnel",
+          "description": "Geoptimaliseerd voor snelheid met directe paginalaadtijden en realtime updates."
+        },
+        "feature2": {
+          "title": "Standaard veilig",
+          "description": "Enterprise-beveiliging met authenticatie, op rollen gebaseerde toegang en encryptie ingebouwd."
+        },
+        "feature3": {
+          "title": "Klaar om te schalen",
+          "description": "Van prototype tot productie - schaal moeiteloos met een robuuste, modulaire architectuur."
+        }
+      },
+      "howItWorks": {
+        "title": "Hoe werkt het",
+        "step1": {
+          "title": "Aanmelden",
+          "description": "Maak in seconden een account aan. Geen creditcard nodig om te starten."
+        },
+        "step2": {
+          "title": "Instellen",
+          "description": "Richt je werkruimte in, nodig je team uit en pas je workflow aan."
+        },
+        "step3": {
+          "title": "Lanceren",
+          "description": "Go live met vertrouwen. Implementeer, monitor en itereer in je eigen tempo."
+        }
+      },
+      "showcase": {
+        "title": "Waarom wij",
+        "item1": {
+          "title": "Moderne stack",
+          "description": "Gebouwd op geavanceerde technologie voor prestaties, betrouwbaarheid en ontwikkelaarsvreugde."
+        },
+        "item2": {
+          "title": "Open source",
+          "description": "Transparant, community-gedreven en gratis te gebruiken."
+        },
+        "item3": {
+          "title": "Ontwikkelaar eerst",
+          "description": "Ontworpen door ontwikkelaars, voor ontwikkelaars. Schone API's en goede documentatie."
+        },
+        "item4": {
+          "title": "Wereldwijd klaar",
+          "description": "Meertalig, meerdere regio's en toegankelijk vanaf dag één."
+        }
+      },
+      "cta": {
+        "title": "Klaar om te starten?",
+        "subtitle": "Sluit je aan bij duizenden teams die betere producten bouwen, sneller.",
+        "primaryAction": "Gratis starten",
+        "secondaryAction": "Sales contacteren"
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "stats": {
+        "revenue": "Omzet",
+        "orders": "Bestellingen",
+        "customers": "Klanten",
+        "conversion": "Conversie"
+      },
+      "activity": {
+        "title": "Recente activiteit",
+        "item1": "Nieuwe bestelling #1234 geplaatst",
+        "time1": "2 min geleden",
+        "item2": "Klant John D. aangemeld",
+        "time2": "15 min geleden",
+        "item3": "Product 'Pro Plan' bijgewerkt",
+        "time3": "1 uur geleden",
+        "item4": "Betaling van $299 ontvangen",
+        "time4": "3 uur geleden"
+      },
+      "actions": {
+        "title": "Snelle acties",
+        "newProduct": "Nieuw product",
+        "viewReports": "Rapporten bekijken",
+        "manageTeam": "Team beheren"
+      }
+    },
+    "settings": {
+      "title": "Instellingen",
+      "tabs": {
+        "general": "Algemeen",
+        "notifications": "Meldingen",
+        "appearance": "Weergave"
+      },
+      "general": {
+        "appInfo": "Applicatie",
+        "appName": "Naam",
+        "description": "Beschrijving",
+        "language": "Taal",
+        "languageHint": "Taal kan worden gewijzigd via het headermenu."
+      },
+      "notifications": {
+        "preferences": "Meldingsvoorkeuren",
+        "email": "E-mailmeldingen",
+        "emailDesc": "Ontvang updates en waarschuwingen via e-mail.",
+        "push": "Pushmeldingen",
+        "pushDesc": "Ontvang realtime pushmeldingen.",
+        "marketing": "Marketing-e-mails",
+        "marketingDesc": "Ontvang productupdates en aanbiedingen."
+      },
+      "appearance": {
+        "theme": "Thema",
+        "darkMode": "Donkere modus",
+        "currentTheme": "Huidig thema"
+      }
+    },
+    "profile": {
+      "title": "Profiel",
+      "subtitle": "Beheer je accountinstellingen en voorkeuren.",
+      "identity": {
+        "title": "Identiteit",
+        "displayName": "Weergavenaam",
+        "email": "E-mail",
+        "emailVerified": "Geverifieerd",
+        "emailUnverified": "Niet geverifieerd"
+      },
+      "security": {
+        "title": "Beveiliging",
+        "updatePassword": "Wachtwoord wijzigen",
+        "linkedProviders": "Gekoppelde diensten"
+      },
+      "subscription": {
+        "title": "Abonnement",
+        "currentPlan": "Huidig abonnement",
+        "status": "Status",
+        "manageBilling": "Facturering beheren",
+        "noPlan": "Geen actief abonnement"
+      },
+      "dangerZone": {
+        "title": "Gevarenzone",
+        "deleteAccount": "Account verwijderen",
+        "deleteWarning": "Deze actie is permanent en kan niet ongedaan worden gemaakt. Al je gegevens worden verwijderd."
+      },
+      "signOut": "Uitloggen"
+    }
+  },
+  "canvas": {
+    "checklist": {
+      "addItem": "Add item",
+      "noItems": "Nog geen items.",
+      "remove": "Verwijderen",
+      "toggleAria": "\"{{text}}\" in-/uitschakelen",
+      "removeAria": "{{text}} verwijderen"
+    },
+    "brainSearch": {
+      "resultsFor": "Results for ",
+      "match": "match",
+      "matches": "matches",
+      "noMatches": "No matches.",
+      "tagFiltersLabel": "Tag filters"
+    },
+    "mailTriage": {
+      "noMessages": "No messages.",
+      "columns": {
+        "sender": "Sender",
+        "subject": "Subject",
+        "received": "Received",
+        "actions": "Actions"
+      },
+      "actions": {
+        "archive": "Archive",
+        "archiveAria": "Archive \"{{subject}}\"",
+        "reply": "Reply",
+        "replyAria": "Reply to \"{{subject}}\"",
+        "flag": "Flag",
+        "flagAria": "Star \"{{subject}}\"",
+        "open": "Open",
+        "openAria": "Open \"{{subject}}\""
+      }
+    }
+  }
+}

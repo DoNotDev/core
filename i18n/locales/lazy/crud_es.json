@@ -1,0 +1,370 @@
+{
+  "actions": {
+    "label": "Acciones",
+    "create": "Crear",
+    "update": "Actualizar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "confirm": "Confirmar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar...",
+    "filter": "Filtrar",
+    "clear": "Limpiar",
+    "reset": "Restablecer",
+    "apply": "Aplicar",
+    "select": "Seleccionar",
+    "selectYear": "Seleccionar o escribir año",
+    "upload": "Subir",
+    "download": "Descargar",
+    "close": "Cerrar",
+    "email": "Correo",
+    "call": "Llamar",
+    "copyEmail": "Copiar correo",
+    "copyPhone": "Copiar teléfono",
+    "copyIban": "Copiar IBAN",
+    "replySubject": "Re: Su consulta",
+    "markResponded": "Marcar como respondido",
+    "selectOptions": "Seleccionar opciones...",
+    "use": "Usar esta dirección"
+  },
+  "address": {
+    "placeholder": "Introducir dirección...",
+    "noResults": "No se encontraron direcciones"
+  },
+  "export": "Exportar",
+  "noInquiries": "No se encontraron consultas.",
+  "customer": "Cliente",
+  "noCustomer": "Ningún cliente vinculado",
+  "status": {
+    "draft": "Borrador",
+    "available": "Disponible",
+    "deleted": "Eliminado",
+    "sold": "Vendido"
+  },
+  "fields": {
+    "array": "Matriz",
+    "boolean": "Booleano",
+    "checkbox": "Casilla de verificación",
+    "date": "Fecha",
+    "datetime-local": "Fecha y hora",
+    "email": "Correo electrónico",
+    "file": "Archivo",
+    "geopoint": "Ubicación",
+    "image": "Imagen",
+    "map": "Mapa",
+    "multiselect": "Selección múltiple",
+    "number": "Número",
+    "password": "Contraseña",
+    "phone": "Número de teléfono",
+    "radio": "Botones de opción",
+    "range": "Rango",
+    "reference": "Referencia",
+    "select": "Seleccionar",
+    "tel": "Número de teléfono",
+    "text": "Texto",
+    "textarea": "Área de texto",
+    "timestamp": "Marca de tiempo",
+    "url": "URL",
+    "status": "Estado",
+    "id": "ID",
+    "createdAt": "Creado el",
+    "updatedAt": "Actualizado el",
+    "createdById": "Creado por",
+    "updatedById": "Actualizado por"
+  },
+  "text": {
+    "required": "{{field}} es obligatorio",
+    "minLength": "{{field}} debe tener al menos {{min}} caracteres",
+    "maxLength": "{{field}} no debe exceder {{max}} caracteres",
+    "email": "Ingrese una dirección de correo electrónico válida",
+    "url": "Ingrese una URL válida",
+    "matches": "{{field}} debe coincidir con el patrón {{pattern}}",
+    "unique": "{{field}} debe ser único",
+    "alphanumeric": "{{field}} debe contener solo letras y números",
+    "lettersOnly": "{{field}} debe contener solo letras"
+  },
+  "number": {
+    "required": "{{field}} es obligatorio",
+    "min": "{{field}} debe ser al menos {{min}}",
+    "max": "{{field}} no debe exceder {{max}}",
+    "integer": "{{field}} debe ser un número entero",
+    "positive": "{{field}} debe ser positivo",
+    "negative": "{{field}} debe ser negativo",
+    "between": "{{field}} debe estar entre {{min}} y {{max}}",
+    "precision": "{{field}} debe tener como máximo {{precision}} decimales"
+  },
+  "date": {
+    "required": "{{field}} es obligatorio",
+    "min": "{{field}} debe ser después de {{min}}",
+    "max": "{{field}} debe ser antes de {{max}}",
+    "between": "{{field}} debe estar entre {{min}} y {{max}}",
+    "format": "Ingrese una fecha válida",
+    "future": "{{field}} debe estar en el futuro",
+    "past": "{{field}} debe estar en el pasado",
+    "today": "{{field}} debe ser hoy"
+  },
+  "select": {
+    "required": "Seleccione un {{field}}",
+    "invalid": "Selección no válida para {{field}}",
+    "min": "Seleccione al menos {{min}} opciones",
+    "max": "Seleccione como máximo {{max}} opciones"
+  },
+  "boolean": {
+    "required": "{{field}} debe estar seleccionado"
+  },
+  "array": {
+    "required": "Se requiere al menos un {{field}}",
+    "minItems": "Seleccione al menos {{min}} {{field}}",
+    "maxItems": "No se pueden seleccionar más de {{max}} {{field}}",
+    "uniqueItems": "Todos los {{field}} deben ser únicos"
+  },
+  "file": {
+    "required": "Seleccione un archivo",
+    "maxSize": "El tamaño del archivo no debe exceder {{max}}",
+    "minSize": "El tamaño del archivo debe ser al menos {{min}}",
+    "type": "El tipo de archivo debe ser {{types}}",
+    "dimensions": "Las dimensiones de la imagen deben ser {{width}}x{{height}}",
+    "upload": {
+      "ariaLabel": "Subir archivo",
+      "ariaLabelSingle": "Subir un archivo",
+      "ariaLabelMultiple": "Subir archivos",
+      "dragDropSingle": "Arrastrar y soltar, pegar o hacer clic para subir un archivo",
+      "dragDropMultiple": "Arrastrar y soltar, pegar o hacer clic para subir archivos"
+    },
+    "delete": {
+      "ariaLabel": "Eliminar archivo",
+      "failed": "Error al eliminar el archivo"
+    },
+    "errors": {
+      "maxFiles": "Máx {{max}} archivos permitidos",
+      "exceedsSize": "{{fileName}} excede el límite de {{size}}MB"
+    }
+  },
+  "document": {
+    "upload": {
+      "ariaLabel": "Subir documento",
+      "hint": "Arrastrar y soltar, pegar o hacer clic para subir documentos"
+    },
+    "delete": {
+      "ariaLabel": "Eliminar documento",
+      "failed": "Error al eliminar el documento"
+    },
+    "preview": {
+      "ariaLabel": "Vista previa del documento",
+      "title": "Vista previa del documento"
+    },
+    "errors": {
+      "maxFiles": "Máx {{max}} documentos permitidos",
+      "invalidType": "Tipo de documento no válido: {{fileName}}",
+      "exceedsSize": "{{fileName}} excede el límite de {{size}}MB"
+    }
+  },
+  "image": {
+    "undo": {
+      "ariaLabel": "Deshacer última acción",
+      "title": "Deshacer (Ctrl+Z)"
+    },
+    "redo": {
+      "ariaLabel": "Rehacer última acción",
+      "title": "Rehacer (Ctrl+Mayús+Z)"
+    },
+    "upload": {
+      "ariaLabel": "Subir {{type}}",
+      "ariaLabelSingle": "Subir una imagen",
+      "ariaLabelMultiple": "Subir imágenes",
+      "selectAriaLabel": "Seleccionar {{type}} para subir",
+      "selectAriaLabelSingle": "Seleccionar una imagen para subir",
+      "selectAriaLabelMultiple": "Seleccionar imágenes para subir",
+      "dropzone": "Arrastrar y soltar, pegar o hacer clic para subir {{type}}",
+      "dropzoneSingle": "Arrastrar y soltar, pegar o hacer clic para subir una imagen",
+      "dropzoneMultiple": "Arrastrar y soltar, pegar o hacer clic para subir imágenes",
+      "maxFiles": "Máx {{max}} imágenes, {{size}}MB cada una",
+      "maxSize": "{{size}}MB cada una",
+      "progress": "Progreso de carga: {{progress}}%",
+      "pending": "Carga pendiente",
+      "uploaded": "{{count}} {{type}} subida",
+      "uploadedSingle": "{{count}} imagen subida",
+      "uploadedMultiple": "{{count}} imágenes subidas",
+      "failed": "Error al subir {{fileName}}"
+    },
+    "delete": {
+      "ariaLabel": "Eliminar imagen {{index}}",
+      "title": "Eliminar (Supr/Retroceso)",
+      "failed": "Error al eliminar la imagen"
+    },
+    "reorder": {
+      "ariaLabel": "Arrastrar para reordenar"
+    },
+    "rotate": {
+      "failed": "Error al rotar la imagen"
+    },
+    "errors": {
+      "maxFiles": "Máximo {{max}} imágenes permitidas",
+      "singleOnly": "Solo se permite una imagen",
+      "notImage": "{{fileName}} no es una imagen",
+      "exceedsSize": "{{fileName}} excede el límite de {{size}}MB"
+    },
+    "warnings": {
+      "duplicates": "Imágenes duplicadas omitidas: {{files}}"
+    },
+    "alt": {
+      "upload": "Subir {{index}}",
+      "uploaded": "{{label}} {{index}}{{suffix}} (subida)",
+      "pending": "{{label}} {{index}}{{suffix}} (carga pendiente)"
+    },
+    "editor": {
+      "title": "Editar imagen",
+      "titleWithIndex": "Imagen {{current}} de {{total}}",
+      "description": "Ver y editar imagen con herramientas de recorte, rotación y zoom",
+      "editButton": "Editar imagen",
+      "aspectRatio": "Relación de aspecto",
+      "aspectFree": "Libre",
+      "zoom": "Zoom",
+      "rotation": "Rotación",
+      "rotateLeft": "Rotar a la izquierda",
+      "rotateRight": "Rotar a la derecha",
+      "fitToView": "Ajustar a la vista",
+      "showGrid": "Mostrar cuadrícula",
+      "hideGrid": "Ocultar cuadrícula",
+      "reset": "Restablecer",
+      "apply": "Aplicar",
+      "processing": "Procesando...",
+      "cancel": "Cancelar",
+      "deleteImage": "Eliminar imagen",
+      "deleteConfirm": "¿Eliminar permanentemente esta imagen?",
+      "previousImage": "Imagen anterior",
+      "nextImage": "Imagen siguiente"
+    }
+  },
+  "messages": {
+    "createSuccess": "{{entity}} creado exitosamente",
+    "updateSuccess": "{{entity}} actualizado exitosamente",
+    "deleteSuccess": "{{entity}} eliminado exitosamente",
+    "createError": "No se pudo crear {{entity}}",
+    "updateError": "No se pudo actualizar {{entity}}",
+    "deleteError": "No se pudo eliminar {{entity}}",
+    "error": "Ocurrió un error",
+    "loading": "Cargando...",
+    "noResults": "No se encontraron resultados",
+    "confirmDelete": "¿Está seguro de que desea eliminar este {{entity}}?",
+    "unsavedChanges": "Tiene cambios sin guardar",
+    "unsavedChangesDiscard": "Tiene cambios sin guardar. ¿Descartarlos?",
+    "unsavedChangesLeave": "Tiene cambios sin guardar. ¿Está seguro de que desea salir?",
+    "sessionExpired": "Su sesión ha expirado",
+    "networkError": "Error de red ocurrido",
+    "unauthorized": "Acceso no autorizado",
+    "forbidden": "Acceso prohibido",
+    "serverError": "Error del servidor ocurrido"
+  },
+  "form": {
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "submitting": "Enviando...",
+    "loading": "Cargando...",
+    "add": "Agregar",
+    "remove": "Eliminar",
+    "typeAndPressAdd": "Escriba y presione Agregar...",
+    "enterLocationData": "Ingrese datos de ubicación (JSON)",
+    "uploading": "Subiendo {{progress}}%...",
+    "processing": "Procesando...",
+    "validating": "Validando...",
+    "saving": "Guardando..."
+  },
+  "gdprConsent": {
+    "consent": "Acepto la",
+    "privacyPolicy": "política de privacidad",
+    "terms": "términos de uso",
+    "and": "y consiento el procesamiento de mis datos personales.",
+    "required": "Por favor acepte la política de privacidad para continuar"
+  },
+  "custom": {
+    "passwordMatch": "Las contraseñas deben coincidir",
+    "phoneNumber": "Ingrese un número de teléfono válido",
+    "postalCode": "Ingrese un código postal válido",
+    "currency": "Ingrese un monto válido",
+    "color": "Ingrese un código de color válido"
+  },
+  "favorites": {
+    "title": "Favoritos",
+    "add": "Agregar a favoritos",
+    "remove": "Quitar de favoritos",
+    "saved": "Guardado",
+    "save": "Guardar",
+    "showAll": "Mostrar todo",
+    "showFavorites": "Mostrar favoritos",
+    "myFavorites": "Mis favoritos",
+    "noFavorites": "Aún no hay favoritos"
+  },
+  "pagination": {
+    "showing": "Mostrando {{from}} a {{to}} de {{total}} entradas",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {{page}} de {{total}}",
+    "itemsPerPagePlaceholder": "Elementos por página:"
+  },
+  "filters": {
+    "title": "Explorar {{entity}} - Filtros",
+    "apply": "Aplicar filtros",
+    "clear": "Limpiar filtros",
+    "noResults": "Ningún resultado coincide con sus filtros",
+    "selected": "{{count}} seleccionado"
+  },
+  "filter": {
+    "placeholder": "Filtrar...",
+    "selectPlaceholder": "Todos",
+    "min": "Mín",
+    "max": "Máx",
+    "from": "Desde",
+    "to": "Hasta",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "tomorrow": "Mañana",
+    "last7Days": "Últimos 7 días",
+    "last30Days": "Últimos 30 días",
+    "next7Days": "Próximos 7 días",
+    "next30Days": "Próximos 30 días",
+    "thisMonthStart": "Inicio del mes",
+    "thisMonthEnd": "Fin del mes",
+    "thisWeek": "Esta semana",
+    "thisMonth": "Este mes",
+    "clear": "Limpiar",
+    "pick": "Seleccionar",
+    "time": "Hora"
+  },
+  "duration": {
+    "15m": "15 min",
+    "30m": "30 min",
+    "45m": "45 min",
+    "1h": "1 h",
+    "1h30": "1 h 30",
+    "2h": "2 h",
+    "2h30": "2 h 30",
+    "3h": "3 h",
+    "custom": "Personalizado",
+    "zero": "—",
+    "minutes": "{{count}} min",
+    "hoursMinutes": "{{hours}} h {{minutes}} min"
+  },
+  "results": {
+    "title": {
+      "fetching": "Cargando...",
+      "count_one": "{{count}} ocurrencia encontrada",
+      "count_other": "{{count}} ocurrencias encontradas"
+    }
+  },
+  "visibility": {
+    "viewAs": "Ver como",
+    "preview": "Vista previa"
+  },
+  "price": {
+    "vatIncluded": "IVA incl.",
+    "discountPercent": "-{{percent}}%"
+  },
+  "recommendations": {
+    "title": "También te puede interesar"
+  }
+}

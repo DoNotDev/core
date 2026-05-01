@@ -1,0 +1,616 @@
+{
+  "signIn": "Log ind",
+  "choosePlatform": "Vælg en platform at logge ind med",
+  "providers": {
+    "google": "Google",
+    "facebook": "Facebook",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "microsoft": "Microsoft",
+    "yahoo": "Yahoo",
+    "apple": "Apple"
+  },
+  "buttons": {
+    "signIn": "Log ind med {{provider}}",
+    "continue": "Fortsæt med {{provider}}",
+    "verify": "Bekræft e-mail",
+    "sendVerification": "Send bekræftelsesmail",
+    "signOut": "Log ud",
+    "loading": "Henter..."
+  },
+  "accountLinking": {
+    "title": "Kontokobling påkrævet",
+    "message": "Den her e-mail er allerede knyttet til andre login-metoder ({{methods}}). Log ind med en af dem for at koble dine konti sammen.",
+    "instruction": "Log ind med en af følgende metoder for at koble dine konti:",
+    "explanation": "Når du logger ind, kobles dine konti automatisk, så du fremover kan bruge begge metoder.",
+    "success": "Kontierne er koblet sammen.",
+    "error": "Kontokobling mislykkedes. Prøv igen.",
+    "emailLabel": "E-mail:"
+  },
+  "emailVerification": {
+    "title": "Bekræft din e-mail",
+    "status": {
+      "verified": "Din e-mail er bekræftet.",
+      "unverified": "Bekræft din e-mail for at bruge alle funktioner."
+    },
+    "sending": "Sender bekræftelsesmail...",
+    "success": "Bekræftelsesmail sendt. Tjek din indbakke.",
+    "alreadyVerified": "Din e-mail er allerede bekræftet.",
+    "notSignedIn": "Du skal være logget ind for at bekræfte din e-mail.",
+    "error": "Kunne ikke sende bekræftelsesmail. Prøv igen."
+  },
+  "errors": {
+    "auth/popup-closed-by-user": "Login-vinduet blev lukket før du var færdig.",
+    "auth/cancelled-popup-request": "Login blev annulleret.",
+    "auth/popup-blocked": "Browseren blokerede login-vinduet.",
+    "auth/email-already-in-use": "E-mailen er allerede i brug.",
+    "auth/invalid-email": "Ugyldig e-mailadresse.",
+    "auth/operation-not-allowed": "Den her login-metode er ikke slået til.",
+    "auth/weak-password": "Adgangskoden er for svag.",
+    "auth/user-disabled": "Kontoen er deaktiveret.",
+    "auth/user-not-found": "Ingen konto med den e-mail.",
+    "auth/wrong-password": "Forkert adgangskode.",
+    "auth/network-request-failed": "Netværksfejl. Prøv igen.",
+    "auth/internal-error": "Der opstod en fejl. Prøv igen.",
+    "auth/invalid-credential": "Ugyldige loginoplysninger.",
+    "auth/account-exists-with-different-credential": "Der findes allerede en konto med den e-mail, men andre loginoplysninger.",
+    "auth/provider-not-enabled": "Login med {{provider}} er ikke slået til",
+    "auth/unknown-provider": "Ukendt tjeneste: {{provider}}",
+    "auth/missing-provider": "Login-tjenesten er ikke sat op",
+    "auth/no-user-signed-in": "Der er ingen logget ind",
+    "auth/oauth-incomplete": "Login blev afbrudt. Prøv at logge ind igen.",
+    "fallback": {
+      "title": "Du skal logge ind",
+      "description": "Log ind for at se denne side.",
+      "chooseProvider": "Vælg hvordan du vil logge ind",
+      "authOptions": "Login-muligheder",
+      "secure": "Dine data er sikre og krypteret.",
+      "terms": "Ved login accepterer du vores vilkår."
+    },
+    "genericError": "Login mislykkedes. Prøv igen.",
+    "fieldUpdate": "Kunne ikke opdatere {{field}}",
+    "hiddenField": "Fejl ved {{field}}",
+    "unsupportedFieldType": "Felttypen {{type}} understøttes ikke",
+    "fieldRendering": "Fejl ved felt {{field}}",
+    "fallingBackToTextField": "Bruger tekstfelt i stedet for {{type}}",
+    "invalidFieldProps": "Ugyldig indstilling for {{field}}"
+  },
+  "status": {
+    "loading": "Henter...",
+    "authenticating": "Logger ind...",
+    "verifying": "Tjekker...",
+    "checking": "Tjekker adgang..."
+  },
+  "aria": {
+    "signInOptions": "Login-muligheder",
+    "signInButton": "Log ind med {{provider}}",
+    "loadingState": "Logger ind",
+    "errorAlert": "Loginfejl",
+    "successAlert": "Succes",
+    "accountLinkingRequired": "Kontokobling påkrævet",
+    "verificationRequired": "E-mail skal bekræftes"
+  },
+  "home": {
+    "title": "DoNotDev",
+    "description": "DoNotDev er en platform til at bygge webapps med TypeScript og ren CSS.",
+    "getStarted": "Kom i gang",
+    "whyChooseDoNotDev": "Hvorfor DoNotDev?",
+    "openSource": "Open Source",
+    "freeAndOpenSource": "Gratis og open source med et levende fællesskab.",
+    "customizable": "Tilpasningsmuligheder",
+    "flexibleComponents": "Komponenter der kan skræddersyes til dit projekt.",
+    "developerFocused": "Udviklere i centrum",
+    "scalableArchitecture": "Skalerbar arkitektur",
+    "secureByDesign": "Sikkerhed indbygget fra start",
+    "fastIntegration": "Hurtig at komme i gang",
+    "scaleEffortlessly": "Skalér fra prototyper til store løsninger.",
+    "header": {
+      "purchase": "Køb"
+    }
+  },
+  "actions": {
+    "create": "Opret",
+    "update": "Opdater",
+    "delete": "Slet",
+    "cancel": "Annuller",
+    "save": "Gem",
+    "confirm": "Bekræft",
+    "back": "Tilbage",
+    "next": "Næste",
+    "previous": "Forrige",
+    "search": "Søg",
+    "searchPlaceholder": "Søg...",
+    "filter": "Filter",
+    "clear": "Ryd",
+    "reset": "Nulstil",
+    "apply": "Anvend",
+    "select": "Vælg",
+    "upload": "Upload",
+    "download": "Hent",
+    "close": "Luk"
+  },
+  "guard": {
+    "signInRequired": "Log ind for at få adgang til denne side"
+  },
+  "messages": {
+    "createSuccess": "{{entity}} oprettet.",
+    "updateSuccess": "{{entity}} opdateret.",
+    "deleteSuccess": "{{entity}} slettet.",
+    "error": "Der opstod en fejl",
+    "loading": "Henter...",
+    "noResults": "Ingen resultater",
+    "confirmDelete": "Er du sikker på, at du vil slette denne {{entity}}?",
+    "unsavedChanges": "Du har ændringer der ikke er gemt",
+    "sessionExpired": "Din session er udløbet",
+    "networkError": "Netværksfejl",
+    "unauthorized": "Ingen adgang",
+    "forbidden": "Adgang nægtet",
+    "serverError": "Serverfejl",
+    "notFound": {
+      "title": "Siden findes ikke",
+      "description": "Siden du leder efter findes ikke eller er flyttet.",
+      "suggestions": "Måske leder du efter:",
+      "goHome": "Til forsiden",
+      "goBack": "Tilbage"
+    }
+  },
+  "nav": {
+    "signIn": "Log ind"
+  },
+  "pagination": {
+    "showing": "Viser {{from}}–{{to}} af {{total}}",
+    "previous": "Forrige",
+    "next": "Næste",
+    "page": "Side {{page}} af {{total}}"
+  },
+  "filters": {
+    "title": "Filtre",
+    "apply": "Brug filtre",
+    "clear": "Ryd filtre",
+    "noResults": "Ingen resultater matcher",
+    "selected": "{{count}} valgt"
+  },
+  "settings": {
+    "title": "Indstillinger",
+    "theme": "Tema",
+    "language": "Sprog",
+    "clearCache": {
+      "title": "Ryd cache",
+      "localStorage": "Lokal lagring",
+      "sessionStorage": "Session",
+      "applicationCache": "App-cache",
+      "serviceWorker": "Service Worker",
+      "cookies": "Cookies",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "Hukommelse",
+      "button": "Ryd cache",
+      "clearing": "Rydder...",
+      "error": "Kunne ikke rydde cache",
+      "success": "Cache ryddet: {{items}}",
+      "noItemsCleared": "Intet blev ryddet"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "DoNotDev App"
+    },
+    "defaultTitle": "Side",
+    "defaultDescription": "Sidebeskrivelse",
+    "locale": "da_DK",
+    "themeSelector": {
+      "changeTheme": "Skift tema",
+      "tooltipWithTransition": "Tema: {{current}} → {{next}}",
+      "tooltipWithCurrent": "Tema: {{current}}",
+      "tooltipWithNext": "Skift til {{next}}"
+    },
+    "languageSelector": {
+      "changeLanguage": "Skift sprog"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "Virksomhed",
+        "description": "Byg bedre produkter hurtigere med vores platform."
+      },
+      "social": {
+        "twitter": "Twitter",
+        "github": "GitHub",
+        "discord": "Discord"
+      },
+      "sections": {
+        "product": {
+          "title": "Produkt",
+          "features": "Funktioner",
+          "pricing": "Priser",
+          "docs": "Dokumentation",
+          "updates": "Opdateringer"
+        },
+        "support": {
+          "title": "Support",
+          "help": "Hjælp",
+          "contact": "Kontakt",
+          "status": "Status",
+          "community": "Fællesskab"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "Alle rettigheder forbeholdes.",
+      "cookieSettings": "Cookie-indstillinger",
+      "legalNotice": "Juridisk information",
+      "privacyPolicy": "Privatlivspolitik",
+      "termsOfService": "Vilkår og betingelser",
+      "builtWith": "Lavet med ❤️ og DoNotDev ©",
+      "collapse": "Luk footer",
+      "expand": "Åbn footer"
+    }
+  },
+  "search": {
+    "ariaLabel": "Søg",
+    "label": "Søg"
+  },
+  "goTo": {
+    "ariaLabel": "Gå til side",
+    "label": "Gå til"
+  },
+  "globalGoTo": {
+    "placeholder": "Søg i sider eller gå til...",
+    "noResults": "Ingen sider fundet.",
+    "favorites": "Favoritter",
+    "allPages": "Alle sider",
+    "addFavorite": "Tilføj til favoritter",
+    "removeFavorite": "Fjern fra favoritter"
+  },
+  "copyToClipboard": "Kopier",
+  "copied": "Kopieret!",
+  "copyPassword": "Kopier adgangskode",
+  "table": {
+    "searchPlaceholder": "Søg...",
+    "filters": "Filtre",
+    "selectAllRows": "Vælg alle",
+    "selectRow": "Vælg række {{index}}",
+    "showingResults": "Viser {{from}}–{{to}} af {{total}}",
+    "previous": "Forrige",
+    "next": "Næste",
+    "page": "Side {{current}} af {{total}}"
+  },
+  "language": {
+    "selectLanguage": "Vælg sprog",
+    "searchLanguages": "Søg sprog...",
+    "noLanguagesFound": "Ingen sprog fundet",
+    "changeLanguage": "Skift sprog"
+  },
+  "form": {
+    "submit": "Send",
+    "cancel": "Annuller",
+    "submitting": "Sender...",
+    "loading": "Henter...",
+    "add": "Tilføj",
+    "remove": "Fjern",
+    "typeAndPressAdd": "Skriv og tryk Tilføj...",
+    "enterLocationData": "Indtast placering (JSON)"
+  },
+  "navigation": {
+    "more": "Mere",
+    "home": "Forside"
+  },
+  "pwa": {
+    "update": {
+      "title": "Ny version klar",
+      "description": "Opdater siden for at hente den nye version.",
+      "button": "Opdater",
+      "altText": "Opdater app"
+    }
+  },
+  "document": {
+    "upload": {
+      "hint": "Klik eller træk filer for at uploade",
+      "ariaLabel": "Upload dokument"
+    },
+    "preview": {
+      "title": "Dokumentvisning",
+      "ariaLabel": "Forhåndsvis dokument"
+    },
+    "delete": {
+      "ariaLabel": "Slet dokument",
+      "failed": "Kunne ikke slette dokument"
+    },
+    "errors": {
+      "maxFiles": "Højst {{max}} filer tilladt",
+      "invalidType": "\"{{fileName}}\" er ikke en tilladt filtype",
+      "exceedsSize": "\"{{fileName}}\" overstiger den maksimale størrelse på {{size}} MB"
+    }
+  },
+  "image": {
+    "alt": {
+      "upload": "Upload billede {{index}}"
+    },
+    "upload": {
+      "pending": "Afventer",
+      "dropzoneMultiple": "Træk billeder hertil eller klik for at uploade",
+      "dropzoneSingle": "Træk et billede hertil eller klik for at uploade"
+    }
+  },
+  "code": {
+    "copyCode": "Kopier kode",
+    "copied": "Kopieret!",
+    "copyCodeToClipboard": "Kopier kode"
+  },
+  "video": {
+    "clickToWatch": "Klik for at se",
+    "watchVideo": "Se video"
+  },
+  "inspector": {
+    "pageSource": "Sidekilde",
+    "inspectPageSourceCode": "Se sidekoden"
+  },
+  "sheet": {
+    "navigation": "Navigation",
+    "codeInspector": "Kodeinspector",
+    "debugPanel": "Fejlsøgningspanel"
+  },
+  "routeError": {
+    "title": "Noget gik galt",
+    "description": "Der opstod en fejl under indlæsning af siden.",
+    "dataSafe": "Dine data er i sikkerhed.",
+    "errorId": "Fejl-ID",
+    "errorMessage": "Fejlbesked",
+    "copied": "Kopieret",
+    "copyDetails": "Kopier detaljer",
+    "tryAgain": "Prøv igen",
+    "goHome": "Til forsiden",
+    "goBack": "Tilbage",
+    "contactSupport": "Kontakt support hvis fejlen fortsætter."
+  },
+  "redirectOverlay": {
+    "phases": {
+      "connecting": "Opretter forbindelse...",
+      "preparing": "Forbereder...",
+      "redirecting": "Omdirigerer...",
+      "timeout": "Det tager længere end forventet..."
+    },
+    "cancel": "Annuller",
+    "doNotRefresh": "Lad vær med at opdatere eller gå tilbage",
+    "default": {
+      "title": "Omdirigerer",
+      "message": "Vent venligst...",
+      "subtitle": "Det tager et øjeblik",
+      "ariaLabel": "Omdirigerer"
+    },
+    "stripe-checkout": {
+      "title": "Til betaling",
+      "message": "Forbereder sikker betaling...",
+      "subtitle": "Vent et øjeblik",
+      "ariaLabel": "Forbereder betaling"
+    },
+    "stripe-portal": {
+      "title": "Til fakturering",
+      "message": "Åbner din konto...",
+      "subtitle": "Administrer abonnement og fakturaer",
+      "ariaLabel": "Åbner fakturering"
+    },
+    "oauth-google": {
+      "title": "Logger ind med Google",
+      "message": "Forbinder til Google...",
+      "subtitle": "Du sendes videre til login",
+      "ariaLabel": "Logger ind med Google"
+    },
+    "oauth-github": {
+      "title": "Logger ind med GitHub",
+      "message": "Forbinder til GitHub...",
+      "subtitle": "Du sendes videre til login",
+      "ariaLabel": "Logger ind med GitHub"
+    },
+    "oauth-apple": {
+      "title": "Logger ind med Apple",
+      "message": "Forbinder til Apple...",
+      "subtitle": "Du sendes videre til login",
+      "ariaLabel": "Logger ind med Apple"
+    },
+    "oauth-microsoft": {
+      "title": "Logger ind med Microsoft",
+      "message": "Forbinder til Microsoft...",
+      "subtitle": "Du sendes videre til login",
+      "ariaLabel": "Logger ind med Microsoft"
+    },
+    "oauth-facebook": {
+      "title": "Logger ind med Facebook",
+      "message": "Forbinder til Facebook...",
+      "subtitle": "Du sendes videre til login",
+      "ariaLabel": "Logger ind med Facebook"
+    },
+    "auth-email-link": {
+      "title": "Sender bekræftelse",
+      "message": "Forbereder bekræftelseslink...",
+      "subtitle": "Tjek din indbakke",
+      "ariaLabel": "Sender bekræftelsesmail"
+    }
+  },
+  "templates": {
+    "home": {
+      "hero": {
+        "badge": "Velkommen",
+        "title": "Byg noget fantastisk",
+        "subtitle": "En moderne platform til at lancere, vokse og skalere dit næste projekt - hurtigere end nogensinde.",
+        "primaryAction": "Kom i gang",
+        "secondaryAction": "Læs mere"
+      },
+      "features": {
+        "title": "Funktioner",
+        "feature1": {
+          "title": "Lynhurtigt",
+          "description": "Optimeret til hastighed med øjeblikkelige sideindlæsninger og realtidsopdateringer ud af kassen."
+        },
+        "feature2": {
+          "title": "Sikker som standard",
+          "description": "Sikkerhed på enterprise-niveau med godkendelse, rollebaseret adgang og kryptering indbygget."
+        },
+        "feature3": {
+          "title": "Klar til at skalere",
+          "description": "Fra prototype til produktion - skalér ubesværet med en robust, modulær arkitektur."
+        }
+      },
+      "howItWorks": {
+        "title": "Sådan virker det",
+        "step1": {
+          "title": "Opret konto",
+          "description": "Opret din konto på få sekunder. Intet kreditkort kræves for at komme i gang."
+        },
+        "step2": {
+          "title": "Konfigurer",
+          "description": "Sæt dit arbejdsområde op, inviter dit team og tilpas dit workflow."
+        },
+        "step3": {
+          "title": "Go live",
+          "description": "Gå live med selvtillid. Deploy, overvåg og iterer i dit eget tempo."
+        }
+      },
+      "showcase": {
+        "title": "Hvorfor os",
+        "item1": {
+          "title": "Moderne stack",
+          "description": "Bygget på banebrydende teknologi for performance, pålidelighed og udviklertrivsel."
+        },
+        "item2": {
+          "title": "Open Source",
+          "description": "Transparent, drevet af fællesskabet og gratis at bruge."
+        },
+        "item3": {
+          "title": "Udviklere først",
+          "description": "Designet af udviklere, til udviklere. Rene API'er og god dokumentation."
+        },
+        "item4": {
+          "title": "Klar til verden",
+          "description": "Flersproget, multi-region og tilgængeligt fra dag ét."
+        }
+      },
+      "cta": {
+        "title": "Klar til at komme i gang?",
+        "subtitle": "Slut dig til tusindvis af teams der bygger bedre produkter, hurtigere.",
+        "primaryAction": "Start gratis",
+        "secondaryAction": "Kontakt salg"
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "stats": {
+        "revenue": "Omsætning",
+        "orders": "Ordrer",
+        "customers": "Kunder",
+        "conversion": "Konvertering"
+      },
+      "activity": {
+        "title": "Seneste aktivitet",
+        "item1": "Ny ordre #1234 modtaget",
+        "time1": "2 min siden",
+        "item2": "Kunden John D. tilmeldte sig",
+        "time2": "15 min siden",
+        "item3": "Produktet 'Pro Plan' opdateret",
+        "time3": "1 time siden",
+        "item4": "Betaling på $299 modtaget",
+        "time4": "3 timer siden"
+      },
+      "actions": {
+        "title": "Hurtige handlinger",
+        "newProduct": "Nyt produkt",
+        "viewReports": "Se rapporter",
+        "manageTeam": "Administrer team"
+      }
+    },
+    "settings": {
+      "title": "Indstillinger",
+      "tabs": {
+        "general": "Generelt",
+        "notifications": "Notifikationer",
+        "appearance": "Udseende"
+      },
+      "general": {
+        "appInfo": "App",
+        "appName": "Navn",
+        "description": "Beskrivelse",
+        "language": "Sprog",
+        "languageHint": "Sproget kan ændres fra headeren."
+      },
+      "notifications": {
+        "preferences": "Notifikationsindstillinger",
+        "email": "E-mailnotifikationer",
+        "emailDesc": "Modtag opdateringer og beskeder via e-mail.",
+        "push": "Push-notifikationer",
+        "pushDesc": "Modtag push-notifikationer i realtid.",
+        "marketing": "Marketing-e-mails",
+        "marketingDesc": "Modtag produktnyheder og tilbud."
+      },
+      "appearance": {
+        "theme": "Tema",
+        "darkMode": "Mørk tilstand",
+        "currentTheme": "Nuværende tema"
+      }
+    },
+    "profile": {
+      "title": "Profil",
+      "subtitle": "Administrer dine kontoindstillinger og præferencer.",
+      "identity": {
+        "title": "Identitet",
+        "displayName": "Visningsnavn",
+        "email": "E-mail",
+        "emailVerified": "Bekræftet",
+        "emailUnverified": "Ikke bekræftet"
+      },
+      "security": {
+        "title": "Sikkerhed",
+        "updatePassword": "Skift adgangskode",
+        "linkedProviders": "Tilknyttede tjenester"
+      },
+      "subscription": {
+        "title": "Abonnement",
+        "currentPlan": "Nuværende plan",
+        "status": "Status",
+        "manageBilling": "Administrer fakturering",
+        "noPlan": "Ingen aktiv plan"
+      },
+      "dangerZone": {
+        "title": "Farezone",
+        "deleteAccount": "Slet konto",
+        "deleteWarning": "Denne handling er permanent og kan ikke fortrydes. Alle dine data slettes."
+      },
+      "signOut": "Log ud"
+    }
+  },
+  "canvas": {
+    "checklist": {
+      "addItem": "Add item",
+      "noItems": "Ingen elementer endnu.",
+      "remove": "Fjern",
+      "toggleAria": "Slå \"{{text}}\" til/fra",
+      "removeAria": "Fjern {{text}}"
+    },
+    "brainSearch": {
+      "resultsFor": "Results for ",
+      "match": "match",
+      "matches": "matches",
+      "noMatches": "No matches.",
+      "tagFiltersLabel": "Tag filters"
+    },
+    "mailTriage": {
+      "noMessages": "No messages.",
+      "columns": {
+        "sender": "Sender",
+        "subject": "Subject",
+        "received": "Received",
+        "actions": "Actions"
+      },
+      "actions": {
+        "archive": "Archive",
+        "archiveAria": "Archive \"{{subject}}\"",
+        "reply": "Reply",
+        "replyAria": "Reply to \"{{subject}}\"",
+        "flag": "Flag",
+        "flagAria": "Star \"{{subject}}\"",
+        "open": "Open",
+        "openAria": "Open \"{{subject}}\""
+      }
+    }
+  }
+}

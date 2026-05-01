@@ -1,0 +1,82 @@
+{
+  "security": {
+    "title": "Procesamiento de Pago Seguro",
+    "description": "Su información de pago se procesa de forma segura por Stripe, un procesador de pagos certificado PCI DSS Level 1.",
+    "encrypted": "Cifrado SSL de 256 bits",
+    "stripe": "Impulsado por Stripe",
+    "dismiss": "Cerrar aviso de seguridad"
+  },
+  "templates": {
+    "purchase": {
+      "title": "Comenzar",
+      "subtitle": "Elija su opción de compra única"
+    },
+    "subscription": {
+      "title": "Elija Su Plan",
+      "subtitle": "Seleccione el plan perfecto para sus necesidades",
+      "billingToggle": {
+        "monthly": "Mensual",
+        "yearly": "Anual",
+        "save20": "Ahorre 20%"
+      }
+    },
+    "checkout": {
+      "title": "Complete Su Compra",
+      "description": "Checkout seguro impulsado por Stripe",
+      "completePurchase": "Completar Compra",
+      "startSubscription": "Iniciar Suscripción"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "Más Popular",
+      "limitedTime": "Tiempo Limitado",
+      "exclVat": "sin IVA",
+      "purchaseNow": "Comprar Ahora",
+      "subscribeNow": "Suscribirse Ahora"
+    },
+    "buttons": {
+      "purchase": "Comprar",
+      "subscribe": "Suscribirse",
+      "processing": "Procesando...",
+      "signInToPurchase": "Inicie sesión para comprar",
+      "signInToSubscribe": "Inicie sesión para suscribirse"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Redirigiendo a Stripe",
+        "message": "Inicializando pago seguro...",
+        "subtitle": "Esto puede tardar un momento en la primera carga",
+        "ariaLabel": "Preparando pago seguro, por favor espere"
+      },
+      "portal": {
+        "title": "Redirigiendo a Stripe",
+        "message": "Abriendo portal de facturación...",
+        "subtitle": "Gestione su suscripción y facturas",
+        "ariaLabel": "Abriendo portal de facturación, por favor espere"
+      }
+    },
+    "subscriptionManager": {
+      "title": "Gestión de Suscripción",
+      "signInRequired": "Por favor inicie sesión para gestionar su suscripción.",
+      "noSubscription": "No tiene una suscripción activa.",
+      "currentPlan": "Plan Actual",
+      "ends": "Termina",
+      "managePaymentMethod": "Gestionar Método de Pago",
+      "cancelSubscription": "Cancelar Suscripción",
+      "cancelConfirm": "¿Está seguro de que desea cancelar? Mantendrá el acceso hasta {{date}}.",
+      "yesCancel": "Sí, Cancelar",
+      "noKeep": "No, Mantener",
+      "changePlan": "Cambiar Plan",
+      "current": "Actual",
+      "subscriptionEnds": "La suscripción terminará el {{date}}",
+      "planChanged": "¡Plan cambiado exitosamente!",
+      "status": {
+        "active": "Activa",
+        "cancelled": "Cancelada",
+        "pastDue": "Vencida",
+        "trialing": "Prueba"
+      }
+    }
+  }
+}

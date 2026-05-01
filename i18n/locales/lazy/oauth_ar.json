@@ -1,0 +1,11 @@
+{
+  "connectServices": "ربط الخدمات",
+  "chooseService": "اختر خدمة للربط مع حسابك",
+  "noProvidersEnabled": "لا توجد مزودات OAuth",
+  "noProvidersMessage": "لا توجد مزودات OAuth مفعلة حالياً. يرجى التحقق من تكوينك.",
+  "checkConfiguration": "يرجى التحقق من تكوين مزود OAuth.",
+  "noProviders": "لا توجد مزودات OAuth",
+  "aria": {
+    "connectionOptions": "خيارات ربط OAuth"
+  }
+}

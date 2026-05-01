@@ -1,0 +1,55 @@
+{
+  "title": "法律声明",
+  "lastUpdated": "最后更新于",
+  "publisher": {
+    "title": "1. 发布者信息",
+    "name": "发布者名称",
+    "type": "类型",
+    "types": {
+      "company": "公司",
+      "individual": "个人"
+    },
+    "legalStatus": "法律地位",
+    "shareCapital": "股本"
+  },
+  "registration": {
+    "title": "2. 注册详情",
+    "number": "注册号 / SIRET",
+    "vat": "增值税号"
+  },
+  "office": {
+    "title": "3. 注册办公地址",
+    "address": "地址"
+  },
+  "contact": {
+    "title": "4. 联系信息",
+    "email": "电子邮件",
+    "phone": "电话"
+  },
+  "director": {
+    "title": "5. 发行人",
+    "name": "姓名",
+    "role": "职务"
+  },
+  "hosting": {
+    "title": "6. 托管服务商",
+    "provider": "服务商",
+    "address": "地址",
+    "contact": "联系方式"
+  },
+  "intellectualProperty": {
+    "title": "7. 知识产权",
+    "content": "本网站上的所有内容，包括但不限于文本、图形、徽标、图像、音频片段、数字下载、数据编汇和软件，均为 {{publisherName}} 或其内容供应商的财产，受国际著作权法保护。",
+    "unauthorized": "未经授权使用本网站的任何内容可能违反著作权、商标和其他法律。"
+  },
+  "personalData": {
+    "title": "8. 个人数据",
+    "content": "有关我们如何收集、使用和保护您的个人数据的信息，请参阅我们的",
+    "privacyPolicy": "隐私政策"
+  },
+  "cookies": {
+    "title": "9. 饼干",
+    "content": "本网站使用饼干。有关饼干及我们如何使用它们的详细信息，请参阅我们的",
+    "privacyPolicy": "隐私政策"
+  }
+}

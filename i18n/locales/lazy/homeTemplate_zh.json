@@ -1,0 +1,52 @@
+{
+  "homeTemplate": {
+    "hero": {
+      "title": "欢迎使用 DoNotDev",
+      "subtitle": "使用现代 TypeScript 和 Firebase 样板，快速构建、部署和扩展强大的应用",
+      "getStarted": "开始使用",
+      "learnMore": "了解更多",
+      "viewDemo": "查看演示"
+    },
+    "features": {
+      "title": "为什么选择 DoNotDev？",
+      "subtitle": "构建现代、可扩展应用所需的一切",
+      "modern": {
+        "title": "现代技术栈",
+        "description": "采用 TypeScript、React 和最新的网络技术"
+      },
+      "scalable": {
+        "title": "可扩展架构",
+        "description": "由 Firebase 驱动，随业务增长无缝扩展"
+      },
+      "fast": {
+        "title": "闪电般快速",
+        "description": "性能优异，开发体验顶尖"
+      },
+      "secure": {
+        "title": "企业级安全",
+        "description": "内置身份验证、授权和安全防护"
+      }
+    },
+    "cta": {
+      "title": "准备开始了吗？",
+      "subtitle": "加入数千名开发者，构建优秀应用",
+      "signUp": "免费注册",
+      "contactSales": "联系销售",
+      "viewDocumentation": "查看文档"
+    },
+    "footer": {
+      "description": "现代化开发框架，用于构建可扩展应用",
+      "links": {
+        "product": "产品",
+        "developers": "开发者",
+        "company": "公司",
+        "support": "支持"
+      },
+      "legal": {
+        "privacy": "隐私政策",
+        "terms": "服务条款",
+        "cookies": "Cookie 政策"
+      }
+    }
+  }
+}

@@ -1,0 +1,616 @@
+{
+  "signIn": "تسجيل الدخول",
+  "choosePlatform": "اختر منصة لتسجيل الدخول بها",
+  "providers": {
+    "google": "جوجل",
+    "facebook": "فيسبوك",
+    "github": "جيت هاب",
+    "twitter": "تويتر",
+    "microsoft": "مايكروسوفت",
+    "yahoo": "ياهو",
+    "apple": "آبل"
+  },
+  "buttons": {
+    "signIn": "تسجيل الدخول بـ {{provider}}",
+    "continue": "المتابعة بـ {{provider}}",
+    "verify": "تحقق من البريد الإلكتروني",
+    "sendVerification": "إرسال بريد التحقق",
+    "signOut": "تسجيل الخروج",
+    "loading": "جاري التحميل..."
+  },
+  "accountLinking": {
+    "title": "ربط الحساب مطلوب",
+    "message": "هذا البريد الإلكتروني مرتبط بالفعل بطرق تسجيل دخول مختلفة ({{methods}}). يرجى تسجيل الدخول باستخدام إحدى هذه الطرق لربط حساباتك.",
+    "instruction": "يرجى تسجيل الدخول بإحدى الطرق التالية لربط حساباتك:",
+    "explanation": "بتسجيل الدخول، ستتم ربط حساباتك تلقائياً، مما يسمح لك باستخدام أي طريقة تسجيل دخول في المستقبل.",
+    "success": "تم ربط الحسابات بنجاح!",
+    "error": "فشل في ربط الحسابات. يرجى المحاولة مرة أخرى.",
+    "emailLabel": "البريد الإلكتروني:"
+  },
+  "emailVerification": {
+    "title": "تحقق البريد الإلكتروني",
+    "status": {
+      "verified": "تم التحقق من بريدك الإلكتروني.",
+      "unverified": "يرجى التحقق من بريدك الإلكتروني للوصول إلى جميع الميزات."
+    },
+    "sending": "جاري إرسال بريد التحقق...",
+    "success": "تم إرسال بريد التحقق! يرجى التحقق من صندوق الوارد.",
+    "alreadyVerified": "تم التحقق من بريدك الإلكتروني بالفعل.",
+    "notSignedIn": "يجب أن تكون مسجلاً للدخول للتحقق من بريدك الإلكتروني.",
+    "error": "فشل في إرسال بريد التحقق. يرجى المحاولة مرة أخرى."
+  },
+  "errors": {
+    "auth/popup-closed-by-user": "تم إغلاق نافذة تسجيل الدخول قبل الإكمال.",
+    "auth/cancelled-popup-request": "تم إلغاء نافذة تسجيل الدخول.",
+    "auth/popup-blocked": "تم حظر نافذة تسجيل الدخول بواسطة المتصفح.",
+    "auth/email-already-in-use": "هذا البريد الإلكتروني مسجل بالفعل.",
+    "auth/invalid-email": "عنوان البريد الإلكتروني غير صالح.",
+    "auth/operation-not-allowed": "طريقة تسجيل الدخول هذه غير مفعلة.",
+    "auth/weak-password": "كلمة المرور ضعيفة جداً.",
+    "auth/user-disabled": "تم تعطيل هذا الحساب.",
+    "auth/user-not-found": "لم يتم العثور على حساب بهذا البريد الإلكتروني.",
+    "auth/wrong-password": "كلمة مرور غير صحيحة.",
+    "auth/network-request-failed": "حدث خطأ في الشبكة. يرجى المحاولة مرة أخرى.",
+    "auth/internal-error": "حدث خطأ داخلي. يرجى المحاولة مرة أخرى.",
+    "auth/invalid-credential": "البيانات المقدمة غير صالحة.",
+    "auth/account-exists-with-different-credential": "يوجد حساب بالفعل بنفس عنوان البريد الإلكتروني ولكن ببيانات تسجيل دخول مختلفة.",
+    "auth/provider-not-enabled": "مصادقة {{provider}} غير مفعلة",
+    "auth/unknown-provider": "مزود غير معروف: {{provider}}",
+    "auth/missing-provider": "مزود المصادقة غير مُكوَّن",
+    "auth/no-user-signed-in": "لا يوجد مستخدم مسجل للدخول حالياً",
+    "auth/oauth-incomplete": "تدفق OAuth غير مكتمل. يرجى المحاولة مرة أخرى.",
+    "fallback": {
+      "title": "المصادقة مطلوبة",
+      "description": "تحتاج إلى تسجيل الدخول للوصول إلى هذه الصفحة.",
+      "chooseProvider": "اختر طريقة تسجيل الدخول المفضلة لديك",
+      "authOptions": "خيارات المصادقة",
+      "secure": "بياناتك آمنة ومشفرة.",
+      "terms": "بتسجيل الدخول، فإنك توافق على شروط الخدمة."
+    },
+    "genericError": "فشلت المصادقة. يرجى المحاولة مرة أخرى.",
+    "fieldUpdate": "فشل في تحديث {{field}}",
+    "hiddenField": "خطأ في عرض الحقل المخفي {{field}}",
+    "unsupportedFieldType": "نوع حقل غير مدعوم: {{type}}",
+    "fieldRendering": "خطأ في عرض الحقل {{field}}",
+    "fallingBackToTextField": "استخدام حقل نص لنوع غير مدعوم {{type}}",
+    "invalidFieldProps": "تكوين غير صالح للحقل {{field}}"
+  },
+  "status": {
+    "loading": "جاري التحميل...",
+    "authenticating": "جاري المصادقة...",
+    "verifying": "جاري التحقق...",
+    "checking": "جاري فحص الصلاحيات..."
+  },
+  "aria": {
+    "signInOptions": "خيارات تسجيل الدخول",
+    "signInButton": "تسجيل الدخول بـ {{provider}}",
+    "loadingState": "تحميل المصادقة",
+    "errorAlert": "خطأ في المصادقة",
+    "successAlert": "نجح",
+    "accountLinkingRequired": "ربط الحساب مطلوب",
+    "verificationRequired": "تحقق البريد الإلكتروني مطلوب"
+  },
+  "home": {
+    "title": "DoNotDev",
+    "description": "DoNotDev منصة لبناء تطبيقات الويب بـ TypeScript و CSS نقي.",
+    "getStarted": "ابدأ",
+    "whyChooseDoNotDev": "لماذا تختار DoNotDev؟",
+    "openSource": "مفتوح المصدر",
+    "freeAndOpenSource": "مجاني ومفتوح المصدر مع مجتمع نابض بالحياة.",
+    "customizable": "قابل للتخصيص",
+    "flexibleComponents": "مكونات مرنة لتلبية احتياجات مشروعك.",
+    "developerFocused": "مركز على المطور",
+    "scalableArchitecture": "هندسة معمارية قابلة للتحجيم",
+    "secureByDesign": "آمن بالتصميم",
+    "fastIntegration": "تكامل سريع",
+    "scaleEffortlessly": "تحجيم بسهولة من النماذج الأولية إلى حلول المؤسسات.",
+    "header": {
+      "purchase": "شراء"
+    }
+  },
+  "actions": {
+    "create": "إنشاء",
+    "update": "تحديث",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "searchPlaceholder": "بحث...",
+    "filter": "تصفية",
+    "clear": "مسح",
+    "reset": "إعادة تعيين",
+    "apply": "تطبيق",
+    "select": "اختيار",
+    "upload": "رفع",
+    "download": "تحميل",
+    "close": "إغلاق"
+  },
+  "guard": {
+    "signInRequired": "يرجى تسجيل الدخول للوصول إلى هذه الصفحة"
+  },
+  "messages": {
+    "createSuccess": "تم إنشاء {{entity}} بنجاح",
+    "updateSuccess": "تم تحديث {{entity}} بنجاح",
+    "deleteSuccess": "تم حذف {{entity}} بنجاح",
+    "error": "حدث خطأ",
+    "loading": "جاري التحميل...",
+    "noResults": "لم يتم العثور على نتائج",
+    "confirmDelete": "هل أنت متأكد من حذف {{entity}}؟",
+    "unsavedChanges": "لديك تغييرات غير محفوظة",
+    "sessionExpired": "انتهت صلاحية جلستك",
+    "networkError": "حدث خطأ في الشبكة",
+    "unauthorized": "وصول غير مصرح به",
+    "forbidden": "الوصول محظور",
+    "serverError": "حدث خطأ في الخادم",
+    "notFound": {
+      "title": "الصفحة غير موجودة",
+      "description": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+      "suggestions": "قد تبحث عن:",
+      "goHome": "الذهاب إلى الصفحة الرئيسية",
+      "goBack": "العودة"
+    }
+  },
+  "nav": {
+    "signIn": "تسجيل الدخول"
+  },
+  "pagination": {
+    "showing": "عرض {{from}} إلى {{to}} من {{total}} إدخال",
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة {{page}} من {{total}}"
+  },
+  "filters": {
+    "title": "المرشحات",
+    "apply": "تطبيق المرشحات",
+    "clear": "مسح المرشحات",
+    "noResults": "لا توجد نتائج تطابق مرشحاتك",
+    "selected": "{{count}} محدد"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "theme": "السمة",
+    "language": "اللغة",
+    "clearCache": {
+      "title": "مسح الذاكرة المؤقتة",
+      "localStorage": "التخزين المحلي",
+      "sessionStorage": "تخزين الجلسة",
+      "applicationCache": "ذاكرة التطبيق المؤقتة",
+      "serviceWorker": "عامل الخدمة",
+      "cookies": "ملفات تعريف الارتباط",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "ذاكرة التخزين المؤقت",
+      "button": "مسح الذاكرة المؤقتة",
+      "clearing": "جارٍ المسح...",
+      "error": "خطأ في مسح الذاكرة المؤقتة",
+      "success": "تم مسح الذاكرة المؤقتة بنجاح: {{items}}",
+      "noItemsCleared": "لم يتم مسح أي عناصر من الذاكرة المؤقتة"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "تطبيق DoNotDev"
+    },
+    "defaultTitle": "صفحة",
+    "defaultDescription": "وصف الصفحة",
+    "locale": "ar_SA",
+    "themeSelector": {
+      "changeTheme": "تغيير السمة",
+      "tooltipWithTransition": "تغيير السمة: {{current}} → {{next}}",
+      "tooltipWithCurrent": "تغيير السمة: {{current}}",
+      "tooltipWithNext": "تغيير السمة: التبديل إلى {{next}}"
+    },
+    "languageSelector": {
+      "changeLanguage": "تغيير اللغة"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "الشركة",
+        "description": "ابني منتجات أفضل وأسرع مع منصة التطوير الشاملة لدينا."
+      },
+      "social": {
+        "twitter": "تويتر",
+        "github": "جيت هاب",
+        "discord": "ديسكورد"
+      },
+      "sections": {
+        "product": {
+          "title": "المنتج",
+          "features": "الميزات",
+          "pricing": "التسعير",
+          "docs": "الوثائق",
+          "updates": "التحديثات"
+        },
+        "support": {
+          "title": "الدعم",
+          "help": "المساعدة",
+          "contact": "اتصل بنا",
+          "status": "الحالة",
+          "community": "المجتمع"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "جميع الحقوق محفوظة.",
+      "cookieSettings": "إعدادات الكوكيز",
+      "legalNotice": "الإشعار القانوني",
+      "privacyPolicy": "سياسة الخصوصية",
+      "termsOfService": "شروط الخدمة",
+      "builtWith": "مبني بـ ❤️ & DoNotDev ©",
+      "collapse": "طي التذييل",
+      "expand": "توسيع التذييل"
+    }
+  },
+  "search": {
+    "ariaLabel": "بحث",
+    "label": "بحث"
+  },
+  "goTo": {
+    "ariaLabel": "انتقل إلى الصفحة",
+    "label": "انتقل إلى"
+  },
+  "globalGoTo": {
+    "placeholder": "تصفية المسارات أو الانتقال إلى صفحة...",
+    "noResults": "لم يتم العثور على مسارات.",
+    "favorites": "المفضلة",
+    "allPages": "جميع الصفحات",
+    "addFavorite": "إضافة إلى المفضلة",
+    "removeFavorite": "إزالة من المفضلة"
+  },
+  "copyToClipboard": "نسخ إلى الحافظة",
+  "copied": "تم النسخ!",
+  "copyPassword": "نسخ كلمة المرور",
+  "table": {
+    "searchPlaceholder": "بحث...",
+    "filters": "المرشحات",
+    "selectAllRows": "تحديد جميع الصفوف",
+    "selectRow": "تحديد الصف {{index}}",
+    "showingResults": "عرض {{from}} إلى {{to}} من {{total}} نتيجة",
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "الصفحة {{current}} من {{total}}"
+  },
+  "language": {
+    "selectLanguage": "اختر اللغة",
+    "searchLanguages": "البحث عن لغة...",
+    "noLanguagesFound": "لم يتم العثور على لغات",
+    "changeLanguage": "تغيير اللغة"
+  },
+  "form": {
+    "submit": "إرسال",
+    "cancel": "إلغاء",
+    "submitting": "جاري الإرسال...",
+    "loading": "جاري التحميل...",
+    "add": "إضافة",
+    "remove": "إزالة",
+    "typeAndPressAdd": "اكتب واضغط إضافة...",
+    "enterLocationData": "أدخل بيانات الموقع (JSON)"
+  },
+  "navigation": {
+    "more": "المزيد",
+    "home": "الرئيسية"
+  },
+  "pwa": {
+    "update": {
+      "title": "تحديث متاح",
+      "description": "إصدار جديد جاهز. قم بالتحديث للتحديث.",
+      "button": "تحديث",
+      "altText": "تحديث التطبيق"
+    }
+  },
+  "document": {
+    "upload": {
+      "hint": "انقر أو اسحب الملفات للرفع",
+      "ariaLabel": "رفع مستند"
+    },
+    "preview": {
+      "title": "معاينة المستند",
+      "ariaLabel": "معاينة المستند"
+    },
+    "delete": {
+      "ariaLabel": "حذف المستند",
+      "failed": "فشل في حذف المستند"
+    },
+    "errors": {
+      "maxFiles": "الحد الأقصى {{max}} ملفات مسموح بها",
+      "invalidType": "\"{{fileName}}\" ليس نوع ملف مسموحاً به",
+      "exceedsSize": "\"{{fileName}}\" يتجاوز الحجم الأقصى {{size}} ميغابايت"
+    }
+  },
+  "image": {
+    "alt": {
+      "upload": "رفع الصورة {{index}}"
+    },
+    "upload": {
+      "pending": "قيد الانتظار",
+      "dropzoneMultiple": "اسحب الصور هنا أو انقر للرفع",
+      "dropzoneSingle": "اسحب صورة هنا أو انقر للرفع"
+    }
+  },
+  "code": {
+    "copyCode": "نسخ الكود",
+    "copied": "تم النسخ!",
+    "copyCodeToClipboard": "نسخ الكود إلى الحافظة"
+  },
+  "video": {
+    "clickToWatch": "انقر لمشاهدة الفيديو",
+    "watchVideo": "مشاهدة الفيديو"
+  },
+  "inspector": {
+    "pageSource": "كود المصدر",
+    "inspectPageSourceCode": "فحص كود المصدر للصفحة"
+  },
+  "sheet": {
+    "navigation": "التنقل",
+    "codeInspector": "فاحص الكود",
+    "debugPanel": "لوحة التصحيح"
+  },
+  "routeError": {
+    "title": "حدث خطأ ما",
+    "description": "حدث خطأ أثناء تحميل هذه الصفحة.",
+    "dataSafe": "لا تقلق، بياناتك آمنة.",
+    "errorId": "معرف الخطأ",
+    "errorMessage": "رسالة الخطأ",
+    "copied": "تم النسخ",
+    "copyDetails": "نسخ التفاصيل",
+    "tryAgain": "حاول مرة أخرى",
+    "goHome": "الذهاب إلى الصفحة الرئيسية",
+    "goBack": "رجوع",
+    "contactSupport": "إذا استمرت المشكلة، يرجى الاتصال بالدعم."
+  },
+  "redirectOverlay": {
+    "phases": {
+      "connecting": "جاري الاتصال بالخادم الآمن...",
+      "preparing": "جاري تحضير جلستك...",
+      "redirecting": "جاري إعادة التوجيه...",
+      "timeout": "يستغرق هذا وقتاً أطول من المتوقع..."
+    },
+    "cancel": "إلغاء",
+    "doNotRefresh": "يرجى عدم التحديث أو الرجوع للخلف",
+    "default": {
+      "title": "إعادة التوجيه",
+      "message": "يرجى الانتظار أثناء إعادة توجيهك...",
+      "subtitle": "قد يستغرق هذا لحظة",
+      "ariaLabel": "جاري إعادة التوجيه، يرجى الانتظار"
+    },
+    "stripe-checkout": {
+      "title": "إعادة التوجيه إلى Stripe",
+      "message": "جاري تهيئة الدفع الآمن...",
+      "subtitle": "قد يستغرق هذا لحظة في التحميل الأول",
+      "ariaLabel": "جاري تحضير الدفع الآمن، يرجى الانتظار"
+    },
+    "stripe-portal": {
+      "title": "إعادة التوجيه إلى Stripe",
+      "message": "جاري فتح بوابة الفواتير...",
+      "subtitle": "إدارة اشتراكك وفواتيرك",
+      "ariaLabel": "جاري فتح بوابة الفواتير، يرجى الانتظار"
+    },
+    "oauth-google": {
+      "title": "تسجيل الدخول بـ Google",
+      "message": "جاري الاتصال بـ Google...",
+      "subtitle": "سيتم إعادة توجيهك لتسجيل الدخول",
+      "ariaLabel": "جاري تسجيل الدخول بـ Google، يرجى الانتظار"
+    },
+    "oauth-github": {
+      "title": "تسجيل الدخول بـ GitHub",
+      "message": "جاري الاتصال بـ GitHub...",
+      "subtitle": "سيتم إعادة توجيهك لتسجيل الدخول",
+      "ariaLabel": "جاري تسجيل الدخول بـ GitHub، يرجى الانتظار"
+    },
+    "oauth-apple": {
+      "title": "تسجيل الدخول بـ Apple",
+      "message": "جاري الاتصال بـ Apple...",
+      "subtitle": "سيتم إعادة توجيهك لتسجيل الدخول",
+      "ariaLabel": "جاري تسجيل الدخول بـ Apple، يرجى الانتظار"
+    },
+    "oauth-microsoft": {
+      "title": "تسجيل الدخول بـ Microsoft",
+      "message": "جاري الاتصال بـ Microsoft...",
+      "subtitle": "سيتم إعادة توجيهك لتسجيل الدخول",
+      "ariaLabel": "جاري تسجيل الدخول بـ Microsoft، يرجى الانتظار"
+    },
+    "oauth-facebook": {
+      "title": "تسجيل الدخول بـ Facebook",
+      "message": "جاري الاتصال بـ Facebook...",
+      "subtitle": "سيتم إعادة توجيهك لتسجيل الدخول",
+      "ariaLabel": "جاري تسجيل الدخول بـ Facebook، يرجى الانتظار"
+    },
+    "auth-email-link": {
+      "title": "إرسال التحقق",
+      "message": "جاري تحضير رابط التحقق...",
+      "subtitle": "تحقق من صندوق الوارد",
+      "ariaLabel": "جاري إرسال بريد التحقق، يرجى الانتظار"
+    }
+  },
+  "templates": {
+    "home": {
+      "hero": {
+        "badge": "مرحباً",
+        "title": "ابنِ شيئاً رائعاً",
+        "subtitle": "منصة حديثة لإطلاق مشروعك التالي وتنميته وتوسيع نطاقه - بشكل أسرع من أي وقت مضى.",
+        "primaryAction": "ابدأ الآن",
+        "secondaryAction": "اعرف المزيد"
+      },
+      "features": {
+        "title": "الميزات",
+        "feature1": {
+          "title": "سرعة فائقة",
+          "description": "مُحسَّن للسرعة مع تحميل فوري للصفحات وتحديثات فورية جاهزة للاستخدام."
+        },
+        "feature2": {
+          "title": "آمن بالتصميم",
+          "description": "أمان بمستوى المؤسسات مع مصادقة وتحكم بالوصول وتشفير مدمج."
+        },
+        "feature3": {
+          "title": "جاهز للتوسع",
+          "description": "من النموذج الأولي إلى الإنتاج - توسَّع بسهولة مع بنية معمارية متينة وقابلة للتوسع."
+        }
+      },
+      "howItWorks": {
+        "title": "كيف يعمل",
+        "step1": {
+          "title": "إنشاء حساب",
+          "description": "أنشئ حسابك في ثوانٍ. لا يلزم بطاقة ائتمان للبدء."
+        },
+        "step2": {
+          "title": "الإعداد",
+          "description": "أعدَّ مساحة عملك وادعُ فريقك وخصِّص سير عملك."
+        },
+        "step3": {
+          "title": "الإطلاق",
+          "description": "انطلق بثقة. انشر وراقب وطوِّر بالسرعة التي تناسبك."
+        }
+      },
+      "showcase": {
+        "title": "لماذا نحن",
+        "item1": {
+          "title": "تقنية حديثة",
+          "description": "مبني على أحدث التقنيات للأداء والموثوقية وسعادة المطور."
+        },
+        "item2": {
+          "title": "مفتوح المصدر",
+          "description": "شفاف وبمساهمة المجتمع ومجاني الاستخدام."
+        },
+        "item3": {
+          "title": "المطور أولاً",
+          "description": "مُصمَّم من مطورين لمطورين. واجهات برمجية نظيفة وتوثيق ممتاز."
+        },
+        "item4": {
+          "title": "جاهز عالمياً",
+          "description": "متعدد اللغات والمناطق وقابل للوصول منذ اليوم الأول."
+        }
+      },
+      "cta": {
+        "title": "هل أنت مستعد للبدء؟",
+        "subtitle": "انضم إلى آلاف الفرق التي تبني منتجات أفضل وأسرع.",
+        "primaryAction": "ابدأ مجاناً",
+        "secondaryAction": "تواصل مع المبيعات"
+      }
+    },
+    "dashboard": {
+      "title": "لوحة التحكم",
+      "stats": {
+        "revenue": "الإيرادات",
+        "orders": "الطلبات",
+        "customers": "العملاء",
+        "conversion": "معدل التحويل"
+      },
+      "activity": {
+        "title": "النشاط الأخير",
+        "item1": "طلب جديد #1234 تم تقديمه",
+        "time1": "منذ دقيقتين",
+        "item2": "العميل John D. سجَّل حساباً",
+        "time2": "منذ 15 دقيقة",
+        "item3": "المنتج 'Pro Plan' تم تحديثه",
+        "time3": "منذ ساعة",
+        "item4": "تم استلام دفعة بقيمة $299",
+        "time4": "منذ 3 ساعات"
+      },
+      "actions": {
+        "title": "إجراءات سريعة",
+        "newProduct": "منتج جديد",
+        "viewReports": "عرض التقارير",
+        "manageTeam": "إدارة الفريق"
+      }
+    },
+    "settings": {
+      "title": "الإعدادات",
+      "tabs": {
+        "general": "عام",
+        "notifications": "الإشعارات",
+        "appearance": "المظهر"
+      },
+      "general": {
+        "appInfo": "التطبيق",
+        "appName": "الاسم",
+        "description": "الوصف",
+        "language": "اللغة",
+        "languageHint": "يمكن تغيير اللغة من قائمة الرأس."
+      },
+      "notifications": {
+        "preferences": "تفضيلات الإشعارات",
+        "email": "إشعارات البريد الإلكتروني",
+        "emailDesc": "تلقِّ التحديثات والتنبيهات عبر البريد الإلكتروني.",
+        "push": "الإشعارات الفورية",
+        "pushDesc": "تلقِّ إشعارات فورية في الوقت الفعلي.",
+        "marketing": "رسائل تسويقية",
+        "marketingDesc": "تلقِّ تحديثات المنتج والعروض الترويجية."
+      },
+      "appearance": {
+        "theme": "السمة",
+        "darkMode": "الوضع الداكن",
+        "currentTheme": "السمة الحالية"
+      }
+    },
+    "profile": {
+      "title": "الملف الشخصي",
+      "subtitle": "إدارة إعدادات حسابك وتفضيلاتك.",
+      "identity": {
+        "title": "الهوية",
+        "displayName": "اسم العرض",
+        "email": "البريد الإلكتروني",
+        "emailVerified": "مُحقَّق",
+        "emailUnverified": "غير مُحقَّق"
+      },
+      "security": {
+        "title": "الأمان",
+        "updatePassword": "تحديث كلمة المرور",
+        "linkedProviders": "الموفرون المرتبطون"
+      },
+      "subscription": {
+        "title": "الاشتراك",
+        "currentPlan": "الخطة الحالية",
+        "status": "الحالة",
+        "manageBilling": "إدارة الفواتير",
+        "noPlan": "لا توجد خطة نشطة"
+      },
+      "dangerZone": {
+        "title": "منطقة الخطر",
+        "deleteAccount": "حذف الحساب",
+        "deleteWarning": "هذا الإجراء نهائي ولا يمكن التراجع عنه. سيتم حذف جميع بياناتك."
+      },
+      "signOut": "تسجيل الخروج"
+    }
+  },
+  "canvas": {
+    "checklist": {
+      "addItem": "Add item",
+      "noItems": "لا توجد عناصر بعد.",
+      "remove": "إزالة",
+      "toggleAria": "تبديل \"{{text}}\"",
+      "removeAria": "إزالة {{text}}"
+    },
+    "brainSearch": {
+      "resultsFor": "Results for ",
+      "match": "match",
+      "matches": "matches",
+      "noMatches": "No matches.",
+      "tagFiltersLabel": "Tag filters"
+    },
+    "mailTriage": {
+      "noMessages": "No messages.",
+      "columns": {
+        "sender": "Sender",
+        "subject": "Subject",
+        "received": "Received",
+        "actions": "Actions"
+      },
+      "actions": {
+        "archive": "Archive",
+        "archiveAria": "Archive \"{{subject}}\"",
+        "reply": "Reply",
+        "replyAria": "Reply to \"{{subject}}\"",
+        "flag": "Flag",
+        "flagAria": "Star \"{{subject}}\"",
+        "open": "Open",
+        "openAria": "Open \"{{subject}}\""
+      }
+    }
+  }
+}

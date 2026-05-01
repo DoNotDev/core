@@ -1,0 +1,134 @@
+{
+  "name": "@donotdev/core",
+  "version": "0.1.42",
+  "private": false,
+  "type": "module",
+  "license": "MIT",
+  "description": "DoNotDev Framework - Core package with all internal modules",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "import": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./server": {
+      "types": "./server.ts",
+      "import": "./server.ts",
+      "default": "./server.ts"
+    },
+    "./vite": {
+      "types": "./config/vite/index.d.ts",
+      "import": "./config/vite/index.js",
+      "default": "./config/vite/index.js"
+    },
+    "./next": {
+      "types": "./config/next/index.d.ts",
+      "import": "./config/next/index.js",
+      "default": "./config/next/index.js"
+    },
+    "./functions": {
+      "types": "./config/functions/index.d.ts",
+      "import": "./config/functions/index.js",
+      "default": "./config/functions/index.js"
+    },
+    "./empty": {
+      "import": "./config/empty.cjs",
+      "default": "./config/empty.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "guidelines",
+    "i18n/locales",
+    "config/**/*.js",
+    "config/**/*.cjs",
+    "config/**/*.d.ts",
+    "package.json",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "sideEffects": false,
+  "peerDependencies": {
+    "@donotdev/components": "^0.1.42",
+    "@sentry/react": "^10.39.0",
+    "i18next": "^25.10.5",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "i18next-http-backend": "^3.0.2",
+    "lucide-react": "^0.575.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-i18next": "^16.5.4",
+    "valibot": "^1.2.0",
+    "zustand": "^5.0.11"
+  },
+  "peerDependenciesMeta": {
+    "@sentry/react": {
+      "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/donotdev/core.git"
+  },
+  "keywords": [
+    "donotdev",
+    "dndev",
+    "framework",
+    "react",
+    "typescript",
+    "vite",
+    "nextjs",
+    "i18n",
+    "state-management",
+    "zustand"
+  ],
+  "scripts": {
+    "dev": "tsc --noEmit --watch",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "type-check": "bunx tsc --noEmit"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.0.1",
+    "@donotdev/config": "workspace:*",
+    "@donotdev/hooks": "workspace:*",
+    "@donotdev/i18n": "workspace:*",
+    "@donotdev/schemas": "workspace:*",
+    "@donotdev/stores": "workspace:*",
+    "@donotdev/types": "workspace:*",
+    "@donotdev/utils": "workspace:*",
+    "@rollup/plugin-strip": "^3.0.4",
+    "@tanstack/react-query": "^5.90.21",
+    "@vitejs/plugin-basic-ssl": "^2.1.4",
+    "@vitejs/plugin-react": "^5.1.4",
+    "autoprefixer": "^10.4.27",
+    "fast-glob": "^3.3.3",
+    "postcss": "^8.5.6",
+    "postcss-import": "^16.1.1",
+    "postcss-nesting": "^14.0.0",
+    "rollup-plugin-visualizer": "^6.0.5",
+    "vite-plugin-pwa": "1.2.0",
+    "vite-tsconfig-paths": "^6.1.1"
+  },
+  "devDependencies": {
+    "@donotdev/components": "workspace:*",
+    "i18next": "^25.10.5",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "i18next-http-backend": "^3.0.2",
+    "lucide-react": "^0.575.0",
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-i18next": "^16.5.4",
+    "react-refresh": "^0.18.0",
+    "typescript": "5.9.3",
+    "valibot": "^1.2.0",
+    "vite": "^7.3.1",
+    "zustand": "^5.0.11"
+  }
+}

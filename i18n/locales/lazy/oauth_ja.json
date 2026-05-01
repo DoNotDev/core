@@ -1,0 +1,11 @@
+{
+  "connectServices": "サービスを接続",
+  "chooseService": "アカウントに接続するサービスを選択してください",
+  "noProvidersEnabled": "OAuthプロバイダーなし",
+  "noProvidersMessage": "現在有効なOAuthプロバイダーがありません。設定を確認してください。",
+  "checkConfiguration": "OAuthプロバイダーの設定を確認してください。",
+  "noProviders": "OAuthプロバイダーなし",
+  "aria": {
+    "connectionOptions": "OAuth接続オプション"
+  }
+}

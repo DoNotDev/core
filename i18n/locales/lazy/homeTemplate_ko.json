@@ -1,0 +1,52 @@
+{
+  "homeTemplate": {
+    "hero": {
+      "title": "DoNotDev에 오신 것을 환영합니다",
+      "subtitle": "최신 TypeScript 및 Firebase 보일러플레이트로 강력한 앱을 구축, 배포 및 확장하세요.",
+      "getStarted": "시작하기",
+      "learnMore": "자세히 알아보기",
+      "viewDemo": "데모 보기"
+    },
+    "features": {
+      "title": "왜 DoNotDev를 선택해야 할까요?",
+      "subtitle": "현대적이고 확장 가능한 애플리케이션을 구축하는 데 필요한 모든 것",
+      "modern": {
+        "title": "현대적 스택",
+        "description": "TypeScript, React 및 현대적인 웹 기술로 구축"
+      },
+      "scalable": {
+        "title": "확장 가능한 아키텍처",
+        "description": "요구 사항에 따라 성장하는 Firebase 기반 백엔드"
+      },
+      "fast": {
+        "title": "번개처럼 빠름",
+        "description": "성능 및 개발자 경험에 최적화"
+      },
+      "secure": {
+        "title": "엔터프라이즈 보안",
+        "description": "내장된 인증, 권한 부여 및 보안 기능"
+      }
+    },
+    "cta": {
+      "title": "시작할 준비가 되셨나요?",
+      "subtitle": "놀라운 앱을 구축하는 수천 명의 개발자에 합류하세요",
+      "signUp": "무료로 가입",
+      "contactSales": "영업팀에 문의",
+      "viewDocumentation": "문서 보기"
+    },
+    "footer": {
+      "description": "확장 가능한 애플리케이션을 구축하기 위한 현대적인 개발 프레임워크",
+      "links": {
+        "product": "제품",
+        "developers": "개발자",
+        "company": "회사",
+        "support": "지원"
+      },
+      "legal": {
+        "privacy": "개인정보 보호정책",
+        "terms": "서비스 약관",
+        "cookies": "쿠키 정책"
+      }
+    }
+  }
+}

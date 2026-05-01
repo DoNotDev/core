@@ -1,0 +1,82 @@
+{
+  "security": {
+    "title": "معالجة الدفع الآمن",
+    "description": "معلومات الدفع الخاصة بك تتم معالجتها بأمان بواسطة Stripe، معالج دفع معتمد PCI DSS Level 1.",
+    "encrypted": "تشفير SSL 256 بت",
+    "stripe": "مدعوم من Stripe",
+    "dismiss": "إخفاء إشعار الأمان"
+  },
+  "templates": {
+    "purchase": {
+      "title": "ابدأ الآن",
+      "subtitle": "اختر خيار الشراء لمرة واحدة"
+    },
+    "subscription": {
+      "title": "اختر خطتك",
+      "subtitle": "اختر الخطة المثالية لاحتياجاتك",
+      "billingToggle": {
+        "monthly": "شهري",
+        "yearly": "سنوي",
+        "save20": "وفر 20%"
+      }
+    },
+    "checkout": {
+      "title": "أكمل عملية الشراء",
+      "description": "الدفع الآمن مدعوم من Stripe",
+      "completePurchase": "إتمام الشراء",
+      "startSubscription": "بدء الاشتراك"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "الأكثر شعبية",
+      "limitedTime": "وقت محدود",
+      "exclVat": "غير شامل الضريبة",
+      "purchaseNow": "اشتر الآن",
+      "subscribeNow": "اشترك الآن"
+    },
+    "buttons": {
+      "purchase": "شراء",
+      "subscribe": "اشتراك",
+      "processing": "جاري المعالجة...",
+      "signInToPurchase": "سجّل الدخول للشراء",
+      "signInToSubscribe": "سجّل الدخول للاشتراك"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "إعادة التوجيه إلى Stripe",
+        "message": "جاري تهيئة الدفع الآمن...",
+        "subtitle": "قد يستغرق هذا لحظة عند التحميل الأول",
+        "ariaLabel": "جاري إعداد الدفع الآمن، يرجى الانتظار"
+      },
+      "portal": {
+        "title": "إعادة التوجيه إلى Stripe",
+        "message": "جاري فتح بوابة الفواتير...",
+        "subtitle": "إدارة اشتراكك وفواتيرك",
+        "ariaLabel": "جاري فتح بوابة الفواتير، يرجى الانتظار"
+      }
+    },
+    "subscriptionManager": {
+      "title": "إدارة الاشتراك",
+      "signInRequired": "يرجى تسجيل الدخول لإدارة اشتراكك.",
+      "noSubscription": "ليس لديك اشتراك نشط.",
+      "currentPlan": "الخطة الحالية",
+      "ends": "ينتهي",
+      "managePaymentMethod": "إدارة طريقة الدفع",
+      "cancelSubscription": "إلغاء الاشتراك",
+      "cancelConfirm": "هل أنت متأكد من أنك تريد الإلغاء؟ ستحتفظ بالوصول حتى {{date}}.",
+      "yesCancel": "نعم، إلغاء",
+      "noKeep": "لا، الاحتفاظ",
+      "changePlan": "تغيير الخطة",
+      "current": "الحالي",
+      "subscriptionEnds": "سينتهي الاشتراك في {{date}}",
+      "planChanged": "تم تغيير الخطة بنجاح!",
+      "status": {
+        "active": "نشط",
+        "cancelled": "ملغي",
+        "pastDue": "متأخر",
+        "trialing": "تجريبي"
+      }
+    }
+  }
+}

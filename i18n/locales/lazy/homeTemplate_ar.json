@@ -1,0 +1,52 @@
+{
+  "homeTemplate": {
+    "hero": {
+      "title": "مرحباً بك في DoNotDev",
+      "subtitle": "ابني ونشر وقم بتحجيم التطبيقات القوية مع الـ boilerplate الحديث لـ TypeScript و Firebase.",
+      "getStarted": "ابدأ",
+      "learnMore": "تعلم المزيد",
+      "viewDemo": "عرض العرض التوضيحي"
+    },
+    "features": {
+      "title": "لماذا تختار DoNotDev؟",
+      "subtitle": "كل ما تحتاجه لبناء تطبيقات حديثة وقابلة للتحجيم",
+      "modern": {
+        "title": "مجموعة تقنيات حديثة",
+        "description": "مبني بـ TypeScript و React وتقنيات الويب الحديثة"
+      },
+      "scalable": {
+        "title": "هندسة معمارية قابلة للتحجيم",
+        "description": "خادم مدعوم بـ Firebase ينمو مع احتياجاتك"
+      },
+      "fast": {
+        "title": "سريع كالبرق",
+        "description": "محسن للأداء وتجربة المطور"
+      },
+      "secure": {
+        "title": "أمان المؤسسات",
+        "description": "ميزات المصادقة والتفويض والأمان المدمجة"
+      }
+    },
+    "cta": {
+      "title": "مستعد للبدء؟",
+      "subtitle": "انضم إلى آلاف المطورين الذين يبنون تطبيقات مذهلة",
+      "signUp": "سجل مجاناً",
+      "contactSales": "اتصل بالمبيعات",
+      "viewDocumentation": "عرض الوثائق"
+    },
+    "footer": {
+      "description": "إطار التطوير الحديث لبناء التطبيقات القابلة للتحجيم",
+      "links": {
+        "product": "المنتج",
+        "developers": "المطورون",
+        "company": "الشركة",
+        "support": "الدعم"
+      },
+      "legal": {
+        "privacy": "سياسة الخصوصية",
+        "terms": "شروط الخدمة",
+        "cookies": "سياسة ملفات تعريف الارتباط"
+      }
+    }
+  }
+}

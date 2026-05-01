@@ -1,0 +1,52 @@
+{
+  "homeTemplate": {
+    "hero": {
+      "title": "Willkommen bei DoNotDev",
+      "subtitle": "Erstellen, bereitstellen und skalieren Sie leistungsstarke Apps mit unserem modernen TypeScript- und Firebase-Boilerplate.",
+      "getStarted": "Loslegen",
+      "learnMore": "Mehr Erfahren",
+      "viewDemo": "Demo Ansehen"
+    },
+    "features": {
+      "title": "Warum DoNotDev wählen?",
+      "subtitle": "Alles, was Sie brauchen, um moderne, skalierbare Anwendungen zu erstellen",
+      "modern": {
+        "title": "Moderner Stack",
+        "description": "Erstellt mit TypeScript, React und modernen Web-Technologien"
+      },
+      "scalable": {
+        "title": "Skalierbare Architektur",
+        "description": "Firebase-gestütztes Backend, das mit Ihren Bedürfnissen wächst"
+      },
+      "fast": {
+        "title": "Blitzschnell",
+        "description": "Optimiert für Leistung und Entwicklererfahrung"
+      },
+      "secure": {
+        "title": "Unternehmenssicherheit",
+        "description": "Integrierte Authentifizierung, Autorisierung und Sicherheitsfunktionen"
+      }
+    },
+    "cta": {
+      "title": "Bereit loszulegen?",
+      "subtitle": "Schließen Sie sich Tausenden von Entwicklern an, die erstaunliche Apps erstellen",
+      "signUp": "Kostenlos Registrieren",
+      "contactSales": "Verkauf Kontaktieren",
+      "viewDocumentation": "Dokumentation Ansehen"
+    },
+    "footer": {
+      "description": "Das moderne Entwicklungsframework zum Erstellen skalierbarer Anwendungen",
+      "links": {
+        "product": "Produkt",
+        "developers": "Entwickler",
+        "company": "Unternehmen",
+        "support": "Support"
+      },
+      "legal": {
+        "privacy": "Datenschutzrichtlinie",
+        "terms": "Nutzungsbedingungen",
+        "cookies": "Cookie-Richtlinie"
+      }
+    }
+  }
+}

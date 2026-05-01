@@ -1,0 +1,82 @@
+{
+  "security": {
+    "title": "Traitement de Paiement Sécurisé",
+    "description": "Vos informations de paiement sont traitées de manière sécurisée par Stripe, un processeur de paiement certifié PCI DSS Level 1.",
+    "encrypted": "Chiffrement SSL 256 bits",
+    "stripe": "Alimenté par Stripe",
+    "dismiss": "Masquer l'avis de sécurité"
+  },
+  "templates": {
+    "purchase": {
+      "title": "Commencer",
+      "subtitle": "Choisissez votre option d'achat unique"
+    },
+    "subscription": {
+      "title": "Choisissez Votre Plan",
+      "subtitle": "Sélectionnez le plan parfait pour vos besoins",
+      "billingToggle": {
+        "monthly": "Mensuel",
+        "yearly": "Annuel",
+        "save20": "Économisez 20%"
+      }
+    },
+    "checkout": {
+      "title": "Finalisez Votre Achat",
+      "description": "Paiement sécurisé propulsé par Stripe",
+      "completePurchase": "Finaliser l'Achat",
+      "startSubscription": "Démarrer l'Abonnement"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "Le Plus Populaire",
+      "limitedTime": "Temps Limité",
+      "exclVat": "HT",
+      "purchaseNow": "Acheter Maintenant",
+      "subscribeNow": "S'Abonner Maintenant"
+    },
+    "buttons": {
+      "purchase": "Acheter",
+      "subscribe": "S'Abonner",
+      "processing": "Traitement...",
+      "signInToPurchase": "Connectez-vous pour acheter",
+      "signInToSubscribe": "Connectez-vous pour vous abonner"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Redirection vers Stripe",
+        "message": "Initialisation du paiement sécurisé...",
+        "subtitle": "Cela peut prendre un moment au premier chargement",
+        "ariaLabel": "Préparation du paiement sécurisé, veuillez patienter"
+      },
+      "portal": {
+        "title": "Redirection vers Stripe",
+        "message": "Ouverture du portail de facturation...",
+        "subtitle": "Gérez votre abonnement et vos factures",
+        "ariaLabel": "Ouverture du portail de facturation, veuillez patienter"
+      }
+    },
+    "subscriptionManager": {
+      "title": "Gestion de l'Abonnement",
+      "signInRequired": "Veuillez vous connecter pour gérer votre abonnement.",
+      "noSubscription": "Vous n'avez pas d'abonnement actif.",
+      "currentPlan": "Plan Actuel",
+      "ends": "Se termine",
+      "managePaymentMethod": "Gérer le Mode de Paiement",
+      "cancelSubscription": "Annuler l'Abonnement",
+      "cancelConfirm": "Êtes-vous sûr de vouloir annuler ? Vous conserverez l'accès jusqu'au {{date}}.",
+      "yesCancel": "Oui, Annuler",
+      "noKeep": "Non, Garder",
+      "changePlan": "Changer de Plan",
+      "current": "Actuel",
+      "subscriptionEnds": "L'abonnement se terminera le {{date}}",
+      "planChanged": "Plan modifié avec succès !",
+      "status": {
+        "active": "Actif",
+        "cancelled": "Annulé",
+        "pastDue": "En Retard",
+        "trialing": "Essai"
+      }
+    }
+  }
+}

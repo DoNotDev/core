@@ -1,0 +1,200 @@
+{
+  "title": "Termini di Servizio",
+  "lastUpdated": "Ultimo aggiornamento",
+  "common": {
+    "we": "noi",
+    "our": "nostro",
+    "or": "o",
+    "us": "noi"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introduzione",
+      "welcome": "Benvenuto in",
+      "govern": "Questi Termini di Servizio (\"Termini\") disciplinano l'utilizzo del nostro framework di sviluppo, strumenti e servizi (collettivamente, il \"Servizio\"). Accedendo o utilizzando il nostro Servizio, accetti di essere vincolato da questi Termini.",
+      "organization": "Se stai utilizzando il nostro Servizio per conto di un'organizzazione, dichiari di avere l'autorità per vincolare tale organizzazione a questi Termini. Se non sei d'accordo con questi Termini, ti preghiamo di non utilizzare il nostro Servizio."
+    },
+    "service": {
+      "title": "2. Descrizione del Servizio",
+      "description": "è un framework di sviluppo completo che fornisce strumenti, componenti e infrastruttura per costruire applicazioni web moderne. Il nostro Servizio include:",
+      "framework": "Framework di sviluppo e librerie",
+      "ui": "Componenti UI e sistema di design",
+      "auth": "Servizi di autenticazione e autorizzazione",
+      "i18n": "Strumenti di internazionalizzazione e localizzazione",
+      "billing": "Gestione fatturazione e abbonamenti",
+      "docs": "Documentazione e risorse di supporto"
+    },
+    "account": {
+      "title": "3. Registrazione Account e Sicurezza",
+      "creation": {
+        "title": "3.1 Creazione Account",
+        "desc": "Per accedere a determinate funzionalità del nostro Servizio, devi creare un account. Accetti di fornire informazioni accurate, aggiornate e complete durante la registrazione e di aggiornare tali informazioni per mantenerle accurate, aggiornate e complete."
+      },
+      "security": {
+        "title": "3.2 Sicurezza Account",
+        "desc": "Sei responsabile della protezione delle credenziali del tuo account e di tutte le attività che si verificano sotto il tuo account. Accetti di notificarci immediatamente di qualsiasi utilizzo non autorizzato del tuo account o di qualsiasi altra violazione della sicurezza."
+      },
+      "eligibility": {
+        "title": "3.3 Idoneità Account",
+        "desc": "Devi avere almeno 13 anni per utilizzare il nostro Servizio. Se hai meno di 18 anni, devi avere il consenso dei genitori o del tutore per utilizzare il nostro Servizio."
+      }
+    },
+    "acceptable": {
+      "title": "4. Politica di Utilizzo Accettabile",
+      "intro": "Accetti di utilizzare il nostro Servizio solo per scopi legali e in conformità con questi Termini. Accetti di non:",
+      "laws": "Utilizzare il Servizio per violare leggi o regolamenti applicabili",
+      "infringe": "Violare i diritti di proprietà intellettuale di altri",
+      "harmful": "Trasmettere contenuti dannosi, offensivi o inappropriati",
+      "unauthorized": "Tentare di ottenere accesso non autorizzato ai nostri sistemi o agli account di altri utenti",
+      "spam": "Utilizzare il Servizio per spam, phishing o altre attività dannose",
+      "disrupt": "Interferire o interrompere il Servizio o i server",
+      "reverse": "Eseguire reverse engineering, decompilare o smontare il nostro software",
+      "automated": "Utilizzare sistemi automatizzati per accedere al Servizio senza autorizzazione",
+      "share": "Condividere le credenziali del tuo account con altri",
+      "competing": "Utilizzare il Servizio per costruire prodotti o servizi concorrenti"
+    },
+    "payment": {
+      "title": "5. Termini di Abbonamento e Pagamento",
+      "plans": {
+        "title": "5.1 Piani di Abbonamento",
+        "desc": "Offriamo vari piani di abbonamento con diverse funzionalità e prezzi. I dettagli dell'abbonamento, inclusi prezzi e funzionalità, sono disponibili sul nostro sito web e possono essere aggiornati di volta in volta."
+      },
+      "processing": {
+        "title": "5.2 Elaborazione Pagamenti",
+        "desc": "I pagamenti vengono elaborati tramite processori di pagamento di terze parti sicuri. Ci autorizzi ad addebitare il tuo metodo di pagamento per tutte le tariffe associate al tuo abbonamento."
+      },
+      "billing": {
+        "title": "5.3 Fatturazione e Rinnovo",
+        "desc": "Gli abbonamenti si rinnovano automaticamente a meno che non vengano cancellati prima della data di rinnovo. Ti verrà addebitata la tariffa di abbonamento applicabile in ogni data di rinnovo."
+      },
+      "refunds": {
+        "title": "5.4 Rimborsi e Cancellazione",
+        "desc": "Puoi cancellare il tuo abbonamento in qualsiasi momento tramite le impostazioni del tuo account. I rimborsi vengono forniti in conformità con la nostra politica di rimborso, che può variare in base al piano e all'utilizzo."
+      }
+    },
+    "ip": {
+      "title": "6. Diritti di Proprietà Intellettuale",
+      "ours": {
+        "title": "6.1 La Nostra Proprietà Intellettuale",
+        "desc": "Il Servizio, inclusi tutti i software, contenuti e materiali, è di nostra proprietà o dei nostri licenzianti ed è protetto dalle leggi sulla proprietà intellettuale. Ti concediamo una licenza limitata, non esclusiva e non trasferibile per utilizzare il Servizio in conformità con questi Termini."
+      },
+      "yours": {
+        "title": "6.2 I Tuoi Contenuti",
+        "desc": "Conservi la proprietà di qualsiasi contenuto che crei utilizzando il nostro Servizio. Ci concedi una licenza per utilizzare, archiviare ed elaborare i tuoi contenuti esclusivamente per fornire e migliorare il nostro Servizio."
+      },
+      "opensource": {
+        "title": "6.3 Componenti Open Source",
+        "desc": "Il nostro Servizio può includere componenti software open source. L'utilizzo di tali componenti è soggetto alle rispettive licenze open source."
+      }
+    },
+    "privacy": {
+      "title": "7. Privacy e Protezione dei Dati",
+      "desc": "La tua privacy è importante per noi. La nostra raccolta e utilizzo delle tue informazioni personali è disciplinata dalla nostra Informativa sulla Privacy, che è incorporata in questi Termini per riferimento."
+    },
+    "availability": {
+      "title": "8. Disponibilità del Servizio e Supporto",
+      "service": {
+        "title": "8.1 Disponibilità del Servizio",
+        "desc": "Ci sforziamo di mantenere un'elevata disponibilità del servizio ma non garantiamo un accesso ininterrotto. Il Servizio può essere temporaneamente non disponibile a causa di manutenzione, aggiornamenti o altri fattori al di fuori del nostro controllo."
+      },
+      "support": {
+        "title": "8.2 Servizi di Supporto",
+        "desc": "La disponibilità del supporto varia in base al piano di abbonamento. Forniamo supporto tramite documentazione, forum della community e canali di supporto diretto come specificato nel tuo piano."
+      },
+      "updates": {
+        "title": "8.3 Aggiornamenti e Modifiche",
+        "desc": "Possiamo aggiornare il Servizio di volta in volta per migliorare funzionalità, sicurezza o esperienza utente. Forniremo un preavviso ragionevole di modifiche significative che potrebbero influenzare il tuo utilizzo del Servizio."
+      }
+    },
+    "termination": {
+      "title": "9. Risoluzione e Sospensione",
+      "you": {
+        "title": "9.1 Risoluzione da Parte Tua",
+        "desc": "Puoi risolvere il tuo account in qualsiasi momento cancellando il tuo abbonamento ed eliminando il tuo account tramite le impostazioni del tuo account."
+      },
+      "us": {
+        "title": "9.2 Risoluzione da Parte Nostra",
+        "desc": "Possiamo risolvere o sospendere il tuo account immediatamente se violi questi Termini, ti impegni in attività fraudolente o per qualsiasi altro motivo a nostra esclusiva discrezione."
+      },
+      "effect": {
+        "title": "9.3 Effetto della Risoluzione",
+        "desc": "Al momento della risoluzione, il tuo diritto di utilizzare il Servizio cessa immediatamente. Possiamo eliminare i dati del tuo account in conformità con le nostre politiche di conservazione dei dati."
+      }
+    },
+    "disclaimers": {
+      "title": "10. Dichiarazioni di Non Responsabilità e Limitazioni",
+      "service": {
+        "title": "10.1 Dichiarazioni di Non Responsabilità del Servizio",
+        "desc": "IL SERVIZIO VIENE FORNITO \"COSÌ COM'È\" E \"COME DISPONIBILE\" SENZA GARANZIE DI ALCUN TIPO, ESPRESSE O IMPLICITE, INCLUSO MA NON LIMITATO A GARANZIE IMPLICITE DI COMMERCIABILITÀ, IDONEITÀ PER UNO SCOPO PARTICOLARE E NON VIOLAZIONE."
+      },
+      "liability": {
+        "title": "10.2 Limitazione di Responsabilità",
+        "desc": "NELLA MASSIMA MISURA CONSENTITA DALLA LEGGE, NON SAREMO RESPONSABILI PER DANNI INDIRETTI, INCIDENTALI, SPECIALI, CONSEGUENZIALI O PUNITIVI, INCLUSO MA NON LIMITATO A PERDITA DI PROFITTI, DATI O UTILIZZO, SOSTENUTI DA TE O DA QUALSIASI TERZA PARTE."
+      },
+      "maximum": {
+        "title": "10.3 Responsabilità Massima",
+        "desc": "LA NOSTRA RESPONSABILITÀ TOTALE NEI TUOI CONFRONTI PER QUALSIASI RICHIESTA DERIVANTE DA O RELATIVA A QUESTI TERMINI O AL SERVIZIO NON SUPERERÀ L'IMPORTO DA TE PAGATO PER IL SERVIZIO NEI DODICI MESI PRECEDENTI LA RICHIESTA."
+      }
+    },
+    "indemnification": {
+      "title": "11. Indennizzo",
+      "desc": "Accetti di indennizzare, difendere e tenere indenne noi e i nostri dirigenti, direttori, dipendenti e agenti da e contro qualsiasi richiesta, danno, perdita e spesa derivante da o relativa al tuo utilizzo del Servizio o violazione di questi Termini."
+    },
+    "governing": {
+      "title": "12. Legge Applicabile e Risoluzione delle Controversie",
+      "law": {
+        "title": "12.1 Legge Applicabile",
+        "desc": "Questi Termini sono disciplinati e interpretati in conformità con le leggi di",
+        "without": "senza riguardo ai suoi principi di conflitto di leggi."
+      },
+      "dispute": {
+        "title": "12.2 Risoluzione delle Controversie",
+        "desc": "Qualsiasi controversia derivante da o relativa a questi Termini o al Servizio sarà risolta tramite arbitrato vincolante in conformità con le regole di",
+        "location": "L'arbitrato sarà condotto in"
+      },
+      "class": {
+        "title": "12.3 Rinuncia all'Azione Collettiva",
+        "desc": "Accetti che qualsiasi arbitrato o procedimento legale sarà condotto su base individuale e non come azione collettiva o rappresentativa."
+      }
+    },
+    "miscellaneous": {
+      "title": "13. Varie",
+      "entire": {
+        "title": "13.1 Accordo Completo",
+        "desc": "Questi Termini, insieme alla nostra Informativa sulla Privacy, costituiscono l'accordo completo tra te e noi riguardo al Servizio e sostituiscono tutti gli accordi e le comprensioni precedenti."
+      },
+      "severability": {
+        "title": "13.2 Separabilità",
+        "desc": "Se una disposizione di questi Termini viene ritenuta non valida o non applicabile, le disposizioni rimanenti continueranno in pieno vigore ed effetto."
+      },
+      "waiver": {
+        "title": "13.3 Rinuncia",
+        "desc": "Il nostro mancato rispetto di una disposizione di questi Termini non costituisce una rinuncia a tale disposizione o a qualsiasi altra disposizione."
+      },
+      "assignment": {
+        "title": "13.4 Assegnazione",
+        "desc": "Non puoi assegnare o trasferire i tuoi diritti o obblighi ai sensi di questi Termini senza il nostro consenso scritto. Possiamo assegnare questi Termini senza restrizioni."
+      },
+      "force": {
+        "title": "13.5 Forza Maggiore",
+        "desc": "Non saremo responsabili per qualsiasi mancato adempimento dei nostri obblighi dovuto a circostanze al di fuori del nostro ragionevole controllo, incluso ma non limitato a disastri naturali, guerra, terrorismo o azioni governative."
+      }
+    },
+    "changes": {
+      "title": "14. Modifiche a Questi Termini",
+      "desc": "Possiamo aggiornare questi Termini di volta in volta per riflettere modifiche nelle nostre pratiche o leggi applicabili. Ti notificheremo eventuali modifiche sostanziali pubblicando i Termini aggiornati sul nostro sito web e aggiornando la data \"Ultimo aggiornamento\"."
+    },
+    "contact": {
+      "title": "15. Contattaci",
+      "intro": "Se hai domande su questi Termini di Servizio, ti preghiamo di contattarci:",
+      "email": "Email",
+      "address": "Indirizzo",
+      "phone": "Telefono",
+      "support": "Email di Supporto"
+    }
+  },
+  "footer": {
+    "effective": "Questi Termini di Servizio sono efficaci a partire dal",
+    "remain": "e rimarranno in vigore salvo rispetto a eventuali modifiche alle loro disposizioni in futuro."
+  }
+}

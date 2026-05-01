@@ -1,0 +1,632 @@
+{
+  "signIn": "Se connecter",
+  "auth": {
+    "signIn": "Se connecter",
+    "loading": "Chargement...",
+    "signOut": "Se déconnecter",
+    "deleteAccount": {
+      "label": "Supprimer le compte"
+    }
+  },
+  "choosePlatform": "Choisissez une plateforme pour vous connecter",
+  "providers": {
+    "google": "Google",
+    "facebook": "Facebook",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "microsoft": "Microsoft",
+    "yahoo": "Yahoo",
+    "apple": "Apple"
+  },
+  "buttons": {
+    "signIn": "Se connecter avec {{provider}}",
+    "continue": "Continuer avec {{provider}}",
+    "verify": "Vérifier l'email",
+    "sendVerification": "Envoyer l'email de vérification",
+    "signOut": "Se déconnecter",
+    "loading": "Chargement..."
+  },
+  "accountLinking": {
+    "title": "Liaison de compte requise",
+    "message": "Cet email est déjà associé à différentes méthodes de connexion ({{methods}}). Veuillez vous connecter en utilisant l'une de ces méthodes pour lier vos comptes.",
+    "instruction": "Veuillez vous connecter avec l'une des méthodes suivantes pour lier vos comptes :",
+    "explanation": "En vous connectant, vos comptes seront automatiquement liés, vous permettant d'utiliser l'une ou l'autre méthode de connexion à l'avenir.",
+    "success": "Comptes liés avec succès !",
+    "error": "Échec de la liaison des comptes. Veuillez réessayer.",
+    "emailLabel": "Email :"
+  },
+  "emailVerification": {
+    "title": "Vérification de l'email",
+    "status": {
+      "verified": "Votre email est vérifié.",
+      "unverified": "Veuillez vérifier votre email pour accéder à toutes les fonctionnalités."
+    },
+    "sending": "Envoi de l'email de vérification...",
+    "success": "Email de vérification envoyé ! Veuillez vérifier votre boîte de réception.",
+    "alreadyVerified": "Votre email est déjà vérifié.",
+    "notSignedIn": "Vous devez être connecté pour vérifier votre email.",
+    "error": "Échec de l'envoi de l'email de vérification. Veuillez réessayer."
+  },
+  "errors": {
+    "auth/popup-closed-by-user": "La fenêtre de connexion a été fermée avant la fin.",
+    "auth/cancelled-popup-request": "La demande de fenêtre de connexion a été annulée.",
+    "auth/popup-blocked": "La fenêtre de connexion a été bloquée par le navigateur.",
+    "auth/email-already-in-use": "Cet email est déjà enregistré.",
+    "auth/invalid-email": "L'adresse email est invalide.",
+    "auth/operation-not-allowed": "Cette méthode de connexion n'est pas activée.",
+    "auth/weak-password": "Le mot de passe est trop faible.",
+    "auth/user-disabled": "Ce compte a été désactivé.",
+    "auth/user-not-found": "Aucun compte trouvé avec cet email.",
+    "auth/wrong-password": "Mot de passe incorrect.",
+    "auth/network-request-failed": "Une erreur réseau s'est produite. Veuillez réessayer.",
+    "auth/internal-error": "Une erreur interne s'est produite. Veuillez réessayer.",
+    "auth/invalid-credential": "Les identifiants fournis sont invalides.",
+    "auth/account-exists-with-different-credential": "Un compte existe déjà avec la même adresse email mais des identifiants de connexion différents.",
+    "auth/provider-not-enabled": "L'authentification {{provider}} n'est pas activée",
+    "auth/unknown-provider": "Fournisseur inconnu : {{provider}}",
+    "auth/missing-provider": "Le fournisseur d'authentification n'est pas configuré",
+    "auth/no-user-signed-in": "Aucun utilisateur n'est actuellement connecté",
+    "auth/oauth-incomplete": "Flux d'authentification incomplet. Veuillez réessayer de vous connecter.",
+    "fallback": {
+      "title": "Authentification requise",
+      "description": "Vous devez vous connecter pour accéder à cette page.",
+      "chooseProvider": "Choisissez votre méthode de connexion préférée",
+      "authOptions": "Options d'authentification",
+      "secure": "Vos données sont sécurisées et chiffrées.",
+      "terms": "En vous connectant, vous acceptez nos conditions d'utilisation."
+    },
+    "genericError": "L'authentification a échoué. Veuillez réessayer.",
+    "fieldUpdate": "Échec de la mise à jour de {{field}}",
+    "hiddenField": "Erreur de rendu du champ caché {{field}}",
+    "unsupportedFieldType": "Type de champ non pris en charge : {{type}}",
+    "fieldRendering": "Erreur de rendu du champ {{field}}",
+    "fallingBackToTextField": "Utilisation du champ texte pour le type non pris en charge {{type}}",
+    "invalidFieldProps": "Configuration invalide pour le champ {{field}}"
+  },
+  "status": {
+    "loading": "Chargement...",
+    "authenticating": "Authentification...",
+    "verifying": "Vérification...",
+    "checking": "Vérification des permissions..."
+  },
+  "aria": {
+    "signInOptions": "Options de connexion",
+    "signInButton": "Se connecter avec {{provider}}",
+    "loadingState": "Chargement de l'authentification",
+    "errorAlert": "Erreur d'authentification",
+    "successAlert": "Succès",
+    "accountLinkingRequired": "Liaison de compte requise",
+    "verificationRequired": "Vérification de l'email requise"
+  },
+  "home": {
+    "title": "DoNotDev",
+    "description": "DoNotDev est une plateforme pour construire des applications web avec TypeScript et du CSS pur.",
+    "getStarted": "Commencer",
+    "whyChooseDoNotDev": "Pourquoi choisir DoNotDev ?",
+    "openSource": "Open Source",
+    "freeAndOpenSource": "Gratuit et open-source avec une communauté dynamique.",
+    "customizable": "Personnalisable",
+    "flexibleComponents": "Composants flexibles pour adapter aux besoins de votre projet.",
+    "developerFocused": "Centré sur les développeurs",
+    "scalableArchitecture": "Architecture évolutive",
+    "secureByDesign": "Sécurisé par conception",
+    "fastIntegration": "Intégration rapide",
+    "scaleEffortlessly": "Évoluez sans effort des prototypes aux solutions d'entreprise.",
+    "header": {
+      "purchase": "Acheter"
+    }
+  },
+  "actions": {
+    "create": "Créer",
+    "update": "Mettre à jour",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "save": "Sauvegarder",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "searchPlaceholder": "Rechercher...",
+    "filter": "Filtrer",
+    "clear": "Effacer",
+    "reset": "Réinitialiser",
+    "apply": "Appliquer",
+    "select": "Sélectionner",
+    "upload": "Télécharger",
+    "download": "Télécharger",
+    "close": "Fermer"
+  },
+  "guard": {
+    "signInRequired": "Veuillez vous connecter pour accéder à cette page"
+  },
+  "messages": {
+    "createSuccess": "{{entity}} créé avec succès",
+    "updateSuccess": "{{entity}} mis à jour avec succès",
+    "deleteSuccess": "{{entity}} supprimé avec succès",
+    "error": "Une erreur s'est produite",
+    "loading": "Chargement...",
+    "noResults": "Aucun résultat trouvé",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce {{entity}} ?",
+    "unsavedChanges": "Vous avez des modifications non sauvegardées",
+    "sessionExpired": "Votre session a expiré",
+    "networkError": "Erreur réseau",
+    "unauthorized": "Accès non autorisé",
+    "forbidden": "Accès interdit",
+    "serverError": "Erreur serveur",
+    "notFound": {
+      "title": "Page non trouvée",
+      "description": "La page que vous recherchez n'existe pas ou a été déplacée.",
+      "suggestions": "Vous cherchez peut-être :",
+      "goHome": "Retour à l'accueil",
+      "goBack": "Retour"
+    }
+  },
+  "nav": {
+    "signIn": "Se connecter"
+  },
+  "pagination": {
+    "showing": "Affichage de {{from}} à {{to}} sur {{total}} entrées",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {{page}} sur {{total}}"
+  },
+  "filters": {
+    "title": "Filtres",
+    "apply": "Appliquer les filtres",
+    "clear": "Effacer les filtres",
+    "noResults": "Aucun résultat ne correspond à vos filtres",
+    "selected": "{{count}} sélectionné"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "theme": "Thème",
+    "language": "Langue",
+    "clearCache": {
+      "title": "Vider le cache",
+      "localStorage": "Stockage local",
+      "sessionStorage": "Stockage de session",
+      "applicationCache": "Cache d'application",
+      "serviceWorker": "Service Worker",
+      "cookies": "Cookies",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "Cache mémoire",
+      "button": "Vider le cache",
+      "clearing": "Nettoyage en cours...",
+      "error": "Erreur lors du nettoyage du cache",
+      "success": "Cache vidé avec succès : {{items}}",
+      "noItemsCleared": "Aucun élément de cache n'a été vidé"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "Application DoNotDev"
+    },
+    "defaultTitle": "Page",
+    "defaultDescription": "Description de la page",
+    "locale": "fr_FR",
+    "themeSelector": {
+      "changeTheme": "Changer le thème",
+      "tooltipWithTransition": "Changer le thème : {{current}} → {{next}}",
+      "tooltipWithCurrent": "Changer le thème : {{current}}",
+      "tooltipWithNext": "Changer le thème : Passer à {{next}}"
+    },
+    "languageSelector": {
+      "changeLanguage": "Changer la langue"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "Entreprise",
+        "description": "Construisez de meilleurs produits plus rapidement avec notre plateforme de développement complète."
+      },
+      "social": {
+        "twitter": "Twitter",
+        "github": "GitHub",
+        "discord": "Discord"
+      },
+      "sections": {
+        "product": {
+          "title": "Produit",
+          "features": "Fonctionnalités",
+          "pricing": "Tarifs",
+          "docs": "Documentation",
+          "updates": "Mises à jour"
+        },
+        "support": {
+          "title": "Support",
+          "help": "Aide",
+          "contact": "Contact",
+          "status": "Statut",
+          "community": "Communauté"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "Tous droits réservés.",
+      "cookieSettings": "Paramètres des cookies",
+      "legalNotice": "Mentions légales",
+      "privacyPolicy": "Politique de confidentialité",
+      "termsOfService": "Conditions d'utilisation",
+      "builtWith": "Créé avec ❤️ & DoNotDev ©",
+      "collapse": "Réduire le pied de page",
+      "expand": "Développer le pied de page"
+    }
+  },
+  "search": {
+    "ariaLabel": "Rechercher",
+    "label": "Rechercher"
+  },
+  "goTo": {
+    "ariaLabel": "Aller à la page",
+    "label": "Aller à"
+  },
+  "globalGoTo": {
+    "placeholder": "Filtrer les routes ou naviguer vers une page...",
+    "noResults": "Aucune route trouvée.",
+    "empty": "Aucune page disponible.",
+    "favorites": "Favoris",
+    "recent": "Récents",
+    "allPages": "Toutes les pages",
+    "addFavorite": "Ajouter aux favoris",
+    "removeFavorite": "Retirer des favoris",
+    "favorite": "Ajouter aux favoris",
+    "unfavorite": "Retirer des favoris",
+    "shortcutOpen": "Ouvrir",
+    "shortcutNavigate": "Naviguer",
+    "shortcutSelect": "Sélectionner",
+    "shortcutClose": "Fermer"
+  },
+  "copyToClipboard": "Copier dans le presse-papiers",
+  "copied": "Copié !",
+  "copyPassword": "Copier le mot de passe",
+  "table": {
+    "searchPlaceholder": "Rechercher...",
+    "filters": "Filtres",
+    "selectAllRows": "Sélectionner toutes les lignes",
+    "selectRow": "Sélectionner la ligne {{index}}",
+    "showingResults": "Affichage de {{from}} à {{to}} sur {{total}} résultats",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {{current}} sur {{total}}"
+  },
+  "language": {
+    "selectLanguage": "Sélectionner la langue",
+    "searchLanguages": "Rechercher une langue...",
+    "noLanguagesFound": "Aucune langue trouvée",
+    "changeLanguage": "Changer la langue"
+  },
+  "form": {
+    "submit": "Soumettre",
+    "cancel": "Annuler",
+    "submitting": "Envoi en cours...",
+    "loading": "Chargement...",
+    "add": "Ajouter",
+    "remove": "Retirer",
+    "typeAndPressAdd": "Tapez et appuyez sur Ajouter...",
+    "enterLocationData": "Saisir les données de localisation (JSON)"
+  },
+  "navigation": {
+    "more": "Plus",
+    "home": "Accueil"
+  },
+  "pwa": {
+    "update": {
+      "title": "Mise à jour disponible",
+      "description": "Une nouvelle version est prête. Actualisez pour mettre à jour.",
+      "button": "Mettre à jour",
+      "altText": "Mettre à jour l'application"
+    }
+  },
+  "document": {
+    "upload": {
+      "hint": "Cliquez ou glissez des fichiers pour les envoyer",
+      "ariaLabel": "Envoyer un document"
+    },
+    "preview": {
+      "title": "Aperçu du document",
+      "ariaLabel": "Aperçu du document"
+    },
+    "delete": {
+      "ariaLabel": "Supprimer le document",
+      "failed": "Échec de la suppression du document"
+    },
+    "errors": {
+      "maxFiles": "Maximum {{max}} fichiers autorisés",
+      "invalidType": "\"{{fileName}}\" n'est pas un type de fichier autorisé",
+      "exceedsSize": "\"{{fileName}}\" dépasse la taille maximale de {{size}} Mo"
+    }
+  },
+  "image": {
+    "alt": {
+      "upload": "Envoyer l'image {{index}}"
+    },
+    "upload": {
+      "pending": "En attente",
+      "dropzoneMultiple": "Déposez des images ici ou cliquez pour envoyer",
+      "dropzoneSingle": "Déposez une image ici ou cliquez pour envoyer"
+    }
+  },
+  "code": {
+    "copyCode": "Copier le code",
+    "copied": "Copié !",
+    "copyCodeToClipboard": "Copier le code dans le presse-papiers"
+  },
+  "video": {
+    "clickToWatch": "Cliquez pour regarder la vidéo",
+    "watchVideo": "Regarder la vidéo"
+  },
+  "inspector": {
+    "pageSource": "Code source de la page",
+    "inspectPageSourceCode": "Inspecter le code source de la page"
+  },
+  "sheet": {
+    "navigation": "Navigation",
+    "codeInspector": "Inspecteur de code",
+    "debugPanel": "Panneau de débogage"
+  },
+  "routeError": {
+    "title": "Une erreur s'est produite",
+    "description": "Nous avons rencontré une erreur lors du chargement de cette page.",
+    "dataSafe": "Ne vous inquiétez pas, vos données sont en sécurité.",
+    "errorId": "ID d'erreur",
+    "errorMessage": "Message d'erreur",
+    "copied": "Copié",
+    "copyDetails": "Copier les détails",
+    "tryAgain": "Réessayer",
+    "goHome": "Retour à l'accueil",
+    "goBack": "Retour",
+    "contactSupport": "Si le problème persiste, veuillez contacter le support."
+  },
+  "redirectOverlay": {
+    "phases": {
+      "connecting": "Connexion au serveur sécurisé...",
+      "preparing": "Préparation de votre session...",
+      "redirecting": "Redirection en cours...",
+      "timeout": "Cela prend plus de temps que prévu..."
+    },
+    "cancel": "Annuler",
+    "doNotRefresh": "Veuillez ne pas actualiser ou revenir en arrière",
+    "default": {
+      "title": "Redirection",
+      "message": "Veuillez patienter pendant la redirection...",
+      "subtitle": "Cela peut prendre un moment",
+      "ariaLabel": "Redirection en cours, veuillez patienter"
+    },
+    "stripe-checkout": {
+      "title": "Redirection vers Stripe",
+      "message": "Initialisation du paiement sécurisé...",
+      "subtitle": "Cela peut prendre un moment au premier chargement",
+      "ariaLabel": "Préparation du paiement sécurisé, veuillez patienter"
+    },
+    "stripe-portal": {
+      "title": "Redirection vers Stripe",
+      "message": "Ouverture du portail de facturation...",
+      "subtitle": "Gérez votre abonnement et vos factures",
+      "ariaLabel": "Ouverture du portail de facturation, veuillez patienter"
+    },
+    "oauth-google": {
+      "title": "Connexion avec Google",
+      "message": "Connexion à Google...",
+      "subtitle": "Vous allez être redirigé pour vous connecter",
+      "ariaLabel": "Connexion avec Google, veuillez patienter"
+    },
+    "oauth-github": {
+      "title": "Connexion avec GitHub",
+      "message": "Connexion à GitHub...",
+      "subtitle": "Vous allez être redirigé pour vous connecter",
+      "ariaLabel": "Connexion avec GitHub, veuillez patienter"
+    },
+    "oauth-apple": {
+      "title": "Connexion avec Apple",
+      "message": "Connexion à Apple...",
+      "subtitle": "Vous allez être redirigé pour vous connecter",
+      "ariaLabel": "Connexion avec Apple, veuillez patienter"
+    },
+    "oauth-microsoft": {
+      "title": "Connexion avec Microsoft",
+      "message": "Connexion à Microsoft...",
+      "subtitle": "Vous allez être redirigé pour vous connecter",
+      "ariaLabel": "Connexion avec Microsoft, veuillez patienter"
+    },
+    "oauth-facebook": {
+      "title": "Connexion avec Facebook",
+      "message": "Connexion à Facebook...",
+      "subtitle": "Vous allez être redirigé pour vous connecter",
+      "ariaLabel": "Connexion avec Facebook, veuillez patienter"
+    },
+    "auth-email-link": {
+      "title": "Envoi de la vérification",
+      "message": "Préparation de votre lien de vérification...",
+      "subtitle": "Vérifiez votre boîte de réception",
+      "ariaLabel": "Envoi de l'email de vérification, veuillez patienter"
+    }
+  },
+  "templates": {
+    "home": {
+      "hero": {
+        "badge": "Bienvenue",
+        "title": "Construisez quelque chose d'extraordinaire",
+        "subtitle": "Une plateforme moderne pour lancer, développer et faire évoluer votre prochain projet - plus vite que jamais.",
+        "primaryAction": "Commencer",
+        "secondaryAction": "En savoir plus"
+      },
+      "features": {
+        "title": "Fonctionnalités",
+        "feature1": {
+          "title": "Ultra rapide",
+          "description": "Optimisé pour la vitesse avec des chargements instantanés et des mises à jour en temps réel."
+        },
+        "feature2": {
+          "title": "Sécurisé par défaut",
+          "description": "Sécurité de niveau entreprise avec authentification, contrôle d'accès et chiffrement intégrés."
+        },
+        "feature3": {
+          "title": "Prêt à évoluer",
+          "description": "Du prototype à la production - évoluez sans friction grâce à une architecture modulaire et robuste."
+        }
+      },
+      "howItWorks": {
+        "title": "Comment ça marche",
+        "step1": {
+          "title": "Créer un compte",
+          "description": "Inscrivez-vous en quelques secondes. Aucune carte bancaire requise pour démarrer."
+        },
+        "step2": {
+          "title": "Configurer",
+          "description": "Configurez votre espace de travail, invitez votre équipe et personnalisez votre flux de travail."
+        },
+        "step3": {
+          "title": "Lancer",
+          "description": "Passez en production en toute confiance. Déployez, surveillez et itérez à votre rythme."
+        }
+      },
+      "showcase": {
+        "title": "Pourquoi nous",
+        "item1": {
+          "title": "Stack moderne",
+          "description": "Construit sur des technologies de pointe pour la performance, la fiabilité et le bonheur des développeurs."
+        },
+        "item2": {
+          "title": "Open Source",
+          "description": "Transparent, porté par la communauté et libre d'utilisation."
+        },
+        "item3": {
+          "title": "Dev avant tout",
+          "description": "Conçu par des développeurs, pour des développeurs. APIs claires et documentation soignée."
+        },
+        "item4": {
+          "title": "Mondial dès le départ",
+          "description": "Multilingue, multi-régions et accessible dès le premier jour."
+        }
+      },
+      "cta": {
+        "title": "Prêt à vous lancer ?",
+        "subtitle": "Rejoignez des milliers d'équipes qui construisent de meilleurs produits, plus vite.",
+        "primaryAction": "Commencer gratuitement",
+        "secondaryAction": "Contacter les ventes"
+      }
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "stats": {
+        "revenue": "Revenus",
+        "orders": "Commandes",
+        "customers": "Clients",
+        "conversion": "Conversion"
+      },
+      "activity": {
+        "title": "Activité récente",
+        "item1": "Nouvelle commande #1234 passée",
+        "time1": "Il y a 2 min",
+        "item2": "Client John D. inscrit",
+        "time2": "Il y a 15 min",
+        "item3": "Produit 'Pro Plan' mis à jour",
+        "time3": "Il y a 1 heure",
+        "item4": "Paiement de 299 € reçu",
+        "time4": "Il y a 3 heures"
+      },
+      "actions": {
+        "title": "Actions rapides",
+        "newProduct": "Nouveau produit",
+        "viewReports": "Voir les rapports",
+        "manageTeam": "Gérer l'équipe"
+      }
+    },
+    "settings": {
+      "title": "Paramètres",
+      "tabs": {
+        "general": "Général",
+        "notifications": "Notifications",
+        "appearance": "Apparence"
+      },
+      "general": {
+        "appInfo": "Application",
+        "appName": "Nom",
+        "description": "Description",
+        "language": "Langue",
+        "languageHint": "La langue peut être changée depuis le menu d'en-tête."
+      },
+      "notifications": {
+        "preferences": "Préférences de notification",
+        "email": "Notifications par email",
+        "emailDesc": "Recevez des mises à jour et alertes par email.",
+        "push": "Notifications push",
+        "pushDesc": "Recevez des notifications push en temps réel.",
+        "marketing": "Emails marketing",
+        "marketingDesc": "Recevez les actualités produit et promotions."
+      },
+      "appearance": {
+        "theme": "Thème",
+        "darkMode": "Mode sombre",
+        "currentTheme": "Thème actuel"
+      }
+    },
+    "profile": {
+      "title": "Profil",
+      "subtitle": "Gérez les paramètres et préférences de votre compte.",
+      "identity": {
+        "title": "Identité",
+        "displayName": "Nom d'affichage",
+        "email": "Email",
+        "emailVerified": "Vérifié",
+        "emailUnverified": "Non vérifié"
+      },
+      "security": {
+        "title": "Sécurité",
+        "updatePassword": "Modifier le mot de passe",
+        "linkedProviders": "Fournisseurs liés"
+      },
+      "subscription": {
+        "title": "Abonnement",
+        "currentPlan": "Formule actuelle",
+        "status": "Statut",
+        "manageBilling": "Gérer la facturation",
+        "noPlan": "Aucune formule active"
+      },
+      "dangerZone": {
+        "title": "Zone dangereuse",
+        "deleteAccount": "Supprimer le compte",
+        "deleteWarning": "Cette action est définitive et irréversible. Toutes vos données seront supprimées."
+      },
+      "signOut": "Se déconnecter"
+    }
+  },
+  "canvas": {
+    "checklist": {
+      "addItem": "Add item",
+      "noItems": "Aucun élément pour l'instant.",
+      "remove": "Supprimer",
+      "toggleAria": "Cocher/décocher \"{{text}}\"",
+      "removeAria": "Supprimer {{text}}"
+    },
+    "brainSearch": {
+      "resultsFor": "Results for ",
+      "match": "match",
+      "matches": "matches",
+      "noMatches": "No matches.",
+      "tagFiltersLabel": "Tag filters"
+    },
+    "mailTriage": {
+      "noMessages": "No messages.",
+      "columns": {
+        "sender": "Sender",
+        "subject": "Subject",
+        "received": "Received",
+        "actions": "Actions"
+      },
+      "actions": {
+        "archive": "Archive",
+        "archiveAria": "Archive \"{{subject}}\"",
+        "reply": "Reply",
+        "replyAria": "Reply to \"{{subject}}\"",
+        "flag": "Flag",
+        "flagAria": "Star \"{{subject}}\"",
+        "open": "Open",
+        "openAria": "Open \"{{subject}}\""
+      }
+    }
+  }
+}

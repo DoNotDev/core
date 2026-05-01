@@ -1,0 +1,55 @@
+{
+  "title": "Aviso Legal",
+  "lastUpdated": "Última atualização em",
+  "publisher": {
+    "title": "1. Informações do Publicador",
+    "name": "Nome do publicador",
+    "type": "Tipo",
+    "types": {
+      "company": "Empresa",
+      "individual": "Pessoa Física"
+    },
+    "legalStatus": "Situação jurídica",
+    "shareCapital": "Capital social"
+  },
+  "registration": {
+    "title": "2. Detalhes de Registro",
+    "number": "Número de registro / SIRET",
+    "vat": "Número de CNPJ/CPF"
+  },
+  "office": {
+    "title": "3. Sede Registrada",
+    "address": "Endereço"
+  },
+  "contact": {
+    "title": "4. Informações de Contato",
+    "email": "E-mail",
+    "phone": "Telefone"
+  },
+  "director": {
+    "title": "5. Diretor de Publicação",
+    "name": "Nome",
+    "role": "Cargo"
+  },
+  "hosting": {
+    "title": "6. Provedor de Hospedagem",
+    "provider": "Provedor",
+    "address": "Endereço",
+    "contact": "Contato"
+  },
+  "intellectualProperty": {
+    "title": "7. Propriedade Intelectual",
+    "content": "Todo o conteúdo deste site, incluindo, mas não limitado a textos, gráficos, logotipos, imagens, clipes de áudio, downloads digitais, compilações de dados e software, é propriedade da {{publisherName}} ou de seus fornecedores de conteúdo e é protegido por leis internacionais de direitos autorais.",
+    "unauthorized": "O uso não autorizado de qualquer conteúdo deste site pode violar as leis de direitos autorais, marcas registradas e outras leis."
+  },
+  "personalData": {
+    "title": "8. Dados Pessoais",
+    "content": "Para informações sobre como coletamos, usamos e protegemos seus dados pessoais, consulte nossa",
+    "privacyPolicy": "Política de Privacidade"
+  },
+  "cookies": {
+    "title": "9. Cookies",
+    "content": "Este site usa cookies. Para informações detalhadas sobre cookies e como os utilizamos, consulte nossa",
+    "privacyPolicy": "Política de Privacidade"
+  }
+}

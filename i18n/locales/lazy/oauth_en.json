@@ -1,0 +1,11 @@
+{
+  "connectServices": "Connect Services",
+  "chooseService": "Choose a service to connect with your account",
+  "noProvidersEnabled": "No OAuth Providers",
+  "noProvidersMessage": "No OAuth providers are currently enabled. Please check your configuration.",
+  "checkConfiguration": "Please check your OAuth provider configuration.",
+  "noProviders": "No OAuth Providers",
+  "aria": {
+    "connectionOptions": "OAuth connection options"
+  }
+}

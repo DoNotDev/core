@@ -1,0 +1,178 @@
+{
+  "title": "Datenschutzerklärung",
+  "lastUpdated": "Zuletzt aktualisiert",
+  "common": {
+    "we": "wir",
+    "our": "unser",
+    "or": "oder",
+    "us": "uns"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Einleitung",
+      "welcome": "Willkommen bei",
+      "commitment": "Wir sind verpflichtet, Ihre Privatsphäre zu schützen und sicherzustellen, dass Sie eine positive Erfahrung auf unserer Plattform haben. Diese Datenschutzerklärung erläutert, wie wir Ihre Informationen sammeln, verwenden, offenlegen und schützen, wenn Sie unser Entwicklungsframework, unsere Tools und Dienste nutzen.",
+      "agreement": "stimmen Sie der Sammlung und Verwendung von Informationen gemäß dieser Richtlinie zu. Wenn Sie unseren Richtlinien und Praktiken nicht zustimmen, nutzen Sie bitte unsere Dienste nicht."
+    },
+    "collection": {
+      "title": "2. Informationen, die wir sammeln",
+      "provided": {
+        "title": "2.1 Informationen, die Sie bereitstellen",
+        "account": "Kontoinformationen",
+        "accountDesc": "Name, E-Mail-Adresse, Passwort und Profilinformationen bei der Erstellung eines Kontos",
+        "usage": "Nutzungsdaten",
+        "usageDesc": "Informationen darüber, wie Sie unsere Dienste nutzen, einschließlich aufgerufener Funktionen und verbrachter Zeit",
+        "communication": "Kommunikation",
+        "communicationDesc": "Nachrichten, Feedback und Support-Anfragen, die Sie uns senden",
+        "payment": "Zahlungsinformationen",
+        "paymentDesc": "Rechnungsdetails und Zahlungsmethodeninformationen für Premium-Funktionen",
+        "project": "Projektdaten",
+        "projectDesc": "Code, Konfigurationen und Projektdateien, die Sie mit unserem Framework erstellen"
+      },
+      "automatic": {
+        "title": "2.2 Automatisch gesammelte Informationen",
+        "device": "Geräteinformationen",
+        "deviceDesc": "IP-Adresse, Browsertyp, Betriebssystem und Geräte-IDs",
+        "analytics": "Nutzungsanalysen",
+        "analyticsDesc": "Besuchte Seiten, verwendete Funktionen und Interaktionsmuster",
+        "performance": "Leistungsdaten",
+        "performanceDesc": "Fehlerprotokolle, Leistungsmetriken und Systemdiagnosen",
+        "cookies": "Cookies und Tracking",
+        "cookiesDesc": "Kleine Datendateien, die auf Ihrem Gerät gespeichert werden, um Ihre Erfahrung zu verbessern"
+      }
+    },
+    "usage": {
+      "title": "3. Wie wir Ihre Informationen verwenden",
+      "intro": "Wir verwenden die gesammelten Informationen, um:",
+      "provide": "Unsere Dienste bereitzustellen, zu warten und zu verbessern",
+      "process": "Transaktionen zu verarbeiten und Ihr Konto zu verwalten",
+      "send": "Ihnen wichtige Updates, Sicherheitswarnungen und Support-Nachrichten zu senden",
+      "respond": "Auf Ihre Kommentare, Fragen und Support-Anfragen zu antworten",
+      "analyze": "Nutzungsmuster zu analysieren, um die Benutzererfahrung zu verbessern",
+      "detect": "Betrug, Missbrauch und Sicherheitsbedrohungen zu erkennen und zu verhindern",
+      "comply": "Rechtlichen Verpflichtungen nachzukommen und unsere Bedingungen durchzusetzen",
+      "develop": "Neue Funktionen und Dienste basierend auf Benutzerfeedback zu entwickeln"
+    },
+    "sharing": {
+      "title": "4. Informationsaustausch und Offenlegung",
+      "intro": "Wir verkaufen, handeln oder vermieten Ihre persönlichen Informationen nicht an Dritte. Wir können Ihre Informationen in folgenden Situationen teilen:",
+      "providers": {
+        "title": "4.1 Dienstleister",
+        "intro": "Wir können Informationen mit vertrauenswürdigen Drittanbieter-Dienstleistern teilen, die uns beim Betrieb unserer Plattform unterstützen, wie z.B.:",
+        "hosting": "Cloud-Hosting- und Infrastrukturanbieter",
+        "payment": "Zahlungsabwickler für Abrechnung und Transaktionen",
+        "analytics": "Analyse- und Überwachungsdienste",
+        "support": "Kundensupport- und Kommunikationstools"
+      },
+      "legal": {
+        "title": "4.2 Rechtliche Anforderungen",
+        "desc": "Wir können Ihre Informationen offenlegen, wenn dies gesetzlich vorgeschrieben ist, durch Gerichtsbeschluss oder Regierungsanfrage, oder um unsere Rechte, unser Eigentum oder unsere Sicherheit zu schützen."
+      },
+      "business": {
+        "title": "4.3 Geschäftstransfers",
+        "desc": "Im Falle einer Fusion, Übernahme oder eines Verkaufs von Vermögenswerten können Ihre Informationen als Teil der Geschäftstransaktion übertragen werden."
+      }
+    },
+    "security": {
+      "title": "5. Datensicherheit",
+      "intro": "Wir implementieren angemessene technische und organisatorische Maßnahmen, um Ihre Informationen vor unbefugtem Zugriff, Änderung, Offenlegung oder Zerstörung zu schützen. Diese Maßnahmen umfassen:",
+      "encryption": "Verschlüsselung von Daten während der Übertragung und im Ruhezustand",
+      "assessments": "Regelmäßige Sicherheitsbewertungen und Updates",
+      "access": "Zugriffskontrollen und Authentifizierungsmechanismen",
+      "training": "Mitarbeiterschulung zu Datenschutzpraktiken",
+      "incident": "Incident-Response- und Verletzungsbenachrichtigungsverfahren"
+    },
+    "retention": {
+      "title": "6. Datenspeicherung",
+      "intro": "Wir speichern Ihre Informationen so lange, wie es zur Bereitstellung unserer Dienste, zur Erfüllung rechtlicher Verpflichtungen, zur Beilegung von Streitigkeiten und zur Durchsetzung unserer Vereinbarungen erforderlich ist. Die Aufbewahrungsdauer variiert je nach Art der Informationen:",
+      "account": "Kontoinformationen",
+      "accountDesc": "Gespeichert, solange Ihr Konto aktiv ist und für einen angemessenen Zeitraum nach der Löschung",
+      "usage": "Nutzungsdaten",
+      "usageDesc": "Gespeichert für Analyse- und Serviceverbesserungszwecke",
+      "payment": "Zahlungsinformationen",
+      "paymentDesc": "Gespeichert gemäß den Finanzvorschriften",
+      "communication": "Kommunikationsaufzeichnungen",
+      "communicationDesc": "Gespeichert für Kundensupport und rechtliche Compliance"
+    },
+    "rights": {
+      "title": "7. Ihre Rechte und Wahlmöglichkeiten",
+      "intro": "Je nach Ihrem Standort haben Sie möglicherweise folgende Rechte bezüglich Ihrer persönlichen Informationen:",
+      "access": {
+        "title": "7.1 Zugriff und Portabilität",
+        "desc": "Sie können Zugriff auf Ihre persönlichen Informationen anfordern und eine Kopie in einem portablen Format erhalten."
+      },
+      "correction": {
+        "title": "7.2 Korrektur und Aktualisierung",
+        "desc": "Sie können die Korrektur ungenauer oder unvollständiger Informationen anfordern."
+      },
+      "deletion": {
+        "title": "7.3 Löschung",
+        "desc": "Sie können die Löschung Ihrer persönlichen Informationen anfordern, vorbehaltlich rechtlicher Anforderungen."
+      },
+      "restriction": {
+        "title": "7.4 Einschränkung und Widerspruch",
+        "desc": "Sie können die Einschränkung der Verarbeitung anfordern oder bestimmten Verwendungen Ihrer Informationen widersprechen."
+      },
+      "marketing": {
+        "title": "7.5 Marketing-Kommunikation",
+        "desc": "Sie können sich jederzeit von Marketing-Kommunikationen abmelden, indem Sie den Abmeldelink verwenden oder uns direkt kontaktieren."
+      }
+    },
+    "cookies": {
+      "title": "8. Cookies und Tracking-Technologien",
+      "intro": "Wir verwenden Cookies und ähnliche Tracking-Technologien, um Ihre Erfahrung zu verbessern, die Nutzung zu analysieren und personalisierte Inhalte bereitzustellen. Sie können Cookie-Einstellungen über Ihre Browser-Einstellungen steuern.",
+      "types": {
+        "title": "8.1 Arten von Cookies, die wir verwenden",
+        "essential": "Notwendige Cookies",
+        "essentialDesc": "Erforderlich für grundlegende Funktionalität und Sicherheit",
+        "analytics": "Analyse-Cookies",
+        "analyticsDesc": "Helfen uns zu verstehen, wie Besucher unsere Plattform nutzen",
+        "functional": "Funktionale Cookies",
+        "functionalDesc": "Merken sich Ihre Präferenzen und Einstellungen",
+        "marketing": "Marketing-Cookies",
+        "marketingDesc": "Werden für gezielte Werbung und Inhalte verwendet"
+      }
+    },
+    "international": {
+      "title": "9. Internationale Datenübertragungen",
+      "desc": "Ihre Informationen können in Länder außerhalb Ihres eigenen Landes übertragen und dort verarbeitet werden. Wir stellen sicher, dass angemessene Schutzmaßnahmen vorhanden sind, um Ihre Informationen gemäß den geltenden Datenschutzgesetzen zu schützen."
+    },
+    "children": {
+      "title": "10. Datenschutz von Kindern",
+      "desc": "Unsere Dienste richten sich nicht an Kinder unter 13 Jahren. Wir sammeln wissentlich keine persönlichen Informationen von Kindern unter 13 Jahren. Wenn Sie glauben, dass wir Informationen von einem Kind unter 13 Jahren gesammelt haben, kontaktieren Sie uns bitte sofort."
+    },
+    "changes": {
+      "title": "11. Änderungen an dieser Datenschutzerklärung",
+      "desc": "Wir können diese Datenschutzerklärung von Zeit zu Zeit aktualisieren, um Änderungen in unseren Praktiken oder geltenden Gesetzen widerzuspiegeln. Wir werden Sie über wesentliche Änderungen informieren, indem wir die aktualisierte Richtlinie auf unserer Website veröffentlichen und das Datum \"Zuletzt aktualisiert\" aktualisieren."
+    },
+    "contact": {
+      "title": "12. Kontaktieren Sie uns",
+      "intro": "Wenn Sie Fragen zu dieser Datenschutzerklärung oder unseren Datenpraktiken haben, kontaktieren Sie uns bitte:",
+      "email": "E-Mail",
+      "address": "Adresse",
+      "dpo": "Datenschutzbeauftragter",
+      "phone": "Telefon",
+      "support": "Support-E-Mail"
+    },
+    "eu": {
+      "title": "13. Rechtsgrundlage für die Verarbeitung (EU-Benutzer)",
+      "intro": "Für Benutzer in der Europäischen Union umfasst unsere Rechtsgrundlage für die Verarbeitung Ihrer persönlichen Informationen:",
+      "consent": "Einwilligung",
+      "consentDesc": "Wenn Sie ausdrücklich unserer Verarbeitung zustimmen",
+      "contract": "Vertragserfüllung",
+      "contractDesc": "Um unsere Dienste gemäß unseren Bedingungen bereitzustellen",
+      "legitimate": "Berechtigtes Interesse",
+      "legitimateDesc": "Um unsere Dienste zu verbessern und Betrug zu verhindern",
+      "legal": "Rechtliche Verpflichtung",
+      "legalDesc": "Um geltenden Gesetzen und Vorschriften nachzukommen"
+    },
+    "california": {
+      "title": "14. Kalifornische Datenschutzrechte (CCPA)",
+      "desc": "Kalifornische Einwohner haben zusätzliche Rechte unter dem California Consumer Privacy Act (CCPA), einschließlich des Rechts zu erfahren, welche persönlichen Informationen wir sammeln und wie wir sie verwenden, des Rechts, persönliche Informationen zu löschen, und des Rechts, dem Verkauf persönlicher Informationen zu widersprechen."
+    }
+  },
+  "footer": {
+    "effective": "Diese Datenschutzerklärung ist ab dem",
+    "remain": "gültig und bleibt in Kraft, außer in Bezug auf Änderungen ihrer Bestimmungen in der Zukunft."
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "title": "Termos de Serviço",
+  "lastUpdated": "Última atualização em",
+  "common": {
+    "we": "nós",
+    "our": "nosso",
+    "or": "ou",
+    "us": "nós"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introdução",
+      "welcome": "Bem-vindo ao",
+      "govern": "Estes Termos de Serviço (\"Termos\") regem seu uso de nosso framework de desenvolvimento, ferramentas e serviços (coletivamente, o \"Serviço\"). Ao acessar ou usar nosso Serviço, você concorda em estar vinculado por estes Termos.",
+      "organization": "Se você estiver usando nosso Serviço em nome de uma organização, você declara que tem a autoridade para vincular essa organização a estes Termos. Se você não concordar com estes Termos, não use nosso Serviço."
+    },
+    "service": {
+      "title": "2. Descrição do Serviço",
+      "description": "é um framework de desenvolvimento abrangente que fornece ferramentas, componentes e infraestrutura para construir aplicações web modernas. Nosso Serviço inclui:",
+      "framework": "Framework de desenvolvimento e bibliotecas",
+      "ui": "Componentes de interface do usuário e sistema de design",
+      "auth": "Serviços de autenticação e autorização",
+      "i18n": "Ferramentas de internacionalização e localização",
+      "billing": "Gerenciamento de cobrança e assinatura",
+      "docs": "Documentação e recursos de suporte"
+    },
+    "account": {
+      "title": "3. Registro de Conta e Segurança",
+      "creation": {
+        "title": "3.1 Criação de Conta",
+        "desc": "Para acessar certos recursos de nosso Serviço, você deve criar uma conta. Você concorda em fornecer informações precisas, atuais e completas durante o registro e em atualizar essas informações para mantê-las precisas, atuais e completas."
+      },
+      "security": {
+        "title": "3.2 Segurança da Conta",
+        "desc": "Você é responsável por proteger suas credenciais de conta e por todas as atividades que ocorrem em sua conta. Você concorda em nos notificar imediatamente sobre qualquer uso não autorizado de sua conta ou qualquer outra violação de segurança."
+      },
+      "eligibility": {
+        "title": "3.3 Elegibilidade da Conta",
+        "desc": "Você deve ter pelo menos 13 anos para usar nosso Serviço. Se você tiver menos de 18 anos, você deve ter consentimento dos pais ou responsável para usar nosso Serviço."
+      }
+    },
+    "acceptable": {
+      "title": "4. Política de Uso Aceitável",
+      "intro": "Você concorda em usar nosso Serviço apenas para fins legítimos e em conformidade com estes Termos. Você concorda em não:",
+      "laws": "Usar o Serviço para violar quaisquer leis ou regulações aplicáveis",
+      "infringe": "Violar os direitos de propriedade intelectual de terceiros",
+      "harmful": "Transmitir conteúdo prejudicial, ofensivo ou inadequado",
+      "unauthorized": "Tentar obter acesso não autorizado a nossos sistemas ou contas de outros usuários",
+      "spam": "Usar o Serviço para spam, phishing ou outras atividades maliciosas",
+      "disrupt": "Interferir ou interromper o Serviço ou servidores",
+      "reverse": "Fazer engenharia reversa, descompilar ou desmontar nosso software",
+      "automated": "Usar sistemas automatizados para acessar o Serviço sem permissão",
+      "share": "Compartilhar suas credenciais de conta com terceiros",
+      "competing": "Usar o Serviço para construir produtos ou serviços concorrentes"
+    },
+    "payment": {
+      "title": "5. Termos de Assinatura e Pagamento",
+      "plans": {
+        "title": "5.1 Planos de Assinatura",
+        "desc": "Oferecemos vários planos de assinatura com diferentes recursos e preços. Os detalhes da assinatura, incluindo preços e recursos, estão disponíveis em nosso site e podem ser atualizados de tempos em tempos."
+      },
+      "processing": {
+        "title": "5.2 Processamento de Pagamento",
+        "desc": "Os pagamentos são processados através de processadores de pagamento terceirizados seguros. Você nos autoriza a cobrar seu método de pagamento por todas as taxas associadas à sua assinatura."
+      },
+      "billing": {
+        "title": "5.3 Cobrança e Renovação",
+        "desc": "As assinaturas se renovam automaticamente, a menos que sejam canceladas antes da data de renovação. Você será cobrado a taxa de assinatura aplicável em cada data de renovação."
+      },
+      "refunds": {
+        "title": "5.4 Reembolsos e Cancelamento",
+        "desc": "Você pode cancelar sua assinatura a qualquer momento através das configurações de sua conta. Os reembolsos são fornecidos de acordo com nossa política de reembolso, que pode variar por plano e uso."
+      }
+    },
+    "ip": {
+      "title": "6. Direitos de Propriedade Intelectual",
+      "ours": {
+        "title": "6.1 Nossa Propriedade Intelectual",
+        "desc": "O Serviço, incluindo todo software, conteúdo e materiais, é propriedade nossa ou de nossos licenciadores e é protegido por leis de propriedade intelectual. Concedemos a você uma licença limitada, não exclusiva e intransferível para usar o Serviço de acordo com estes Termos."
+      },
+      "yours": {
+        "title": "6.2 Seu Conteúdo",
+        "desc": "Você mantém a propriedade de qualquer conteúdo que criar usando nosso Serviço. Você nos concede uma licença para usar, armazenar e processar seu conteúdo apenas para fornecer e melhorar nosso Serviço."
+      },
+      "opensource": {
+        "title": "6.3 Componentes de Código Aberto",
+        "desc": "Nosso Serviço pode incluir componentes de software de código aberto. O uso de tais componentes está sujeito às suas respectivas licenças de código aberto."
+      }
+    },
+    "privacy": {
+      "title": "7. Privacidade e Proteção de Dados",
+      "desc": "Sua privacidade é importante para nós. A coleta e uso de suas informações pessoais é governado por nossa Política de Privacidade, que é incorporada a estes Termos por referência."
+    },
+    "availability": {
+      "title": "8. Disponibilidade e Suporte do Serviço",
+      "service": {
+        "title": "8.1 Disponibilidade do Serviço",
+        "desc": "Nos esforçamos para manter alta disponibilidade do serviço, mas não garantimos acesso ininterrupto. O Serviço pode estar temporariamente indisponível devido a manutenção, atualizações ou outros fatores além de nosso controle."
+      },
+      "support": {
+        "title": "8.2 Serviços de Suporte",
+        "desc": "A disponibilidade de suporte varia de acordo com o plano de assinatura. Fornecemos suporte através de documentação, fóruns comunitários e canais de suporte direto conforme especificado em seu plano."
+      },
+      "updates": {
+        "title": "8.3 Atualizações e Mudanças",
+        "desc": "Podemos atualizar o Serviço de tempos em tempos para melhorar funcionalidade, segurança ou experiência do usuário. Forneceremos aviso razoável sobre mudanças significativas que possam afetar seu uso do Serviço."
+      }
+    },
+    "termination": {
+      "title": "9. Rescisão e Suspensão",
+      "you": {
+        "title": "9.1 Rescisão por Você",
+        "desc": "Você pode rescindir sua conta a qualquer momento cancelando sua assinatura e deletando sua conta através das configurações de sua conta."
+      },
+      "us": {
+        "title": "9.2 Rescisão por Nós",
+        "desc": "Podemos rescindir ou suspender sua conta imediatamente se você violar estes Termos, se envolver em atividade fraudulenta, ou por qualquer outro motivo a nosso critério exclusivo."
+      },
+      "effect": {
+        "title": "9.3 Efeito da Rescisão",
+        "desc": "Após a rescisão, seu direito de usar o Serviço cessa imediatamente. Podemos deletar os dados da sua conta de acordo com nossas políticas de retenção de dados."
+      }
+    },
+    "disclaimers": {
+      "title": "10. Isenções de Responsabilidade e Limitações",
+      "service": {
+        "title": "10.1 Isenções de Responsabilidade do Serviço",
+        "desc": "O SERVIÇO É FORNECIDO \"NO ESTADO EM QUE SE ENCONTRA\" E \"CONFORME DISPONÍVEL\" SEM GARANTIAS DE QUALQUER TIPO, EXPRESSAS OU IMPLÍCITAS, INCLUINDO MAS NÃO LIMITADO ÀS GARANTIAS IMPLÍCITAS DE COMERCIABILIDADE, ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO E NÃO-VIOLAÇÃO."
+      },
+      "liability": {
+        "title": "10.2 Limitação de Responsabilidade",
+        "desc": "NA EXTENSÃO MÁXIMA PERMITIDA PELA LEI, NÃO SEREMOS RESPONSÁVEIS POR QUAISQUER DANOS INDIRETOS, INCIDENTAIS, ESPECIAIS, CONSEQUENTES OU PUNITIVOS, INCLUINDO MAS NÃO LIMITADO À PERDA DE LUCROS, DADOS OU USO, INCORRIDOS POR VOCÊ OU QUALQUER TERCEIRO."
+      },
+      "maximum": {
+        "title": "10.3 Responsabilidade Máxima",
+        "desc": "NOSSA RESPONSABILIDADE TOTAL A VOCÊ POR QUAISQUER RECLAMAÇÕES DECORRENTES DE OU RELACIONADAS A ESTES TERMOS OU SERVIÇO NÃO EXCEDERÁ O VALOR POR VOCÊ PAGO PELO SERVIÇO NOS DOZE MESES ANTERIORES À RECLAMAÇÃO."
+      }
+    },
+    "indemnification": {
+      "title": "11. Indenização",
+      "desc": "Você concorda em nos indemnizar, defender e manter inócuos nós e nossos oficiais, diretores, funcionários e agentes de e contra quaisquer reclamações, danos, perdas e despesas decorrentes ou relacionadas ao seu uso do Serviço ou violação destes Termos."
+    },
+    "governing": {
+      "title": "12. Lei Aplicável e Resolução de Disputas",
+      "law": {
+        "title": "12.1 Lei Aplicável",
+        "desc": "Estes Termos são regidos pelas leis de",
+        "without": "sem levar em conta seus princípios de conflito de leis."
+      },
+      "dispute": {
+        "title": "12.2 Resolução de Disputas",
+        "desc": "Quaisquer disputas decorrentes de ou relacionadas a estes Termos ou Serviço serão resolvidas através de arbitragem vinculante de acordo com as regras de",
+        "location": "A arbitragem será conduzida em"
+      },
+      "class": {
+        "title": "12.3 Renúncia de Ação Coletiva",
+        "desc": "Você concorda que qualquer arbitragem ou processo legal será conduzido em base individual e não como ação coletiva ou ação representativa."
+      }
+    },
+    "miscellaneous": {
+      "title": "13. Disposições Diversas",
+      "entire": {
+        "title": "13.1 Acordo Inteiro",
+        "desc": "Estes Termos, juntamente com nossa Política de Privacidade, constituem o acordo inteiro entre você e nós em relação ao Serviço e substituem todos os acordos e entendimentos anteriores."
+      },
+      "severability": {
+        "title": "13.2 Severabilidade",
+        "desc": "Se qualquer disposição destes Termos for considerada inválida ou inaplicável, as disposições restantes continuarão em pleno vigor e efeito."
+      },
+      "waiver": {
+        "title": "13.3 Renúncia",
+        "desc": "Nossa falha em fazer cumprir qualquer disposição destes Termos não constitui renúncia dessa disposição ou qualquer outra disposição."
+      },
+      "assignment": {
+        "title": "13.4 Cessão",
+        "desc": "Você não pode ceder ou transferir seus direitos ou obrigações sob estes Termos sem nosso consentimento por escrito. Podemos ceder estes Termos sem restrição."
+      },
+      "force": {
+        "title": "13.5 Força Maior",
+        "desc": "Não seremos responsáveis por qualquer falha em cumprir nossas obrigações devido a circunstâncias além de nosso controle razoável, incluindo mas não limitado a desastres naturais, guerra, terrorismo ou ações governamentais."
+      }
+    },
+    "changes": {
+      "title": "14. Mudanças Nestes Termos",
+      "desc": "Podemos atualizar estes Termos de tempos em tempos para refletir mudanças em nossas práticas ou leis aplicáveis. Notificaremos você sobre quaisquer mudanças materiais postando os Termos atualizados em nosso site e atualizando a data \"Última atualização em\"."
+    },
+    "contact": {
+      "title": "15. Entre em Contato Conosco",
+      "intro": "Se você tiver dúvidas sobre estes Termos de Serviço, entre em contato conosco:",
+      "email": "Email",
+      "address": "Endereço",
+      "phone": "Telefone",
+      "support": "Email de Suporte"
+    }
+  },
+  "footer": {
+    "effective": "Estes Termos de Serviço entram em vigor a partir de",
+    "remain": "e permanecerão em vigor, exceto com relação a quaisquer mudanças em suas disposições no futuro."
+  }
+}

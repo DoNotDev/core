@@ -1,0 +1,25 @@
+{
+  "errors": {
+    "not_available": "AI 不可用。",
+    "unauthenticated": "请登录以使用 AI 功能。",
+    "send_failed": "消息发送失败，请重试。",
+    "conversation_truncated": "对话已截断以符合模型的上下文限制。"
+  },
+  "chat": {
+    "empty": "开始对话",
+    "you": "您",
+    "assistant": "助手",
+    "thinking": "思考中...",
+    "placeholder": "输入消息...",
+    "input_label": "聊天消息输入",
+    "send": "发送",
+    "abort": "停止",
+    "tokens": "令牌",
+    "last_usage": "最后",
+    "total": "总计",
+    "unavailable": "AI 聊天不可用。"
+  },
+  "cost": {
+    "tokens": "令牌"
+  }
+}

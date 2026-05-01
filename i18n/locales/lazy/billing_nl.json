@@ -1,0 +1,82 @@
+{
+  "security": {
+    "title": "Veilige betaling",
+    "description": "Je betalingsgegevens worden veilig verwerkt door Stripe.",
+    "encrypted": "256-bits SSL-versleuteling",
+    "stripe": "Powered by Stripe",
+    "dismiss": "Sluiten"
+  },
+  "templates": {
+    "purchase": {
+      "title": "Aan de slag",
+      "subtitle": "Kies je eenmalige aankoop"
+    },
+    "subscription": {
+      "title": "Kies je abonnement",
+      "subtitle": "Selecteer het abonnement dat bij je past",
+      "billingToggle": {
+        "monthly": "Maandelijks",
+        "yearly": "Jaarlijks",
+        "save20": "Bespaar 20%"
+      }
+    },
+    "checkout": {
+      "title": "Afrekenen",
+      "description": "Veilig afrekenen met Stripe",
+      "completePurchase": "Afrekenen",
+      "startSubscription": "Abonnement starten"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "Meest populair",
+      "limitedTime": "Beperkte tijd",
+      "exclVat": "excl. btw",
+      "purchaseNow": "Nu kopen",
+      "subscribeNow": "Nu abonneren"
+    },
+    "buttons": {
+      "purchase": "Kopen",
+      "subscribe": "Abonneren",
+      "processing": "Bezig...",
+      "signInToPurchase": "Log in om te kopen",
+      "signInToSubscribe": "Log in om te abonneren"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Doorverwijzen naar Stripe",
+        "message": "Veilige betaling voorbereiden...",
+        "subtitle": "Dit kan even duren bij eerste keer",
+        "ariaLabel": "Betaling voorbereiden"
+      },
+      "portal": {
+        "title": "Doorverwijzen naar Stripe",
+        "message": "Facturatieportaal openen...",
+        "subtitle": "Beheer je abonnement en facturen",
+        "ariaLabel": "Facturatieportaal openen"
+      }
+    },
+    "subscriptionManager": {
+      "title": "Abonnement beheren",
+      "signInRequired": "Log in om je abonnement te beheren.",
+      "noSubscription": "Je hebt geen actief abonnement.",
+      "currentPlan": "Huidig abonnement",
+      "ends": "Eindigt",
+      "managePaymentMethod": "Betaalmethode beheren",
+      "cancelSubscription": "Abonnement opzeggen",
+      "cancelConfirm": "Weet je het zeker? Je hebt toegang tot {{date}}.",
+      "yesCancel": "Ja, opzeggen",
+      "noKeep": "Nee, behouden",
+      "changePlan": "Abonnement wijzigen",
+      "current": "Huidig",
+      "subscriptionEnds": "Abonnement eindigt op {{date}}",
+      "planChanged": "Abonnement gewijzigd.",
+      "status": {
+        "active": "Actief",
+        "cancelled": "Opgezegd",
+        "pastDue": "Verlopen",
+        "trialing": "Proefperiode"
+      }
+    }
+  }
+}

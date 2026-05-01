@@ -1,0 +1,82 @@
+{
+  "security": {
+    "title": "Elaborazione Pagamenti Sicura",
+    "description": "Le tue informazioni di pagamento vengono elaborate in modo sicuro da Stripe, un processore di pagamento certificato PCI DSS Level 1.",
+    "encrypted": "Crittografia SSL a 256 bit",
+    "stripe": "Alimentato da Stripe",
+    "dismiss": "Chiudi avviso sicurezza"
+  },
+  "templates": {
+    "purchase": {
+      "title": "Inizia",
+      "subtitle": "Scegli la tua opzione di acquisto una tantum"
+    },
+    "subscription": {
+      "title": "Scegli il Tuo Piano",
+      "subtitle": "Seleziona il piano perfetto per le tue esigenze",
+      "billingToggle": {
+        "monthly": "Mensile",
+        "yearly": "Annuale",
+        "save20": "Risparmia 20%"
+      }
+    },
+    "checkout": {
+      "title": "Completa il Tuo Acquisto",
+      "description": "Checkout sicuro alimentato da Stripe",
+      "completePurchase": "Completa Acquisto",
+      "startSubscription": "Inizia Abbonamento"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "Più Popolare",
+      "limitedTime": "Tempo Limitato",
+      "exclVat": "escl. IVA",
+      "purchaseNow": "Acquista Ora",
+      "subscribeNow": "Abbonati Ora"
+    },
+    "buttons": {
+      "purchase": "Acquista",
+      "subscribe": "Abbonati",
+      "processing": "Elaborazione...",
+      "signInToPurchase": "Accedi per acquistare",
+      "signInToSubscribe": "Accedi per abbonarti"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Reindirizzamento a Stripe",
+        "message": "Inizializzazione pagamento sicuro...",
+        "subtitle": "Potrebbe richiedere un momento al primo caricamento",
+        "ariaLabel": "Preparazione checkout sicuro, attendere prego"
+      },
+      "portal": {
+        "title": "Reindirizzamento a Stripe",
+        "message": "Apertura portale di fatturazione...",
+        "subtitle": "Gestisci il tuo abbonamento e le fatture",
+        "ariaLabel": "Apertura portale di fatturazione, attendere prego"
+      }
+    },
+    "subscriptionManager": {
+      "title": "Gestione Abbonamento",
+      "signInRequired": "Accedi per gestire il tuo abbonamento.",
+      "noSubscription": "Non hai un abbonamento attivo.",
+      "currentPlan": "Piano Attuale",
+      "ends": "Termina",
+      "managePaymentMethod": "Gestisci Metodo di Pagamento",
+      "cancelSubscription": "Annulla Abbonamento",
+      "cancelConfirm": "Sei sicuro di voler annullare? Conserverai l'accesso fino al {{date}}.",
+      "yesCancel": "Sì, Annulla",
+      "noKeep": "No, Mantieni",
+      "changePlan": "Cambia Piano",
+      "current": "Attuale",
+      "subscriptionEnds": "L'abbonamento terminerà il {{date}}",
+      "planChanged": "Piano modificato con successo!",
+      "status": {
+        "active": "Attivo",
+        "cancelled": "Annullato",
+        "pastDue": "Scaduto",
+        "trialing": "Prova"
+      }
+    }
+  }
+}

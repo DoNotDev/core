@@ -1,0 +1,25 @@
+{
+  "errors": {
+    "not_available": "IA não está disponível.",
+    "unauthenticated": "Faça login para usar recursos de IA.",
+    "send_failed": "Falha ao enviar mensagem. Tente novamente.",
+    "conversation_truncated": "A conversa foi truncada para se adequar ao limite de contexto do modelo."
+  },
+  "chat": {
+    "empty": "Iniciar conversa",
+    "you": "Você",
+    "assistant": "Assistente",
+    "thinking": "Pensando...",
+    "placeholder": "Digite uma mensagem...",
+    "input_label": "Entrada de mensagem de bate-papo",
+    "send": "Enviar",
+    "abort": "Parar",
+    "tokens": "tokens",
+    "last_usage": "Último",
+    "total": "Total",
+    "unavailable": "Bate-papo com IA não está disponível."
+  },
+  "cost": {
+    "tokens": "tokens"
+  }
+}

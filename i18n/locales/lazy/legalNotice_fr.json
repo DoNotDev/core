@@ -1,0 +1,55 @@
+{
+  "title": "Mentions Légales",
+  "lastUpdated": "Dernière mise à jour",
+  "publisher": {
+    "title": "1. Informations sur l'éditeur",
+    "name": "Nom de l'éditeur",
+    "type": "Type",
+    "types": {
+      "company": "Société",
+      "individual": "Personne physique"
+    },
+    "legalStatus": "Forme juridique",
+    "shareCapital": "Capital social"
+  },
+  "registration": {
+    "title": "2. Informations d'enregistrement",
+    "number": "Numéro d'enregistrement / SIRET",
+    "vat": "Numéro de TVA intracommunautaire"
+  },
+  "office": {
+    "title": "3. Siège social",
+    "address": "Adresse"
+  },
+  "contact": {
+    "title": "4. Coordonnées",
+    "email": "Email",
+    "phone": "Téléphone"
+  },
+  "director": {
+    "title": "5. Directeur de la publication",
+    "name": "Nom",
+    "role": "Fonction"
+  },
+  "hosting": {
+    "title": "6. Hébergeur",
+    "provider": "Nom de l'hébergeur",
+    "address": "Adresse",
+    "contact": "Contact"
+  },
+  "intellectualProperty": {
+    "title": "7. Propriété intellectuelle",
+    "content": "L'ensemble des éléments de ce site web, incluant mais ne se limitant pas aux textes, graphiques, logos, images, clips audio, téléchargements numériques, compilations de données et logiciels, est la propriété de {{publisherName}} ou de ses fournisseurs de contenu et est protégé par les lois internationales sur le droit d'auteur.",
+    "unauthorized": "L'utilisation non autorisée de tout contenu de ce site web peut violer les lois sur le droit d'auteur, les marques déposées et d'autres lois."
+  },
+  "personalData": {
+    "title": "8. Données personnelles",
+    "content": "Pour des informations sur la manière dont nous collectons, utilisons et protégeons vos données personnelles, veuillez consulter notre ",
+    "privacyPolicy": "Politique de confidentialité"
+  },
+  "cookies": {
+    "title": "9. Cookies",
+    "content": "Ce site web utilise des cookies. Pour des informations détaillées sur les cookies et la manière dont nous les utilisons, veuillez consulter notre ",
+    "privacyPolicy": "Politique de confidentialité"
+  }
+}

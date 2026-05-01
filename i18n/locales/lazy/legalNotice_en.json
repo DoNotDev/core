@@ -1,0 +1,55 @@
+{
+  "title": "Legal Notice",
+  "lastUpdated": "Last updated",
+  "publisher": {
+    "title": "1. Publisher Information",
+    "name": "Publisher name",
+    "type": "Type",
+    "types": {
+      "company": "Company",
+      "individual": "Individual"
+    },
+    "legalStatus": "Legal status",
+    "shareCapital": "Share capital"
+  },
+  "registration": {
+    "title": "2. Registration Details",
+    "number": "Registration number / SIRET",
+    "vat": "VAT number"
+  },
+  "office": {
+    "title": "3. Registered Office",
+    "address": "Address"
+  },
+  "contact": {
+    "title": "4. Contact Information",
+    "email": "Email",
+    "phone": "Phone"
+  },
+  "director": {
+    "title": "5. Publication Director",
+    "name": "Name",
+    "role": "Role"
+  },
+  "hosting": {
+    "title": "6. Hosting Provider",
+    "provider": "Provider",
+    "address": "Address",
+    "contact": "Contact"
+  },
+  "intellectualProperty": {
+    "title": "7. Intellectual Property",
+    "content": "All content on this website, including but not limited to text, graphics, logos, images, audio clips, digital downloads, data compilations, and software, is the property of {{publisherName}} or its content suppliers and is protected by international copyright laws.",
+    "unauthorized": "The unauthorized use of any content from this website may violate copyright, trademark, and other laws."
+  },
+  "personalData": {
+    "title": "8. Personal Data",
+    "content": "For information about how we collect, use, and protect your personal data, please refer to our ",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "cookies": {
+    "title": "9. Cookies",
+    "content": "This website uses cookies. For detailed information about cookies and how we use them, please refer to our ",
+    "privacyPolicy": "Privacy Policy"
+  }
+}

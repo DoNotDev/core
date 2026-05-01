@@ -1,0 +1,200 @@
+{
+  "title": "Terms of Service",
+  "lastUpdated": "Last updated",
+  "common": {
+    "we": "we",
+    "our": "our",
+    "or": "or",
+    "us": "us"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introduction",
+      "welcome": "Welcome to",
+      "govern": "These Terms of Service (\"Terms\") govern your use of our development framework, tools, and services (collectively, the \"Service\"). By accessing or using our Service, you agree to be bound by these Terms.",
+      "organization": "If you are using our Service on behalf of an organization, you represent that you have the authority to bind that organization to these Terms. If you do not agree to these Terms, please do not use our Service."
+    },
+    "service": {
+      "title": "2. Service Description",
+      "description": "is a comprehensive development framework that provides tools, components, and infrastructure for building modern web applications. Our Service includes:",
+      "framework": "Development framework and libraries",
+      "ui": "UI components and design system",
+      "auth": "Authentication and authorization services",
+      "i18n": "Internationalization and localization tools",
+      "billing": "Billing and subscription management",
+      "docs": "Documentation and support resources"
+    },
+    "account": {
+      "title": "3. Account Registration and Security",
+      "creation": {
+        "title": "3.1 Account Creation",
+        "desc": "To access certain features of our Service, you must create an account. You agree to provide accurate, current, and complete information during registration and to update such information to keep it accurate, current, and complete."
+      },
+      "security": {
+        "title": "3.2 Account Security",
+        "desc": "You are responsible for safeguarding your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account or any other breach of security."
+      },
+      "eligibility": {
+        "title": "3.3 Account Eligibility",
+        "desc": "You must be at least 13 years old to use our Service. If you are under 18, you must have parental or guardian consent to use our Service."
+      }
+    },
+    "acceptable": {
+      "title": "4. Acceptable Use Policy",
+      "intro": "You agree to use our Service only for lawful purposes and in accordance with these Terms. You agree not to:",
+      "laws": "Use the Service to violate any applicable laws or regulations",
+      "infringe": "Infringe upon the intellectual property rights of others",
+      "harmful": "Transmit harmful, offensive, or inappropriate content",
+      "unauthorized": "Attempt to gain unauthorized access to our systems or other users' accounts",
+      "spam": "Use the Service for spam, phishing, or other malicious activities",
+      "disrupt": "Interfere with or disrupt the Service or servers",
+      "reverse": "Reverse engineer, decompile, or disassemble our software",
+      "automated": "Use automated systems to access the Service without permission",
+      "share": "Share your account credentials with others",
+      "competing": "Use the Service to build competing products or services"
+    },
+    "payment": {
+      "title": "5. Subscription and Payment Terms",
+      "plans": {
+        "title": "5.1 Subscription Plans",
+        "desc": "We offer various subscription plans with different features and pricing. Subscription details, including pricing and features, are available on our website and may be updated from time to time."
+      },
+      "processing": {
+        "title": "5.2 Payment Processing",
+        "desc": "Payments are processed through secure third-party payment processors. You authorize us to charge your payment method for all fees associated with your subscription."
+      },
+      "billing": {
+        "title": "5.3 Billing and Renewal",
+        "desc": "Subscriptions automatically renew unless cancelled before the renewal date. You will be charged the applicable subscription fee on each renewal date."
+      },
+      "refunds": {
+        "title": "5.4 Refunds and Cancellation",
+        "desc": "You may cancel your subscription at any time through your account settings. Refunds are provided in accordance with our refund policy, which may vary by plan and usage."
+      }
+    },
+    "ip": {
+      "title": "6. Intellectual Property Rights",
+      "ours": {
+        "title": "6.1 Our Intellectual Property",
+        "desc": "The Service, including all software, content, and materials, is owned by us or our licensors and is protected by intellectual property laws. We grant you a limited, non-exclusive, non-transferable license to use the Service in accordance with these Terms."
+      },
+      "yours": {
+        "title": "6.2 Your Content",
+        "desc": "You retain ownership of any content you create using our Service. You grant us a license to use, store, and process your content solely to provide and improve our Service."
+      },
+      "opensource": {
+        "title": "6.3 Open Source Components",
+        "desc": "Our Service may include open source software components. The use of such components is subject to their respective open source licenses."
+      }
+    },
+    "privacy": {
+      "title": "7. Privacy and Data Protection",
+      "desc": "Your privacy is important to us. Our collection and use of your personal information is governed by our Privacy Policy, which is incorporated into these Terms by reference."
+    },
+    "availability": {
+      "title": "8. Service Availability and Support",
+      "service": {
+        "title": "8.1 Service Availability",
+        "desc": "We strive to maintain high service availability but do not guarantee uninterrupted access. The Service may be temporarily unavailable due to maintenance, updates, or other factors beyond our control."
+      },
+      "support": {
+        "title": "8.2 Support Services",
+        "desc": "Support availability varies by subscription plan. We provide support through documentation, community forums, and direct support channels as specified in your plan."
+      },
+      "updates": {
+        "title": "8.3 Updates and Changes",
+        "desc": "We may update the Service from time to time to improve functionality, security, or user experience. We will provide reasonable notice of significant changes that may affect your use of the Service."
+      }
+    },
+    "termination": {
+      "title": "9. Termination and Suspension",
+      "you": {
+        "title": "9.1 Termination by You",
+        "desc": "You may terminate your account at any time by cancelling your subscription and deleting your account through your account settings."
+      },
+      "us": {
+        "title": "9.2 Termination by Us",
+        "desc": "We may terminate or suspend your account immediately if you violate these Terms, engage in fraudulent activity, or for any other reason at our sole discretion."
+      },
+      "effect": {
+        "title": "9.3 Effect of Termination",
+        "desc": "Upon termination, your right to use the Service ceases immediately. We may delete your account data in accordance with our data retention policies."
+      }
+    },
+    "disclaimers": {
+      "title": "10. Disclaimers and Limitations",
+      "service": {
+        "title": "10.1 Service Disclaimers",
+        "desc": "THE SERVICE IS PROVIDED \"AS IS\" AND \"AS AVAILABLE\" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT."
+      },
+      "liability": {
+        "title": "10.2 Limitation of Liability",
+        "desc": "TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, OR USE, INCURRED BY YOU OR ANY THIRD PARTY."
+      },
+      "maximum": {
+        "title": "10.3 Maximum Liability",
+        "desc": "OUR TOTAL LIABILITY TO YOU FOR ANY CLAIMS ARISING OUT OF OR RELATING TO THESE TERMS OR THE SERVICE SHALL NOT EXCEED THE AMOUNT PAID BY YOU FOR THE SERVICE IN THE TWELVE MONTHS PRECEDING THE CLAIM."
+      }
+    },
+    "indemnification": {
+      "title": "11. Indemnification",
+      "desc": "You agree to indemnify, defend, and hold harmless us and our officers, directors, employees, and agents from and against any claims, damages, losses, and expenses arising out of or relating to your use of the Service or violation of these Terms."
+    },
+    "governing": {
+      "title": "12. Governing Law and Dispute Resolution",
+      "law": {
+        "title": "12.1 Governing Law",
+        "desc": "These Terms are governed by and construed in accordance with the laws of",
+        "without": "without regard to its conflict of law principles."
+      },
+      "dispute": {
+        "title": "12.2 Dispute Resolution",
+        "desc": "Any disputes arising out of or relating to these Terms or the Service shall be resolved through binding arbitration in accordance with the rules of",
+        "location": "The arbitration shall be conducted in"
+      },
+      "class": {
+        "title": "12.3 Class Action Waiver",
+        "desc": "You agree that any arbitration or legal proceeding will be conducted on an individual basis and not as a class action or representative action."
+      }
+    },
+    "miscellaneous": {
+      "title": "13. Miscellaneous",
+      "entire": {
+        "title": "13.1 Entire Agreement",
+        "desc": "These Terms, together with our Privacy Policy, constitute the entire agreement between you and us regarding the Service and supersede all prior agreements and understandings."
+      },
+      "severability": {
+        "title": "13.2 Severability",
+        "desc": "If any provision of these Terms is held to be invalid or unenforceable, the remaining provisions will continue in full force and effect."
+      },
+      "waiver": {
+        "title": "13.3 Waiver",
+        "desc": "Our failure to enforce any provision of these Terms does not constitute a waiver of that provision or any other provision."
+      },
+      "assignment": {
+        "title": "13.4 Assignment",
+        "desc": "You may not assign or transfer your rights or obligations under these Terms without our written consent. We may assign these Terms without restriction."
+      },
+      "force": {
+        "title": "13.5 Force Majeure",
+        "desc": "We shall not be liable for any failure to perform our obligations due to circumstances beyond our reasonable control, including but not limited to natural disasters, war, terrorism, or government actions."
+      }
+    },
+    "changes": {
+      "title": "14. Changes to These Terms",
+      "desc": "We may update these Terms from time to time to reflect changes in our practices or applicable laws. We will notify you of any material changes by posting the updated Terms on our website and updating the \"Last updated\" date."
+    },
+    "contact": {
+      "title": "15. Contact Us",
+      "intro": "If you have any questions about these Terms of Service, please contact us:",
+      "email": "Email",
+      "address": "Address",
+      "phone": "Phone",
+      "support": "Support Email"
+    }
+  },
+  "footer": {
+    "effective": "These Terms of Service are effective as of",
+    "remain": "and will remain in effect except with respect to any changes in its provisions in the future."
+  }
+}

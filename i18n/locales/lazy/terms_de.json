@@ -1,0 +1,200 @@
+{
+  "title": "Nutzungsbedingungen",
+  "lastUpdated": "Zuletzt aktualisiert",
+  "common": {
+    "we": "wir",
+    "our": "unser",
+    "or": "oder",
+    "us": "uns"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Einleitung",
+      "welcome": "Willkommen bei",
+      "govern": "Diese Nutzungsbedingungen (\"Bedingungen\") regeln Ihre Nutzung unseres Entwicklungsframeworks, unserer Tools und Dienste (zusammenfassend der \"Dienst\"). Durch den Zugriff auf oder die Nutzung unseres Dienstes stimmen Sie zu, an diese Bedingungen gebunden zu sein.",
+      "organization": "Wenn Sie unseren Dienst im Namen einer Organisation nutzen, erklären Sie, dass Sie die Befugnis haben, diese Organisation an diese Bedingungen zu binden. Wenn Sie diesen Bedingungen nicht zustimmen, nutzen Sie bitte unseren Dienst nicht."
+    },
+    "service": {
+      "title": "2. Dienstbeschreibung",
+      "description": "ist ein umfassendes Entwicklungsframework, das Tools, Komponenten und Infrastruktur zum Erstellen moderner Webanwendungen bereitstellt. Unser Dienst umfasst:",
+      "framework": "Entwicklungsframework und Bibliotheken",
+      "ui": "UI-Komponenten und Designsystem",
+      "auth": "Authentifizierungs- und Autorisierungsdienste",
+      "i18n": "Internationalisierungs- und Lokalisierungstools",
+      "billing": "Abrechnungs- und Abonnementverwaltung",
+      "docs": "Dokumentation und Support-Ressourcen"
+    },
+    "account": {
+      "title": "3. Kontoregistrierung und Sicherheit",
+      "creation": {
+        "title": "3.1 Kontenerstellung",
+        "desc": "Um auf bestimmte Funktionen unseres Dienstes zuzugreifen, müssen Sie ein Konto erstellen. Sie stimmen zu, bei der Registrierung genaue, aktuelle und vollständige Informationen anzugeben und diese Informationen zu aktualisieren, um sie genau, aktuell und vollständig zu halten."
+      },
+      "security": {
+        "title": "3.2 Kontosicherheit",
+        "desc": "Sie sind für den Schutz Ihrer Kontodaten und für alle Aktivitäten verantwortlich, die unter Ihrem Konto stattfinden. Sie stimmen zu, uns unverzüglich über jede unbefugte Nutzung Ihres Kontos oder jede andere Sicherheitsverletzung zu benachrichtigen."
+      },
+      "eligibility": {
+        "title": "3.3 Kontoberechtigung",
+        "desc": "Sie müssen mindestens 13 Jahre alt sein, um unseren Dienst zu nutzen. Wenn Sie unter 18 Jahre alt sind, müssen Sie die Zustimmung der Eltern oder des Vormunds haben, um unseren Dienst zu nutzen."
+      }
+    },
+    "acceptable": {
+      "title": "4. Richtlinie für akzeptable Nutzung",
+      "intro": "Sie stimmen zu, unseren Dienst nur für rechtmäßige Zwecke und in Übereinstimmung mit diesen Bedingungen zu nutzen. Sie stimmen zu, Folgendes nicht zu tun:",
+      "laws": "Den Dienst nutzen, um geltende Gesetze oder Vorschriften zu verletzen",
+      "infringe": "Die geistigen Eigentumsrechte anderer verletzen",
+      "harmful": "Schädliche, anstößige oder unangemessene Inhalte übertragen",
+      "unauthorized": "Versuchen, unbefugten Zugriff auf unsere Systeme oder die Konten anderer Benutzer zu erhalten",
+      "spam": "Den Dienst für Spam, Phishing oder andere böswillige Aktivitäten nutzen",
+      "disrupt": "Den Dienst oder die Server stören oder unterbrechen",
+      "reverse": "Unsere Software reverse engineerieren, dekompilieren oder disassemblieren",
+      "automated": "Automatisierte Systeme ohne Erlaubnis verwenden, um auf den Dienst zuzugreifen",
+      "share": "Ihre Kontodaten mit anderen teilen",
+      "competing": "Den Dienst nutzen, um konkurrierende Produkte oder Dienste zu erstellen"
+    },
+    "payment": {
+      "title": "5. Abonnement- und Zahlungsbedingungen",
+      "plans": {
+        "title": "5.1 Abonnementpläne",
+        "desc": "Wir bieten verschiedene Abonnementpläne mit unterschiedlichen Funktionen und Preisen an. Abonnementdetails, einschließlich Preise und Funktionen, sind auf unserer Website verfügbar und können von Zeit zu Zeit aktualisiert werden."
+      },
+      "processing": {
+        "title": "5.2 Zahlungsabwicklung",
+        "desc": "Zahlungen werden über sichere Drittanbieter-Zahlungsabwickler verarbeitet. Sie autorisieren uns, Ihre Zahlungsmethode für alle mit Ihrem Abonnement verbundenen Gebühren zu belasten."
+      },
+      "billing": {
+        "title": "5.3 Abrechnung und Verlängerung",
+        "desc": "Abonnements verlängern sich automatisch, es sei denn, sie werden vor dem Verlängerungsdatum gekündigt. Ihnen wird die geltende Abonnementgebühr an jedem Verlängerungsdatum berechnet."
+      },
+      "refunds": {
+        "title": "5.4 Rückerstattungen und Kündigung",
+        "desc": "Sie können Ihr Abonnement jederzeit über Ihre Kontoeinstellungen kündigen. Rückerstattungen werden gemäß unserer Rückerstattungsrichtlinie gewährt, die je nach Plan und Nutzung variieren kann."
+      }
+    },
+    "ip": {
+      "title": "6. Geistige Eigentumsrechte",
+      "ours": {
+        "title": "6.1 Unser geistiges Eigentum",
+        "desc": "Der Dienst, einschließlich aller Software, Inhalte und Materialien, gehört uns oder unseren Lizenzgebern und ist durch Gesetze zum geistigen Eigentum geschützt. Wir gewähren Ihnen eine beschränkte, nicht ausschließliche, nicht übertragbare Lizenz zur Nutzung des Dienstes gemäß diesen Bedingungen."
+      },
+      "yours": {
+        "title": "6.2 Ihre Inhalte",
+        "desc": "Sie behalten das Eigentum an allen Inhalten, die Sie mit unserem Dienst erstellen. Sie gewähren uns eine Lizenz zur Nutzung, Speicherung und Verarbeitung Ihrer Inhalte ausschließlich zur Bereitstellung und Verbesserung unseres Dienstes."
+      },
+      "opensource": {
+        "title": "6.3 Open-Source-Komponenten",
+        "desc": "Unser Dienst kann Open-Source-Softwarekomponenten enthalten. Die Nutzung solcher Komponenten unterliegt ihren jeweiligen Open-Source-Lizenzen."
+      }
+    },
+    "privacy": {
+      "title": "7. Datenschutz und Datensicherheit",
+      "desc": "Ihre Privatsphäre ist uns wichtig. Unsere Erhebung und Nutzung Ihrer persönlichen Informationen unterliegt unserer Datenschutzerklärung, die durch Verweis in diese Bedingungen einbezogen ist."
+    },
+    "availability": {
+      "title": "8. Dienstverfügbarkeit und Support",
+      "service": {
+        "title": "8.1 Dienstverfügbarkeit",
+        "desc": "Wir bemühen uns, eine hohe Dienstverfügbarkeit aufrechtzuerhalten, garantieren aber keinen unterbrechungsfreien Zugang. Der Dienst kann aufgrund von Wartungsarbeiten, Updates oder anderen Faktoren außerhalb unserer Kontrolle vorübergehend nicht verfügbar sein."
+      },
+      "support": {
+        "title": "8.2 Support-Dienste",
+        "desc": "Die Support-Verfügbarkeit variiert je nach Abonnementplan. Wir bieten Support über Dokumentation, Community-Foren und direkte Support-Kanäle an, wie in Ihrem Plan angegeben."
+      },
+      "updates": {
+        "title": "8.3 Updates und Änderungen",
+        "desc": "Wir können den Dienst von Zeit zu Zeit aktualisieren, um Funktionalität, Sicherheit oder Benutzererfahrung zu verbessern. Wir werden Sie angemessen über wesentliche Änderungen benachrichtigen, die Ihre Nutzung des Dienstes beeinträchtigen könnten."
+      }
+    },
+    "termination": {
+      "title": "9. Kündigung und Sperrung",
+      "you": {
+        "title": "9.1 Kündigung durch Sie",
+        "desc": "Sie können Ihr Konto jederzeit kündigen, indem Sie Ihr Abonnement kündigen und Ihr Konto über Ihre Kontoeinstellungen löschen."
+      },
+      "us": {
+        "title": "9.2 Kündigung durch uns",
+        "desc": "Wir können Ihr Konto sofort kündigen oder sperren, wenn Sie diese Bedingungen verletzen, betrügerische Aktivitäten ausüben oder aus einem anderen Grund nach unserem alleinigen Ermessen."
+      },
+      "effect": {
+        "title": "9.3 Auswirkungen der Kündigung",
+        "desc": "Bei Kündigung erlischt Ihr Recht zur Nutzung des Dienstes sofort. Wir können Ihre Kontodaten gemäß unseren Datenaufbewahrungsrichtlinien löschen."
+      }
+    },
+    "disclaimers": {
+      "title": "10. Haftungsausschlüsse und Beschränkungen",
+      "service": {
+        "title": "10.1 Dienst-Haftungsausschlüsse",
+        "desc": "DER DIENST WIRD \"WIE BESEHEN\" UND \"WIE VERFÜGBAR\" OHNE GEWÄHRLEISTUNGEN JEGLICHER ART, AUSDRÜCKLICH ODER STILLSCHWEIGEND, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF STILLSCHWEIGENDE GEWÄHRLEISTUNGEN DER MARKTGÄNGIGKEIT, EIGNUNG FÜR EINEN BESTIMMTEN ZWECK UND NICHTVERLETZUNG."
+      },
+      "liability": {
+        "title": "10.2 Haftungsbeschränkung",
+        "desc": "SOWEIT GESETZLICH ZULÄSSIG, HAFTEN WIR NICHT FÜR INDIREKTE, ZUFÄLLIGE, BESONDERE, FOLGE- ODER STRAFSCHÄDEN, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF VERLUST VON GEWINNEN, DATEN ODER NUTZUNG, DIE SIE ODER EIN DRITTER ERLEIDEN."
+      },
+      "maximum": {
+        "title": "10.3 Maximale Haftung",
+        "desc": "UNSERE GESAMTHAFTUNG GEGENÜBER IHNEN FÜR ALLE ANSPRÜCHE, DIE AUS DIESEN BEDINGUNGEN ODER DEM DIENST ENTSTEHEN ODER DAMIT ZUSAMMENHÄNGEN, ÜBERSTEIGT NICHT DEN BETRAG, DEN SIE FÜR DEN DIENST IN DEN ZWÖLF MONATEN VOR DEM ANSPRUCH GEZAHLT HABEN."
+      }
+    },
+    "indemnification": {
+      "title": "11. Freistellung",
+      "desc": "Sie verpflichten sich, uns und unsere leitenden Angestellten, Direktoren, Mitarbeiter und Vertreter von und gegen alle Ansprüche, Schäden, Verluste und Ausgaben freizustellen, zu verteidigen und schadlos zu halten, die aus Ihrer Nutzung des Dienstes oder der Verletzung dieser Bedingungen entstehen oder damit zusammenhängen."
+    },
+    "governing": {
+      "title": "12. Geltendes Recht und Streitbeilegung",
+      "law": {
+        "title": "12.1 Geltendes Recht",
+        "desc": "Diese Bedingungen unterliegen den Gesetzen von",
+        "without": "ohne Rücksicht auf seine Kollisionsrechtsgrundsätze."
+      },
+      "dispute": {
+        "title": "12.2 Streitbeilegung",
+        "desc": "Alle Streitigkeiten, die aus diesen Bedingungen oder dem Dienst entstehen oder damit zusammenhängen, werden durch bindende Schiedsverfahren gemäß den Regeln von",
+        "location": "Das Schiedsverfahren wird in"
+      },
+      "class": {
+        "title": "12.3 Verzicht auf Sammelklagen",
+        "desc": "Sie stimmen zu, dass jedes Schiedsverfahren oder Rechtsverfahren auf individueller Basis und nicht als Sammelklage oder Repräsentativklage durchgeführt wird."
+      }
+    },
+    "miscellaneous": {
+      "title": "13. Verschiedenes",
+      "entire": {
+        "title": "13.1 Vollständige Vereinbarung",
+        "desc": "Diese Bedingungen zusammen mit unserer Datenschutzerklärung bilden die vollständige Vereinbarung zwischen Ihnen und uns bezüglich des Dienstes und ersetzen alle vorherigen Vereinbarungen und Verständigungen."
+      },
+      "severability": {
+        "title": "13.2 Teilnichtigkeit",
+        "desc": "Wenn eine Bestimmung dieser Bedingungen für ungültig oder nicht durchsetzbar erklärt wird, bleiben die übrigen Bestimmungen in vollem Umfang in Kraft."
+      },
+      "waiver": {
+        "title": "13.3 Verzicht",
+        "desc": "Unser Versäumnis, eine Bestimmung dieser Bedingungen durchzusetzen, stellt keinen Verzicht auf diese Bestimmung oder eine andere Bestimmung dar."
+      },
+      "assignment": {
+        "title": "13.4 Übertragung",
+        "desc": "Sie dürfen Ihre Rechte oder Pflichten aus diesen Bedingungen ohne unsere schriftliche Zustimmung nicht übertragen oder abtreten. Wir können diese Bedingungen ohne Einschränkung übertragen."
+      },
+      "force": {
+        "title": "13.5 Höhere Gewalt",
+        "desc": "Wir haften nicht für das Versäumnis, unsere Verpflichtungen aufgrund von Umständen zu erfüllen, die außerhalb unserer angemessenen Kontrolle liegen, einschließlich, aber nicht beschränkt auf Naturkatastrophen, Krieg, Terrorismus oder Regierungsmaßnahmen."
+      }
+    },
+    "changes": {
+      "title": "14. Änderungen dieser Bedingungen",
+      "desc": "Wir können diese Bedingungen von Zeit zu Zeit aktualisieren, um Änderungen in unseren Praktiken oder geltenden Gesetzen widerzuspiegeln. Wir werden Sie über wesentliche Änderungen informieren, indem wir die aktualisierten Bedingungen auf unserer Website veröffentlichen und das Datum \"Zuletzt aktualisiert\" aktualisieren."
+    },
+    "contact": {
+      "title": "15. Kontaktieren Sie uns",
+      "intro": "Wenn Sie Fragen zu diesen Nutzungsbedingungen haben, kontaktieren Sie uns bitte:",
+      "email": "E-Mail",
+      "address": "Adresse",
+      "phone": "Telefon",
+      "support": "Support-E-Mail"
+    }
+  },
+  "footer": {
+    "effective": "Diese Nutzungsbedingungen treten in Kraft ab",
+    "remain": "und bleiben in Kraft, außer in Bezug auf Änderungen ihrer Bestimmungen in der Zukunft."
+  }
+}

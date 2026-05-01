@@ -1,0 +1,616 @@
+{
+  "signIn": "로그인",
+  "choosePlatform": "로그인할 플랫폼을 선택하세요",
+  "providers": {
+    "google": "구글",
+    "facebook": "페이스북",
+    "github": "깃허브",
+    "twitter": "트위터",
+    "microsoft": "마이크로소프트",
+    "yahoo": "야후",
+    "apple": "애플"
+  },
+  "buttons": {
+    "signIn": "{{provider}}로 로그인",
+    "continue": "{{provider}}로 계속하기",
+    "verify": "이메일 확인",
+    "sendVerification": "확인 이메일 보내기",
+    "signOut": "로그아웃",
+    "loading": "로딩 중..."
+  },
+  "accountLinking": {
+    "title": "계정 연결 필요",
+    "message": "이 이메일은 이미 다른 로그인 방법({{methods}})과 연결되어 있습니다. 계정을 연결하려면 해당 방법 중 하나로 로그인해 주세요.",
+    "instruction": "계정을 연결하려면 다음 방법 중 하나로 로그인해 주세요:",
+    "explanation": "로그인하면 계정이 자동으로 연결되어 앞으로 두 로그인 방법을 모두 사용할 수 있습니다.",
+    "success": "계정이 성공적으로 연결되었습니다!",
+    "error": "계정 연결에 실패했습니다. 다시 시도해 주세요.",
+    "emailLabel": "이메일:"
+  },
+  "emailVerification": {
+    "title": "이메일 확인",
+    "status": {
+      "verified": "이메일이 확인되었습니다.",
+      "unverified": "모든 기능을 사용하려면 이메일을 확인해 주세요."
+    },
+    "sending": "확인 이메일 전송 중...",
+    "success": "확인 이메일을 보냈습니다! 받은편지함을 확인해 주세요.",
+    "alreadyVerified": "이메일이 이미 확인되었습니다.",
+    "notSignedIn": "이메일을 확인하려면 로그인해야 합니다.",
+    "error": "확인 이메일 전송에 실패했습니다. 다시 시도해 주세요."
+  },
+  "errors": {
+    "auth/popup-closed-by-user": "로그인 팝업이 완료 전에 닫혔습니다.",
+    "auth/cancelled-popup-request": "로그인 팝업 요청이 취소되었습니다.",
+    "auth/popup-blocked": "로그인 팝업이 브라우저에 의해 차단되었습니다.",
+    "auth/email-already-in-use": "이 이메일은 이미 등록되어 있습니다.",
+    "auth/invalid-email": "이메일 주소가 유효하지 않습니다.",
+    "auth/operation-not-allowed": "이 로그인 방법이 활성화되어 있지 않습니다.",
+    "auth/weak-password": "비밀번호가 너무 약합니다.",
+    "auth/user-disabled": "이 계정이 비활성화되었습니다.",
+    "auth/user-not-found": "이 이메일로 등록된 계정을 찾을 수 없습니다.",
+    "auth/wrong-password": "비밀번호가 올바르지 않습니다.",
+    "auth/network-request-failed": "네트워크 오류가 발생했습니다. 다시 시도해 주세요.",
+    "auth/internal-error": "내부 오류가 발생했습니다. 다시 시도해 주세요.",
+    "auth/invalid-credential": "제공된 인증 정보가 유효하지 않습니다.",
+    "auth/account-exists-with-different-credential": "같은 이메일 주소로 다른 로그인 정보를 사용하는 계정이 이미 존재합니다.",
+    "auth/provider-not-enabled": "{{provider}} 인증이 활성화되어 있지 않습니다",
+    "auth/unknown-provider": "알 수 없는 제공자: {{provider}}",
+    "auth/missing-provider": "인증 제공자가 구성되어 있지 않습니다",
+    "auth/no-user-signed-in": "현재 로그인한 사용자가 없습니다",
+    "auth/oauth-incomplete": "인증 프로세스가 완료되지 않았습니다. 다시 로그인해 주세요.",
+    "fallback": {
+      "title": "인증 필요",
+      "description": "이 페이지에 액세스하려면 로그인해야 합니다.",
+      "chooseProvider": "선호하는 로그인 방법을 선택하세요",
+      "authOptions": "인증 옵션",
+      "secure": "데이터는 안전하게 암호화되어 있습니다.",
+      "terms": "로그인하면 서비스 약관에 동의하는 것입니다."
+    },
+    "genericError": "인증에 실패했습니다. 다시 시도해 주세요.",
+    "fieldUpdate": "{{field}} 업데이트 실패",
+    "hiddenField": "숨겨진 필드 {{field}} 렌더링 오류",
+    "unsupportedFieldType": "지원되지 않는 필드 유형: {{type}}",
+    "fieldRendering": "필드 {{field}} 렌더링 오류",
+    "fallingBackToTextField": "지원되지 않는 유형 {{type}}에 대해 텍스트 필드 사용",
+    "invalidFieldProps": "필드 {{field}}에 대한 잘못된 구성"
+  },
+  "status": {
+    "loading": "로딩 중...",
+    "authenticating": "인증 중...",
+    "verifying": "확인 중...",
+    "checking": "권한 확인 중..."
+  },
+  "aria": {
+    "signInOptions": "로그인 옵션",
+    "signInButton": "{{provider}}로 로그인",
+    "loadingState": "인증 로딩 중",
+    "errorAlert": "인증 오류",
+    "successAlert": "성공",
+    "accountLinkingRequired": "계정 연결 필요",
+    "verificationRequired": "이메일 확인 필요"
+  },
+  "home": {
+    "title": "DoNotDev",
+    "description": "DoNotDev는 TypeScript와 순수 CSS로 웹 애플리케이션을 구축하는 플랫폼입니다.",
+    "getStarted": "시작하기",
+    "whyChooseDoNotDev": "DoNotDev를 선택하는 이유",
+    "openSource": "오픈 소스",
+    "freeAndOpenSource": "활기찬 커뮤니티와 함께하는 무료 오픈 소스입니다.",
+    "customizable": "커스터마이징 가능",
+    "flexibleComponents": "프로젝트 요구사항에 맞게 조정할 수 있는 유연한 컴포넌트입니다.",
+    "developerFocused": "개발자 중심",
+    "scalableArchitecture": "확장 가능한 아키텍처",
+    "secureByDesign": "설계상 안전함",
+    "fastIntegration": "빠른 통합",
+    "scaleEffortlessly": "프로토타입부터 엔터프라이즈 솔루션까지 쉽게 확장하세요.",
+    "header": {
+      "purchase": "구매"
+    }
+  },
+  "actions": {
+    "create": "생성",
+    "update": "업데이트",
+    "delete": "삭제",
+    "cancel": "취소",
+    "save": "저장",
+    "confirm": "확인",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "search": "검색",
+    "searchPlaceholder": "검색...",
+    "filter": "필터",
+    "clear": "지우기",
+    "reset": "재설정",
+    "apply": "적용",
+    "select": "선택",
+    "upload": "업로드",
+    "download": "다운로드",
+    "close": "닫기"
+  },
+  "guard": {
+    "signInRequired": "이 페이지에 접근하려면 로그인해 주세요"
+  },
+  "messages": {
+    "createSuccess": "{{entity}}이(가) 성공적으로 생성되었습니다",
+    "updateSuccess": "{{entity}}이(가) 성공적으로 업데이트되었습니다",
+    "deleteSuccess": "{{entity}}이(가) 성공적으로 삭제되었습니다",
+    "error": "오류가 발생했습니다",
+    "loading": "로딩 중...",
+    "noResults": "결과를 찾을 수 없습니다",
+    "confirmDelete": "이 {{entity}}을(를) 삭제하시겠습니까?",
+    "unsavedChanges": "저장되지 않은 변경사항이 있습니다",
+    "sessionExpired": "세션이 만료되었습니다",
+    "networkError": "네트워크 오류가 발생했습니다",
+    "unauthorized": "권한이 없습니다",
+    "forbidden": "접근이 금지되었습니다",
+    "serverError": "서버 오류가 발생했습니다",
+    "notFound": {
+      "title": "페이지를 찾을 수 없습니다",
+      "description": "찾고 있는 페이지가 존재하지 않거나 이동되었습니다.",
+      "suggestions": "다음을 찾고 계실 수 있습니다:",
+      "goHome": "홈으로 이동",
+      "goBack": "뒤로 가기"
+    }
+  },
+  "nav": {
+    "signIn": "로그인"
+  },
+  "pagination": {
+    "showing": "{{total}}개 중 {{from}}~{{to}}개 표시",
+    "previous": "이전",
+    "next": "다음",
+    "page": "{{page}}/{{total}} 페이지"
+  },
+  "filters": {
+    "title": "필터",
+    "apply": "필터 적용",
+    "clear": "필터 지우기",
+    "noResults": "필터와 일치하는 결과가 없습니다",
+    "selected": "{{count}}개 선택됨"
+  },
+  "settings": {
+    "title": "설정",
+    "theme": "테마",
+    "language": "언어",
+    "clearCache": {
+      "title": "캐시 지우기",
+      "localStorage": "로컬 스토리지",
+      "sessionStorage": "세션 스토리지",
+      "applicationCache": "애플리케이션 캐시",
+      "serviceWorker": "서비스 워커",
+      "cookies": "쿠키",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "메모리 캐시",
+      "button": "캐시 지우기",
+      "clearing": "지우는 중...",
+      "error": "캐시 지우기 오류",
+      "success": "캐시가 성공적으로 지워졌습니다: {{items}}",
+      "noItemsCleared": "지워진 캐시 항목이 없습니다"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "DoNotDev 앱"
+    },
+    "defaultTitle": "페이지",
+    "defaultDescription": "페이지 설명",
+    "locale": "ko_KR",
+    "themeSelector": {
+      "changeTheme": "테마 변경",
+      "tooltipWithTransition": "테마 변경: {{current}} → {{next}}",
+      "tooltipWithCurrent": "테마 변경: {{current}}",
+      "tooltipWithNext": "테마 변경: {{next}}(으)로 전환"
+    },
+    "languageSelector": {
+      "changeLanguage": "언어 변경"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "회사",
+        "description": "포괄적인 개발 플랫폼으로 더 나은 제품을 더 빠르게 구축하세요."
+      },
+      "social": {
+        "twitter": "트위터",
+        "github": "깃허브",
+        "discord": "디스코드"
+      },
+      "sections": {
+        "product": {
+          "title": "제품",
+          "features": "기능",
+          "pricing": "가격",
+          "docs": "문서",
+          "updates": "업데이트"
+        },
+        "support": {
+          "title": "지원",
+          "help": "도움말",
+          "contact": "문의",
+          "status": "상태",
+          "community": "커뮤니티"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "모든 권리 보유.",
+      "cookieSettings": "쿠키 설정",
+      "legalNotice": "법적 고지",
+      "privacyPolicy": "개인정보 보호정책",
+      "termsOfService": "서비스 약관",
+      "builtWith": "제작 ❤️ & DoNotDev ©",
+      "collapse": "푸터 접기",
+      "expand": "푸터 펼치기"
+    }
+  },
+  "search": {
+    "ariaLabel": "검색",
+    "label": "검색"
+  },
+  "goTo": {
+    "ariaLabel": "페이지로 이동",
+    "label": "이동"
+  },
+  "globalGoTo": {
+    "placeholder": "경로 필터링 또는 페이지로 이동...",
+    "noResults": "경로를 찾을 수 없습니다.",
+    "favorites": "즐겨찾기",
+    "allPages": "모든 페이지",
+    "addFavorite": "즐겨찾기에 추가",
+    "removeFavorite": "즐겨찾기에서 제거"
+  },
+  "copyToClipboard": "클립보드에 복사",
+  "copied": "복사됨!",
+  "copyPassword": "비밀번호 복사",
+  "table": {
+    "searchPlaceholder": "검색...",
+    "filters": "필터",
+    "selectAllRows": "모든 행 선택",
+    "selectRow": "{{index}}번째 행 선택",
+    "showingResults": "{{total}}개 결과 중 {{from}}~{{to}}개 표시",
+    "previous": "이전",
+    "next": "다음",
+    "page": "{{current}}/{{total}} 페이지"
+  },
+  "language": {
+    "selectLanguage": "언어 선택",
+    "searchLanguages": "언어 검색...",
+    "noLanguagesFound": "언어를 찾을 수 없습니다",
+    "changeLanguage": "언어 변경"
+  },
+  "form": {
+    "submit": "제출",
+    "cancel": "취소",
+    "submitting": "제출 중...",
+    "loading": "로딩 중...",
+    "add": "추가",
+    "remove": "제거",
+    "typeAndPressAdd": "입력 후 추가 버튼을 누르세요...",
+    "enterLocationData": "위치 데이터 입력 (JSON)"
+  },
+  "navigation": {
+    "more": "더보기",
+    "home": "홈"
+  },
+  "pwa": {
+    "update": {
+      "title": "업데이트 사용 가능",
+      "description": "새 버전이 준비되었습니다. 업데이트하려면 새로고침하세요.",
+      "button": "업데이트",
+      "altText": "애플리케이션 업데이트"
+    }
+  },
+  "document": {
+    "upload": {
+      "hint": "클릭하거나 파일을 드래그하여 업로드",
+      "ariaLabel": "문서 업로드"
+    },
+    "preview": {
+      "title": "문서 미리보기",
+      "ariaLabel": "문서 미리보기"
+    },
+    "delete": {
+      "ariaLabel": "문서 삭제",
+      "failed": "문서 삭제에 실패했습니다"
+    },
+    "errors": {
+      "maxFiles": "최대 {{max}}개 파일만 허용됩니다",
+      "invalidType": "\"{{fileName}}\"은(는) 허용되지 않는 파일 형식입니다",
+      "exceedsSize": "\"{{fileName}}\"이(가) 최대 크기 {{size}} MB를 초과합니다"
+    }
+  },
+  "image": {
+    "alt": {
+      "upload": "이미지 {{index}} 업로드"
+    },
+    "upload": {
+      "pending": "대기 중",
+      "dropzoneMultiple": "이미지를 여기에 놓거나 클릭하여 업로드",
+      "dropzoneSingle": "이미지를 여기에 놓거나 클릭하여 업로드"
+    }
+  },
+  "code": {
+    "copyCode": "코드 복사",
+    "copied": "복사됨!",
+    "copyCodeToClipboard": "코드를 클립보드에 복사"
+  },
+  "video": {
+    "clickToWatch": "동영상을 보려면 클릭",
+    "watchVideo": "동영상 보기"
+  },
+  "inspector": {
+    "pageSource": "페이지 소스",
+    "inspectPageSourceCode": "페이지 소스 코드 검사"
+  },
+  "sheet": {
+    "navigation": "내비게이션",
+    "codeInspector": "코드 검사기",
+    "debugPanel": "디버그 패널"
+  },
+  "routeError": {
+    "title": "문제가 발생했습니다",
+    "description": "이 페이지를 로드하는 중 오류가 발생했습니다.",
+    "dataSafe": "걱정하지 마세요. 데이터는 안전합니다.",
+    "errorId": "오류 ID",
+    "errorMessage": "오류 메시지",
+    "copied": "복사됨",
+    "copyDetails": "세부 정보 복사",
+    "tryAgain": "다시 시도",
+    "goHome": "홈으로",
+    "goBack": "뒤로",
+    "contactSupport": "문제가 계속되면 지원팀에 문의하세요."
+  },
+  "redirectOverlay": {
+    "phases": {
+      "connecting": "보안 서버에 연결 중...",
+      "preparing": "세션 준비 중...",
+      "redirecting": "리다이렉트 중...",
+      "timeout": "예상보다 오래 걸리고 있습니다..."
+    },
+    "cancel": "취소",
+    "doNotRefresh": "새로고침하거나 뒤로 가기를 누르지 마세요",
+    "default": {
+      "title": "리다이렉트 중",
+      "message": "리다이렉트 중입니다. 잠시만 기다려 주세요...",
+      "subtitle": "잠시 시간이 걸릴 수 있습니다",
+      "ariaLabel": "리다이렉트 중입니다. 잠시만 기다려 주세요"
+    },
+    "stripe-checkout": {
+      "title": "Stripe로 이동 중",
+      "message": "보안 결제 초기화 중...",
+      "subtitle": "처음 로드 시 시간이 걸릴 수 있습니다",
+      "ariaLabel": "보안 결제 준비 중입니다. 잠시만 기다려 주세요"
+    },
+    "stripe-portal": {
+      "title": "Stripe로 이동 중",
+      "message": "청구 포털 열기 중...",
+      "subtitle": "구독 및 청구서 관리",
+      "ariaLabel": "청구 포털을 열고 있습니다. 잠시만 기다려 주세요"
+    },
+    "oauth-google": {
+      "title": "Google로 로그인",
+      "message": "Google에 연결 중...",
+      "subtitle": "로그인을 위해 리다이렉트됩니다",
+      "ariaLabel": "Google로 로그인 중입니다. 잠시만 기다려 주세요"
+    },
+    "oauth-github": {
+      "title": "GitHub로 로그인",
+      "message": "GitHub에 연결 중...",
+      "subtitle": "로그인을 위해 리다이렉트됩니다",
+      "ariaLabel": "GitHub로 로그인 중입니다. 잠시만 기다려 주세요"
+    },
+    "oauth-apple": {
+      "title": "Apple로 로그인",
+      "message": "Apple에 연결 중...",
+      "subtitle": "로그인을 위해 리다이렉트됩니다",
+      "ariaLabel": "Apple로 로그인 중입니다. 잠시만 기다려 주세요"
+    },
+    "oauth-microsoft": {
+      "title": "Microsoft로 로그인",
+      "message": "Microsoft에 연결 중...",
+      "subtitle": "로그인을 위해 리다이렉트됩니다",
+      "ariaLabel": "Microsoft로 로그인 중입니다. 잠시만 기다려 주세요"
+    },
+    "oauth-facebook": {
+      "title": "Facebook으로 로그인",
+      "message": "Facebook에 연결 중...",
+      "subtitle": "로그인을 위해 리다이렉트됩니다",
+      "ariaLabel": "Facebook으로 로그인 중입니다. 잠시만 기다려 주세요"
+    },
+    "auth-email-link": {
+      "title": "인증 메일 발송 중",
+      "message": "인증 링크 준비 중...",
+      "subtitle": "받은 편지함을 확인하세요",
+      "ariaLabel": "인증 이메일을 발송 중입니다. 잠시만 기다려 주세요"
+    }
+  },
+  "templates": {
+    "home": {
+      "hero": {
+        "badge": "환영합니다",
+        "title": "놀라운 것을 만들어보세요",
+        "subtitle": "다음 프로젝트를 더 빠르게 시작하고, 성장시키고, 확장할 수 있는 현대적인 플랫폼입니다.",
+        "primaryAction": "시작하기",
+        "secondaryAction": "자세히 알아보기"
+      },
+      "features": {
+        "title": "기능",
+        "feature1": {
+          "title": "빠른 속도",
+          "description": "즉각적인 페이지 로드와 실시간 업데이트로 속도에 최적화되어 있습니다."
+        },
+        "feature2": {
+          "title": "기본 보안",
+          "description": "인증, 역할 기반 접근 제어, 암호화가 내장된 엔터프라이즈급 보안입니다."
+        },
+        "feature3": {
+          "title": "확장 준비 완료",
+          "description": "프로토타입부터 프로덕션까지 - 견고하고 모듈식 아키텍처로 쉽게 확장하세요."
+        }
+      },
+      "howItWorks": {
+        "title": "이용 방법",
+        "step1": {
+          "title": "회원가입",
+          "description": "몇 초 만에 계정을 만드세요. 시작하는 데 신용카드가 필요하지 않습니다."
+        },
+        "step2": {
+          "title": "설정",
+          "description": "워크스페이스를 설정하고, 팀원을 초대하고, 워크플로우를 커스터마이징하세요."
+        },
+        "step3": {
+          "title": "출시",
+          "description": "자신 있게 라이브로 전환하세요. 자신의 속도로 배포하고, 모니터링하고, 개선하세요."
+        }
+      },
+      "showcase": {
+        "title": "왜 저희인가요",
+        "item1": {
+          "title": "최신 스택",
+          "description": "성능, 안정성, 개발자 만족도를 위한 최첨단 기술로 구축되었습니다."
+        },
+        "item2": {
+          "title": "오픈 소스",
+          "description": "투명하고, 커뮤니티 주도적이며, 무료로 사용할 수 있습니다."
+        },
+        "item3": {
+          "title": "개발자 우선",
+          "description": "개발자가 개발자를 위해 설계했습니다. 깔끔한 API와 훌륭한 문서를 제공합니다."
+        },
+        "item4": {
+          "title": "글로벌 지원",
+          "description": "처음부터 다국어, 다지역, 접근성을 지원합니다."
+        }
+      },
+      "cta": {
+        "title": "시작할 준비가 되셨나요?",
+        "subtitle": "더 나은 제품을 더 빠르게 구축하는 수천 개의 팀에 합류하세요.",
+        "primaryAction": "무료로 시작하기",
+        "secondaryAction": "영업팀 문의"
+      }
+    },
+    "dashboard": {
+      "title": "대시보드",
+      "stats": {
+        "revenue": "매출",
+        "orders": "주문",
+        "customers": "고객",
+        "conversion": "전환율"
+      },
+      "activity": {
+        "title": "최근 활동",
+        "item1": "새 주문 #1234 접수",
+        "time1": "2분 전",
+        "item2": "고객 John D. 가입",
+        "time2": "15분 전",
+        "item3": "'Pro Plan' 제품 업데이트",
+        "time3": "1시간 전",
+        "item4": "$299 결제 완료",
+        "time4": "3시간 전"
+      },
+      "actions": {
+        "title": "빠른 작업",
+        "newProduct": "새 제품",
+        "viewReports": "보고서 보기",
+        "manageTeam": "팀 관리"
+      }
+    },
+    "settings": {
+      "title": "설정",
+      "tabs": {
+        "general": "일반",
+        "notifications": "알림",
+        "appearance": "외관"
+      },
+      "general": {
+        "appInfo": "애플리케이션",
+        "appName": "이름",
+        "description": "설명",
+        "language": "언어",
+        "languageHint": "언어는 헤더 메뉴에서 변경할 수 있습니다."
+      },
+      "notifications": {
+        "preferences": "알림 설정",
+        "email": "이메일 알림",
+        "emailDesc": "이메일로 업데이트 및 알림을 받으세요.",
+        "push": "푸시 알림",
+        "pushDesc": "실시간 푸시 알림을 받으세요.",
+        "marketing": "마케팅 이메일",
+        "marketingDesc": "제품 업데이트 및 프로모션을 받으세요."
+      },
+      "appearance": {
+        "theme": "테마",
+        "darkMode": "다크 모드",
+        "currentTheme": "현재 테마"
+      }
+    },
+    "profile": {
+      "title": "프로필",
+      "subtitle": "계정 설정 및 환경설정을 관리하세요.",
+      "identity": {
+        "title": "신원",
+        "displayName": "표시 이름",
+        "email": "이메일",
+        "emailVerified": "확인됨",
+        "emailUnverified": "미확인"
+      },
+      "security": {
+        "title": "보안",
+        "updatePassword": "비밀번호 변경",
+        "linkedProviders": "연결된 제공자"
+      },
+      "subscription": {
+        "title": "구독",
+        "currentPlan": "현재 플랜",
+        "status": "상태",
+        "manageBilling": "결제 관리",
+        "noPlan": "활성 플랜 없음"
+      },
+      "dangerZone": {
+        "title": "위험 구역",
+        "deleteAccount": "계정 삭제",
+        "deleteWarning": "이 작업은 영구적이며 되돌릴 수 없습니다. 모든 데이터가 삭제됩니다."
+      },
+      "signOut": "로그아웃"
+    }
+  },
+  "canvas": {
+    "checklist": {
+      "addItem": "Add item",
+      "noItems": "아직 항목이 없습니다.",
+      "remove": "제거",
+      "toggleAria": "\"{{text}}\" 전환",
+      "removeAria": "{{text}} 제거"
+    },
+    "brainSearch": {
+      "resultsFor": "Results for ",
+      "match": "match",
+      "matches": "matches",
+      "noMatches": "No matches.",
+      "tagFiltersLabel": "Tag filters"
+    },
+    "mailTriage": {
+      "noMessages": "No messages.",
+      "columns": {
+        "sender": "Sender",
+        "subject": "Subject",
+        "received": "Received",
+        "actions": "Actions"
+      },
+      "actions": {
+        "archive": "Archive",
+        "archiveAria": "Archive \"{{subject}}\"",
+        "reply": "Reply",
+        "replyAria": "Reply to \"{{subject}}\"",
+        "flag": "Flag",
+        "flagAria": "Star \"{{subject}}\"",
+        "open": "Open",
+        "openAria": "Open \"{{subject}}\""
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "name": "@donotdev/config",
+  "version": "0.1.42",
+  "private": true,
+  "type": "module",
+  "description": "Unified configuration system for DoNotDev framework - build tool configs for Vite, Next.js, ESBuild",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./vite": {
+      "types": "./vite/index.d.ts",
+      "default": "./vite/index.js"
+    },
+    "./next": {
+      "types": "./next/index.d.ts",
+      "default": "./next/index.js"
+    },
+    "./functions": {
+      "types": "./functions/index.d.ts",
+      "default": "./functions/index.js"
+    }
+  },
+  "files": [
+    "vite/**/*.js",
+    "vite/**/*.d.ts",
+    "next/**/*.js",
+    "next/**/*.d.ts",
+    "functions/**/*.js",
+    "functions/**/*.d.ts",
+    "discovery/**/*.js",
+    "discovery/**/*.d.ts",
+    "utils/**/*.js",
+    "utils/**/*.d.ts",
+    "*.js",
+    "*.d.ts"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "clean": "echo 'Config is bundled into @donotdev/core'",
+    "build": "echo 'Config is bundled into @donotdev/core - build via core handler'"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    },
+    "@vitejs/plugin-react": {
+      "optional": true
+    },
+    "vite": {
+      "optional": true
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "MIT"
+}

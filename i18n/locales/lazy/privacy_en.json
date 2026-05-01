@@ -1,0 +1,178 @@
+{
+  "title": "Privacy Policy",
+  "lastUpdated": "Last updated",
+  "common": {
+    "we": "we",
+    "our": "our",
+    "or": "or",
+    "us": "us"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introduction",
+      "welcome": "Welcome to",
+      "commitment": "We are committed to protecting your privacy and ensuring you have a positive experience on our platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our development framework, tools, and services.",
+      "agreement": "you agree to the collection and use of information in accordance with this policy. If you do not agree with our policies and practices, please do not use our services."
+    },
+    "collection": {
+      "title": "2. Information We Collect",
+      "provided": {
+        "title": "2.1 Information You Provide",
+        "account": "Account Information",
+        "accountDesc": "Name, email address, password, and profile information when you create an account",
+        "usage": "Usage Data",
+        "usageDesc": "Information about how you use our services, including features accessed and time spent",
+        "communication": "Communication",
+        "communicationDesc": "Messages, feedback, and support requests you send to us",
+        "payment": "Payment Information",
+        "paymentDesc": "Billing details and payment method information for premium features",
+        "project": "Project Data",
+        "projectDesc": "Code, configurations, and project files you create using our framework"
+      },
+      "automatic": {
+        "title": "2.2 Automatically Collected Information",
+        "device": "Device Information",
+        "deviceDesc": "IP address, browser type, operating system, and device identifiers",
+        "analytics": "Usage Analytics",
+        "analyticsDesc": "Pages visited, features used, and interaction patterns",
+        "performance": "Performance Data",
+        "performanceDesc": "Error logs, performance metrics, and system diagnostics",
+        "cookies": "Cookies and Tracking",
+        "cookiesDesc": "Small data files stored on your device to improve your experience"
+      }
+    },
+    "usage": {
+      "title": "3. How We Use Your Information",
+      "intro": "We use the information we collect to:",
+      "provide": "Provide, maintain, and improve our services",
+      "process": "Process transactions and manage your account",
+      "send": "Send you important updates, security alerts, and support messages",
+      "respond": "Respond to your comments, questions, and support requests",
+      "analyze": "Analyze usage patterns to enhance user experience",
+      "detect": "Detect and prevent fraud, abuse, and security threats",
+      "comply": "Comply with legal obligations and enforce our terms",
+      "develop": "Develop new features and services based on user feedback"
+    },
+    "sharing": {
+      "title": "4. Information Sharing and Disclosure",
+      "intro": "We do not sell, trade, or rent your personal information to third parties. We may share your information in the following circumstances:",
+      "providers": {
+        "title": "4.1 Service Providers",
+        "intro": "We may share information with trusted third-party service providers who assist us in operating our platform, such as:",
+        "hosting": "Cloud hosting and infrastructure providers",
+        "payment": "Payment processors for billing and transactions",
+        "analytics": "Analytics and monitoring services",
+        "support": "Customer support and communication tools"
+      },
+      "legal": {
+        "title": "4.2 Legal Requirements",
+        "desc": "We may disclose your information if required by law, court order, or government request, or to protect our rights, property, or safety."
+      },
+      "business": {
+        "title": "4.3 Business Transfers",
+        "desc": "In the event of a merger, acquisition, or sale of assets, your information may be transferred as part of the business transaction."
+      }
+    },
+    "security": {
+      "title": "5. Data Security",
+      "intro": "We implement appropriate technical and organizational measures to protect your information against unauthorized access, alteration, disclosure, or destruction. These measures include:",
+      "encryption": "Encryption of data in transit and at rest",
+      "assessments": "Regular security assessments and updates",
+      "access": "Access controls and authentication mechanisms",
+      "training": "Employee training on data protection practices",
+      "incident": "Incident response and breach notification procedures"
+    },
+    "retention": {
+      "title": "6. Data Retention",
+      "intro": "We retain your information for as long as necessary to provide our services, comply with legal obligations, resolve disputes, and enforce our agreements. The retention period varies based on the type of information:",
+      "account": "Account Information",
+      "accountDesc": "Retained while your account is active and for a reasonable period after deletion",
+      "usage": "Usage Data",
+      "usageDesc": "Retained for analytics and service improvement purposes",
+      "payment": "Payment Information",
+      "paymentDesc": "Retained as required by financial regulations",
+      "communication": "Communication Records",
+      "communicationDesc": "Retained for customer support and legal compliance"
+    },
+    "rights": {
+      "title": "7. Your Rights and Choices",
+      "intro": "Depending on your location, you may have the following rights regarding your personal information:",
+      "access": {
+        "title": "7.1 Access and Portability",
+        "desc": "You can request access to your personal information and receive a copy in a portable format."
+      },
+      "correction": {
+        "title": "7.2 Correction and Update",
+        "desc": "You can request correction of inaccurate or incomplete information."
+      },
+      "deletion": {
+        "title": "7.3 Deletion",
+        "desc": "You can request deletion of your personal information, subject to legal requirements."
+      },
+      "restriction": {
+        "title": "7.4 Restriction and Objection",
+        "desc": "You can request restriction of processing or object to certain uses of your information."
+      },
+      "marketing": {
+        "title": "7.5 Marketing Communications",
+        "desc": "You can opt out of marketing communications at any time using the unsubscribe link or contacting us directly."
+      }
+    },
+    "cookies": {
+      "title": "8. Cookies and Tracking Technologies",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience, analyze usage, and provide personalized content. You can control cookie settings through your browser preferences.",
+      "types": {
+        "title": "8.1 Types of Cookies We Use",
+        "essential": "Essential Cookies",
+        "essentialDesc": "Required for basic functionality and security",
+        "analytics": "Analytics Cookies",
+        "analyticsDesc": "Help us understand how visitors use our platform",
+        "functional": "Functional Cookies",
+        "functionalDesc": "Remember your preferences and settings",
+        "marketing": "Marketing Cookies",
+        "marketingDesc": "Used for targeted advertising and content"
+      }
+    },
+    "international": {
+      "title": "9. International Data Transfers",
+      "desc": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place to protect your information in accordance with applicable data protection laws."
+    },
+    "children": {
+      "title": "10. Children's Privacy",
+      "desc": "Our services are not intended for children under the age of 13. We do not knowingly collect personal information from children under 13. If you believe we have collected information from a child under 13, please contact us immediately."
+    },
+    "changes": {
+      "title": "11. Changes to This Privacy Policy",
+      "desc": "We may update this Privacy Policy from time to time to reflect changes in our practices or applicable laws. We will notify you of any material changes by posting the updated policy on our website and updating the \"Last updated\" date."
+    },
+    "contact": {
+      "title": "12. Contact Us",
+      "intro": "If you have any questions about this Privacy Policy or our data practices, please contact us:",
+      "email": "Email",
+      "address": "Address",
+      "dpo": "Data Protection Officer",
+      "phone": "Phone",
+      "support": "Support Email"
+    },
+    "eu": {
+      "title": "13. Legal Basis for Processing (EU Users)",
+      "intro": "For users in the European Union, our legal basis for processing your personal information includes:",
+      "consent": "Consent",
+      "consentDesc": "When you explicitly agree to our processing",
+      "contract": "Contract Performance",
+      "contractDesc": "To provide our services under our terms",
+      "legitimate": "Legitimate Interest",
+      "legitimateDesc": "To improve our services and prevent fraud",
+      "legal": "Legal Obligation",
+      "legalDesc": "To comply with applicable laws and regulations"
+    },
+    "california": {
+      "title": "14. California Privacy Rights (CCPA)",
+      "desc": "California residents have additional rights under the California Consumer Privacy Act (CCPA), including the right to know what personal information we collect and how we use it, the right to delete personal information, and the right to opt out of the sale of personal information."
+    }
+  },
+  "footer": {
+    "effective": "This Privacy Policy is effective as of",
+    "remain": "and will remain in effect except with respect to any changes in its provisions in the future."
+  }
+}

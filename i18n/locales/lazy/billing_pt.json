@@ -1,0 +1,93 @@
+{
+  "errors": {
+    "unauthenticated": "Faça login para continuar com o checkout.",
+    "checkout_failed": "Não foi possível iniciar o checkout. Tente novamente ou entre em contato com o suporte se o problema persistir.",
+    "cancel_failed": "Falha ao cancelar a assinatura. Tente novamente ou entre em contato com o suporte.",
+    "change_plan_failed": "Falha ao alterar o plano. Tente novamente ou entre em contato com o suporte.",
+    "refresh_failed": "Falha ao atualizar o status da assinatura. Tente novamente.",
+    "portal_failed": "Falha ao abrir o portal do cliente. Tente novamente ou entre em contato com o suporte.",
+    "not_available": "A cobrança não está disponível.",
+    "server_error": "O servidor retornou um erro. Tente novamente.",
+    "no_checkout_url": "Nenhuma URL de checkout recebida. Tente novamente."
+  },
+  "security": {
+    "title": "Processamento Seguro de Pagamentos",
+    "description": "Suas informações de pagamento são processadas com segurança pela Stripe, processadora de pagamentos certificada PCI DSS Nível 1.",
+    "encrypted": "Criptografia SSL de 256 bits",
+    "stripe": "Fornecido pela Stripe",
+    "dismiss": "Descartar notificação de segurança"
+  },
+  "templates": {
+    "purchase": {
+      "title": "Comece Agora",
+      "subtitle": "Escolha sua opção de compra única"
+    },
+    "subscription": {
+      "title": "Escolha Seu Plano",
+      "subtitle": "Selecione o plano perfeito para suas necessidades",
+      "billingToggle": {
+        "monthly": "Mensal",
+        "yearly": "Anual",
+        "save20": "Economize 20%"
+      }
+    },
+    "checkout": {
+      "title": "Conclua Sua Compra",
+      "description": "Checkout seguro fornecido pela Stripe",
+      "completePurchase": "Concluir Compra",
+      "startSubscription": "Iniciar Assinatura"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "Mais Popular",
+      "limitedTime": "Tempo Limitado",
+      "exclVat": "excl. IVA",
+      "purchaseNow": "Comprar Agora",
+      "subscribeNow": "Assinar Agora"
+    },
+    "buttons": {
+      "purchase": "Comprar",
+      "subscribe": "Assinar",
+      "processing": "Processando...",
+      "signInToPurchase": "Faça login para comprar",
+      "signInToSubscribe": "Faça login para assinar"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Redirecionando para a Stripe",
+        "message": "Inicializando pagamento seguro...",
+        "subtitle": "Isso pode levar um momento no primeiro carregamento",
+        "ariaLabel": "Preparando checkout seguro, por favor aguarde"
+      },
+      "portal": {
+        "title": "Redirecionando para a Stripe",
+        "message": "Abrindo portal de cobrança...",
+        "subtitle": "Gerenciar sua assinatura e faturas",
+        "ariaLabel": "Abrindo portal de cobrança, por favor aguarde"
+      }
+    },
+    "subscriptionManager": {
+      "title": "Gerenciamento de Assinatura",
+      "signInRequired": "Faça login para gerenciar sua assinatura.",
+      "noSubscription": "Você não tem uma assinatura ativa.",
+      "currentPlan": "Plano Atual",
+      "ends": "Termina",
+      "managePaymentMethod": "Gerenciar Método de Pagamento",
+      "cancelSubscription": "Cancelar Assinatura",
+      "cancelConfirm": "Tem certeza de que deseja cancelar? Você manterá o acesso até {{date}}.",
+      "yesCancel": "Sim, Cancelar",
+      "noKeep": "Não, Manter",
+      "changePlan": "Alterar Plano",
+      "current": "Atual",
+      "subscriptionEnds": "A assinatura terminará em {{date}}",
+      "planChanged": "Plano alterado com sucesso!",
+      "status": {
+        "active": "Ativo",
+        "cancelled": "Cancelado",
+        "pastDue": "Vencido",
+        "trialing": "Período de Teste"
+      }
+    }
+  }
+}

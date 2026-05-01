@@ -1,0 +1,82 @@
+{
+  "security": {
+    "title": "보안 결제 처리",
+    "description": "결제 정보는 PCI DSS Level 1 인증 결제 처리업체인 Stripe에서 안전하게 처리됩니다.",
+    "encrypted": "256비트 SSL 암호화",
+    "stripe": "Stripe 제공",
+    "dismiss": "보안 알림 닫기"
+  },
+  "templates": {
+    "purchase": {
+      "title": "시작하기",
+      "subtitle": "일회성 구매 옵션을 선택하세요"
+    },
+    "subscription": {
+      "title": "플랜 선택",
+      "subtitle": "필요에 맞는 완벽한 플랜을 선택하세요",
+      "billingToggle": {
+        "monthly": "월간",
+        "yearly": "연간",
+        "save20": "20% 절약"
+      }
+    },
+    "checkout": {
+      "title": "구매 완료",
+      "description": "Stripe로 구동되는 안전한 결제",
+      "completePurchase": "구매 완료",
+      "startSubscription": "구독 시작"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "가장 인기",
+      "limitedTime": "한정 시간",
+      "exclVat": "부가세 별도",
+      "purchaseNow": "지금 구매",
+      "subscribeNow": "지금 구독"
+    },
+    "buttons": {
+      "purchase": "구매",
+      "subscribe": "구독",
+      "processing": "처리 중...",
+      "signInToPurchase": "구매하려면 로그인",
+      "signInToSubscribe": "구독하려면 로그인"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Stripe로 리디렉션 중",
+        "message": "보안 결제 초기화 중...",
+        "subtitle": "처음 로드 시 잠시 시간이 걸릴 수 있습니다",
+        "ariaLabel": "안전한 결제 준비 중, 잠시만 기다려 주세요"
+      },
+      "portal": {
+        "title": "Stripe로 리디렉션 중",
+        "message": "청구 포털 열기...",
+        "subtitle": "구독 및 청구서 관리",
+        "ariaLabel": "청구 포털 열기, 잠시만 기다려 주세요"
+      }
+    },
+    "subscriptionManager": {
+      "title": "구독 관리",
+      "signInRequired": "구독을 관리하려면 로그인하세요.",
+      "noSubscription": "활성 구독이 없습니다.",
+      "currentPlan": "현재 플랜",
+      "ends": "종료",
+      "managePaymentMethod": "결제 방법 관리",
+      "cancelSubscription": "구독 취소",
+      "cancelConfirm": "정말 취소하시겠습니까? {{date}}까지 액세스를 유지할 수 있습니다.",
+      "yesCancel": "예, 취소",
+      "noKeep": "아니요, 유지",
+      "changePlan": "플랜 변경",
+      "current": "현재",
+      "subscriptionEnds": "구독은 {{date}}에 종료됩니다",
+      "planChanged": "플랜이 성공적으로 변경되었습니다!",
+      "status": {
+        "active": "활성",
+        "cancelled": "취소됨",
+        "pastDue": "연체",
+        "trialing": "시험"
+      }
+    }
+  }
+}

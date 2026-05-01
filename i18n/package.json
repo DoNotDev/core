@@ -1,0 +1,59 @@
+{
+  "name": "@donotdev/i18n",
+  "version": "0.1.42",
+  "private": true,
+  "type": "module",
+  "description": "Internationalization with i18next and react-i18next",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./instance": {
+      "types": "./src/instance.next.ts",
+      "vite-app": "./src/instance.vite.ts",
+      "import": "./src/instance.next.ts",
+      "default": "./src/instance.next.ts"
+    },
+    "./utils": {
+      "types": "./src/utils/index.ts",
+      "import": "./src/utils/index.ts",
+      "default": "./src/utils/index.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsc --noEmit --watch --listFiles false --listEmittedFiles false",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "type-check": "bunx tsc --noEmit"
+  },
+  "files": [
+    "dist",
+    "locales",
+    "package.json"
+  ],
+  "dependencies": {
+    "@donotdev/components": "workspace:*",
+    "@donotdev/stores": "workspace:*",
+    "@donotdev/types": "workspace:*",
+    "@donotdev/utils": "workspace:*"
+  },
+  "peerDependencies": {
+    "i18next": "^25.10.5",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "i18next-http-backend": "^3.0.2",
+    "lucide-react": "^0.575.0",
+    "react-i18next": "^16.5.4"
+  },
+  "peerDependenciesMeta": {},
+  "devDependencies": {
+    "i18next": "^25.10.5",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "i18next-http-backend": "^3.0.2",
+    "lucide-react": "^0.575.0",
+    "react-i18next": "^16.5.4"
+  },
+  "license": "MIT"
+}

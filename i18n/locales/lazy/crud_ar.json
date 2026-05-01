@@ -1,0 +1,370 @@
+{
+  "actions": {
+    "label": "الإجراءات",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "searchPlaceholder": "بحث...",
+    "filter": "تصفية",
+    "clear": "مسح",
+    "reset": "إعادة تعيين",
+    "apply": "تطبيق",
+    "select": "اختيار",
+    "selectYear": "اختر أو اكتب السنة",
+    "upload": "رفع",
+    "download": "تنزيل",
+    "close": "إغلاق",
+    "email": "البريد الإلكتروني",
+    "call": "اتصال",
+    "copyEmail": "نسخ البريد الإلكتروني",
+    "copyPhone": "نسخ رقم الهاتف",
+    "copyIban": "نسخ IBAN",
+    "replySubject": "Re: استفسارك",
+    "markResponded": "وضع علامة كمردود",
+    "selectOptions": "اختر خيارات...",
+    "use": "استخدم هذا العنوان"
+  },
+  "address": {
+    "placeholder": "أدخل العنوان...",
+    "noResults": "لم يتم العثور على عناوين"
+  },
+  "export": "تصدير",
+  "noInquiries": "لم يتم العثور على استفسارات.",
+  "customer": "العميل",
+  "noCustomer": "لا يوجد عميل مرتبط",
+  "status": {
+    "draft": "مسودة",
+    "available": "متاح",
+    "deleted": "محذوف",
+    "sold": "مباع"
+  },
+  "fields": {
+    "array": "مصفوفة",
+    "boolean": "منطقي",
+    "checkbox": "مربع اختيار",
+    "date": "تاريخ",
+    "datetime-local": "التاريخ والوقت",
+    "email": "بريد إلكتروني",
+    "file": "ملف",
+    "geopoint": "موقع",
+    "image": "صورة",
+    "map": "خريطة",
+    "multiselect": "اختيار متعدد",
+    "number": "رقم",
+    "password": "كلمة مرور",
+    "phone": "رقم هاتف",
+    "radio": "أزرار اختيار",
+    "range": "نطاق",
+    "reference": "مرجع",
+    "select": "اختيار",
+    "tel": "رقم هاتف",
+    "text": "نص",
+    "textarea": "منطقة نص",
+    "timestamp": "طابع زمني",
+    "url": "رابط",
+    "status": "الحالة",
+    "id": "المعرف",
+    "createdAt": "تم الإنشاء في",
+    "updatedAt": "تم التحديث في",
+    "createdById": "تم الإنشاء بواسطة",
+    "updatedById": "تم التحديث بواسطة"
+  },
+  "text": {
+    "required": "{{field}} مطلوب",
+    "minLength": "{{field}} يجب أن يكون {{min}} أحرف على الأقل",
+    "maxLength": "{{field}} يجب ألا يتجاوز {{max}} حرف",
+    "email": "يرجى إدخال عنوان بريد إلكتروني صالح",
+    "url": "يرجى إدخال رابط صالح",
+    "matches": "{{field}} يجب أن يطابق النمط {{pattern}}",
+    "unique": "{{field}} يجب أن يكون فريداً",
+    "alphanumeric": "{{field}} يجب أن يحتوي على أحرف وأرقام فقط",
+    "lettersOnly": "{{field}} يجب أن يحتوي على أحرف فقط"
+  },
+  "number": {
+    "required": "{{field}} مطلوب",
+    "min": "{{field}} يجب أن يكون {{min}} على الأقل",
+    "max": "{{field}} يجب ألا يتجاوز {{max}}",
+    "integer": "{{field}} يجب أن يكون رقماً صحيحاً",
+    "positive": "{{field}} يجب أن يكون موجباً",
+    "negative": "{{field}} يجب أن يكون سالباً",
+    "between": "{{field}} يجب أن يكون بين {{min}} و {{max}}",
+    "precision": "{{field}} يجب أن يحتوي على {{precision}} منازل عشرية كحد أقصى"
+  },
+  "date": {
+    "required": "{{field}} مطلوب",
+    "min": "{{field}} يجب أن يكون بعد {{min}}",
+    "max": "{{field}} يجب أن يكون قبل {{max}}",
+    "between": "{{field}} يجب أن يكون بين {{min}} و {{max}}",
+    "format": "يرجى إدخال تاريخ صالح",
+    "future": "{{field}} يجب أن يكون في المستقبل",
+    "past": "{{field}} يجب أن يكون في الماضي",
+    "today": "{{field}} يجب أن يكون اليوم"
+  },
+  "select": {
+    "required": "يرجى اختيار {{field}}",
+    "invalid": "اختيار غير صالح لـ {{field}}",
+    "min": "يرجى اختيار {{min}} خيارات على الأقل",
+    "max": "يرجى اختيار {{max}} خيارات كحد أقصى"
+  },
+  "boolean": {
+    "required": "{{field}} يجب أن يكون محدداً"
+  },
+  "array": {
+    "required": "{{field}} واحد على الأقل مطلوب",
+    "minItems": "يرجى اختيار {{min}} {{field}} على الأقل",
+    "maxItems": "لا يمكن اختيار أكثر من {{max}} {{field}}",
+    "uniqueItems": "جميع {{field}} يجب أن تكون فريدة"
+  },
+  "file": {
+    "required": "يرجى اختيار ملف",
+    "maxSize": "حجم الملف يجب ألا يتجاوز {{max}}",
+    "minSize": "حجم الملف يجب أن يكون {{min}} على الأقل",
+    "type": "نوع الملف يجب أن يكون {{types}}",
+    "dimensions": "أبعاد الصورة يجب أن تكون {{width}}x{{height}}",
+    "upload": {
+      "ariaLabel": "رفع ملف",
+      "ariaLabelSingle": "رفع ملف واحد",
+      "ariaLabelMultiple": "رفع ملفات",
+      "dragDropSingle": "اسحب وأفلت، الصق، أو انقر لرفع ملف",
+      "dragDropMultiple": "اسحب وأفلت، الصق، أو انقر لرفع ملفات"
+    },
+    "delete": {
+      "ariaLabel": "حذف الملف",
+      "failed": "فشل في حذف الملف"
+    },
+    "errors": {
+      "maxFiles": "الحد الأقصى {{max}} ملف مسموح به",
+      "exceedsSize": "{{fileName}} يتجاوز الحد {{size}} ميجابايت"
+    }
+  },
+  "document": {
+    "upload": {
+      "ariaLabel": "رفع وثيقة",
+      "hint": "اسحب وأفلت، الصق، أو انقر لرفع وثائق"
+    },
+    "delete": {
+      "ariaLabel": "حذف الوثيقة",
+      "failed": "فشل في حذف الوثيقة"
+    },
+    "preview": {
+      "ariaLabel": "معاينة الوثيقة",
+      "title": "معاينة الوثيقة"
+    },
+    "errors": {
+      "maxFiles": "الحد الأقصى {{max}} وثيقة مسموح بها",
+      "invalidType": "نوع الوثيقة غير صالح: {{fileName}}",
+      "exceedsSize": "{{fileName}} يتجاوز الحد {{size}} ميجابايت"
+    }
+  },
+  "image": {
+    "undo": {
+      "ariaLabel": "تراجع عن الإجراء الأخير",
+      "title": "تراجع (Ctrl+Z)"
+    },
+    "redo": {
+      "ariaLabel": "أعد الإجراء الأخير",
+      "title": "أعد (Ctrl+Shift+Z)"
+    },
+    "upload": {
+      "ariaLabel": "رفع {{type}}",
+      "ariaLabelSingle": "رفع صورة",
+      "ariaLabelMultiple": "رفع صور",
+      "selectAriaLabel": "اختر {{type}} للرفع",
+      "selectAriaLabelSingle": "اختر صورة للرفع",
+      "selectAriaLabelMultiple": "اختر صور للرفع",
+      "dropzone": "اسحب وأفلت، الصق، أو انقر لرفع {{type}}",
+      "dropzoneSingle": "اسحب وأفلت، الصق، أو انقر لرفع صورة",
+      "dropzoneMultiple": "اسحب وأفلت، الصق، أو انقر لرفع صور",
+      "maxFiles": "حد أقصى {{max}} صورة، {{size}} ميجابايت لكل منها",
+      "maxSize": "{{size}} ميجابايت لكل منها",
+      "progress": "تقدم الرفع: {{progress}}%",
+      "pending": "رفع معلق",
+      "uploaded": "تم رفع {{count}} {{type}}",
+      "uploadedSingle": "تم رفع {{count}} صورة",
+      "uploadedMultiple": "تم رفع {{count}} صورة",
+      "failed": "فشل رفع {{fileName}}"
+    },
+    "delete": {
+      "ariaLabel": "حذف الصورة {{index}}",
+      "title": "حذف (Delete/Backspace)",
+      "failed": "فشل حذف الصورة"
+    },
+    "reorder": {
+      "ariaLabel": "اسحب لإعادة الترتيب"
+    },
+    "rotate": {
+      "failed": "فشل تدوير الصورة"
+    },
+    "errors": {
+      "maxFiles": "الحد الأقصى {{max}} صورة مسموح بها",
+      "singleOnly": "صورة واحدة فقط مسموح بها",
+      "notImage": "{{fileName}} ليست صورة",
+      "exceedsSize": "{{fileName}} يتجاوز الحد {{size}} ميجابايت"
+    },
+    "warnings": {
+      "duplicates": "تم تخطي الصور المكررة: {{files}}"
+    },
+    "alt": {
+      "upload": "رفع {{index}}",
+      "uploaded": "{{label}} {{index}}{{suffix}} (مرفوعة)",
+      "pending": "{{label}} {{index}}{{suffix}} (رفع معلق)"
+    },
+    "editor": {
+      "title": "تعديل الصورة",
+      "titleWithIndex": "صورة {{current}} من {{total}}",
+      "description": "عرض وتعديل الصورة باستخدام أدوات القص والتدوير والتكبير",
+      "editButton": "تعديل الصورة",
+      "aspectRatio": "نسبة العرض إلى الارتفاع",
+      "aspectFree": "حر",
+      "zoom": "تكبير",
+      "rotation": "تدوير",
+      "rotateLeft": "تدوير لليسار",
+      "rotateRight": "تدوير لليمين",
+      "fitToView": "ملاءمة العرض",
+      "showGrid": "إظهار الشبكة",
+      "hideGrid": "إخفاء الشبكة",
+      "reset": "إعادة تعيين",
+      "apply": "تطبيق",
+      "processing": "جاري المعالجة...",
+      "cancel": "إلغاء",
+      "deleteImage": "حذف الصورة",
+      "deleteConfirm": "حذف هذه الصورة نهائياً؟",
+      "previousImage": "الصورة السابقة",
+      "nextImage": "الصورة التالية"
+    }
+  },
+  "messages": {
+    "createSuccess": "تم إنشاء {{entity}} بنجاح",
+    "updateSuccess": "تم تحديث {{entity}} بنجاح",
+    "deleteSuccess": "تم حذف {{entity}} بنجاح",
+    "createError": "فشل إنشاء {{entity}}",
+    "updateError": "فشل تحديث {{entity}}",
+    "deleteError": "فشل حذف {{entity}}",
+    "error": "حدث خطأ",
+    "loading": "جاري التحميل...",
+    "noResults": "لم يتم العثور على نتائج",
+    "confirmDelete": "هل أنت متأكد من حذف هذا {{entity}}؟",
+    "unsavedChanges": "لديك تغييرات غير محفوظة",
+    "unsavedChangesDiscard": "لديك تغييرات غير محفوظة. هل تريد التخلي عنها؟",
+    "unsavedChangesLeave": "لديك تغييرات غير محفوظة. هل أنت متأكد من أنك تريد المغادرة؟",
+    "sessionExpired": "انتهت صلاحية جلستك",
+    "networkError": "حدث خطأ في الشبكة",
+    "unauthorized": "وصول غير مصرح به",
+    "forbidden": "الوصول محظور",
+    "serverError": "حدث خطأ في الخادم"
+  },
+  "form": {
+    "submit": "إرسال",
+    "cancel": "إلغاء",
+    "submitting": "جاري الإرسال...",
+    "loading": "جاري التحميل...",
+    "add": "إضافة",
+    "remove": "إزالة",
+    "typeAndPressAdd": "اكتب واضغط إضافة...",
+    "enterLocationData": "أدخل بيانات الموقع (JSON)",
+    "uploading": "جاري الرفع {{progress}}%...",
+    "processing": "جاري المعالجة...",
+    "validating": "جاري التحقق...",
+    "saving": "جاري الحفظ..."
+  },
+  "gdprConsent": {
+    "consent": "أوافق على",
+    "privacyPolicy": "سياسة الخصوصية",
+    "terms": "شروط الاستخدام",
+    "and": "وأوافق على معالجة بياناتي الشخصية.",
+    "required": "يرجى قبول سياسة الخصوصية للمتابعة"
+  },
+  "custom": {
+    "passwordMatch": "كلمات المرور يجب أن تتطابق",
+    "phoneNumber": "يرجى إدخال رقم هاتف صالح",
+    "postalCode": "يرجى إدخال رمز بريدي صالح",
+    "currency": "يرجى إدخال مبلغ صالح",
+    "color": "يرجى إدخال كود لون صالح"
+  },
+  "favorites": {
+    "title": "المفضلة",
+    "add": "إضافة إلى المفضلة",
+    "remove": "إزالة من المفضلة",
+    "saved": "محفوظ",
+    "save": "حفظ",
+    "showAll": "عرض الكل",
+    "showFavorites": "عرض المفضلة",
+    "myFavorites": "مفضلاتي",
+    "noFavorites": "لا توجد مفضلات بعد"
+  },
+  "pagination": {
+    "showing": "عرض {{from}} إلى {{to}} من {{total}} إدخالات",
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "الصفحة {{page}} من {{total}}",
+    "itemsPerPagePlaceholder": "عناصر لكل صفحة:"
+  },
+  "filters": {
+    "title": "تصفح {{entity}} - المرشحات",
+    "apply": "تطبيق المرشحات",
+    "clear": "مسح المرشحات",
+    "noResults": "لا توجد نتائج تطابق مرشحاتك",
+    "selected": "{{count}} محدد"
+  },
+  "filter": {
+    "placeholder": "تصفية...",
+    "selectPlaceholder": "الكل",
+    "min": "الحد الأدنى",
+    "max": "الحد الأقصى",
+    "from": "من",
+    "to": "إلى",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "tomorrow": "غداً",
+    "last7Days": "آخر 7 أيام",
+    "last30Days": "آخر 30 يوماً",
+    "next7Days": "الـ 7 أيام القادمة",
+    "next30Days": "الـ 30 يوماً القادمة",
+    "thisMonthStart": "بداية الشهر",
+    "thisMonthEnd": "نهاية الشهر",
+    "thisWeek": "هذا الأسبوع",
+    "thisMonth": "هذا الشهر",
+    "clear": "مسح",
+    "pick": "اختيار",
+    "time": "الوقت"
+  },
+  "duration": {
+    "15m": "١٥ د",
+    "30m": "٣٠ د",
+    "45m": "٤٥ د",
+    "1h": "١ س",
+    "1h30": "١ س ٣٠ د",
+    "2h": "٢ س",
+    "2h30": "٢ س ٣٠ د",
+    "3h": "٣ س",
+    "custom": "مخصص",
+    "zero": "—",
+    "minutes": "{{count}} د",
+    "hoursMinutes": "{{hours}} س {{minutes}} د"
+  },
+  "results": {
+    "title": {
+      "fetching": "جاري الجلب...",
+      "count_one": "تم العثور على {{count}} نتيجة",
+      "count_other": "تم العثور على {{count}} نتائج"
+    }
+  },
+  "visibility": {
+    "viewAs": "عرض كـ",
+    "preview": "معاينة"
+  },
+  "price": {
+    "vatIncluded": "شامل الضريبة",
+    "discountPercent": "-{{percent}}%"
+  },
+  "recommendations": {
+    "title": "قد يعجبك أيضاً"
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "title": "Privacybeleid",
+  "lastUpdated": "Laatst bijgewerkt",
+  "common": {
+    "we": "wij",
+    "our": "onze",
+    "or": "of",
+    "us": "ons"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introductie",
+      "welcome": "Welkom bij",
+      "commitment": "We hechten aan je privacy. Dit beleid legt uit hoe we je gegevens verzamelen, gebruiken en beschermen.",
+      "agreement": "Door onze diensten te gebruiken ga je akkoord met dit beleid. Anders mag je ze niet gebruiken."
+    },
+    "collection": {
+      "title": "2. Gegevens die we verzamelen",
+      "provided": {
+        "title": "2.1 Gegevens die jij verstrekt",
+        "account": "Accountgegevens",
+        "accountDesc": "Naam, e-mail, wachtwoord en profiel bij aanmelding",
+        "usage": "Gebruiksgegevens",
+        "usageDesc": "Hoe je onze diensten gebruikt",
+        "communication": "Communicatie",
+        "communicationDesc": "Berichten, feedback en supportverzoeken",
+        "payment": "Betalingsgegevens",
+        "paymentDesc": "Facturatie en betaalmethode",
+        "project": "Projectgegevens",
+        "projectDesc": "Code en configuratie die je maakt"
+      },
+      "automatic": {
+        "title": "2.2 Automatisch verzameld",
+        "device": "Apparaatgegevens",
+        "deviceDesc": "IP, browser, besturingssysteem",
+        "analytics": "Gebruiksstatistieken",
+        "analyticsDesc": "Pagina's, functies en gedrag",
+        "performance": "Prestatiegegevens",
+        "performanceDesc": "Foutlogboeken en metingen",
+        "cookies": "Cookies en tracking",
+        "cookiesDesc": "Bestanden voor betere ervaring"
+      }
+    },
+    "usage": {
+      "title": "3. Hoe we ze gebruiken",
+      "intro": "We gebruiken de gegevens om:",
+      "provide": "Diensten te leveren en verbeteren",
+      "process": "Transacties en je account te beheren",
+      "send": "Updates en support te sturen",
+      "respond": "Te reageren op vragen",
+      "analyze": "Gebruik te analyseren",
+      "detect": "Fraude en dreigingen te voorkomen",
+      "comply": "Aan de wet te voldoen",
+      "develop": "Nieuwe functies te ontwikkelen"
+    },
+    "sharing": {
+      "title": "4. Delen en openbaarmaking",
+      "intro": "We verkopen je gegevens niet. We kunnen delen in deze situaties:",
+      "providers": {
+        "title": "4.1 Dienstenproviders",
+        "intro": "We kunnen delen met leveranciers die ons helpen:",
+        "hosting": "Cloud en infrastructuur",
+        "payment": "Betalingsverwerkers",
+        "analytics": "Statistiek en monitoring",
+        "support": "Support en communicatie"
+      },
+      "legal": {
+        "title": "4.2 Wettelijke verplichtingen",
+        "desc": "We kunnen openbaar maken wanneer de wet of overheid dat vereist."
+      },
+      "business": {
+        "title": "4.3 Bedrijfsoverdrachten",
+        "desc": "Bij fusie of verkoop kunnen je gegevens worden overgedragen."
+      }
+    },
+    "security": {
+      "title": "5. Gegevensbeveiliging",
+      "intro": "We nemen passende technische en organisatorische maatregelen:",
+      "encryption": "Versleuteling onderweg en in rust",
+      "assessments": "Regelmatige beveiligingsbeoordelingen",
+      "access": "Toegangscontrole en authenticatie",
+      "training": "Medewerkertraining",
+      "incident": "Incidentafhandeling en melding"
+    },
+    "retention": {
+      "title": "6. Bewaring",
+      "intro": "We bewaren gegevens zolang nodig. De termijn verschilt per type:",
+      "account": "Accountgegevens",
+      "accountDesc": "Zolang je account actief is en redelijke periode na verwijdering",
+      "usage": "Gebruiksgegevens",
+      "usageDesc": "Voor statistiek en verbetering",
+      "payment": "Betalingsgegevens",
+      "paymentDesc": "Zoals vereist door financiële regelgeving",
+      "communication": "Communicatie",
+      "communicationDesc": "Voor support en wettelijke verplichtingen"
+    },
+    "rights": {
+      "title": "7. Je rechten",
+      "intro": "Afhankelijk van waar je woont kun je recht hebben op:",
+      "access": {
+        "title": "7.1 Inzage en overdraagbaarheid",
+        "desc": "Je kunt inzage en een kopie in overdraagbaar formaat vragen."
+      },
+      "correction": {
+        "title": "7.2 Correctie",
+        "desc": "Je kunt correctie van onjuiste gegevens vragen."
+      },
+      "deletion": {
+        "title": "7.3 Verwijdering",
+        "desc": "Je kunt verwijdering vragen, met inachtneming van de wet."
+      },
+      "restriction": {
+        "title": "7.4 Beperking en bezwaar",
+        "desc": "Je kunt beperking of bezwaar vragen."
+      },
+      "marketing": {
+        "title": "7.5 Marketing",
+        "desc": "Je kunt je op elk moment uitschrijven voor marketing."
+      }
+    },
+    "cookies": {
+      "title": "8. Cookies en tracking",
+      "intro": "We gebruiken cookies voor ervaring en statistiek. Je kunt ze in je browser beheren.",
+      "types": {
+        "title": "8.1 Soorten cookies",
+        "essential": "Noodzakelijke cookies",
+        "essentialDesc": "Nodig voor functionaliteit en beveiliging",
+        "analytics": "Analytische cookies",
+        "analyticsDesc": "Helpen ons platformgebruik te begrijpen",
+        "functional": "Functionele cookies",
+        "functionalDesc": "Onthouden je voorkeuren",
+        "marketing": "Marketingcookies",
+        "marketingDesc": "Voor gerichte advertenties"
+      }
+    },
+    "international": {
+      "title": "9. Internationale doorgifte",
+      "desc": "Gegevens kunnen naar andere landen worden overgedragen. We zorgen voor passende waarborgen."
+    },
+    "children": {
+      "title": "10. Privacy van kinderen",
+      "desc": "Onze diensten zijn niet bedoeld voor kinderen onder 13. Neem direct contact op als we gegevens van een kind onder 13 hebben."
+    },
+    "changes": {
+      "title": "11. Wijzigingen",
+      "desc": "We kunnen dit beleid bijwerken. Bij inhoudelijke wijzigingen informeren we je."
+    },
+    "contact": {
+      "title": "12. Contact",
+      "intro": "Vragen over dit beleid of onze gegevensverwerking:",
+      "email": "E-mail",
+      "address": "Adres",
+      "dpo": "Functionaris voor gegevensbescherming",
+      "phone": "Telefoon",
+      "support": "Support-e-mail"
+    },
+    "eu": {
+      "title": "13. Rechtsgrond (EU)",
+      "intro": "Voor gebruikers in de EU omvat onze rechtsgrond:",
+      "consent": "Toestemming",
+      "consentDesc": "Wanneer je uitdrukkelijk toestemt",
+      "contract": "Uitvoering van de overeenkomst",
+      "contractDesc": "Om onze diensten te leveren volgens de voorwaarden",
+      "legitimate": "Gerechtvaardigd belang",
+      "legitimateDesc": "Verbetering en fraude voorkomen",
+      "legal": "Wettelijke verplichting",
+      "legalDesc": "Nakomen van de wet"
+    },
+    "california": {
+      "title": "14. Rechten in California (CCPA)",
+      "desc": "Inwoners van California hebben extra rechten onder de CCPA."
+    }
+  },
+  "footer": {
+    "effective": "Dit privacybeleid is van kracht vanaf",
+    "remain": "en blijft van kracht behalve bij wijziging van de bepalingen."
+  }
+}

@@ -1,0 +1,616 @@
+{
+  "signIn": "登录",
+  "choosePlatform": "选择登录方式",
+  "providers": {
+    "google": "Google",
+    "facebook": "Facebook",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "microsoft": "Microsoft",
+    "yahoo": "Yahoo",
+    "apple": "Apple"
+  },
+  "buttons": {
+    "signIn": "使用 {{provider}} 登录",
+    "continue": "使用 {{provider}} 继续",
+    "verify": "验证邮箱",
+    "sendVerification": "发送验证邮件",
+    "signOut": "退出登录",
+    "loading": "加载中..."
+  },
+  "accountLinking": {
+    "title": "需要关联账号",
+    "message": "此邮箱已绑定其他登录方式（{{methods}}）。请使用其中一种方式登录以关联账号。",
+    "instruction": "请使用以下方式之一登录以关联账号：",
+    "explanation": "登录后，您的账号将自动关联，之后可以使用任意一种方式登录。",
+    "success": "账号关联成功！",
+    "error": "账号关联失败，请重试。",
+    "emailLabel": "邮箱："
+  },
+  "emailVerification": {
+    "title": "邮箱验证",
+    "status": {
+      "verified": "邮箱已验证。",
+      "unverified": "请验证邮箱以使用全部功能。"
+    },
+    "sending": "正在发送验证邮件...",
+    "success": "验证邮件已发送！请查收收件箱。",
+    "alreadyVerified": "您的邮箱已经验证过了。",
+    "notSignedIn": "请先登录再验证邮箱。",
+    "error": "发送验证邮件失败，请重试。"
+  },
+  "errors": {
+    "auth/popup-closed-by-user": "登录窗口已被关闭。",
+    "auth/cancelled-popup-request": "登录请求已取消。",
+    "auth/popup-blocked": "登录弹窗被浏览器拦截。",
+    "auth/email-already-in-use": "该邮箱已被注册。",
+    "auth/invalid-email": "邮箱地址无效。",
+    "auth/operation-not-allowed": "该登录方式未启用。",
+    "auth/weak-password": "密码强度不足。",
+    "auth/user-disabled": "该账号已被禁用。",
+    "auth/user-not-found": "未找到该邮箱对应的账号。",
+    "auth/wrong-password": "密码错误。",
+    "auth/network-request-failed": "网络错误，请重试。",
+    "auth/internal-error": "内部错误，请重试。",
+    "auth/invalid-credential": "凭据无效。",
+    "auth/account-exists-with-different-credential": "该邮箱已使用其他登录方式注册。",
+    "auth/provider-not-enabled": "{{provider}} 登录未启用",
+    "auth/unknown-provider": "未知登录方式：{{provider}}",
+    "auth/missing-provider": "登录方式未配置",
+    "auth/no-user-signed-in": "当前未登录",
+    "auth/oauth-incomplete": "登录流程未完成，请重试。",
+    "fallback": {
+      "title": "需要登录",
+      "description": "请登录以访问此页面。",
+      "chooseProvider": "选择登录方式",
+      "authOptions": "登录选项",
+      "secure": "您的数据安全且已加密。",
+      "terms": "登录即表示您同意我们的服务条款。"
+    },
+    "genericError": "登录失败，请重试。",
+    "fieldUpdate": "更新 {{field}} 失败",
+    "hiddenField": "隐藏字段 {{field}} 渲染出错",
+    "unsupportedFieldType": "不支持的字段类型：{{type}}",
+    "fieldRendering": "字段 {{field}} 渲染出错",
+    "fallingBackToTextField": "使用文本框替代不支持的类型 {{type}}",
+    "invalidFieldProps": "字段 {{field}} 配置无效"
+  },
+  "status": {
+    "loading": "加载中...",
+    "authenticating": "正在认证...",
+    "verifying": "正在验证...",
+    "checking": "正在检查权限..."
+  },
+  "aria": {
+    "signInOptions": "登录选项",
+    "signInButton": "使用 {{provider}} 登录",
+    "loadingState": "正在加载认证",
+    "errorAlert": "认证错误",
+    "successAlert": "成功",
+    "accountLinkingRequired": "需要关联账号",
+    "verificationRequired": "需要验证邮箱"
+  },
+  "home": {
+    "title": "DoNotDev",
+    "description": "DoNotDev 是一个使用 TypeScript 和纯 CSS 构建 Web 应用的平台。",
+    "getStarted": "立即开始",
+    "whyChooseDoNotDev": "为什么选择 DoNotDev？",
+    "openSource": "开源",
+    "freeAndOpenSource": "免费开源，拥有活跃的社区。",
+    "customizable": "可定制",
+    "flexibleComponents": "灵活的组件，满足您的项目需求。",
+    "developerFocused": "开发者优先",
+    "scalableArchitecture": "可扩展架构",
+    "secureByDesign": "安全设计",
+    "fastIntegration": "快速集成",
+    "scaleEffortlessly": "从原型到企业级应用，轻松扩展。",
+    "header": {
+      "purchase": "购买"
+    }
+  },
+  "actions": {
+    "create": "创建",
+    "update": "更新",
+    "delete": "删除",
+    "cancel": "取消",
+    "save": "保存",
+    "confirm": "确认",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "search": "搜索",
+    "searchPlaceholder": "搜索...",
+    "filter": "筛选",
+    "clear": "清除",
+    "reset": "重置",
+    "apply": "应用",
+    "select": "选择",
+    "upload": "上传",
+    "download": "下载",
+    "close": "关闭"
+  },
+  "guard": {
+    "signInRequired": "请登录以访问此页面"
+  },
+  "messages": {
+    "createSuccess": "{{entity}} 创建成功",
+    "updateSuccess": "{{entity}} 更新成功",
+    "deleteSuccess": "{{entity}} 删除成功",
+    "error": "发生错误",
+    "loading": "加载中...",
+    "noResults": "未找到结果",
+    "confirmDelete": "确定要删除此 {{entity}} 吗？",
+    "unsavedChanges": "您有未保存的更改",
+    "sessionExpired": "会话已过期",
+    "networkError": "网络错误",
+    "unauthorized": "未授权访问",
+    "forbidden": "访问被禁止",
+    "serverError": "服务器错误",
+    "notFound": {
+      "title": "页面未找到",
+      "description": "您访问的页面不存在或已被移动。",
+      "suggestions": "您可能在寻找：",
+      "goHome": "回到首页",
+      "goBack": "返回上页"
+    }
+  },
+  "nav": {
+    "signIn": "登录"
+  },
+  "pagination": {
+    "showing": "显示第 {{from}} 至 {{to}} 条，共 {{total}} 条",
+    "previous": "上一页",
+    "next": "下一页",
+    "page": "第 {{page}} 页，共 {{total}} 页"
+  },
+  "filters": {
+    "title": "筛选",
+    "apply": "应用筛选",
+    "clear": "清除筛选",
+    "noResults": "无匹配结果",
+    "selected": "已选 {{count}} 项"
+  },
+  "settings": {
+    "title": "设置",
+    "theme": "主题",
+    "language": "语言",
+    "clearCache": {
+      "title": "清除缓存",
+      "localStorage": "本地存储",
+      "sessionStorage": "会话存储",
+      "applicationCache": "应用缓存",
+      "serviceWorker": "Service Worker",
+      "cookies": "Cookies",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "内存缓存",
+      "button": "清除缓存",
+      "clearing": "正在清除...",
+      "error": "清除缓存出错",
+      "success": "缓存清除成功：{{items}}",
+      "noItemsCleared": "没有缓存被清除"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "DoNotDev App"
+    },
+    "defaultTitle": "页面",
+    "defaultDescription": "页面描述",
+    "locale": "zh_CN",
+    "themeSelector": {
+      "changeTheme": "切换主题",
+      "tooltipWithTransition": "切换主题：{{current}} → {{next}}",
+      "tooltipWithCurrent": "切换主题：{{current}}",
+      "tooltipWithNext": "切换主题：切换到 {{next}}"
+    },
+    "languageSelector": {
+      "changeLanguage": "切换语言"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "公司",
+        "description": "借助我们全面的开发平台，更快地构建更好的产品。"
+      },
+      "social": {
+        "twitter": "Twitter",
+        "github": "GitHub",
+        "discord": "Discord"
+      },
+      "sections": {
+        "product": {
+          "title": "产品",
+          "features": "功能",
+          "pricing": "定价",
+          "docs": "文档",
+          "updates": "更新"
+        },
+        "support": {
+          "title": "支持",
+          "help": "帮助",
+          "contact": "联系我们",
+          "status": "状态",
+          "community": "社区"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "保留所有权利。",
+      "cookieSettings": "Cookie 设置",
+      "legalNotice": "法律声明",
+      "privacyPolicy": "隐私政策",
+      "termsOfService": "服务条款",
+      "builtWith": "Made with ❤️ & DoNotDev ©",
+      "collapse": "收起页脚",
+      "expand": "展开页脚"
+    }
+  },
+  "search": {
+    "ariaLabel": "搜索",
+    "label": "搜索"
+  },
+  "goTo": {
+    "ariaLabel": "跳转到页面",
+    "label": "跳转"
+  },
+  "globalGoTo": {
+    "placeholder": "筛选路由或跳转到页面...",
+    "noResults": "未找到路由。",
+    "favorites": "收藏",
+    "allPages": "所有页面",
+    "addFavorite": "添加到收藏",
+    "removeFavorite": "从收藏中移除"
+  },
+  "copyToClipboard": "复制到剪贴板",
+  "copied": "已复制！",
+  "copyPassword": "复制密码",
+  "table": {
+    "searchPlaceholder": "搜索...",
+    "filters": "筛选",
+    "selectAllRows": "全选",
+    "selectRow": "选择第 {{index}} 行",
+    "showingResults": "显示第 {{from}} 至 {{to}} 条，共 {{total}} 条",
+    "previous": "上一页",
+    "next": "下一页",
+    "page": "第 {{current}} 页，共 {{total}} 页"
+  },
+  "language": {
+    "selectLanguage": "选择语言",
+    "searchLanguages": "搜索语言...",
+    "noLanguagesFound": "未找到语言",
+    "changeLanguage": "切换语言"
+  },
+  "form": {
+    "submit": "提交",
+    "cancel": "取消",
+    "submitting": "提交中...",
+    "loading": "加载中...",
+    "add": "添加",
+    "remove": "移除",
+    "typeAndPressAdd": "输入后点击添加...",
+    "enterLocationData": "输入位置数据（JSON）"
+  },
+  "navigation": {
+    "more": "更多",
+    "home": "首页"
+  },
+  "pwa": {
+    "update": {
+      "title": "有新版本",
+      "description": "新版本已就绪，刷新即可更新。",
+      "button": "更新",
+      "altText": "更新应用"
+    }
+  },
+  "document": {
+    "upload": {
+      "hint": "点击或拖拽文件上传",
+      "ariaLabel": "上传文档"
+    },
+    "preview": {
+      "title": "文档预览",
+      "ariaLabel": "预览文档"
+    },
+    "delete": {
+      "ariaLabel": "删除文档",
+      "failed": "删除文档失败"
+    },
+    "errors": {
+      "maxFiles": "最多允许上传 {{max}} 个文件",
+      "invalidType": "\"{{fileName}}\" 不是允许的文件类型",
+      "exceedsSize": "\"{{fileName}}\" 超过最大限制 {{size}} MB"
+    }
+  },
+  "image": {
+    "alt": {
+      "upload": "上传图片 {{index}}"
+    },
+    "upload": {
+      "pending": "等待中",
+      "dropzoneMultiple": "拖拽图片到此处或点击上传",
+      "dropzoneSingle": "拖拽图片到此处或点击上传"
+    }
+  },
+  "code": {
+    "copyCode": "复制代码",
+    "copied": "已复制！",
+    "copyCodeToClipboard": "复制代码到剪贴板"
+  },
+  "video": {
+    "clickToWatch": "点击观看视频",
+    "watchVideo": "观看视频"
+  },
+  "inspector": {
+    "pageSource": "页面源码",
+    "inspectPageSourceCode": "查看页面源代码"
+  },
+  "sheet": {
+    "navigation": "导航",
+    "codeInspector": "代码检查器",
+    "debugPanel": "调试面板"
+  },
+  "routeError": {
+    "title": "出错了",
+    "description": "加载此页面时发生错误。",
+    "dataSafe": "请放心，您的数据是安全的。",
+    "errorId": "错误 ID",
+    "errorMessage": "错误信息",
+    "copied": "已复制",
+    "copyDetails": "复制详情",
+    "tryAgain": "重试",
+    "goHome": "回到首页",
+    "goBack": "返回上页",
+    "contactSupport": "如问题持续存在，请联系支持团队。"
+  },
+  "redirectOverlay": {
+    "phases": {
+      "connecting": "正在连接安全服务器...",
+      "preparing": "正在准备您的会话...",
+      "redirecting": "正在跳转...",
+      "timeout": "花费的时间比预期长..."
+    },
+    "cancel": "取消",
+    "doNotRefresh": "请勿刷新或返回",
+    "default": {
+      "title": "正在跳转",
+      "message": "请稍候，正在为您跳转...",
+      "subtitle": "这可能需要片刻",
+      "ariaLabel": "正在跳转，请稍候"
+    },
+    "stripe-checkout": {
+      "title": "正在跳转到 Stripe",
+      "message": "正在初始化安全支付...",
+      "subtitle": "首次加载可能需要片刻",
+      "ariaLabel": "正在准备安全结账，请稍候"
+    },
+    "stripe-portal": {
+      "title": "正在跳转到 Stripe",
+      "message": "正在打开账单门户...",
+      "subtitle": "管理您的订阅和发票",
+      "ariaLabel": "正在打开账单门户，请稍候"
+    },
+    "oauth-google": {
+      "title": "使用 Google 登录",
+      "message": "正在连接 Google...",
+      "subtitle": "即将跳转至登录页面",
+      "ariaLabel": "正在使用 Google 登录，请稍候"
+    },
+    "oauth-github": {
+      "title": "使用 GitHub 登录",
+      "message": "正在连接 GitHub...",
+      "subtitle": "即将跳转至登录页面",
+      "ariaLabel": "正在使用 GitHub 登录，请稍候"
+    },
+    "oauth-apple": {
+      "title": "使用 Apple 登录",
+      "message": "正在连接 Apple...",
+      "subtitle": "即将跳转至登录页面",
+      "ariaLabel": "正在使用 Apple 登录，请稍候"
+    },
+    "oauth-microsoft": {
+      "title": "使用 Microsoft 登录",
+      "message": "正在连接 Microsoft...",
+      "subtitle": "即将跳转至登录页面",
+      "ariaLabel": "正在使用 Microsoft 登录，请稍候"
+    },
+    "oauth-facebook": {
+      "title": "使用 Facebook 登录",
+      "message": "正在连接 Facebook...",
+      "subtitle": "即将跳转至登录页面",
+      "ariaLabel": "正在使用 Facebook 登录，请稍候"
+    },
+    "auth-email-link": {
+      "title": "正在发送验证",
+      "message": "正在准备验证链接...",
+      "subtitle": "请查收收件箱",
+      "ariaLabel": "正在发送验证邮件，请稍候"
+    }
+  },
+  "templates": {
+    "home": {
+      "hero": {
+        "badge": "欢迎",
+        "title": "构建非凡之作",
+        "subtitle": "现代化平台，帮助您更快地启动、成长和扩展下一个项目。",
+        "primaryAction": "立即开始",
+        "secondaryAction": "了解更多"
+      },
+      "features": {
+        "title": "功能特性",
+        "feature1": {
+          "title": "极速体验",
+          "description": "针对速度优化，开箱即用的即时页面加载和实时更新。"
+        },
+        "feature2": {
+          "title": "默认安全",
+          "description": "内置企业级安全，包括身份验证、基于角色的访问控制和加密。"
+        },
+        "feature3": {
+          "title": "弹性扩展",
+          "description": "从原型到生产，借助强大的模块化架构轻松扩展。"
+        }
+      },
+      "howItWorks": {
+        "title": "如何使用",
+        "step1": {
+          "title": "注册",
+          "description": "几秒内创建账号，无需信用卡即可开始。"
+        },
+        "step2": {
+          "title": "配置",
+          "description": "设置工作空间，邀请团队，自定义工作流。"
+        },
+        "step3": {
+          "title": "上线",
+          "description": "自信发布。按自己的节奏部署、监控和迭代。"
+        }
+      },
+      "showcase": {
+        "title": "为何选择我们",
+        "item1": {
+          "title": "现代技术栈",
+          "description": "基于前沿技术，兼顾性能、可靠性与开发体验。"
+        },
+        "item2": {
+          "title": "开源",
+          "description": "透明、社区驱动，免费使用。"
+        },
+        "item3": {
+          "title": "开发者优先",
+          "description": "由开发者为开发者设计，简洁的 API 和完善的文档。"
+        },
+        "item4": {
+          "title": "全球就绪",
+          "description": "从第一天起支持多语言、多地区和无障碍访问。"
+        }
+      },
+      "cta": {
+        "title": "准备好开始了吗？",
+        "subtitle": "加入数千个团队，更快地构建更好的产品。",
+        "primaryAction": "免费开始",
+        "secondaryAction": "联系销售"
+      }
+    },
+    "dashboard": {
+      "title": "仪表盘",
+      "stats": {
+        "revenue": "收入",
+        "orders": "订单",
+        "customers": "客户",
+        "conversion": "转化率"
+      },
+      "activity": {
+        "title": "最近动态",
+        "item1": "新订单 #1234 已提交",
+        "time1": "2 分钟前",
+        "item2": "客户 John D. 已注册",
+        "time2": "15 分钟前",
+        "item3": "产品\"Pro Plan\"已更新",
+        "time3": "1 小时前",
+        "item4": "已收到 $299 付款",
+        "time4": "3 小时前"
+      },
+      "actions": {
+        "title": "快捷操作",
+        "newProduct": "新建产品",
+        "viewReports": "查看报告",
+        "manageTeam": "管理团队"
+      }
+    },
+    "settings": {
+      "title": "设置",
+      "tabs": {
+        "general": "通用",
+        "notifications": "通知",
+        "appearance": "外观"
+      },
+      "general": {
+        "appInfo": "应用",
+        "appName": "名称",
+        "description": "描述",
+        "language": "语言",
+        "languageHint": "可在顶部菜单中切换语言。"
+      },
+      "notifications": {
+        "preferences": "通知偏好",
+        "email": "邮件通知",
+        "emailDesc": "通过邮件接收更新和提醒。",
+        "push": "推送通知",
+        "pushDesc": "接收实时推送通知。",
+        "marketing": "营销邮件",
+        "marketingDesc": "接收产品更新和促销信息。"
+      },
+      "appearance": {
+        "theme": "主题",
+        "darkMode": "深色模式",
+        "currentTheme": "当前主题"
+      }
+    },
+    "profile": {
+      "title": "个人资料",
+      "subtitle": "管理您的账号设置和偏好。",
+      "identity": {
+        "title": "身份信息",
+        "displayName": "显示名称",
+        "email": "邮箱",
+        "emailVerified": "已验证",
+        "emailUnverified": "未验证"
+      },
+      "security": {
+        "title": "安全",
+        "updatePassword": "修改密码",
+        "linkedProviders": "已关联的登录方式"
+      },
+      "subscription": {
+        "title": "订阅",
+        "currentPlan": "当前套餐",
+        "status": "状态",
+        "manageBilling": "管理账单",
+        "noPlan": "无有效套餐"
+      },
+      "dangerZone": {
+        "title": "危险区域",
+        "deleteAccount": "删除账号",
+        "deleteWarning": "此操作不可撤销，您的所有数据将被永久删除。"
+      },
+      "signOut": "退出登录"
+    }
+  },
+  "canvas": {
+    "checklist": {
+      "addItem": "Add item",
+      "noItems": "暂无项目。",
+      "remove": "删除",
+      "toggleAria": "切换\"{{text}}\"",
+      "removeAria": "删除 {{text}}"
+    },
+    "brainSearch": {
+      "resultsFor": "Results for ",
+      "match": "match",
+      "matches": "matches",
+      "noMatches": "No matches.",
+      "tagFiltersLabel": "Tag filters"
+    },
+    "mailTriage": {
+      "noMessages": "No messages.",
+      "columns": {
+        "sender": "Sender",
+        "subject": "Subject",
+        "received": "Received",
+        "actions": "Actions"
+      },
+      "actions": {
+        "archive": "Archive",
+        "archiveAria": "Archive \"{{subject}}\"",
+        "reply": "Reply",
+        "replyAria": "Reply to \"{{subject}}\"",
+        "flag": "Flag",
+        "flagAria": "Star \"{{subject}}\"",
+        "open": "Open",
+        "openAria": "Open \"{{subject}}\""
+      }
+    }
+  }
+}

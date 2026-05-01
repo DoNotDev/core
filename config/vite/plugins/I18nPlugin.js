@@ -1,0 +1,694 @@
+// packages/builders/config/src/vite/I18nPlugin.js
+
+/**
+ * @fileoverview Clean i18n Virtual Module Plugin
+ * @description Generates virtual module that populates _DNDEV_CONFIG_.i18n
+ *
+ * Uses unified _DNDEV_CONFIG_ structure - no individual globals
+ * Platform detection foundation sets base config, this plugin adds i18n namespace
+ *
+ * @version 0.0.1
+ * @since 0.0.1
+ * @author AMBROISE PARK Consulting
+ */
+
+import { createDiscoveryPlugin } from './PluginFactory.js';
+import {
+  VIRTUAL_MODULES,
+  GENERATED_PATHS,
+  CONFIG_KEYS,
+} from '../../constants.js';
+import { I18nDiscovery } from '../../discovery/I18nDiscovery.js';
+import { PathResolver } from '../../utils/PathResolver.js';
+import { DEFAULT_OPTIONS } from '../options.js';
+
+// ============================================================================
+// I18N PLUGIN TEMPLATES
+// ============================================================================
+
+const i18nTemplates = {
+  /**
+   * Check if i18n data is empty
+   */
+  isEmpty: (i18nData) =>
+    !i18nData.mapping || Object.keys(i18nData.mapping).length === 0,
+
+  /**
+   * Generate main virtual module that populates _DNDEV_CONFIG_.i18n
+   *
+   * In dev mode (isDevMode=true), ALL namespaces are inlined into the virtual module
+   * and no lazy import() calls are generated. This avoids virtual-to-virtual module
+   * imports (`import('virtual:i18n-lazy-{ns}-{lang}')`) which break in Vite's dev
+   * server (on-demand serving can't resolve virtual modules imported from other
+   * virtual modules — no file on disk to serve).
+   *
+   * In build mode (isDevMode=false), only eager namespaces are inlined. Lazy
+   * namespaces get per-ns-per-lang dynamic import() calls, producing ~212 separate
+   * async chunks for optimal code splitting.
+   *
+   * @param {Object} i18nData - Discovery results from I18nDiscovery
+   * @param {boolean} debug - Enable debug output in generated code
+   * @param {string} [configKey='i18n'] - Key in _DNDEV_CONFIG_ to write to
+   * @param {boolean} [isDevMode=false] - When true, inline all content and skip lazy loaders
+   * @returns {string} Generated JavaScript module source code
+   */
+  generateModule: (i18nData, debug, configKey = 'i18n', isDevMode = false) => {
+    const {
+      mapping,
+      eagerNamespaces,
+      supportedLanguages,
+      fallbackLanguage,
+      stats,
+      content = {},
+      files = [],
+    } = i18nData;
+
+    // Dev mode: inline ALL content (virtual-to-virtual imports break in Vite dev server)
+    // Build mode: only inline eager namespaces — lazy ones use dynamic import() chunks
+    const namespacesToInline = isDevMode
+      ? Object.keys(content)
+      : eagerNamespaces;
+    const eagerContent = {};
+    for (const ns of namespacesToInline) {
+      if (content[ns]) {
+        eagerContent[ns] = content[ns];
+      }
+    }
+
+    // In dev mode, all namespaces are eager (no lazy loading needed)
+    const allNamespaces = [
+      ...new Set([...eagerNamespaces, ...Object.keys(content)]),
+    ];
+
+    // Create complete i18n plugin configuration
+    const i18nPluginConfig = {
+      mapping,
+      languages: supportedLanguages,
+      eager: isDevMode ? allNamespaces : eagerNamespaces,
+      fallback: fallbackLanguage,
+      content: eagerContent,
+      storage: {
+        type: 'localStorage',
+        prefix: 'dndev_i18n_',
+        ttl: 24 * 60 * 60 * 1000, // 24 hours
+        encryption: false,
+        maxSize: 5 * 1024 * 1024, // 5MB
+      },
+      performance: {
+        cacheSize: 1000,
+        errorCacheTTL: 5 * 60 * 1000, // 5 minutes
+      },
+      manifest: {
+        totalFiles: stats?.totalFiles || 0,
+        totalNamespaces: stats?.totalNamespaces || 0,
+        totalLanguages: stats?.totalLanguages || 0,
+        eagerNamespaces: stats?.eagerNamespaces || 0,
+        generatedAt: new Date().toISOString(),
+      },
+      debug: debug, // Already merged from config
+    };
+
+    // Build lazy loaders using virtual-to-virtual module imports
+    // Each lazy namespace+language gets its own virtual module (virtual:i18n-lazy-{ns}-{lang})
+    // Vite resolves virtual-to-virtual imports via resolveId, creating separate chunks
+    // Dev mode: skip entirely — all content is already inlined above
+    const lazyLoaderEntries = [];
+    if (!isDevMode) {
+      for (const [ns, langs] of Object.entries(mapping)) {
+        if (eagerNamespaces.includes(ns)) continue; // Eager content is already inlined
+        const langEntries = [];
+        for (const lang of Object.keys(langs)) {
+          langEntries.push(
+            `    '${lang}': () => import('virtual:i18n-lazy-${ns}-${lang}')`
+          );
+        }
+        if (langEntries.length > 0) {
+          lazyLoaderEntries.push(
+            `  '${ns}': {\n${langEntries.join(',\n')}\n  }`
+          );
+        }
+      }
+    }
+    const lazyLoadersCode =
+      lazyLoaderEntries.length > 0
+        ? `{\n${lazyLoaderEntries.join(',\n')}\n}`
+        : '{}';
+
+    return `// ${VIRTUAL_MODULES.i18n} - Generated by @donotdev/config
+// Generated at: ${new Date().toISOString()}
+
+// ===== STATIC EXPORTS =====
+export const I18N_CONFIG = ${JSON.stringify(i18nPluginConfig, null, 2)};
+export const LANGUAGES = ${JSON.stringify(supportedLanguages, null, 2)};
+export const FALLBACK_LANGUAGE = '${fallbackLanguage}';
+export const EAGER_NAMESPACES = ${JSON.stringify(eagerNamespaces, null, 2)};
+
+const i18nPluginConfig = I18N_CONFIG;
+
+// ===== LAZY LOADERS =====
+// Static import() calls — Vite bundles each JSON as a separate async chunk
+const _lazyLoaders = ${lazyLoadersCode};
+
+// ============================================================================
+// INITIALIZE DnDev CONFIG FOUNDATION
+// ============================================================================
+
+if (typeof globalThis !== 'undefined') {
+  if (!globalThis._DNDEV_CONFIG_) {
+    globalThis._DNDEV_CONFIG_ = {
+      platform: 'unknown',
+      mode: 'development',
+      version: '1.0.0',
+      context: typeof window !== 'undefined' ? 'client' : 'server',
+      timestamp: Date.now(),
+    };
+  }
+
+  // Add i18n plugin configuration + lazy loaders (functions, not serializable)
+  globalThis._DNDEV_CONFIG_.${CONFIG_KEYS[configKey]} = {
+    ...i18nPluginConfig,
+    loaders: _lazyLoaders,
+  };
+}
+
+// ============================================================================
+// HELPER FUNCTIONS FOR TRANSLATION LOADING
+// ============================================================================
+
+/**
+ * Load a specific translation dynamically
+ * Uses lazy loaders (static import() calls) for lazy namespaces
+ * Falls back to inline content for eager namespaces
+ */
+export function getTranslation(namespace, language) {
+  // Check inline content first (eager namespaces)
+  const inlineContent = i18nPluginConfig.content?.[namespace]?.[language];
+  if (inlineContent) {
+    return Promise.resolve(inlineContent);
+  }
+
+  // Use lazy loader (Vite-bundled async chunk)
+  const loader = _lazyLoaders[namespace]?.[language];
+  if (!loader) {
+    return Promise.resolve(null);
+  }
+
+  return loader()
+    .then(module => module.default || module)
+    .catch(() => ({}));
+}
+
+/**
+ * Get eager translations that should be preloaded
+ */
+export function getEagerTranslations() {
+  const promises = {};
+  const { eager, languages } = i18nPluginConfig;
+
+  eager.forEach(namespace => {
+    promises[namespace] = {};
+    languages.forEach(language => {
+      if (i18nPluginConfig.content?.[namespace]?.[language]) {
+        promises[namespace][language] = Promise.resolve(i18nPluginConfig.content[namespace][language]);
+      }
+    });
+  });
+
+  return promises;
+}
+
+export function isEagerNamespace(namespace) {
+  return i18nPluginConfig.eager.includes(namespace);
+}
+
+export function getSupportedLanguages() {
+  return i18nPluginConfig.languages;
+}
+
+export function getFallbackLanguage() {
+  return i18nPluginConfig.fallback;
+}
+
+export function getInlineContent(namespace, language) {
+  return i18nPluginConfig.content?.[namespace]?.[language] || null;
+}
+
+// ============================================================================
+// EXPORTS
+// ============================================================================
+
+export const mapping = i18nPluginConfig.mapping;
+export const languages = i18nPluginConfig.languages;
+export const eager = i18nPluginConfig.eager;
+export const fallback = i18nPluginConfig.fallback;
+export const manifest = i18nPluginConfig.manifest;
+export const config = i18nPluginConfig;
+
+export default {
+  mapping,
+  languages,
+  eager,
+  fallback,
+  manifest,
+  config,
+  getTranslation,
+  getEagerTranslations,
+  isEagerNamespace,
+  getSupportedLanguages,
+  getFallbackLanguage,
+  getInlineContent,
+};
+
+`;
+  },
+
+  /**
+   * Generate empty virtual module when no translations found
+   */
+  generateEmpty: (data, debug, discoveryOptions, configKey = 'i18n') => {
+    const fallbackLang = discoveryOptions.fallbackLanguage || 'en';
+
+    const emptyI18nConfig = {
+      mapping: {},
+      languages: [fallbackLang],
+      eager: [],
+      fallback: fallbackLang,
+      content: {},
+      storage: {
+        type: 'localStorage',
+        prefix: 'dndev_i18n_',
+        ttl: 24 * 60 * 60 * 1000,
+        encryption: false,
+        maxSize: 5 * 1024 * 1024,
+      },
+      performance: {
+        cacheSize: 1000,
+        errorCacheTTL: 5 * 60 * 1000,
+      },
+      manifest: {
+        totalFiles: 0,
+        totalNamespaces: 0,
+        totalLanguages: 1,
+        eagerNamespaces: 0,
+        generatedAt: new Date().toISOString(),
+      },
+      debug: debug, // Already merged from config
+    };
+
+    return `// ${VIRTUAL_MODULES.i18n} - Empty i18n configuration
+// No translation files found - using fallback configuration
+// Generated at: ${new Date().toISOString()}
+
+const i18nPluginConfig = ${JSON.stringify(emptyI18nConfig, null, 2)};
+
+// Initialize base config if needed (universal CSR/SSR)
+if (typeof globalThis !== 'undefined') {
+  if (!globalThis._DNDEV_CONFIG_) {
+    globalThis._DNDEV_CONFIG_ = {
+      platform: 'unknown',
+      mode: 'development',
+      version: '1.0.0',
+      context: typeof window !== 'undefined' ? 'client' : 'server',
+      timestamp: Date.now(),
+    };
+  }
+  
+  globalThis._DNDEV_CONFIG_.${CONFIG_KEYS[configKey]} = i18nPluginConfig;
+}
+
+// Placeholder functions
+export function getTranslation(namespace, language) {
+  return Promise.resolve({});
+}
+
+export function getEagerTranslations() {
+  return {};
+}
+
+export function isEagerNamespace() {
+  return false;
+}
+
+export function getSupportedLanguages() {
+  return ['${fallbackLang}'];
+}
+
+export function getFallbackLanguage() {
+  return '${fallbackLang}';
+}
+
+export function getInlineContent() {
+  return null;
+}
+
+export const mapping = {};
+export const languages = ['${fallbackLang}'];
+export const eager = [];
+export const fallback = '${fallbackLang}';
+export const manifest = i18nPluginConfig.manifest;
+export const config = i18nPluginConfig;
+
+export default {
+  mapping,
+  languages,
+  eager,
+  fallback,
+  manifest,
+  config,
+  getTranslation,
+  getEagerTranslations,
+  isEagerNamespace,
+  getSupportedLanguages,
+  getFallbackLanguage,
+  getInlineContent,
+};
+`;
+  },
+
+  /**
+   * Generate inspection file content for debugging
+   */
+  generateInspection: (i18nData, configRoot, discoveryOptions) => {
+    const { mapping, supportedLanguages, eagerNamespaces, files } = i18nData;
+
+    if (!mapping || Object.keys(mapping).length === 0) {
+      return `/**
+ * Generated i18n Discovery Results
+ * Generated at: ${new Date().toISOString()}
+ * Status: No translations found
+ */
+
+export const discoveredTranslations = {};
+export const supportedLanguages = ['${discoveryOptions?.fallbackLanguage || 'en'}'];
+export const eagerNamespaces = [];
+export const translationFiles = [];
+
+export const i18nManifest = {
+  totalNamespaces: 0,
+  totalLanguages: 1,
+  eagerNamespaces: 0,
+  generatedAt: '${new Date().toISOString()}'
+};
+
+export default {
+  translations: discoveredTranslations,
+  languages: supportedLanguages,
+  eager: eagerNamespaces,
+  files: translationFiles,
+  manifest: i18nManifest,
+};
+`;
+    }
+
+    return `/**
+ * Generated i18n Discovery Results
+ * Generated at: ${new Date().toISOString()}
+ * Access via: globalThis._DNDEV_CONFIG_.i18n
+ */
+
+export const discoveredTranslations = ${JSON.stringify(mapping, null, 2)};
+
+export const supportedLanguages = ${JSON.stringify(supportedLanguages, null, 2)};
+
+export const eagerNamespaces = ${JSON.stringify(eagerNamespaces, null, 2)};
+
+export const translationFiles = ${JSON.stringify(
+      files.map((f) => ({
+        namespace: f.namespace,
+        language: f.language,
+        path: f.relativePath,
+        eager: f.eager,
+        size: f.size,
+      })),
+      null,
+      2
+    )};
+
+export const i18nManifest = {
+  totalNamespaces: ${i18nData.stats?.totalNamespaces || 0},
+  totalLanguages: ${i18nData.stats?.totalLanguages || 0},
+  eagerNamespaces: ${i18nData.stats?.eagerNamespaces || 0},
+  generatedAt: '${new Date().toISOString()}'
+};
+
+export default {
+  translations: discoveredTranslations,
+  languages: supportedLanguages,
+  eager: eagerNamespaces,
+  files: translationFiles,
+  manifest: i18nManifest,
+};
+`;
+  },
+
+  /**
+   * Generate production manifest
+   */
+  generateManifest: (i18nData) => ({
+    namespaces: i18nData.stats?.totalNamespaces || 0,
+    languages: i18nData.stats?.totalLanguages || 0,
+    fallbackLanguage: i18nData.fallbackLanguage,
+    eagerNamespaces: i18nData.stats?.eagerNamespaces || 0,
+    platform: 'vite',
+    timestamp: Date.now(),
+  }),
+
+  /**
+   * Log configuration details (replaced by plugin factory)
+   */
+  logConfig: (options) => {
+    // Implementation provided by plugin factory
+  },
+
+  /**
+   * Log discovery stats - show WHAT was found, not timing
+   */
+  logStats: (i18nData, icon, logger) => {
+    const languages = i18nData.supportedLanguages || [];
+    const namespaces =
+      Object.keys(i18nData.mapping || {}).filter((ns) => ns !== 'default')
+        .length || 0;
+
+    if (logger) {
+      logger.info(
+        `${icon} I18n: ${languages.length} languages, ${namespaces} namespaces`
+      );
+    }
+  },
+};
+
+// ============================================================================
+// FILE PATTERNS FOR HMR
+// ============================================================================
+
+const i18nFilePatterns = [
+  (file) => file.endsWith('.json') && file.includes('locale'),
+  (file) => /[a-z]+_[a-z]{2}\.json$/i.test(file),
+  (file) => file.includes('/locales/') && file.endsWith('.json'),
+];
+
+// ============================================================================
+// PLUGIN FACTORY INTEGRATION
+// ============================================================================
+
+/**
+ * Create the i18n virtual module plugin using the unified factory
+ *
+ * Returns an array of 2 plugins:
+ * 1. Main discovery plugin — handles virtual:i18n-mapping (config + eager content)
+ * 2. Lazy loader plugin — handles virtual:i18n-lazy-{ns}-{lang} (one chunk per lazy ns+lang)
+ *
+ * **Dev vs Build behavior:**
+ * - Dev (`vite serve`): All namespaces inlined into a single virtual module. No lazy
+ *   chunks, no virtual-to-virtual imports. Language switch is instant — everything
+ *   is already in `resources`. The lazy loader plugin becomes a no-op.
+ * - Build (`vite build`): Eager namespaces inlined, lazy namespaces get per-ns-per-lang
+ *   dynamic import() calls resolved by the lazy loader plugin into separate async chunks.
+ *
+ * This split exists because virtual-to-virtual module imports
+ * (`import('virtual:i18n-lazy-{ns}-{lang}')` from `virtual:i18n-mapping`) break in
+ * Vite's dev server — the on-demand serving model can't resolve virtual modules imported
+ * from other virtual modules since there's no file on disk. Build mode does a full pass
+ * and resolves everything upfront.
+ *
+ * @param {Object} options - Plugin options
+ * @param {string} [options.fallbackLanguage='en'] - Default language when translation missing
+ * @param {string[]} [options.additionalPaths=[]] - Additional locale paths from workspace packages
+ *   Paths are relative to app root. Useful for shared entities in monorepos.
+ *   Example: ['../../entities/locales'] scans for *_*.json files in that directory
+ * @returns {import('vite').Plugin[]} Vite plugin array (Vite flattens nested arrays)
+ *
+ * @example
+ * // vite.config.ts - with shared entity translations
+ * createViteI18nPlugin({
+ *   additionalPaths: ['../../entities/locales']
+ * })
+ */
+export function createViteI18nPlugin(options = {}) {
+  // Dev mode flag — shared between lazyPlugin and wrappedTemplates
+  // Set in lazyPlugin's configResolved hook
+  let isDevMode = false;
+
+  // Shared state between main plugin and lazy loader plugin
+  // Maps virtual module ID → translation content for that ns+lang
+  const lazyModuleRegistry = new Map();
+
+  // Shared discovery instance — used by both plugins
+  const pathResolver = PathResolver.getInstance();
+  const mergedDiscoveryOptions = {
+    ...DEFAULT_OPTIONS.discovery,
+    fallbackLanguage: options.fallbackLanguage || 'en',
+    ...options,
+  };
+  const lazyDiscovery = new I18nDiscovery(pathResolver, mergedDiscoveryOptions);
+
+  /**
+   * Populate the lazy module registry from discovery data.
+   * Called in buildStart (before any load) and again from generateModule (for HMR).
+   */
+  function populateRegistry(i18nData) {
+    lazyModuleRegistry.clear();
+    const { content, eagerNamespaces } = i18nData;
+    for (const [ns, langs] of Object.entries(content || {})) {
+      if (eagerNamespaces.includes(ns)) continue;
+      for (const [lang, translations] of Object.entries(langs)) {
+        lazyModuleRegistry.set(`virtual:i18n-lazy-${ns}-${lang}`, translations);
+      }
+    }
+  }
+
+  // Wrap templates to also refresh registry during HMR rebuilds
+  // Dev mode: skip registry (no lazy modules) and pass isDevMode to inline everything
+  const wrappedTemplates = {
+    ...i18nTemplates,
+    generateModule: (i18nData, debug, configKey) => {
+      if (!isDevMode) populateRegistry(i18nData);
+      return i18nTemplates.generateModule(
+        i18nData,
+        debug,
+        configKey,
+        isDevMode
+      );
+    },
+  };
+
+  // Main plugin via factory (handles virtual:i18n-mapping)
+  const mainPlugin = createDiscoveryPlugin({
+    pluginName: 'dndev-vite-i18n-discovery',
+    icon: '🌐',
+    virtualModuleId: VIRTUAL_MODULES.i18n,
+    DiscoveryClass: I18nDiscovery,
+    discoveryMethod: 'discoverTranslations',
+    filePatterns: i18nFilePatterns,
+    templates: wrappedTemplates,
+    manifestFileName: GENERATED_PATHS.manifests.i18n,
+    configKey: 'i18n',
+    discoveryOptions: mergedDiscoveryOptions,
+  })({
+    ...options,
+    hmrSmartDetection: false, // Disable smart detection for i18n - we want .json files to trigger HMR
+  });
+
+  // Lazy loader plugin — resolves virtual:i18n-lazy-* modules
+  // Registry is populated in buildStart BEFORE any load() calls
+  const lazyPlugin = {
+    name: 'dndev-i18n-lazy-loader',
+    enforce: 'pre',
+
+    configResolved(config) {
+      isDevMode = config.command === 'serve';
+    },
+
+    async buildStart() {
+      if (isDevMode) return; // Dev mode: all content inlined, no lazy modules needed
+
+      // Populate registry upfront so lazy modules are available before any load() call.
+      // The main plugin also runs discovery, but we need data ready BEFORE it generates
+      // the virtual module code (which contains import() calls to our lazy modules).
+      // Discovery caches internally, so this is not a duplicate scan.
+
+      // Wait for appRoot (set by main plugin's configResolved)
+      const isReady = () => {
+        const appRoot = pathResolver.getAppRoot();
+        const repoRoot = pathResolver.getRepoRoot();
+        return appRoot && appRoot !== repoRoot;
+      };
+      let waitCount = 0;
+      while (!isReady() && waitCount < 100) {
+        await new Promise((r) => setTimeout(r, 10));
+        waitCount++;
+      }
+      if (!isReady()) return; // Main plugin will handle the error
+
+      const data = await lazyDiscovery.discoverTranslations();
+      populateRegistry(data);
+    },
+
+    resolveId(id) {
+      if (isDevMode) return; // Dev mode: no lazy virtual modules
+      if (id.startsWith('virtual:i18n-lazy-')) {
+        return '\0' + id;
+      }
+    },
+
+    load(id) {
+      if (isDevMode) return; // Dev mode: no lazy virtual modules
+      if (id.startsWith('\0virtual:i18n-lazy-')) {
+        const key = id.slice(1); // remove '\0' prefix (null byte = 1 char)
+        const content = lazyModuleRegistry.get(key);
+        return `export default ${JSON.stringify(content || {})};`;
+      }
+    },
+  };
+
+  // Flag filter plugin — aliases unused flag files to empty component
+  // Reduces ~112 flag chunks down to only the ones matching supportedLanguages
+  const flagFilterPlugin = {
+    name: 'dndev-i18n-flag-filter',
+    enforce: 'pre',
+
+    async buildStart() {
+      // Dev mode: all flags allowed, no filtering needed
+      if (isDevMode) return;
+
+      // Wait for appRoot (set by main plugin's configResolved)
+      const isReady = () => {
+        const appRoot = pathResolver.getAppRoot();
+        const repoRoot = pathResolver.getRepoRoot();
+        return appRoot && appRoot !== repoRoot;
+      };
+      let waitCount = 0;
+      while (!isReady() && waitCount < 100) {
+        await new Promise((r) => setTimeout(r, 10));
+        waitCount++;
+      }
+      if (!isReady()) return;
+
+      // Discovery is cached — no duplicate scan
+      const data = await lazyDiscovery.discoverTranslations();
+      const flagCodes = data.flagCodes || [];
+      this._allowedFlags = new Set(flagCodes.map((c) => c.toUpperCase()));
+    },
+
+    resolveId(id, importer) {
+      if (isDevMode) return;
+      if (!importer || !id.includes('flag')) return;
+      // Match: flagXX.tsx or similar flag file import
+      const match = id.match(/flag([A-Z][A-Z0-9_-]*)\.(tsx|js)$/i);
+      if (!match) return;
+      const code = match[1].toUpperCase();
+      if (code === 'BASE') return; // FlagBase.tsx — always needed
+      if (!this._allowedFlags?.has(code)) {
+        return '\0empty-flag';
+      }
+    },
+
+    load(id) {
+      if (id === '\0empty-flag') {
+        return 'export default () => null;';
+      }
+    },
+  };
+
+  return [mainPlugin, lazyPlugin, flagFilterPlugin];
+}

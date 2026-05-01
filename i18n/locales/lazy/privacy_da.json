@@ -1,0 +1,178 @@
+{
+  "title": "Privatlivspolitik",
+  "lastUpdated": "Sidst opdateret",
+  "common": {
+    "we": "vi",
+    "our": "vores",
+    "or": "eller",
+    "us": "os"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introduktion",
+      "welcome": "Velkommen til",
+      "commitment": "Vi beskytter dit privatliv. Denne politik beskriver, hvordan vi indsamler, bruger og beskytter dine oplysninger.",
+      "agreement": "Ved at bruge vores tjenester accepterer du denne politik. Ellers må du ikke bruge dem."
+    },
+    "collection": {
+      "title": "2. Oplysninger vi indsamler",
+      "provided": {
+        "title": "2.1 Oplysninger du giver",
+        "account": "Kontooplysninger",
+        "accountDesc": "Navn, e-mail, adgangskode og profil ved oprettelse",
+        "usage": "Brugsdata",
+        "usageDesc": "Hvordan du bruger tjenesten",
+        "communication": "Kommunikation",
+        "communicationDesc": "Besked, feedback og supporthenvendelser",
+        "payment": "Betalingsoplysninger",
+        "paymentDesc": "Fakturering og betalingsmetode",
+        "project": "Projektdata",
+        "projectDesc": "Kode og konfiguration du opretter"
+      },
+      "automatic": {
+        "title": "2.2 Automatisk indsamlet",
+        "device": "Enhedsoplysninger",
+        "deviceDesc": "IP, browser, styresystem",
+        "analytics": "Brugsstatistik",
+        "analyticsDesc": "Sider, funktioner og adfærd",
+        "performance": "Performance-data",
+        "performanceDesc": "Fejllog og målinger",
+        "cookies": "Cookies og sporing",
+        "cookiesDesc": "Datafiler til bedre oplevelse"
+      }
+    },
+    "usage": {
+      "title": "3. Hvordan vi bruger dem",
+      "intro": "Vi bruger oplysningerne til:",
+      "provide": "Levere og forbedre vores tjenester",
+      "process": "Behandle transaktioner og din konto",
+      "send": "Sende opdateringer og support",
+      "respond": "Besvare henvendelser",
+      "analyze": "Analysere brug",
+      "detect": "Forebygge svindel og trusler",
+      "comply": "Overholde lovkrav",
+      "develop": "Udvikle nye funktioner"
+    },
+    "sharing": {
+      "title": "4. Deling og videregivelse",
+      "intro": "Vi sælger ikke dine data. Vi kan dele i disse situationer:",
+      "providers": {
+        "title": "4.1 Tredjepartsudbydere",
+        "intro": "Vi kan dele med leverandører der hjælper driften:",
+        "hosting": "Cloud og infrastruktur",
+        "payment": "Betalingsudbydere",
+        "analytics": "Statistik og overvågning",
+        "support": "Support og kommunikation"
+      },
+      "legal": {
+        "title": "4.2 Lovkrav",
+        "desc": "Vi kan videregive når loven eller myndigheder kræver det."
+      },
+      "business": {
+        "title": "4.3 Virksomhedsoverdragelser",
+        "desc": "Ved fusion eller salg kan dine data overgå som del af transaktionen."
+      }
+    },
+    "security": {
+      "title": "5. Datasikkerhed",
+      "intro": "Vi anvender tekniske og organisatoriske foranstaltninger:",
+      "encryption": "Kryptering under overførsel og i hvile",
+      "assessments": "Løbende sikkerhedsvurderinger",
+      "access": "Adgangskontrol og godkendelse",
+      "training": "Medarbejdertræning",
+      "incident": "Håndtering af indbrud og varsling"
+    },
+    "retention": {
+      "title": "6. Opbevaring",
+      "intro": "Vi bevarer data så længe nødvendigt. Perioden afhænger af type:",
+      "account": "Kontooplysninger",
+      "accountDesc": "Mens kontoen er aktiv og rimelig tid efter sletning",
+      "usage": "Brugsdata",
+      "usageDesc": "Til statistik og forbedring",
+      "payment": "Betalingsoplysninger",
+      "paymentDesc": "Som krævet af finansiel lovgivning",
+      "communication": "Kommunikation",
+      "communicationDesc": "Til support og lovkrav"
+    },
+    "rights": {
+      "title": "7. Dine rettigheder",
+      "intro": "Afhængigt af hvor du bor kan du have ret til:",
+      "access": {
+        "title": "7.1 Adgang og portabilitet",
+        "desc": "Du kan anmode om adgang og en kopi i bærbart format."
+      },
+      "correction": {
+        "title": "7.2 Rettelse",
+        "desc": "Du kan anmode om rettelse af forkerte oplysninger."
+      },
+      "deletion": {
+        "title": "7.3 Sletning",
+        "desc": "Du kan anmode om sletning, med forbehold for lovkrav."
+      },
+      "restriction": {
+        "title": "7.4 Begrænsning og indsigelse",
+        "desc": "Du kan anmode om begrænsning eller gøre indsigelse."
+      },
+      "marketing": {
+        "title": "7.5 Markedsføring",
+        "desc": "Du kan framelde dig markedsføring når som helst."
+      }
+    },
+    "cookies": {
+      "title": "8. Cookies og sporing",
+      "intro": "Vi bruger cookies til oplevelse og statistik. Du kan styre dem i browseren.",
+      "types": {
+        "title": "8.1 Typer af cookies",
+        "essential": "Nødvendige cookies",
+        "essentialDesc": "Påkrævet for funktion og sikkerhed",
+        "analytics": "Statistik-cookies",
+        "analyticsDesc": "Hjælper os forstå brug af platformen",
+        "functional": "Funktionelle cookies",
+        "functionalDesc": "Husker præferencer",
+        "marketing": "Markedsføringscookies",
+        "marketingDesc": "Til målrettet reklame"
+      }
+    },
+    "international": {
+      "title": "9. Overførsel til tredjelande",
+      "desc": "Data kan overføres til andre lande. Vi sørger for passende garantier."
+    },
+    "children": {
+      "title": "10. Børns privatliv",
+      "desc": "Tjenesterne er ikke til børn under 13. Kontakt os straks hvis vi har modtaget data fra et barn under 13."
+    },
+    "changes": {
+      "title": "11. Ændringer",
+      "desc": "Vi kan opdatere denne politik. Ved væsentlige ændringer giver vi besked."
+    },
+    "contact": {
+      "title": "12. Kontakt",
+      "intro": "Spørgsmål til politikken eller vores datapraksis:",
+      "email": "E-mail",
+      "address": "Adresse",
+      "dpo": "Databeskyttelsesansvarlig",
+      "phone": "Telefon",
+      "support": "Support-e-mail"
+    },
+    "eu": {
+      "title": "13. Retsgrundlag (EU)",
+      "intro": "For brugere i EU omfatter vores retsgrundlag:",
+      "consent": "Samtykke",
+      "consentDesc": "Når du udtrykkeligt giver samtykke",
+      "contract": "Kontraktopfyldelse",
+      "contractDesc": "For at levere tjenester efter vilkårene",
+      "legitimate": "Legitime interesser",
+      "legitimateDesc": "Forbedring og forebygge svindel",
+      "legal": "Lovkrav",
+      "legalDesc": "Overholdelse af gældende lovgivning"
+    },
+    "california": {
+      "title": "14. Californiens rettigheder (CCPA)",
+      "desc": "Beboere i California har yderligere rettigheder under CCPA."
+    }
+  },
+  "footer": {
+    "effective": "Denne privatlivspolitik træder i kraft den",
+    "remain": "og gælder until videre, medmindre bestemmelserne ændres."
+  }
+}

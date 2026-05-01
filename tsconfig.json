@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.packages.json",
+  "compilerOptions": {
+    "composite": false,
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "isolatedModules": false
+  },
+  "include": ["index.ts", "server.ts", "config/**/*.d.ts"],
+  "exclude": [
+    "components/**",
+    "crud/**",
+    "hooks/**",
+    "i18n/**",
+    "schemas/**",
+    "stores/**",
+    "types/**",
+    "utils/**",
+    "**/node_modules",
+    "**/dist",
+    "**/__tests__/**",
+    "**/*.test.ts"
+  ]
+}

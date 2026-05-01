@@ -1,0 +1,178 @@
+{
+  "title": "Política de Privacidad",
+  "lastUpdated": "Última actualización",
+  "common": {
+    "we": "nosotros",
+    "our": "nuestro",
+    "or": "o",
+    "us": "nosotros"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introducción",
+      "welcome": "Bienvenido a",
+      "commitment": "Estamos comprometidos a proteger su privacidad y asegurar que tenga una experiencia positiva en nuestra plataforma. Esta Política de Privacidad explica cómo recopilamos, utilizamos, divulgamos y protegemos su información cuando utiliza nuestro framework de desarrollo, herramientas y servicios.",
+      "agreement": "usted acepta la recopilación y uso de información de acuerdo con esta política. Si no está de acuerdo con nuestras políticas y prácticas, por favor no utilice nuestros servicios."
+    },
+    "collection": {
+      "title": "2. Información que Recopilamos",
+      "provided": {
+        "title": "2.1 Información que Usted Proporciona",
+        "account": "Información de Cuenta",
+        "accountDesc": "Nombre, dirección de correo electrónico, contraseña e información de perfil cuando crea una cuenta",
+        "usage": "Datos de Uso",
+        "usageDesc": "Información sobre cómo utiliza nuestros servicios, incluidas las funciones accedidas y el tiempo dedicado",
+        "communication": "Comunicación",
+        "communicationDesc": "Mensajes, comentarios y solicitudes de soporte que nos envía",
+        "payment": "Información de Pago",
+        "paymentDesc": "Detalles de facturación e información del método de pago para funciones premium",
+        "project": "Datos del Proyecto",
+        "projectDesc": "Código, configuraciones y archivos de proyecto que crea utilizando nuestro framework"
+      },
+      "automatic": {
+        "title": "2.2 Información Recopilada Automáticamente",
+        "device": "Información del Dispositivo",
+        "deviceDesc": "Dirección IP, tipo de navegador, sistema operativo e identificadores del dispositivo",
+        "analytics": "Análisis de Uso",
+        "analyticsDesc": "Páginas visitadas, funciones utilizadas y patrones de interacción",
+        "performance": "Datos de Rendimiento",
+        "performanceDesc": "Registros de errores, métricas de rendimiento y diagnósticos del sistema",
+        "cookies": "Cookies y Seguimiento",
+        "cookiesDesc": "Pequeños archivos de datos almacenados en su dispositivo para mejorar su experiencia"
+      }
+    },
+    "usage": {
+      "title": "3. Cómo Utilizamos Su Información",
+      "intro": "Utilizamos la información que recopilamos para:",
+      "provide": "Proporcionar, mantener y mejorar nuestros servicios",
+      "process": "Procesar transacciones y gestionar su cuenta",
+      "send": "Enviarle actualizaciones importantes, alertas de seguridad y mensajes de soporte",
+      "respond": "Responder a sus comentarios, preguntas y solicitudes de soporte",
+      "analyze": "Analizar patrones de uso para mejorar la experiencia del usuario",
+      "detect": "Detectar y prevenir fraudes, abusos y amenazas de seguridad",
+      "comply": "Cumplir con obligaciones legales y hacer cumplir nuestros términos",
+      "develop": "Desarrollar nuevas funciones y servicios basados en comentarios de usuarios"
+    },
+    "sharing": {
+      "title": "4. Compartir y Divulgar Información",
+      "intro": "No vendemos, intercambiamos ni alquilamos su información personal a terceros. Podemos compartir su información en las siguientes circunstancias:",
+      "providers": {
+        "title": "4.1 Proveedores de Servicios",
+        "intro": "Podemos compartir información con proveedores de servicios de terceros de confianza que nos ayudan a operar nuestra plataforma, como:",
+        "hosting": "Proveedores de alojamiento en la nube e infraestructura",
+        "payment": "Procesadores de pago para facturación y transacciones",
+        "analytics": "Servicios de análisis y monitoreo",
+        "support": "Herramientas de soporte al cliente y comunicación"
+      },
+      "legal": {
+        "title": "4.2 Requisitos Legales",
+        "desc": "Podemos divulgar su información si es requerido por ley, orden judicial o solicitud gubernamental, o para proteger nuestros derechos, propiedad o seguridad."
+      },
+      "business": {
+        "title": "4.3 Transferencias Comerciales",
+        "desc": "En caso de fusión, adquisición o venta de activos, su información puede ser transferida como parte de la transacción comercial."
+      }
+    },
+    "security": {
+      "title": "5. Seguridad de Datos",
+      "intro": "Implementamos medidas técnicas y organizativas apropiadas para proteger su información contra acceso no autorizado, alteración, divulgación o destrucción. Estas medidas incluyen:",
+      "encryption": "Cifrado de datos en tránsito y en reposo",
+      "assessments": "Evaluaciones de seguridad regulares y actualizaciones",
+      "access": "Controles de acceso y mecanismos de autenticación",
+      "training": "Capacitación de empleados en prácticas de protección de datos",
+      "incident": "Procedimientos de respuesta a incidentes y notificación de violaciones"
+    },
+    "retention": {
+      "title": "6. Retención de Datos",
+      "intro": "Retenemos su información durante el tiempo necesario para proporcionar nuestros servicios, cumplir con obligaciones legales, resolver disputas y hacer cumplir nuestros acuerdos. El período de retención varía según el tipo de información:",
+      "account": "Información de Cuenta",
+      "accountDesc": "Retenida mientras su cuenta está activa y por un período razonable después de la eliminación",
+      "usage": "Datos de Uso",
+      "usageDesc": "Retenidos para fines de análisis y mejora del servicio",
+      "payment": "Información de Pago",
+      "paymentDesc": "Retenida según lo requerido por las regulaciones financieras",
+      "communication": "Registros de Comunicación",
+      "communicationDesc": "Retenidos para soporte al cliente y cumplimiento legal"
+    },
+    "rights": {
+      "title": "7. Sus Derechos y Opciones",
+      "intro": "Dependiendo de su ubicación, puede tener los siguientes derechos con respecto a su información personal:",
+      "access": {
+        "title": "7.1 Acceso y Portabilidad",
+        "desc": "Puede solicitar acceso a su información personal y recibir una copia en un formato portable."
+      },
+      "correction": {
+        "title": "7.2 Corrección y Actualización",
+        "desc": "Puede solicitar la corrección de información inexacta o incompleta."
+      },
+      "deletion": {
+        "title": "7.3 Eliminación",
+        "desc": "Puede solicitar la eliminación de su información personal, sujeto a los requisitos legales."
+      },
+      "restriction": {
+        "title": "7.4 Restricción y Objeción",
+        "desc": "Puede solicitar la restricción del procesamiento u oponerse a ciertos usos de su información."
+      },
+      "marketing": {
+        "title": "7.5 Comunicaciones de Marketing",
+        "desc": "Puede optar por no recibir comunicaciones de marketing en cualquier momento utilizando el enlace de cancelación de suscripción o contactándonos directamente."
+      }
+    },
+    "cookies": {
+      "title": "8. Cookies y Tecnologías de Seguimiento",
+      "intro": "Utilizamos cookies y tecnologías de seguimiento similares para mejorar su experiencia, analizar el uso y proporcionar contenido personalizado. Puede controlar la configuración de cookies a través de las preferencias de su navegador.",
+      "types": {
+        "title": "8.1 Tipos de Cookies que Utilizamos",
+        "essential": "Cookies Esenciales",
+        "essentialDesc": "Requeridos para funcionalidad básica y seguridad",
+        "analytics": "Cookies de Análisis",
+        "analyticsDesc": "Nos ayudan a entender cómo los visitantes utilizan nuestra plataforma",
+        "functional": "Cookies Funcionales",
+        "functionalDesc": "Recuerdan sus preferencias y configuraciones",
+        "marketing": "Cookies de Marketing",
+        "marketingDesc": "Utilizados para publicidad dirigida y contenido"
+      }
+    },
+    "international": {
+      "title": "9. Transferencias Internacionales de Datos",
+      "desc": "Su información puede ser transferida y procesada en países distintos al suyo. Aseguramos que existan salvaguardas apropiadas para proteger su información de acuerdo con las leyes aplicables de protección de datos."
+    },
+    "children": {
+      "title": "10. Privacidad de Menores",
+      "desc": "Nuestros servicios no están dirigidos a niños menores de 13 años. No recopilamos conscientemente información personal de niños menores de 13 años. Si cree que hemos recopilado información de un niño menor de 13 años, por favor contáctenos inmediatamente."
+    },
+    "changes": {
+      "title": "11. Cambios a Esta Política de Privacidad",
+      "desc": "Podemos actualizar esta Política de Privacidad de vez en cuando para reflejar cambios en nuestras prácticas o leyes aplicables. Le notificaremos de cualquier cambio material publicando la política actualizada en nuestro sitio web y actualizando la fecha \"Última actualización\"."
+    },
+    "contact": {
+      "title": "12. Contáctenos",
+      "intro": "Si tiene alguna pregunta sobre esta Política de Privacidad o nuestras prácticas de datos, por favor contáctenos:",
+      "email": "Correo Electrónico",
+      "address": "Dirección",
+      "dpo": "Oficial de Protección de Datos",
+      "phone": "Teléfono",
+      "support": "Correo de Soporte"
+    },
+    "eu": {
+      "title": "13. Base Legal para el Procesamiento (Usuarios UE)",
+      "intro": "Para usuarios en la Unión Europea, nuestra base legal para procesar su información personal incluye:",
+      "consent": "Consentimiento",
+      "consentDesc": "Cuando acepta explícitamente nuestro procesamiento",
+      "contract": "Ejecución del Contrato",
+      "contractDesc": "Para proporcionar nuestros servicios bajo nuestros términos",
+      "legitimate": "Interés Legítimo",
+      "legitimateDesc": "Para mejorar nuestros servicios y prevenir fraudes",
+      "legal": "Obligación Legal",
+      "legalDesc": "Para cumplir con leyes y regulaciones aplicables"
+    },
+    "california": {
+      "title": "14. Derechos de Privacidad de California (CCPA)",
+      "desc": "Los residentes de California tienen derechos adicionales bajo la Ley de Privacidad del Consumidor de California (CCPA), incluido el derecho a saber qué información personal recopilamos y cómo la utilizamos, el derecho a eliminar información personal y el derecho a optar por no participar en la venta de información personal."
+    }
+  },
+  "footer": {
+    "effective": "Esta Política de Privacidad es efectiva a partir del",
+    "remain": "y permanecerá en vigor excepto con respecto a cualquier cambio en sus disposiciones en el futuro."
+  }
+}

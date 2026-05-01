@@ -1,0 +1,82 @@
+{
+  "security": {
+    "title": "安全な決済処理",
+    "description": "お支払い情報は、PCI DSS Level 1認定の決済処理業者であるStripeによって安全に処理されます。",
+    "encrypted": "256ビットSSL暗号化",
+    "stripe": "Stripe提供",
+    "dismiss": "セキュリティ通知を閉じる"
+  },
+  "templates": {
+    "purchase": {
+      "title": "始める",
+      "subtitle": "一回限りの購入オプションを選択してください"
+    },
+    "subscription": {
+      "title": "プランを選択",
+      "subtitle": "ニーズに合った完璧なプランを選択してください",
+      "billingToggle": {
+        "monthly": "月額",
+        "yearly": "年額",
+        "save20": "20%節約"
+      }
+    },
+    "checkout": {
+      "title": "購入を完了",
+      "description": "Stripeによる安全なチェックアウト",
+      "completePurchase": "購入を完了",
+      "startSubscription": "サブスクリプションを開始"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "最も人気",
+      "limitedTime": "期間限定",
+      "exclVat": "税抜",
+      "purchaseNow": "今すぐ購入",
+      "subscribeNow": "今すぐ登録"
+    },
+    "buttons": {
+      "purchase": "購入",
+      "subscribe": "登録",
+      "processing": "処理中...",
+      "signInToPurchase": "購入するにはログイン",
+      "signInToSubscribe": "登録するにはログイン"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Stripeにリダイレクト中",
+        "message": "安全な決済を初期化中...",
+        "subtitle": "初回は少々お時間がかかる場合があります",
+        "ariaLabel": "安全なチェックアウトを準備中、お待ちください"
+      },
+      "portal": {
+        "title": "Stripeにリダイレクト中",
+        "message": "請求ポータルを開いています...",
+        "subtitle": "サブスクリプションと請求書を管理",
+        "ariaLabel": "請求ポータルを開いています、お待ちください"
+      }
+    },
+    "subscriptionManager": {
+      "title": "サブスクリプション管理",
+      "signInRequired": "サブスクリプションを管理するにはログインしてください。",
+      "noSubscription": "アクティブなサブスクリプションがありません。",
+      "currentPlan": "現在のプラン",
+      "ends": "終了",
+      "managePaymentMethod": "支払い方法を管理",
+      "cancelSubscription": "サブスクリプションをキャンセル",
+      "cancelConfirm": "キャンセルしてもよろしいですか？{{date}}までアクセスを維持できます。",
+      "yesCancel": "はい、キャンセル",
+      "noKeep": "いいえ、維持",
+      "changePlan": "プランを変更",
+      "current": "現在",
+      "subscriptionEnds": "サブスクリプションは{{date}}に終了します",
+      "planChanged": "プランが正常に変更されました！",
+      "status": {
+        "active": "アクティブ",
+        "cancelled": "キャンセル済み",
+        "pastDue": "期限切れ",
+        "trialing": "トライアル"
+      }
+    }
+  }
+}

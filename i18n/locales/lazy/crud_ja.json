@@ -1,0 +1,370 @@
+{
+  "actions": {
+    "label": "アクション",
+    "create": "作成",
+    "update": "更新",
+    "delete": "削除",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "confirm": "確認",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "search": "検索",
+    "searchPlaceholder": "検索...",
+    "filter": "フィルター",
+    "clear": "クリア",
+    "reset": "リセット",
+    "apply": "適用",
+    "select": "選択",
+    "selectYear": "年を選択または入力",
+    "upload": "アップロード",
+    "download": "ダウンロード",
+    "close": "閉じる",
+    "email": "メール",
+    "call": "電話",
+    "copyEmail": "メールをコピー",
+    "copyPhone": "電話番号をコピー",
+    "copyIban": "IBANをコピー",
+    "replySubject": "Re: お問い合わせ",
+    "markResponded": "対応済みとしてマーク",
+    "selectOptions": "オプションを選択...",
+    "use": "この住所を使用"
+  },
+  "address": {
+    "placeholder": "住所を入力...",
+    "noResults": "住所が見つかりません"
+  },
+  "export": "エクスポート",
+  "noInquiries": "お問い合わせが見つかりませんでした。",
+  "customer": "顧客",
+  "noCustomer": "顧客がリンクされていません",
+  "status": {
+    "draft": "下書き",
+    "available": "利用可能",
+    "deleted": "削除済み",
+    "sold": "売却済み"
+  },
+  "fields": {
+    "array": "配列",
+    "boolean": "ブール値",
+    "checkbox": "チェックボックス",
+    "date": "日付",
+    "datetime-local": "日時",
+    "email": "メールアドレス",
+    "file": "ファイル",
+    "geopoint": "位置",
+    "image": "画像",
+    "map": "マップ",
+    "multiselect": "複数選択",
+    "number": "数値",
+    "password": "パスワード",
+    "phone": "電話番号",
+    "radio": "ラジオボタン",
+    "range": "範囲",
+    "reference": "参照",
+    "select": "選択",
+    "tel": "電話番号",
+    "text": "テキスト",
+    "textarea": "テキストエリア",
+    "timestamp": "タイムスタンプ",
+    "url": "URL",
+    "status": "ステータス",
+    "id": "ID",
+    "createdAt": "作成日時",
+    "updatedAt": "更新日時",
+    "createdById": "作成者",
+    "updatedById": "更新者"
+  },
+  "text": {
+    "required": "{{field}}は必須です",
+    "minLength": "{{field}}は少なくとも{{min}}文字である必要があります",
+    "maxLength": "{{field}}は{{max}}文字を超えてはいけません",
+    "email": "有効なメールアドレスを入力してください",
+    "url": "有効なURLを入力してください",
+    "matches": "{{field}}はパターン{{pattern}}と一致する必要があります",
+    "unique": "{{field}}は一意である必要があります",
+    "alphanumeric": "{{field}}は文字と数字のみを含む必要があります",
+    "lettersOnly": "{{field}}は文字のみを含む必要があります"
+  },
+  "number": {
+    "required": "{{field}}は必須です",
+    "min": "{{field}}は少なくとも{{min}}である必要があります",
+    "max": "{{field}}は{{max}}を超えてはいけません",
+    "integer": "{{field}}は整数である必要があります",
+    "positive": "{{field}}は正の数である必要があります",
+    "negative": "{{field}}は負の数である必要があります",
+    "between": "{{field}}は{{min}}と{{max}}の間である必要があります",
+    "precision": "{{field}}は最大{{precision}}桁の小数点を持つ必要があります"
+  },
+  "date": {
+    "required": "{{field}}は必須です",
+    "min": "{{field}}は{{min}}より後である必要があります",
+    "max": "{{field}}は{{max}}より前である必要があります",
+    "between": "{{field}}は{{min}}と{{max}}の間である必要があります",
+    "format": "有効な日付を入力してください",
+    "future": "{{field}}は未来である必要があります",
+    "past": "{{field}}は過去である必要があります",
+    "today": "{{field}}は今日である必要があります"
+  },
+  "select": {
+    "required": "{{field}}を選択してください",
+    "invalid": "{{field}}の無効な選択",
+    "min": "少なくとも{{min}}個のオプションを選択してください",
+    "max": "{{max}}個を超えるオプションを選択することはできません"
+  },
+  "boolean": {
+    "required": "{{field}}を選択する必要があります"
+  },
+  "array": {
+    "required": "少なくとも1つの{{field}}が必要です",
+    "minItems": "少なくとも{{min}}個の{{field}}を選択してください",
+    "maxItems": "{{max}}個を超える{{field}}を選択することはできません",
+    "uniqueItems": "すべての{{field}}は一意である必要があります"
+  },
+  "file": {
+    "required": "ファイルを選択してください",
+    "maxSize": "ファイルサイズは{{max}}を超えてはいけません",
+    "minSize": "ファイルサイズは少なくとも{{min}}である必要があります",
+    "type": "ファイルタイプは{{types}}である必要があります",
+    "dimensions": "画像のサイズは{{width}}x{{height}}である必要があります",
+    "upload": {
+      "ariaLabel": "ファイルをアップロード",
+      "ariaLabelSingle": "ファイルをアップロード",
+      "ariaLabelMultiple": "ファイルをアップロード",
+      "dragDropSingle": "ドラッグ&ドロップ、貼り付け、またはクリックしてファイルをアップロード",
+      "dragDropMultiple": "ドラッグ&ドロップ、貼り付け、またはクリックしてファイルをアップロード"
+    },
+    "delete": {
+      "ariaLabel": "ファイルを削除",
+      "failed": "ファイルの削除に失敗しました"
+    },
+    "errors": {
+      "maxFiles": "最大{{max}}ファイルまで許可されています",
+      "exceedsSize": "{{fileName}}は{{size}}MBの制限を超えています"
+    }
+  },
+  "document": {
+    "upload": {
+      "ariaLabel": "ドキュメントをアップロード",
+      "hint": "ドラッグ&ドロップ、貼り付け、またはクリックしてドキュメントをアップロード"
+    },
+    "delete": {
+      "ariaLabel": "ドキュメントを削除",
+      "failed": "ドキュメントの削除に失敗しました"
+    },
+    "preview": {
+      "ariaLabel": "ドキュメントプレビュー",
+      "title": "ドキュメントプレビュー"
+    },
+    "errors": {
+      "maxFiles": "最大{{max}}ドキュメントまで許可されています",
+      "invalidType": "無効なドキュメントタイプ: {{fileName}}",
+      "exceedsSize": "{{fileName}}は{{size}}MBの制限を超えています"
+    }
+  },
+  "image": {
+    "undo": {
+      "ariaLabel": "最後の操作を元に戻す",
+      "title": "元に戻す (Ctrl+Z)"
+    },
+    "redo": {
+      "ariaLabel": "最後の操作をやり直す",
+      "title": "やり直す (Ctrl+Shift+Z)"
+    },
+    "upload": {
+      "ariaLabel": "{{type}}をアップロード",
+      "ariaLabelSingle": "画像をアップロード",
+      "ariaLabelMultiple": "画像をアップロード",
+      "selectAriaLabel": "アップロードする{{type}}を選択",
+      "selectAriaLabelSingle": "アップロードする画像を選択",
+      "selectAriaLabelMultiple": "アップロードする画像を選択",
+      "dropzone": "ドラッグ&ドロップ、貼り付け、またはクリックして{{type}}をアップロード",
+      "dropzoneSingle": "ドラッグ&ドロップ、貼り付け、またはクリックして画像をアップロード",
+      "dropzoneMultiple": "ドラッグ&ドロップ、貼り付け、またはクリックして画像をアップロード",
+      "maxFiles": "最大{{max}}枚の画像、それぞれ{{size}}MB",
+      "maxSize": "それぞれ{{size}}MB",
+      "progress": "アップロード進捗: {{progress}}%",
+      "pending": "アップロード待機中",
+      "uploaded": "{{count}}枚の{{type}}をアップロードしました",
+      "uploadedSingle": "{{count}}枚の画像をアップロードしました",
+      "uploadedMultiple": "{{count}}枚の画像をアップロードしました",
+      "failed": "{{fileName}}のアップロードに失敗しました"
+    },
+    "delete": {
+      "ariaLabel": "画像{{index}}を削除",
+      "title": "削除 (Delete/Backspace)",
+      "failed": "画像の削除に失敗しました"
+    },
+    "reorder": {
+      "ariaLabel": "ドラッグして並べ替え"
+    },
+    "rotate": {
+      "failed": "画像の回転に失敗しました"
+    },
+    "errors": {
+      "maxFiles": "最大{{max}}枚の画像まで許可されています",
+      "singleOnly": "画像は1枚のみ許可されています",
+      "notImage": "{{fileName}}は画像ではありません",
+      "exceedsSize": "{{fileName}}は{{size}}MBの制限を超えています"
+    },
+    "warnings": {
+      "duplicates": "重複した画像をスキップしました: {{files}}"
+    },
+    "alt": {
+      "upload": "アップロード{{index}}",
+      "uploaded": "{{label}} {{index}}{{suffix}} (アップロード済み)",
+      "pending": "{{label}} {{index}}{{suffix}} (アップロード待機中)"
+    },
+    "editor": {
+      "title": "画像を編集",
+      "titleWithIndex": "画像 {{current}} / {{total}}",
+      "description": "切り抜き、回転、ズームツールで画像を表示・編集",
+      "editButton": "画像を編集",
+      "aspectRatio": "アスペクト比",
+      "aspectFree": "自由",
+      "zoom": "ズーム",
+      "rotation": "回転",
+      "rotateLeft": "左に回転",
+      "rotateRight": "右に回転",
+      "fitToView": "表示に合わせる",
+      "showGrid": "グリッドを表示",
+      "hideGrid": "グリッドを非表示",
+      "reset": "リセット",
+      "apply": "適用",
+      "processing": "処理中...",
+      "cancel": "キャンセル",
+      "deleteImage": "画像を削除",
+      "deleteConfirm": "この画像を完全に削除しますか？",
+      "previousImage": "前の画像",
+      "nextImage": "次の画像"
+    }
+  },
+  "messages": {
+    "createSuccess": "{{entity}}が正常に作成されました",
+    "updateSuccess": "{{entity}}が正常に更新されました",
+    "deleteSuccess": "{{entity}}が正常に削除されました",
+    "createError": "{{entity}}の作成に失敗しました",
+    "updateError": "{{entity}}の更新に失敗しました",
+    "deleteError": "{{entity}}の削除に失敗しました",
+    "error": "エラーが発生しました",
+    "loading": "読み込み中...",
+    "noResults": "結果が見つかりませんでした",
+    "confirmDelete": "この{{entity}}を削除してもよろしいですか？",
+    "unsavedChanges": "保存されていない変更があります",
+    "unsavedChangesDiscard": "保存されていない変更があります。破棄しますか？",
+    "unsavedChangesLeave": "保存されていない変更があります。本当に離れますか？",
+    "sessionExpired": "セッションが期限切れです",
+    "networkError": "ネットワークエラーが発生しました",
+    "unauthorized": "不正なアクセス",
+    "forbidden": "アクセスが禁止されています",
+    "serverError": "サーバーエラーが発生しました"
+  },
+  "form": {
+    "submit": "送信",
+    "cancel": "キャンセル",
+    "submitting": "送信中...",
+    "loading": "読み込み中...",
+    "add": "追加",
+    "remove": "削除",
+    "typeAndPressAdd": "入力して追加を押してください...",
+    "enterLocationData": "位置データを入力してください（JSON）",
+    "uploading": "アップロード中 {{progress}}%...",
+    "processing": "処理中...",
+    "validating": "検証中...",
+    "saving": "保存中..."
+  },
+  "gdprConsent": {
+    "consent": "私は",
+    "privacyPolicy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "and": "に同意し、個人データの処理に同意します。",
+    "required": "続行するには、プライバシーポリシーに同意してください"
+  },
+  "custom": {
+    "passwordMatch": "パスワードは一致する必要があります",
+    "phoneNumber": "有効な電話番号を入力してください",
+    "postalCode": "有効な郵便番号を入力してください",
+    "currency": "有効な金額を入力してください",
+    "color": "有効なカラーコードを入力してください"
+  },
+  "favorites": {
+    "title": "お気に入り",
+    "add": "お気に入りに追加",
+    "remove": "お気に入りから削除",
+    "saved": "保存済み",
+    "save": "保存",
+    "showAll": "すべて表示",
+    "showFavorites": "お気に入りを表示",
+    "myFavorites": "マイお気に入り",
+    "noFavorites": "お気に入りはまだありません"
+  },
+  "pagination": {
+    "showing": "{{from}}から{{to}}まで（全{{total}}件中）",
+    "previous": "前へ",
+    "next": "次へ",
+    "page": "{{page}} / {{total}}ページ",
+    "itemsPerPagePlaceholder": "ページあたりの項目数:"
+  },
+  "filters": {
+    "title": "{{entity}}を閲覧 - フィルター",
+    "apply": "フィルターを適用",
+    "clear": "フィルターをクリア",
+    "noResults": "フィルターに一致する結果がありません",
+    "selected": "{{count}}件選択"
+  },
+  "filter": {
+    "placeholder": "フィルター...",
+    "selectPlaceholder": "すべて",
+    "min": "最小",
+    "max": "最大",
+    "from": "開始",
+    "to": "終了",
+    "today": "今日",
+    "yesterday": "昨日",
+    "tomorrow": "明日",
+    "last7Days": "過去7日間",
+    "last30Days": "過去30日間",
+    "next7Days": "今後7日間",
+    "next30Days": "今後30日間",
+    "thisMonthStart": "今月初め",
+    "thisMonthEnd": "今月末",
+    "thisWeek": "今週",
+    "thisMonth": "今月",
+    "clear": "クリア",
+    "pick": "選択",
+    "time": "時間"
+  },
+  "duration": {
+    "15m": "15分",
+    "30m": "30分",
+    "45m": "45分",
+    "1h": "1時間",
+    "1h30": "1時間30分",
+    "2h": "2時間",
+    "2h30": "2時間30分",
+    "3h": "3時間",
+    "custom": "カスタム",
+    "zero": "—",
+    "minutes": "{{count}}分",
+    "hoursMinutes": "{{hours}}時間{{minutes}}分"
+  },
+  "results": {
+    "title": {
+      "fetching": "取得中...",
+      "count_one": "{{count}}件見つかりました",
+      "count_other": "{{count}}件見つかりました"
+    }
+  },
+  "visibility": {
+    "viewAs": "表示モード",
+    "preview": "プレビュー"
+  },
+  "price": {
+    "vatIncluded": "税込",
+    "discountPercent": "-{{percent}}%"
+  },
+  "recommendations": {
+    "title": "こちらもおすすめ"
+  }
+}

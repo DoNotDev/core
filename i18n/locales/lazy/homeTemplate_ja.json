@@ -1,0 +1,52 @@
+{
+  "homeTemplate": {
+    "hero": {
+      "title": "DoNotDevへようこそ",
+      "subtitle": "最新のTypeScriptとFirebaseボイラープレートで強力なアプリを構築、デプロイ、スケールします。",
+      "getStarted": "始める",
+      "learnMore": "詳細を見る",
+      "viewDemo": "デモを見る"
+    },
+    "features": {
+      "title": "なぜDoNotDevを選ぶのか？",
+      "subtitle": "モダンでスケーラブルなアプリケーションを構築するために必要なすべて",
+      "modern": {
+        "title": "モダンスタック",
+        "description": "TypeScript、React、モダンなWebテクノロジーで構築"
+      },
+      "scalable": {
+        "title": "スケーラブルなアーキテクチャ",
+        "description": "ニーズに応じて成長するFirebase駆動のバックエンド"
+      },
+      "fast": {
+        "title": "超高速",
+        "description": "パフォーマンスと開発者体験に最適化"
+      },
+      "secure": {
+        "title": "エンタープライズセキュリティ",
+        "description": "組み込みの認証、承認、セキュリティ機能"
+      }
+    },
+    "cta": {
+      "title": "始める準備はできましたか？",
+      "subtitle": "素晴らしいアプリを構築している何千人もの開発者に参加",
+      "signUp": "無料で登録",
+      "contactSales": "営業に連絡",
+      "viewDocumentation": "ドキュメントを見る"
+    },
+    "footer": {
+      "description": "スケーラブルなアプリケーションを構築するためのモダンな開発フレームワーク",
+      "links": {
+        "product": "製品",
+        "developers": "開発者",
+        "company": "会社",
+        "support": "サポート"
+      },
+      "legal": {
+        "privacy": "プライバシーポリシー",
+        "terms": "利用規約",
+        "cookies": "Cookieポリシー"
+      }
+    }
+  }
+}

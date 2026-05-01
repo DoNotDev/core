@@ -1,0 +1,33 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "./dist",
+    "rootDir": ".",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": false,
+    "noEmit": false,
+    "composite": false,
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "index.ts",
+    "server.ts",
+    "config/**/*.d.ts",
+    "types/**/*",
+    "utils/**/*",
+    "stores/**/*",
+    "schemas/**/*",
+    "hooks/**/*",
+    "i18n/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}

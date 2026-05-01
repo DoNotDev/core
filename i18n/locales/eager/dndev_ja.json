@@ -1,0 +1,616 @@
+{
+  "signIn": "ログイン",
+  "choosePlatform": "ログインするプラットフォームを選択してください",
+  "providers": {
+    "google": "Google",
+    "facebook": "Facebook",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "microsoft": "Microsoft",
+    "yahoo": "Yahoo",
+    "apple": "Apple"
+  },
+  "buttons": {
+    "signIn": "{{provider}}でログイン",
+    "continue": "{{provider}}で続ける",
+    "verify": "メールアドレスを確認",
+    "sendVerification": "確認メールを送信",
+    "signOut": "ログアウト",
+    "loading": "読み込み中..."
+  },
+  "accountLinking": {
+    "title": "アカウントのリンクが必要です",
+    "message": "このメールアドレスは既に異なるログイン方法（{{methods}}）に関連付けられています。アカウントをリンクするには、そのいずれかの方法でログインしてください。",
+    "instruction": "アカウントをリンクするには、以下のいずれかの方法でログインしてください：",
+    "explanation": "ログインすると、アカウントが自動的にリンクされ、今後どちらのログイン方法も使用できるようになります。",
+    "success": "アカウントのリンクに成功しました！",
+    "error": "アカウントのリンクに失敗しました。もう一度お試しください。",
+    "emailLabel": "メールアドレス："
+  },
+  "emailVerification": {
+    "title": "メールアドレスの確認",
+    "status": {
+      "verified": "メールアドレスが確認されました。",
+      "unverified": "すべての機能にアクセスするには、メールアドレスを確認してください。"
+    },
+    "sending": "確認メールを送信中...",
+    "success": "確認メールを送信しました！受信トレイをご確認ください。",
+    "alreadyVerified": "メールアドレスは既に確認されています。",
+    "notSignedIn": "メールアドレスを確認するには、ログインする必要があります。",
+    "error": "確認メールの送信に失敗しました。もう一度お試しください。"
+  },
+  "errors": {
+    "auth/popup-closed-by-user": "ログインポップアップが完了前に閉じられました。",
+    "auth/cancelled-popup-request": "ログインリクエストがキャンセルされました。",
+    "auth/popup-blocked": "ログインポップアップがブラウザによってブロックされました。",
+    "auth/email-already-in-use": "このメールアドレスは既に登録されています。",
+    "auth/invalid-email": "メールアドレスが無効です。",
+    "auth/operation-not-allowed": "このログイン方法は有効になっていません。",
+    "auth/weak-password": "パスワードが弱すぎます。",
+    "auth/user-disabled": "このアカウントは無効になっています。",
+    "auth/user-not-found": "このメールアドレスでアカウントが見つかりませんでした。",
+    "auth/wrong-password": "パスワードが正しくありません。",
+    "auth/network-request-failed": "ネットワークエラーが発生しました。もう一度お試しください。",
+    "auth/internal-error": "内部エラーが発生しました。もう一度お試しください。",
+    "auth/invalid-credential": "提供された認証情報が無効です。",
+    "auth/account-exists-with-different-credential": "同じメールアドレスで異なるログイン認証情報を持つアカウントが既に存在します。",
+    "auth/provider-not-enabled": "{{provider}}認証が有効になっていません",
+    "auth/unknown-provider": "不明なプロバイダー：{{provider}}",
+    "auth/missing-provider": "認証プロバイダーが設定されていません",
+    "auth/no-user-signed-in": "現在ログインしているユーザーはいません",
+    "auth/oauth-incomplete": "認証フローが完了していません。もう一度ログインをお試しください。",
+    "fallback": {
+      "title": "認証が必要です",
+      "description": "このページにアクセスするには、ログインする必要があります。",
+      "chooseProvider": "お好みのログイン方法を選択してください",
+      "authOptions": "認証オプション",
+      "secure": "データは安全に暗号化されています。",
+      "terms": "ログインすることで、利用規約に同意したことになります。"
+    },
+    "genericError": "認証に失敗しました。もう一度お試しください。",
+    "fieldUpdate": "{{field}}の更新に失敗しました",
+    "hiddenField": "非表示フィールド{{field}}のレンダリングエラー",
+    "unsupportedFieldType": "サポートされていないフィールドタイプ：{{type}}",
+    "fieldRendering": "フィールド{{field}}のレンダリングエラー",
+    "fallingBackToTextField": "サポートされていないタイプ{{type}}にテキストフィールドを使用",
+    "invalidFieldProps": "フィールド{{field}}の無効な設定"
+  },
+  "status": {
+    "loading": "読み込み中...",
+    "authenticating": "認証中...",
+    "verifying": "確認中...",
+    "checking": "権限を確認中..."
+  },
+  "aria": {
+    "signInOptions": "ログインオプション",
+    "signInButton": "{{provider}}でログイン",
+    "loadingState": "認証を読み込み中",
+    "errorAlert": "認証エラー",
+    "successAlert": "成功",
+    "accountLinkingRequired": "アカウントのリンクが必要です",
+    "verificationRequired": "メールアドレスの確認が必要です"
+  },
+  "home": {
+    "title": "DoNotDev",
+    "description": "DoNotDevは、TypeScriptと純粋なCSSを使用してWebアプリケーションを構築するためのプラットフォームです。",
+    "getStarted": "始める",
+    "whyChooseDoNotDev": "DoNotDevを選ぶ理由",
+    "openSource": "オープンソース",
+    "freeAndOpenSource": "活気のあるコミュニティと共に無料でオープンソースです。",
+    "customizable": "カスタマイズ可能",
+    "flexibleComponents": "プロジェクトのニーズに合わせて調整できる柔軟なコンポーネントです。",
+    "developerFocused": "開発者向け",
+    "scalableArchitecture": "スケーラブルなアーキテクチャ",
+    "secureByDesign": "設計により安全",
+    "fastIntegration": "高速統合",
+    "scaleEffortlessly": "プロトタイプからエンタープライズソリューションまで簡単にスケールできます。",
+    "header": {
+      "purchase": "購入"
+    }
+  },
+  "actions": {
+    "create": "作成",
+    "update": "更新",
+    "delete": "削除",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "confirm": "確認",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "search": "検索",
+    "searchPlaceholder": "検索...",
+    "filter": "フィルター",
+    "clear": "クリア",
+    "reset": "リセット",
+    "apply": "適用",
+    "select": "選択",
+    "upload": "アップロード",
+    "download": "ダウンロード",
+    "close": "閉じる"
+  },
+  "guard": {
+    "signInRequired": "このページにアクセスするにはログインしてください"
+  },
+  "messages": {
+    "createSuccess": "{{entity}}が正常に作成されました",
+    "updateSuccess": "{{entity}}が正常に更新されました",
+    "deleteSuccess": "{{entity}}が正常に削除されました",
+    "error": "エラーが発生しました",
+    "loading": "読み込み中...",
+    "noResults": "結果が見つかりませんでした",
+    "confirmDelete": "この{{entity}}を削除してもよろしいですか？",
+    "unsavedChanges": "保存されていない変更があります",
+    "sessionExpired": "セッションの有効期限が切れました",
+    "networkError": "ネットワークエラーが発生しました",
+    "unauthorized": "認証されていません",
+    "forbidden": "アクセスが禁止されています",
+    "serverError": "サーバーエラーが発生しました",
+    "notFound": {
+      "title": "ページが見つかりません",
+      "description": "お探しのページは存在しないか、移動されました。",
+      "suggestions": "以下をお探しかもしれません:",
+      "goHome": "ホームに戻る",
+      "goBack": "戻る"
+    }
+  },
+  "nav": {
+    "signIn": "ログイン"
+  },
+  "pagination": {
+    "showing": "{{total}}件中{{from}}〜{{to}}件を表示",
+    "previous": "前へ",
+    "next": "次へ",
+    "page": "{{page}}/{{total}}ページ"
+  },
+  "filters": {
+    "title": "フィルター",
+    "apply": "フィルターを適用",
+    "clear": "フィルターをクリア",
+    "noResults": "フィルターに一致する結果がありません",
+    "selected": "{{count}}件選択中"
+  },
+  "settings": {
+    "title": "設定",
+    "theme": "テーマ",
+    "language": "言語",
+    "clearCache": {
+      "title": "キャッシュをクリア",
+      "localStorage": "ローカルストレージ",
+      "sessionStorage": "セッションストレージ",
+      "applicationCache": "アプリケーションキャッシュ",
+      "serviceWorker": "サービスワーカー",
+      "cookies": "クッキー",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "メモリキャッシュ",
+      "button": "キャッシュをクリア",
+      "clearing": "クリア中...",
+      "error": "キャッシュのクリア中にエラーが発生しました",
+      "success": "キャッシュが正常にクリアされました: {{items}}",
+      "noItemsCleared": "クリアされたキャッシュ項目はありません"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "DoNotDevアプリ"
+    },
+    "defaultTitle": "ページ",
+    "defaultDescription": "ページの説明",
+    "locale": "ja_JP",
+    "themeSelector": {
+      "changeTheme": "テーマを変更",
+      "tooltipWithTransition": "テーマを変更: {{current}} → {{next}}",
+      "tooltipWithCurrent": "テーマを変更: {{current}}",
+      "tooltipWithNext": "テーマを変更: {{next}}に切り替え"
+    },
+    "languageSelector": {
+      "changeLanguage": "言語を変更"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "会社",
+        "description": "包括的な開発プラットフォームで、より良い製品をより速く構築しましょう。"
+      },
+      "social": {
+        "twitter": "Twitter",
+        "github": "GitHub",
+        "discord": "Discord"
+      },
+      "sections": {
+        "product": {
+          "title": "製品",
+          "features": "機能",
+          "pricing": "価格",
+          "docs": "ドキュメント",
+          "updates": "アップデート"
+        },
+        "support": {
+          "title": "サポート",
+          "help": "ヘルプ",
+          "contact": "お問い合わせ",
+          "status": "ステータス",
+          "community": "コミュニティ"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "全著作権所有。",
+      "cookieSettings": "Cookie設定",
+      "legalNotice": "法的通知",
+      "privacyPolicy": "プライバシーポリシー",
+      "termsOfService": "利用規約",
+      "builtWith": "作成 ❤️ & DoNotDev ©",
+      "collapse": "フッターを折りたたむ",
+      "expand": "フッターを展開する"
+    }
+  },
+  "search": {
+    "ariaLabel": "検索",
+    "label": "検索"
+  },
+  "goTo": {
+    "ariaLabel": "ページに移動",
+    "label": "移動"
+  },
+  "globalGoTo": {
+    "placeholder": "ルートをフィルタリングまたはページに移動...",
+    "noResults": "ルートが見つかりませんでした。",
+    "favorites": "お気に入り",
+    "allPages": "すべてのページ",
+    "addFavorite": "お気に入りに追加",
+    "removeFavorite": "お気に入りから削除"
+  },
+  "copyToClipboard": "クリップボードにコピー",
+  "copied": "コピーしました！",
+  "copyPassword": "パスワードをコピー",
+  "table": {
+    "searchPlaceholder": "検索...",
+    "filters": "フィルター",
+    "selectAllRows": "すべての行を選択",
+    "selectRow": "{{index}}行目を選択",
+    "showingResults": "{{total}}件中{{from}}〜{{to}}件を表示",
+    "previous": "前へ",
+    "next": "次へ",
+    "page": "{{current}}/{{total}}ページ"
+  },
+  "language": {
+    "selectLanguage": "言語を選択",
+    "searchLanguages": "言語を検索...",
+    "noLanguagesFound": "言語が見つかりませんでした",
+    "changeLanguage": "言語を変更"
+  },
+  "form": {
+    "submit": "送信",
+    "cancel": "キャンセル",
+    "submitting": "送信中...",
+    "loading": "読み込み中...",
+    "add": "追加",
+    "remove": "削除",
+    "typeAndPressAdd": "入力して追加ボタンを押してください...",
+    "enterLocationData": "位置データを入力（JSON）"
+  },
+  "navigation": {
+    "more": "もっと見る",
+    "home": "ホーム"
+  },
+  "pwa": {
+    "update": {
+      "title": "更新が利用可能",
+      "description": "新しいバージョンが準備できました。更新するには更新してください。",
+      "button": "更新",
+      "altText": "アプリケーションを更新"
+    }
+  },
+  "document": {
+    "upload": {
+      "hint": "クリックまたはファイルをドラッグしてアップロード",
+      "ariaLabel": "ドキュメントをアップロード"
+    },
+    "preview": {
+      "title": "ドキュメントプレビュー",
+      "ariaLabel": "ドキュメントをプレビュー"
+    },
+    "delete": {
+      "ariaLabel": "ドキュメントを削除",
+      "failed": "ドキュメントの削除に失敗しました"
+    },
+    "errors": {
+      "maxFiles": "最大{{max}}ファイルまで許可されています",
+      "invalidType": "\"{{fileName}}\"は許可されていないファイル形式です",
+      "exceedsSize": "\"{{fileName}}\"は最大サイズ{{size}} MBを超えています"
+    }
+  },
+  "image": {
+    "alt": {
+      "upload": "画像{{index}}をアップロード"
+    },
+    "upload": {
+      "pending": "処理待ち",
+      "dropzoneMultiple": "画像をここにドロップまたはクリックしてアップロード",
+      "dropzoneSingle": "画像をここにドロップまたはクリックしてアップロード"
+    }
+  },
+  "code": {
+    "copyCode": "コードをコピー",
+    "copied": "コピーしました！",
+    "copyCodeToClipboard": "コードをクリップボードにコピー"
+  },
+  "video": {
+    "clickToWatch": "動画を視聴するにはクリック",
+    "watchVideo": "動画を視聴"
+  },
+  "inspector": {
+    "pageSource": "ページソース",
+    "inspectPageSourceCode": "ページのソースコードを検査"
+  },
+  "sheet": {
+    "navigation": "ナビゲーション",
+    "codeInspector": "コードインスペクター",
+    "debugPanel": "デバッグパネル"
+  },
+  "routeError": {
+    "title": "エラーが発生しました",
+    "description": "このページの読み込み中にエラーが発生しました。",
+    "dataSafe": "ご安心ください。データは安全です。",
+    "errorId": "エラーID",
+    "errorMessage": "エラーメッセージ",
+    "copied": "コピーしました",
+    "copyDetails": "詳細をコピー",
+    "tryAgain": "再試行",
+    "goHome": "ホームに戻る",
+    "goBack": "戻る",
+    "contactSupport": "問題が解決しない場合は、サポートにお問い合わせください。"
+  },
+  "redirectOverlay": {
+    "phases": {
+      "connecting": "セキュアサーバーに接続中...",
+      "preparing": "セッションを準備中...",
+      "redirecting": "リダイレクト中...",
+      "timeout": "予想より時間がかかっています..."
+    },
+    "cancel": "キャンセル",
+    "doNotRefresh": "更新や戻るボタンを押さないでください",
+    "default": {
+      "title": "リダイレクト中",
+      "message": "リダイレクト中です。お待ちください...",
+      "subtitle": "少々お時間をいただく場合があります",
+      "ariaLabel": "リダイレクト中です。お待ちください"
+    },
+    "stripe-checkout": {
+      "title": "Stripeにリダイレクト中",
+      "message": "セキュア決済を初期化中...",
+      "subtitle": "初回は少し時間がかかる場合があります",
+      "ariaLabel": "セキュア決済を準備中です。お待ちください"
+    },
+    "stripe-portal": {
+      "title": "Stripeにリダイレクト中",
+      "message": "請求ポータルを開いています...",
+      "subtitle": "サブスクリプションと請求書を管理",
+      "ariaLabel": "請求ポータルを開いています。お待ちください"
+    },
+    "oauth-google": {
+      "title": "Googleでサインイン",
+      "message": "Googleに接続中...",
+      "subtitle": "サインインのためにリダイレクトされます",
+      "ariaLabel": "Googleでサインイン中です。お待ちください"
+    },
+    "oauth-github": {
+      "title": "GitHubでサインイン",
+      "message": "GitHubに接続中...",
+      "subtitle": "サインインのためにリダイレクトされます",
+      "ariaLabel": "GitHubでサインイン中です。お待ちください"
+    },
+    "oauth-apple": {
+      "title": "Appleでサインイン",
+      "message": "Appleに接続中...",
+      "subtitle": "サインインのためにリダイレクトされます",
+      "ariaLabel": "Appleでサインイン中です。お待ちください"
+    },
+    "oauth-microsoft": {
+      "title": "Microsoftでサインイン",
+      "message": "Microsoftに接続中...",
+      "subtitle": "サインインのためにリダイレクトされます",
+      "ariaLabel": "Microsoftでサインイン中です。お待ちください"
+    },
+    "oauth-facebook": {
+      "title": "Facebookでサインイン",
+      "message": "Facebookに接続中...",
+      "subtitle": "サインインのためにリダイレクトされます",
+      "ariaLabel": "Facebookでサインイン中です。お待ちください"
+    },
+    "auth-email-link": {
+      "title": "確認メール送信中",
+      "message": "確認リンクを準備中...",
+      "subtitle": "受信トレイをご確認ください",
+      "ariaLabel": "確認メールを送信中です。お待ちください"
+    }
+  },
+  "templates": {
+    "home": {
+      "hero": {
+        "badge": "ようこそ",
+        "title": "素晴らしいものを作ろう",
+        "subtitle": "次のプロジェクトをこれまでより速く立ち上げ、成長させ、スケールさせるためのモダンなプラットフォームです。",
+        "primaryAction": "始める",
+        "secondaryAction": "詳しく見る"
+      },
+      "features": {
+        "title": "機能",
+        "feature1": {
+          "title": "超高速",
+          "description": "速度に最適化され、即時ページ読み込みとリアルタイム更新をすぐに利用できます。"
+        },
+        "feature2": {
+          "title": "デフォルトで安全",
+          "description": "認証、ロールベースのアクセス制御、暗号化を内蔵したエンタープライズグレードのセキュリティです。"
+        },
+        "feature3": {
+          "title": "スケール対応済み",
+          "description": "プロトタイプから本番環境まで、堅牢でモジュール式のアーキテクチャで簡単にスケールできます。"
+        }
+      },
+      "howItWorks": {
+        "title": "使い方",
+        "step1": {
+          "title": "登録",
+          "description": "数秒でアカウントを作成できます。始めるためにクレジットカードは不要です。"
+        },
+        "step2": {
+          "title": "設定",
+          "description": "ワークスペースをセットアップし、チームを招待して、ワークフローをカスタマイズします。"
+        },
+        "step3": {
+          "title": "ローンチ",
+          "description": "自信を持って公開しましょう。自分のペースでデプロイ、監視、改善できます。"
+        }
+      },
+      "showcase": {
+        "title": "選ばれる理由",
+        "item1": {
+          "title": "モダンなスタック",
+          "description": "パフォーマンス、信頼性、開発者の満足度のために最先端技術で構築されています。"
+        },
+        "item2": {
+          "title": "オープンソース",
+          "description": "透明性があり、コミュニティ主導で、無料で使用できます。"
+        },
+        "item3": {
+          "title": "開発者ファースト",
+          "description": "開発者が開発者のために設計。クリーンなAPIと充実したドキュメントを提供します。"
+        },
+        "item4": {
+          "title": "グローバル対応",
+          "description": "多言語、マルチリージョン対応で、最初からアクセシブルです。"
+        }
+      },
+      "cta": {
+        "title": "始める準備はできましたか？",
+        "subtitle": "より良い製品をより速く構築している多くのチームに参加しましょう。",
+        "primaryAction": "無料で始める",
+        "secondaryAction": "営業に問い合わせる"
+      }
+    },
+    "dashboard": {
+      "title": "ダッシュボード",
+      "stats": {
+        "revenue": "売上",
+        "orders": "注文",
+        "customers": "顧客",
+        "conversion": "コンバージョン"
+      },
+      "activity": {
+        "title": "最近のアクティビティ",
+        "item1": "新規注文 #1234 が入りました",
+        "time1": "2分前",
+        "item2": "顧客 John D. が登録しました",
+        "time2": "15分前",
+        "item3": "製品「Pro Plan」が更新されました",
+        "time3": "1時間前",
+        "item4": "$299の支払いを受領しました",
+        "time4": "3時間前"
+      },
+      "actions": {
+        "title": "クイックアクション",
+        "newProduct": "新規製品",
+        "viewReports": "レポートを表示",
+        "manageTeam": "チームを管理"
+      }
+    },
+    "settings": {
+      "title": "設定",
+      "tabs": {
+        "general": "一般",
+        "notifications": "通知",
+        "appearance": "外観"
+      },
+      "general": {
+        "appInfo": "アプリケーション",
+        "appName": "名前",
+        "description": "説明",
+        "language": "言語",
+        "languageHint": "言語はヘッダーメニューから変更できます。"
+      },
+      "notifications": {
+        "preferences": "通知設定",
+        "email": "メール通知",
+        "emailDesc": "メールでアップデートやアラートを受け取ります。",
+        "push": "プッシュ通知",
+        "pushDesc": "リアルタイムのプッシュ通知を受け取ります。",
+        "marketing": "マーケティングメール",
+        "marketingDesc": "製品のアップデートやプロモーションを受け取ります。"
+      },
+      "appearance": {
+        "theme": "テーマ",
+        "darkMode": "ダークモード",
+        "currentTheme": "現在のテーマ"
+      }
+    },
+    "profile": {
+      "title": "プロフィール",
+      "subtitle": "アカウント設定と環境設定を管理します。",
+      "identity": {
+        "title": "ID情報",
+        "displayName": "表示名",
+        "email": "メールアドレス",
+        "emailVerified": "確認済み",
+        "emailUnverified": "未確認"
+      },
+      "security": {
+        "title": "セキュリティ",
+        "updatePassword": "パスワードを更新",
+        "linkedProviders": "リンク済みプロバイダー"
+      },
+      "subscription": {
+        "title": "サブスクリプション",
+        "currentPlan": "現在のプラン",
+        "status": "ステータス",
+        "manageBilling": "請求を管理",
+        "noPlan": "有効なプランなし"
+      },
+      "dangerZone": {
+        "title": "危険な操作",
+        "deleteAccount": "アカウントを削除",
+        "deleteWarning": "この操作は永続的で元に戻せません。すべてのデータが削除されます。"
+      },
+      "signOut": "ログアウト"
+    }
+  },
+  "canvas": {
+    "checklist": {
+      "addItem": "Add item",
+      "noItems": "まだ項目がありません。",
+      "remove": "削除",
+      "toggleAria": "\"{{text}}\" を切り替え",
+      "removeAria": "{{text}} を削除"
+    },
+    "brainSearch": {
+      "resultsFor": "Results for ",
+      "match": "match",
+      "matches": "matches",
+      "noMatches": "No matches.",
+      "tagFiltersLabel": "Tag filters"
+    },
+    "mailTriage": {
+      "noMessages": "No messages.",
+      "columns": {
+        "sender": "Sender",
+        "subject": "Subject",
+        "received": "Received",
+        "actions": "Actions"
+      },
+      "actions": {
+        "archive": "Archive",
+        "archiveAria": "Archive \"{{subject}}\"",
+        "reply": "Reply",
+        "replyAria": "Reply to \"{{subject}}\"",
+        "flag": "Flag",
+        "flagAria": "Star \"{{subject}}\"",
+        "open": "Open",
+        "openAria": "Open \"{{subject}}\""
+      }
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "security": {
+    "title": "Sikker betaling",
+    "description": "Dine betalingsoplysninger behandles sikkert af Stripe.",
+    "encrypted": "256-bit SSL-kryptering",
+    "stripe": "Leveret af Stripe",
+    "dismiss": "Luk"
+  },
+  "templates": {
+    "purchase": {
+      "title": "Kom i gang",
+      "subtitle": "Vælg din engangskøb"
+    },
+    "subscription": {
+      "title": "Vælg din pakke",
+      "subtitle": "Find den pakke der passer til dig",
+      "billingToggle": {
+        "monthly": "Månedlig",
+        "yearly": "Årlig",
+        "save20": "Spar 20%"
+      }
+    },
+    "checkout": {
+      "title": "Afslut købet",
+      "description": "Sikker betaling med Stripe",
+      "completePurchase": "Betal nu",
+      "startSubscription": "Start abonnement"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "Mest populær",
+      "limitedTime": "Begrænset tilbud",
+      "exclVat": "ekskl. moms",
+      "purchaseNow": "Køb nu",
+      "subscribeNow": "Abonner nu"
+    },
+    "buttons": {
+      "purchase": "Køb",
+      "subscribe": "Abonner",
+      "processing": "Behandler...",
+      "signInToPurchase": "Log ind for at købe",
+      "signInToSubscribe": "Log ind for at abonnere"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Videresender til Stripe",
+        "message": "Forbereder sikker betaling...",
+        "subtitle": "Ved første gang kan det tage et øjeblik",
+        "ariaLabel": "Forbereder betaling"
+      },
+      "portal": {
+        "title": "Videresender til Stripe",
+        "message": "Åbner faktureringsportalen...",
+        "subtitle": "Administrer abonnement og fakturaer",
+        "ariaLabel": "Åbner faktureringsportalen"
+      }
+    },
+    "subscriptionManager": {
+      "title": "Abonnement",
+      "signInRequired": "Log ind for at administrere dit abonnement.",
+      "noSubscription": "Du har intet aktivt abonnement.",
+      "currentPlan": "Nuværende pakke",
+      "ends": "Udløber",
+      "managePaymentMethod": "Rediger betalingsmetode",
+      "cancelSubscription": "Opsig abonnement",
+      "cancelConfirm": "Vil du virkelig opsige? Du har adgang til {{date}}.",
+      "yesCancel": "Ja, opsig",
+      "noKeep": "Nej, behold",
+      "changePlan": "Skift pakke",
+      "current": "Nuværende",
+      "subscriptionEnds": "Abonnementet udløber {{date}}",
+      "planChanged": "Pakke ændret.",
+      "status": {
+        "active": "Aktiv",
+        "cancelled": "Opsagt",
+        "pastDue": "Forfaldent",
+        "trialing": "Prøveperiode"
+      }
+    }
+  }
+}

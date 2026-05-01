@@ -1,0 +1,535 @@
+{
+  "actions": {
+    "label": "Handlinger",
+    "create": "Opret",
+    "update": "Opdater",
+    "delete": "Slet",
+    "cancel": "Annuller",
+    "save": "Gem",
+    "confirm": "Bekræft",
+    "back": "Tilbage",
+    "next": "Næste",
+    "previous": "Forrige",
+    "search": "Søg",
+    "searchPlaceholder": "Søg...",
+    "filter": "Filter",
+    "clear": "Ryd",
+    "reset": "Nulstil",
+    "apply": "Anvend",
+    "select": "Vælg",
+    "selectYear": "Vælg eller indtast år",
+    "upload": "Upload",
+    "download": "Download",
+    "close": "Luk",
+    "email": "E-mail",
+    "call": "Ring",
+    "copyEmail": "Kopier e-mail",
+    "copyPhone": "Kopier telefon",
+    "copyIban": "Kopier IBAN",
+    "replySubject": "Re: Din henvendelse",
+    "markResponded": "Markér som besvaret",
+    "selectOptions": "Vælg muligheder...",
+    "use": "Brug denne adresse"
+  },
+  "address": {
+    "placeholder": "Indtast adresse...",
+    "noResults": "Ingen adresser fundet"
+  },
+  "export": "Eksporter",
+  "noInquiries": "Ingen henvendelser fundet.",
+  "customer": "Kunde",
+  "noCustomer": "Ingen kunde tilknyttet",
+  "status": {
+    "draft": "Kladde",
+    "available": "Tilgængelig",
+    "deleted": "Slettet",
+    "sold": "Solgt"
+  },
+  "messages": {
+    "createSuccess": "{{entity}} er oprettet",
+    "updateSuccess": "{{entity}} er opdateret",
+    "deleteSuccess": "{{entity}} er slettet",
+    "createError": "Kunne ikke oprette {{entity}}",
+    "updateError": "Kunne ikke opdatere {{entity}}",
+    "deleteError": "Kunne ikke slette {{entity}}",
+    "error": "Der opstod en fejl",
+    "loading": "Henter...",
+    "noResults": "Ingen resultater",
+    "confirmDelete": "Vil du slette denne {{entity}}?",
+    "unsavedChanges": "Du har ikke-gemte ændringer",
+    "unsavedChangesDiscard": "Du har ikke-gemte ændringer. Kasser dem?",
+    "unsavedChangesLeave": "Du har ikke-gemte ændringer. Vil du virkelig gå?",
+    "sessionExpired": "Din session er udløbet",
+    "networkError": "Netværksfejl",
+    "unauthorized": "Ingen adgang",
+    "forbidden": "Adgang nægtet",
+    "serverError": "Serverfejl",
+    "notFound": {
+      "title": "Siden findes ikke",
+      "description": "Siden findes ikke eller er flyttet.",
+      "suggestions": "Måske leder du efter:",
+      "goHome": "Til forsiden",
+      "goBack": "Tilbage"
+    }
+  },
+  "pagination": {
+    "showing": "{{from}}–{{to}} af {{total}}",
+    "previous": "Forrige",
+    "next": "Næste",
+    "page": "Side {{page}} af {{total}}",
+    "itemsPerPagePlaceholder": "Pr. side:"
+  },
+  "filters": {
+    "title": "Gennemse {{entity}} – filtre",
+    "apply": "Anvend filtre",
+    "clear": "Ryd filtre",
+    "noResults": "Ingen resultater matcher",
+    "selected": "{{count}} valgt"
+  },
+  "filter": {
+    "placeholder": "Filter...",
+    "selectPlaceholder": "Alle",
+    "min": "Min",
+    "max": "Max",
+    "from": "Fra",
+    "to": "Til",
+    "today": "I dag",
+    "yesterday": "I går",
+    "tomorrow": "I morgen",
+    "last7Days": "Sidste 7 dage",
+    "last30Days": "Sidste 30 dage",
+    "next7Days": "Næste 7 dage",
+    "next30Days": "Næste 30 dage",
+    "thisMonthStart": "Månedens start",
+    "thisMonthEnd": "Månedens slutning",
+    "thisWeek": "Denne uge",
+    "thisMonth": "Denne måned",
+    "clear": "Ryd",
+    "pick": "Vælg",
+    "time": "Tid"
+  },
+  "duration": {
+    "15m": "15m",
+    "30m": "30m",
+    "45m": "45m",
+    "1h": "1t",
+    "1h30": "1t 30",
+    "2h": "2t",
+    "2h30": "2t 30",
+    "3h": "3t",
+    "custom": "Brugerdefineret",
+    "zero": "—",
+    "minutes": "{{count}} min",
+    "hoursMinutes": "{{hours}}t {{minutes}}min"
+  },
+  "results": {
+    "title": {
+      "fetching": "Henter...",
+      "count_one": "{{count}} fundet",
+      "count_other": "{{count}} fundet"
+    }
+  },
+  "settings": {
+    "title": "Indstillinger",
+    "theme": "Tema",
+    "language": "Sprog",
+    "clearCache": {
+      "title": "Ryd cache",
+      "localStorage": "Lokal lagring",
+      "sessionStorage": "Session",
+      "applicationCache": "App-cache",
+      "serviceWorker": "Service Worker",
+      "cookies": "Cookies",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "Hukommelse",
+      "button": "Ryd cache",
+      "clearing": "Rydder...",
+      "error": "Kunne ikke rydde cache",
+      "success": "Cache ryddet: {{items}}",
+      "noItemsCleared": "Intet blev ryddet"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "DoNotDev App"
+    },
+    "defaultTitle": "Side",
+    "defaultDescription": "Sidebeskrivelse",
+    "locale": "da_DK",
+    "themeSelector": {
+      "changeTheme": "Skift tema",
+      "tooltipWithTransition": "Tema: {{current}} → {{next}}",
+      "tooltipWithCurrent": "Tema: {{current}}",
+      "tooltipWithNext": "Skift til {{next}}"
+    },
+    "languageSelector": {
+      "changeLanguage": "Skift sprog"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "Virksomhed",
+        "description": "Byg bedre produkter hurtigere med vores platform."
+      },
+      "social": {
+        "twitter": "Twitter",
+        "github": "GitHub",
+        "discord": "Discord"
+      },
+      "sections": {
+        "product": {
+          "title": "Produkt",
+          "features": "Funktioner",
+          "pricing": "Priser",
+          "docs": "Dokumentation",
+          "updates": "Opdateringer"
+        },
+        "support": {
+          "title": "Support",
+          "help": "Hjælp",
+          "contact": "Kontakt",
+          "status": "Status",
+          "community": "Fællesskab"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "Alle rettigheder forbeholdes.",
+      "cookieSettings": "Cookie-indstillinger",
+      "legalNotice": "Juridisk information",
+      "privacyPolicy": "Privatlivspolitik",
+      "termsOfService": "Servicevilkår",
+      "builtWith": "Lavet med ❤️ og DoNotDev ©",
+      "collapse": "Luk footer",
+      "expand": "Udvid footer"
+    }
+  },
+  "search": {
+    "ariaLabel": "Søg",
+    "label": "Søg"
+  },
+  "goTo": {
+    "ariaLabel": "Gå til side",
+    "label": "Gå til"
+  },
+  "globalGoTo": {
+    "placeholder": "Søg eller gå til en side...",
+    "noResults": "Ingen sider fundet.",
+    "favorites": "Favoritter",
+    "allPages": "Alle sider",
+    "addFavorite": "Tilføj til favoritter",
+    "removeFavorite": "Fjern fra favoritter"
+  },
+  "favorites": {
+    "title": "Favoritter",
+    "add": "Tilføj til favoritter",
+    "remove": "Fjern fra favoritter",
+    "saved": "Gemt",
+    "save": "Gem",
+    "showAll": "Vis alle",
+    "showFavorites": "Vis favoritter",
+    "myFavorites": "Mine favoritter",
+    "noFavorites": "Ingen favoritter endnu"
+  },
+  "copyToClipboard": "Kopier",
+  "copied": "Kopieret!",
+  "copyPassword": "Kopier adgangskode",
+  "table": {
+    "searchPlaceholder": "Søg...",
+    "filters": "Filtre",
+    "selectAllRows": "Vælg alle",
+    "selectRow": "Vælg række {{index}}",
+    "showingResults": "{{from}}–{{to}} af {{total}}",
+    "previous": "Forrige",
+    "next": "Næste",
+    "page": "Side {{current}} af {{total}}"
+  },
+  "language": {
+    "selectLanguage": "Vælg sprog",
+    "searchLanguages": "Søg sprog...",
+    "noLanguagesFound": "Ingen sprog fundet",
+    "changeLanguage": "Skift sprog"
+  },
+  "form": {
+    "submit": "Send",
+    "cancel": "Annuller",
+    "submitting": "Sender...",
+    "loading": "Henter...",
+    "add": "Tilføj",
+    "remove": "Fjern",
+    "typeAndPressAdd": "Skriv og tryk Tilføj...",
+    "enterLocationData": "Indtast lokationsdata (JSON)",
+    "uploading": "Uploader {{progress}}%...",
+    "processing": "Behandler...",
+    "validating": "Validerer...",
+    "saving": "Gemmer..."
+  },
+  "navigation": {
+    "more": "Mere",
+    "home": "Forside"
+  },
+  "pwa": {
+    "update": {
+      "title": "Opdatering tilgængelig",
+      "description": "Ny version klar. Genindlæs for at opdatere.",
+      "button": "Opdater",
+      "altText": "Opdater app"
+    }
+  },
+  "code": {
+    "copyCode": "Kopier kode",
+    "copied": "Kopieret!",
+    "copyCodeToClipboard": "Kopier kode"
+  },
+  "video": {
+    "clickToWatch": "Klik for at se video",
+    "watchVideo": "Se video"
+  },
+  "inspector": {
+    "pageSource": "Sidekilde",
+    "inspectPageSourceCode": "Inspicer sidekilde"
+  },
+  "routeError": {
+    "title": "Noget gik galt",
+    "description": "Der opstod en fejl under indlæsning.",
+    "dataSafe": "Dine data er uændrede.",
+    "errorId": "Fejl-ID",
+    "errorMessage": "Fejlbesked",
+    "copied": "Kopieret",
+    "copyDetails": "Kopier detaljer",
+    "tryAgain": "Prøv igen",
+    "goHome": "Til forsiden",
+    "goBack": "Tilbage",
+    "contactSupport": "Kontakt support hvis problemet fortsætter."
+  },
+  "fields": {
+    "array": "Liste",
+    "boolean": "Ja/nej",
+    "checkbox": "Afkrydsningsfelt",
+    "date": "Dato",
+    "datetime-local": "Dato og tid",
+    "email": "E-mail",
+    "file": "Fil",
+    "geopoint": "Sted",
+    "image": "Billede",
+    "map": "Kort",
+    "multiselect": "Flervalg",
+    "number": "Tal",
+    "password": "Adgangskode",
+    "phone": "Telefonnummer",
+    "radio": "Valgknapper",
+    "range": "Interval",
+    "reference": "Reference",
+    "select": "Vælg",
+    "tel": "Telefonnummer",
+    "text": "Tekst",
+    "textarea": "Tekstfelt",
+    "timestamp": "Tidsstempel",
+    "url": "URL",
+    "status": "Status",
+    "id": "ID",
+    "createdAt": "Oprettet",
+    "updatedAt": "Opdateret",
+    "createdById": "Oprettet af",
+    "updatedById": "Opdateret af"
+  },
+  "text": {
+    "required": "{{field}} er påkrævet",
+    "minLength": "{{field}} skal have mindst {{min}} tegn",
+    "maxLength": "{{field}} må højst have {{max}} tegn",
+    "email": "Indtast en gyldig e-mailadresse",
+    "url": "Indtast en gyldig URL",
+    "matches": "{{field}} skal matche {{pattern}}",
+    "unique": "{{field}} skal være unikt",
+    "alphanumeric": "{{field}} må kun indeholde bogstaver og tal",
+    "lettersOnly": "{{field}} må kun indeholde bogstaver"
+  },
+  "number": {
+    "required": "{{field}} er påkrævet",
+    "min": "{{field}} skal være mindst {{min}}",
+    "max": "{{field}} må højst være {{max}}",
+    "integer": "{{field}} skal være et heltal",
+    "positive": "{{field}} skal være positivt",
+    "negative": "{{field}} skal være negativt",
+    "between": "{{field}} skal være mellem {{min}} og {{max}}",
+    "precision": "{{field}} må højst have {{precision}} decimaler"
+  },
+  "date": {
+    "required": "{{field}} er påkrævet",
+    "min": "{{field}} skal være efter {{min}}",
+    "max": "{{field}} skal være før {{max}}",
+    "between": "{{field}} skal være mellem {{min}} og {{max}}",
+    "format": "Indtast en gyldig dato",
+    "future": "{{field}} skal være i fremtiden",
+    "past": "{{field}} skal være i fortiden",
+    "today": "{{field}} skal være i dag"
+  },
+  "select": {
+    "required": "Vælg en {{field}}",
+    "invalid": "Ugyldig værdi for {{field}}",
+    "min": "Vælg mindst {{min}}",
+    "max": "Vælg højst {{max}}"
+  },
+  "boolean": {
+    "required": "{{field}} skal vælges"
+  },
+  "array": {
+    "required": "Mindst én {{field}} er påkrævet",
+    "minItems": "Vælg mindst {{min}} {{field}}",
+    "maxItems": "Højst {{max}} {{field}}",
+    "uniqueItems": "Alle {{field}} skal være forskellige"
+  },
+  "file": {
+    "required": "Vælg en fil",
+    "maxSize": "Filen må højst være {{max}}",
+    "minSize": "Filen skal være mindst {{min}}",
+    "type": "Filtypen skal være {{types}}",
+    "dimensions": "Billedstørrelse skal være {{width}}×{{height}}",
+    "upload": {
+      "ariaLabel": "Upload fil",
+      "ariaLabelSingle": "Upload en fil",
+      "ariaLabelMultiple": "Upload filer",
+      "dragDropSingle": "Træk og slip, indsæt eller klik for at uploade",
+      "dragDropMultiple": "Træk og slip, indsæt eller klik for at uploade filer"
+    },
+    "delete": {
+      "ariaLabel": "Slet fil",
+      "failed": "Kunne ikke slette fil"
+    },
+    "errors": {
+      "maxFiles": "Højst {{max}} filer",
+      "exceedsSize": "{{fileName}} overstiger {{size}}MB"
+    }
+  },
+  "document": {
+    "upload": {
+      "ariaLabel": "Upload dokument",
+      "hint": "Træk og slip, indsæt eller klik for at uploade dokumenter"
+    },
+    "delete": {
+      "ariaLabel": "Slet dokument",
+      "failed": "Kunne ikke slette dokument"
+    },
+    "preview": {
+      "ariaLabel": "Forhåndsvis dokument",
+      "title": "Forhåndsvisning"
+    },
+    "errors": {
+      "maxFiles": "Højst {{max}} dokumenter",
+      "invalidType": "Ugyldig filtype: {{fileName}}",
+      "exceedsSize": "{{fileName}} overstiger {{size}}MB"
+    }
+  },
+  "image": {
+    "undo": {
+      "ariaLabel": "Fortryd",
+      "title": "Fortryd (Ctrl+Z)"
+    },
+    "redo": {
+      "ariaLabel": "Gentag",
+      "title": "Gentag (Ctrl+Shift+Z)"
+    },
+    "upload": {
+      "ariaLabel": "Upload {{type}}",
+      "ariaLabelSingle": "Upload et billede",
+      "ariaLabelMultiple": "Upload billeder",
+      "selectAriaLabel": "Vælg {{type}}",
+      "selectAriaLabelSingle": "Vælg et billede",
+      "selectAriaLabelMultiple": "Vælg billeder",
+      "dropzone": "Træk og slip, indsæt eller klik for at uploade {{type}}",
+      "dropzoneSingle": "Træk og slip eller klik for at uploade et billede",
+      "dropzoneMultiple": "Træk og slip eller klik for at uploade billeder",
+      "maxFiles": "Max {{max}} billeder, {{size}}MB hver",
+      "maxSize": "{{size}}MB hver",
+      "progress": "Upload: {{progress}}%",
+      "pending": "Venter på upload",
+      "uploaded": "{{count}} {{type}} uploadet",
+      "uploadedSingle": "{{count}} billede uploadet",
+      "uploadedMultiple": "{{count}} billeder uploadet",
+      "failed": "Kunne ikke uploade {{fileName}}"
+    },
+    "delete": {
+      "ariaLabel": "Slet billede {{index}}",
+      "title": "Slet (Slet/Backspace)",
+      "failed": "Kunne ikke slette billede"
+    },
+    "reorder": {
+      "ariaLabel": "Træk for at ændre rækkefølge"
+    },
+    "rotate": {
+      "failed": "Kunne ikke rotere billede"
+    },
+    "errors": {
+      "maxFiles": "Højst {{max}} billeder",
+      "singleOnly": "Kun ét billede tilladt",
+      "notImage": "{{fileName}} er ikke et billede",
+      "exceedsSize": "{{fileName}} overstiger {{size}}MB"
+    },
+    "warnings": {
+      "duplicates": "Dublerede billeder sprunget over: {{files}}"
+    },
+    "alt": {
+      "upload": "Upload {{index}}",
+      "uploaded": "{{label}} {{index}}{{suffix}} (uploadet)",
+      "pending": "{{label}} {{index}}{{suffix}} (venter)"
+    },
+    "editor": {
+      "title": "Rediger billede",
+      "titleWithIndex": "Billede {{current}} af {{total}}",
+      "description": "Beskær, roter og zoom",
+      "editButton": "Rediger billede",
+      "aspectRatio": "Bredde/højde",
+      "aspectFree": "Fri",
+      "zoom": "Zoom",
+      "rotation": "Rotation",
+      "rotateLeft": "Roter venstre",
+      "rotateRight": "Roter højre",
+      "fitToView": "Tilpas til visning",
+      "showGrid": "Vis gitter",
+      "hideGrid": "Skjul gitter",
+      "reset": "Nulstil",
+      "apply": "Anvend",
+      "processing": "Behandler...",
+      "cancel": "Annuller",
+      "deleteImage": "Slet billede",
+      "deleteConfirm": "Slet dette billede permanent?",
+      "previousImage": "Forrige billede",
+      "nextImage": "Næste billede"
+    }
+  },
+  "gdprConsent": {
+    "consent": "Jeg accepterer",
+    "privacyPolicy": "privatlivspolitikken",
+    "terms": "og servicevilkårene",
+    "and": "og giver samtykke til behandling af mine persondata.",
+    "required": "Accepter privatlivspolitikken for at fortsætte"
+  },
+  "custom": {
+    "passwordMatch": "Adgangskoderne skal matche",
+    "phoneNumber": "Indtast et gyldigt telefonnummer",
+    "postalCode": "Indtast et gyldigt postnummer",
+    "currency": "Indtast et gyldigt beløb",
+    "color": "Indtast en gyldig farvekode"
+  },
+  "errors": {
+    "fieldUpdate": "Kunne ikke opdatere {{field}}",
+    "hiddenField": "Fejl ved felt {{field}}",
+    "unsupportedFieldType": "Felttypen {{type}} understøttes ikke",
+    "fieldRendering": "Fejl ved felt {{field}}",
+    "fallingBackToTextField": "Bruger tekstfelt i stedet for {{type}}",
+    "invalidFieldProps": "Ugyldig indstilling for {{field}}"
+  },
+  "visibility": {
+    "viewAs": "Vis som",
+    "preview": "Forhåndsvisning"
+  },
+  "price": {
+    "vatIncluded": "inkl. moms",
+    "discountPercent": "-{{percent}}%"
+  },
+  "recommendations": {
+    "title": "Du vil måske også synes om"
+  }
+}

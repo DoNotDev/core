@@ -1,0 +1,200 @@
+{
+  "title": "Conditions d'Utilisation",
+  "lastUpdated": "Dernière mise à jour",
+  "common": {
+    "we": "nous",
+    "our": "notre",
+    "or": "ou",
+    "us": "nous"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introduction",
+      "welcome": "Bienvenue chez",
+      "govern": "Ces Conditions d'Utilisation (\"Conditions\") régissent votre utilisation de notre framework de développement, nos outils et nos services (collectivement, le \"Service\"). En accédant ou en utilisant notre Service, vous acceptez d'être lié par ces Conditions.",
+      "organization": "Si vous utilisez notre Service au nom d'une organisation, vous représentez que vous avez l'autorité pour lier cette organisation à ces Conditions. Si vous n'êtes pas d'accord avec ces Conditions, veuillez ne pas utiliser notre Service."
+    },
+    "service": {
+      "title": "2. Description du service",
+      "description": "est un framework de développement complet qui fournit des outils, des composants et une infrastructure pour construire des applications web modernes. Notre Service comprend :",
+      "framework": "Framework de développement et bibliothèques",
+      "ui": "Composants UI et système de design",
+      "auth": "Services d'authentification et d'autorisation",
+      "i18n": "Outils d'internationalisation et de localisation",
+      "billing": "Gestion de la facturation et des abonnements",
+      "docs": "Documentation et ressources de support"
+    },
+    "account": {
+      "title": "3. Inscription et sécurité du compte",
+      "creation": {
+        "title": "3.1 Création de compte",
+        "desc": "Pour accéder à certaines fonctionnalités de notre Service, vous devez créer un compte. Vous acceptez de fournir des informations exactes, actuelles et complètes lors de l'inscription et de mettre à jour ces informations pour les maintenir exactes, actuelles et complètes."
+      },
+      "security": {
+        "title": "3.2 Sécurité du compte",
+        "desc": "Vous êtes responsable de la protection de vos identifiants de compte et de toutes les activités qui se produisent sous votre compte. Vous acceptez de nous notifier immédiatement de toute utilisation non autorisée de votre compte ou de toute autre violation de sécurité."
+      },
+      "eligibility": {
+        "title": "3.3 Éligibilité du compte",
+        "desc": "Vous devez avoir au moins 13 ans pour utiliser notre Service. Si vous avez moins de 18 ans, vous devez avoir le consentement parental ou du tuteur pour utiliser notre Service."
+      }
+    },
+    "acceptable": {
+      "title": "4. Politique d'utilisation acceptable",
+      "intro": "Vous acceptez d'utiliser notre Service uniquement à des fins légales et conformément à ces Conditions. Vous acceptez de ne pas :",
+      "laws": "Utiliser le Service pour violer toute loi ou réglementation applicable",
+      "infringe": "Enfreindre les droits de propriété intellectuelle d'autrui",
+      "harmful": "Transmettre du contenu nuisible, offensant ou inapproprié",
+      "unauthorized": "Tenter d'obtenir un accès non autorisé à nos systèmes ou aux comptes d'autres utilisateurs",
+      "spam": "Utiliser le Service pour le spam, le phishing ou d'autres activités malveillantes",
+      "disrupt": "Interférer avec ou perturber le Service ou les serveurs",
+      "reverse": "Rétroconcevoir, décompiler ou désassembler notre logiciel",
+      "automated": "Utiliser des systèmes automatisés pour accéder au Service sans permission",
+      "share": "Partager vos identifiants de compte avec d'autres",
+      "competing": "Utiliser le Service pour construire des produits ou services concurrents"
+    },
+    "payment": {
+      "title": "5. Conditions d'abonnement et de paiement",
+      "plans": {
+        "title": "5.1 Plans d'abonnement",
+        "desc": "Nous proposons divers plans d'abonnement avec différentes fonctionnalités et tarifs. Les détails de l'abonnement, y compris les tarifs et fonctionnalités, sont disponibles sur notre site web et peuvent être mis à jour de temps à autre."
+      },
+      "processing": {
+        "title": "5.2 Traitement des paiements",
+        "desc": "Les paiements sont traités par des processeurs de paiement tiers sécurisés. Vous nous autorisez à facturer votre méthode de paiement pour tous les frais associés à votre abonnement."
+      },
+      "billing": {
+        "title": "5.3 Facturation et renouvellement",
+        "desc": "Les abonnements se renouvellent automatiquement sauf s'ils sont annulés avant la date de renouvellement. Vous serez facturé des frais d'abonnement applicables à chaque date de renouvellement."
+      },
+      "refunds": {
+        "title": "5.4 Remboursements et annulation",
+        "desc": "Vous pouvez annuler votre abonnement à tout moment via les paramètres de votre compte. Les remboursements sont fournis conformément à notre politique de remboursement, qui peut varier selon le plan et l'utilisation."
+      }
+    },
+    "ip": {
+      "title": "6. Droits de propriété intellectuelle",
+      "ours": {
+        "title": "6.1 Notre propriété intellectuelle",
+        "desc": "Le Service, y compris tous les logiciels, contenus et matériaux, est détenu par nous ou nos concédants et est protégé par les lois sur la propriété intellectuelle. Nous vous accordons une licence limitée, non exclusive et non transférable pour utiliser le Service conformément à ces Conditions."
+      },
+      "yours": {
+        "title": "6.2 Votre contenu",
+        "desc": "Vous conservez la propriété de tout contenu que vous créez en utilisant notre Service. Vous nous accordez une licence pour utiliser, stocker et traiter votre contenu uniquement pour fournir et améliorer notre Service."
+      },
+      "opensource": {
+        "title": "6.3 Composants open source",
+        "desc": "Notre Service peut inclure des composants logiciels open source. L'utilisation de ces composants est soumise à leurs licences open source respectives."
+      }
+    },
+    "privacy": {
+      "title": "7. Confidentialité et protection des données",
+      "desc": "Votre confidentialité est importante pour nous. Notre collecte et utilisation de vos informations personnelles sont régies par notre Politique de Confidentialité, qui est incorporée dans ces Conditions par référence."
+    },
+    "availability": {
+      "title": "8. Disponibilité et support du service",
+      "service": {
+        "title": "8.1 Disponibilité du service",
+        "desc": "Nous nous efforçons de maintenir une haute disponibilité du service mais ne garantissons pas un accès ininterrompu. Le Service peut être temporairement indisponible en raison de maintenance, de mises à jour ou d'autres facteurs indépendants de notre volonté."
+      },
+      "support": {
+        "title": "8.2 Services de support",
+        "desc": "La disponibilité du support varie selon le plan d'abonnement. Nous fournissons un support via la documentation, les forums communautaires et les canaux de support directs comme spécifié dans votre plan."
+      },
+      "updates": {
+        "title": "8.3 Mises à jour et changements",
+        "desc": "Nous pouvons mettre à jour le Service de temps à autre pour améliorer la fonctionnalité, la sécurité ou l'expérience utilisateur. Nous fournirons un préavis raisonnable des changements importants qui peuvent affecter votre utilisation du Service."
+      }
+    },
+    "termination": {
+      "title": "9. Résiliation et suspension",
+      "you": {
+        "title": "9.1 Résiliation par vous",
+        "desc": "Vous pouvez résilier votre compte à tout moment en annulant votre abonnement et en supprimant votre compte via les paramètres de votre compte."
+      },
+      "us": {
+        "title": "9.2 Résiliation par nous",
+        "desc": "Nous pouvons résilier ou suspendre votre compte immédiatement si vous violez ces Conditions, vous engagez dans une activité frauduleuse, ou pour toute autre raison à notre seule discrétion."
+      },
+      "effect": {
+        "title": "9.3 Effet de la résiliation",
+        "desc": "Lors de la résiliation, votre droit d'utiliser le Service cesse immédiatement. Nous pouvons supprimer les données de votre compte conformément à nos politiques de conservation des données."
+      }
+    },
+    "disclaimers": {
+      "title": "10. Exclusions et limitations",
+      "service": {
+        "title": "10.1 Exclusions de service",
+        "desc": "LE SERVICE EST FOURNI \"EN L'ÉTAT\" ET \"TEL QUE DISPONIBLE\" SANS GARANTIES D'AUCUNE SORTE, EXPRESSES OU IMPLICITES, Y COMPRIS MAIS SANS S'Y LIMITER LES GARANTIES IMPLICITES DE COMMERCIALISATION, D'ADÉQUATION À UN USAGE PARTICULIER ET DE NON-VIOLATION."
+      },
+      "liability": {
+        "title": "10.2 Limitation de responsabilité",
+        "desc": "DANS LA MESURE MAXIMALE PERMISE PAR LA LOI, NOUS NE SERONS PAS RESPONSABLES DE TOUT DOMMAGE INDIRECT, ACCESSOIRE, SPÉCIAL, CONSÉQUENTIEL OU PUNITIF, Y COMPRIS MAIS SANS S'Y LIMITER LA PERTE DE PROFITS, DE DONNÉES OU D'UTILISATION, ENCOURUS PAR VOUS OU TOUT TIERS."
+      },
+      "maximum": {
+        "title": "10.3 Responsabilité maximale",
+        "desc": "NOTRE RESPONSABILITÉ TOTALE ENVERS VOUS POUR TOUTE RÉCLAMATION DÉCOULANT DE OU RELATIVE À CES CONDITIONS OU AU SERVICE NE DÉPASSERA PAS LE MONTANT PAYÉ PAR VOUS POUR LE SERVICE DANS LES DOUZE MOIS PRÉCÉDANT LA RÉCLAMATION."
+      }
+    },
+    "indemnification": {
+      "title": "11. Indemnisation",
+      "desc": "Vous acceptez d'indemniser, de défendre et de tenir indemnes nous et nos dirigeants, administrateurs, employés et agents de toute réclamation, dommage, perte et dépense découlant de ou relative à votre utilisation du Service ou violation de ces Conditions."
+    },
+    "governing": {
+      "title": "12. Droit applicable et résolution des litiges",
+      "law": {
+        "title": "12.1 Droit applicable",
+        "desc": "Ces Conditions sont régies et interprétées conformément aux lois de",
+        "without": "sans égard à ses principes de conflit de lois."
+      },
+      "dispute": {
+        "title": "12.2 Résolution des litiges",
+        "desc": "Tout litige découlant de ou relatif à ces Conditions ou au Service sera résolu par arbitrage contraignant conformément aux règles de",
+        "location": "L'arbitrage sera mené à"
+      },
+      "class": {
+        "title": "12.3 Renonciation aux actions collectives",
+        "desc": "Vous acceptez que toute procédure d'arbitrage ou légale sera menée sur une base individuelle et non comme une action collective ou représentative."
+      }
+    },
+    "miscellaneous": {
+      "title": "13. Dispositions diverses",
+      "entire": {
+        "title": "13.1 Accord complet",
+        "desc": "Ces Conditions, avec notre Politique de Confidentialité, constituent l'accord complet entre vous et nous concernant le Service et remplacent tous les accords et compréhensions antérieurs."
+      },
+      "severability": {
+        "title": "13.2 Divisibilité",
+        "desc": "Si une disposition de ces Conditions est jugée invalide ou inapplicable, les dispositions restantes continueront en pleine force et effet."
+      },
+      "waiver": {
+        "title": "13.3 Renonciation",
+        "desc": "Notre échec à faire respecter une disposition de ces Conditions ne constitue pas une renonciation à cette disposition ou à toute autre disposition."
+      },
+      "assignment": {
+        "title": "13.4 Cession",
+        "desc": "Vous ne pouvez pas céder ou transférer vos droits ou obligations en vertu de ces Conditions sans notre consentement écrit. Nous pouvons céder ces Conditions sans restriction."
+      },
+      "force": {
+        "title": "13.5 Force majeure",
+        "desc": "Nous ne serons pas responsables de tout échec à exécuter nos obligations en raison de circonstances indépendantes de notre contrôle raisonnable, y compris mais sans s'y limiter les catastrophes naturelles, la guerre, le terrorisme ou les actions gouvernementales."
+      }
+    },
+    "changes": {
+      "title": "14. Modifications de ces conditions",
+      "desc": "Nous pouvons mettre à jour ces Conditions de temps à autre pour refléter les changements dans nos pratiques ou les lois applicables. Nous vous informerons de tout changement important en publiant les Conditions mises à jour sur notre site web et en mettant à jour la date de \"Dernière mise à jour\"."
+    },
+    "contact": {
+      "title": "15. Nous contacter",
+      "intro": "Si vous avez des questions sur ces Conditions d'Utilisation, veuillez nous contacter :",
+      "email": "E-mail",
+      "address": "Adresse",
+      "phone": "Téléphone",
+      "support": "E-mail de support"
+    }
+  },
+  "footer": {
+    "effective": "Ces Conditions d'Utilisation sont effectives à partir du",
+    "remain": "et resteront en vigueur sauf en ce qui concerne tout changement dans leurs dispositions à l'avenir."
+  }
+}

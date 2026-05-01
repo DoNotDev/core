@@ -1,0 +1,51 @@
+{
+  "name": "@donotdev/utils",
+  "version": "0.1.42",
+  "private": true,
+  "type": "module",
+  "description": "Utility functions for DoNotDev",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./server": {
+      "types": "./src/server/index.ts",
+      "import": "./src/server/index.ts",
+      "default": "./src/server/index.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsc --noEmit --watch --listFiles false --listEmittedFiles false",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "type-check": "bunx tsc --noEmit"
+  },
+  "dependencies": {
+    "@donotdev/components": "workspace:*",
+    "@donotdev/types": "workspace:*",
+    "@tanstack/react-query": "^5.90.21"
+  },
+  "devDependencies": {
+    "@sentry/react": "^10.39.0",
+    "firebase": "^12.9.0",
+    "i18next": "^25.10.5",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "i18next-http-backend": "^3.0.2",
+    "react-i18next": "^16.5.4",
+    "valibot": "^1.2.0",
+    "zustand": "^5.0.11"
+  },
+  "peerDependencies": {
+    "@sentry/react": "^10.39.0",
+    "zustand": "^5.0.11"
+  },
+  "peerDependenciesMeta": {
+    "@sentry/react": {
+      "optional": true
+    }
+  },
+  "license": "MIT"
+}

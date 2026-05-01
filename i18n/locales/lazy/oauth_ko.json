@@ -1,0 +1,11 @@
+{
+  "connectServices": "서비스 연결",
+  "chooseService": "계정과 연결할 서비스를 선택하세요",
+  "noProvidersEnabled": "OAuth 제공자 없음",
+  "noProvidersMessage": "현재 활성화된 OAuth 제공자가 없습니다. 구성을 확인해 주세요.",
+  "checkConfiguration": "OAuth 제공자 구성을 확인해 주세요.",
+  "noProviders": "OAuth 제공자 없음",
+  "aria": {
+    "connectionOptions": "OAuth 연결 옵션"
+  }
+}

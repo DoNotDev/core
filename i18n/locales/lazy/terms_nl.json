@@ -1,0 +1,200 @@
+{
+  "title": "Algemene voorwaarden",
+  "lastUpdated": "Laatst bijgewerkt",
+  "common": {
+    "we": "wij",
+    "our": "onze",
+    "or": "of",
+    "us": "ons"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Introductie",
+      "welcome": "Welkom bij",
+      "govern": "Deze algemene voorwaarden (\"Voorwaarden\") regelen je gebruik van ons ontwikkelframework, onze tools en diensten (samen de \"Dienst\"). Door de Dienst te gebruiken of er toegang toe te hebben, ga je akkoord met deze Voorwaarden.",
+      "organization": "Als je de Dienst namens een organisatie gebruikt, verklaar je dat je bevoegd bent die organisatie aan deze Voorwaarden te binden. Als je het niet eens bent met deze Voorwaarden, gebruik de Dienst dan niet."
+    },
+    "service": {
+      "title": "2. Beschrijving van de dienst",
+      "description": "is een ontwikkelframework met tools, componenten en infrastructuur voor het bouwen van moderne webapplicaties. Onze Dienst omvat onder meer:",
+      "framework": "Ontwikkelframework en bibliotheken",
+      "ui": "UI-componenten en designsysteem",
+      "auth": "Inloggen en rechtenbeheer",
+      "i18n": "Meertaligheid en vertalingen",
+      "billing": "Facturatie en abonnementen",
+      "docs": "Documentatie en ondersteuning"
+    },
+    "account": {
+      "title": "3. Account en beveiliging",
+      "creation": {
+        "title": "3.1 Account aanmaken",
+        "desc": "Voor bepaalde functies moet je een account aanmaken. Je gaat ermee akkoord bij registratie juiste en actuele gegevens te verstrekken en deze up-to-date te houden."
+      },
+      "security": {
+        "title": "3.2 Accountbeveiliging",
+        "desc": "Je bent verantwoordelijk voor het geheimhouden van je inloggegevens en voor alles wat er onder jouw account gebeurt. Je meldt ons direct elk misbruik of andere inbreuk op de beveiliging."
+      },
+      "eligibility": {
+        "title": "3.3 Leeftijd",
+        "desc": "Je moet minstens 13 jaar zijn om de Dienst te gebruiken. Onder 18 jaar heb je toestemming van een ouder of voogd nodig."
+      }
+    },
+    "acceptable": {
+      "title": "4. Aanvaardbaar gebruik",
+      "intro": "Je gebruikt de Dienst alleen voor legale doeleinden en in overeenstemming met deze Voorwaarden. Je gaat ermee akkoord onder meer niet:",
+      "laws": "De Dienst te gebruiken in strijd met toepasselijke wet- en regelgeving",
+      "infringe": "Inbreuk te maken op intellectuele eigendomsrechten van anderen",
+      "harmful": "Schadelijke, aanstootgevende of ongepaste inhoud te verspreiden",
+      "unauthorized": "Ongeautoriseerde toegang tot onze systemen of accounts van anderen te verkrijgen",
+      "spam": "De Dienst te gebruiken voor spam, phishing of andere kwaadwillige activiteiten",
+      "disrupt": "De Dienst of servers te verstoren of te ontwrichten",
+      "reverse": "Onze software te reverse-engineeren, decompileren of disassembleren",
+      "automated": "Geautomatiseerde systemen te gebruiken voor toegang zonder toestemming",
+      "share": "Je inloggegevens met anderen te delen",
+      "competing": "De Dienst te gebruiken om concurrerende producten of diensten te bouwen"
+    },
+    "payment": {
+      "title": "5. Abonnement en betaling",
+      "plans": {
+        "title": "5.1 Abonnementspakketten",
+        "desc": "We bieden verschillende abonnementspakketten met verschillende functies en prijzen. Details staan op onze website en kunnen worden aangepast."
+      },
+      "processing": {
+        "title": "5.2 Betalingsverwerking",
+        "desc": "Betalingen lopen via beveiligde betalingsverwerkers. Je machtigt ons om je betaalmethode te belasten voor alle kosten die bij je abonnement horen."
+      },
+      "billing": {
+        "title": "5.3 Facturatie en verlenging",
+        "desc": "Abonnementen verlengen automatisch tenzij je voor de verlengingsdatum opzegt. Je wordt op elke verlengingsdatum het geldende abonnementsbedrag in rekening gebracht."
+      },
+      "refunds": {
+        "title": "5.4 Terugbetaling en opzegging",
+        "desc": "Je kunt je abonnement op elk moment opzeggen via je accountinstellingen. Terugbetalingen verlopen volgens ons restitutiebeleid, dat per pakket en gebruik kan verschillen."
+      }
+    },
+    "ip": {
+      "title": "6. Intellectueel eigendom",
+      "ours": {
+        "title": "6.1 Ons eigendom",
+        "desc": "De Dienst, inclusief alle software, inhoud en materiaal, is van ons of onze licentiegevers en beschermd door intellectuele-eigendomsrecht. We verlenen je een beperkte, niet-exclusieve, niet-overdraagbare licentie om de Dienst te gebruiken volgens deze Voorwaarden."
+      },
+      "yours": {
+        "title": "6.2 Jouw inhoud",
+        "desc": "Jij blijft eigenaar van inhoud die je met de Dienst maakt. Je verleent ons een licentie om die inhoud te gebruiken, op te slaan en te verwerken uitsluitend om de Dienst te leveren en te verbeteren."
+      },
+      "opensource": {
+        "title": "6.3 Open source",
+        "desc": "De Dienst kan open source-onderdelen bevatten. Gebruik daarvan valt onder hun respectieve open source-licenties."
+      }
+    },
+    "privacy": {
+      "title": "7. Privacy en gegevensbescherming",
+      "desc": "Je privacy is belangrijk voor ons. Hoe we je persoonsgegevens verzamelen en gebruiken, staat in ons privacybeleid, dat deel uitmaakt van deze Voorwaarden."
+    },
+    "availability": {
+      "title": "8. Beschikbaarheid en ondersteuning",
+      "service": {
+        "title": "8.1 Beschikbaarheid",
+        "desc": "We streven naar hoge beschikbaarheid maar garanderen geen ononderbroken toegang. De Dienst kan tijdelijk niet beschikbaar zijn door onderhoud, updates of andere omstandigheden buiten onze controle."
+      },
+      "support": {
+        "title": "8.2 Ondersteuning",
+        "desc": "Ondersteuning verschilt per abonnementspakket. We bieden ondersteuning via documentatie, communityfora en directe kanalen zoals in je pakket staat."
+      },
+      "updates": {
+        "title": "8.3 Updates en wijzigingen",
+        "desc": "We kunnen de Dienst van tijd tot tijd bijwerken. Bij ingrijpende wijzigingen die je gebruik beïnvloeden, geven we tijdig bericht."
+      }
+    },
+    "termination": {
+      "title": "9. Beëindiging en opschorting",
+      "you": {
+        "title": "9.1 Opzegging door jou",
+        "desc": "Je kunt je account op elk moment beëindigen door je abonnement op te zeggen en je account via je accountinstellingen te verwijderen."
+      },
+      "us": {
+        "title": "9.2 Beëindiging door ons",
+        "desc": "We kunnen je account direct beëindigen of opschorten als je deze Voorwaarden overtreedt, fraude pleegt of om een andere reden naar ons oordeel."
+      },
+      "effect": {
+        "title": "9.3 Gevolg van beëindiging",
+        "desc": "Na beëindiging vervalt je recht om de Dienst te gebruiken direct. We kunnen je accountgegevens verwijderen volgens ons bewaarbeleid."
+      }
+    },
+    "disclaimers": {
+      "title": "10. Disclaimer en aansprakelijkheidsbeperking",
+      "service": {
+        "title": "10.1 Geen garantie",
+        "desc": "DE DIENST WORDT GELEVERD \"ZOALS ZIJ IS\" EN \"ZOALS BESCHIKBAAR\" ZONDER ENIGE GARANTIE, EXPLICIET OF IMPLICIET, WAARONDER MAAR NIET BEPERKT TOT GARANTIES VAN VERKOOPBAARHEID, GESCHIKTHEID VOOR EEN BEPAALD DOEL EN NIET-INBREUK."
+      },
+      "liability": {
+        "title": "10.2 Beperking aansprakelijkheid",
+        "desc": "VOOR ZOVER WETTELIJK TOEGESTAAN ZIJN WIJ NIET AANSPRAKELIJK VOOR INDIRECTE, INCIDENTELE, BIJZONDERE, GEVOLGS- OF STRAFBARE SCHADE, WAARONDER VERLIES VAN WINST, GEGEVENS OF GEBRUIK, DOOR JOU OF DERDEN GELEDEN."
+      },
+      "maximum": {
+        "title": "10.3 Maximale aansprakelijkheid",
+        "desc": "ONZE TOTALE AANSPRAKELIJKHEID TEN OPZICHTE VAN JOU VOOR VORDERINGEN IN VERBAND MET DEZE VOORWAARDEN OF DE DIENST BEDRAAGT NIET MEER DAN HET BEDRAG DAT JIJ IN DE TWAALF MAANDEN VOOR DE VORDERING VOOR DE DIENST HEBT BETAALD."
+      }
+    },
+    "indemnification": {
+      "title": "11. Vrijwaring",
+      "desc": "Je vrijwaart ons en onze bestuurders, directeuren, medewerkers en vertegenwoordigers van alle vorderingen, schade, verliezen en kosten die voortvloeien uit of verband houden met je gebruik van de Dienst of overtreding van deze Voorwaarden."
+    },
+    "governing": {
+      "title": "12. Toepasselijk recht en geschillen",
+      "law": {
+        "title": "12.1 Toepasselijk recht",
+        "desc": "Deze Voorwaarden vallen onder het recht van",
+        "without": "zonder toepassing van conflictenrecht."
+      },
+      "dispute": {
+        "title": "12.2 Geschillenbeslechting",
+        "desc": "Geschillen over deze Voorwaarden of de Dienst worden beslecht door bindende arbitrage volgens de regels van",
+        "location": "De arbitrage vindt plaats in"
+      },
+      "class": {
+        "title": "12.3 Afstand van collectieve actie",
+        "desc": "Je gaat ermee akkoord dat arbitrage of rechtszaken individueel worden gevoerd en niet als collectieve of representatieve actie."
+      }
+    },
+    "miscellaneous": {
+      "title": "13. Overige bepalingen",
+      "entire": {
+        "title": "13.1 Volledige overeenkomst",
+        "desc": "Deze Voorwaarden samen met ons privacybeleid vormen de volledige overeenkomst tussen jou en ons over de Dienst en vervangen eerdere afspraken."
+      },
+      "severability": {
+        "title": "13.2 Scheidbaarheid",
+        "desc": "Als een bepaling ongeldig of niet afdwingbaar is, blijven de overige bepalingen van kracht."
+      },
+      "waiver": {
+        "title": "13.3 Afstand",
+        "desc": "Het niet handhaven van een bepaling door ons geldt niet als afstand van die of andere bepalingen."
+      },
+      "assignment": {
+        "title": "13.4 Overdracht",
+        "desc": "Je mag je rechten of plichten uit deze Voorwaarden niet overdragen zonder onze schriftelijke toestemming. Wij kunnen deze Voorwaarden zonder beperking overdragen."
+      },
+      "force": {
+        "title": "13.5 Overmacht",
+        "desc": "Wij zijn niet aansprakelijk voor het niet nakomen van verplichtingen door omstandigheden buiten onze redelijke controle, zoals natuurrampen, oorlog, terrorisme of overheidsmaatregelen."
+      }
+    },
+    "changes": {
+      "title": "14. Wijzigingen",
+      "desc": "We kunnen deze Voorwaarden van tijd tot tijd wijzigen. Bij inhoudelijke wijzigingen informeren we je door de gewijzigde Voorwaarden te publiceren en de datum \"Laatst bijgewerkt\" aan te passen."
+    },
+    "contact": {
+      "title": "15. Contact",
+      "intro": "Voor vragen over deze algemene voorwaarden kun je contact met ons opnemen:",
+      "email": "E-mail",
+      "address": "Adres",
+      "phone": "Telefoon",
+      "support": "Support-e-mail"
+    }
+  },
+  "footer": {
+    "effective": "Deze algemene voorwaarden zijn van kracht vanaf",
+    "remain": "en blijven van kracht behalve bij wijziging van de bepalingen."
+  }
+}

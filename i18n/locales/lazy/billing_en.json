@@ -1,0 +1,93 @@
+{
+  "errors": {
+    "unauthenticated": "Please sign in to continue with checkout.",
+    "checkout_failed": "Unable to start checkout. Please try again or contact support if the problem persists.",
+    "cancel_failed": "Failed to cancel subscription. Please try again or contact support.",
+    "change_plan_failed": "Failed to change plan. Please try again or contact support.",
+    "refresh_failed": "Failed to refresh subscription status. Please try again.",
+    "portal_failed": "Failed to open customer portal. Please try again or contact support.",
+    "not_available": "Billing is not available.",
+    "server_error": "Server returned an error. Please try again.",
+    "no_checkout_url": "No checkout URL received. Please try again."
+  },
+  "security": {
+    "title": "Secure Payment Processing",
+    "description": "Your payment information is processed securely by Stripe, a PCI DSS Level 1 certified payment processor.",
+    "encrypted": "256-bit SSL encryption",
+    "stripe": "Powered by Stripe",
+    "dismiss": "Dismiss security notice"
+  },
+  "templates": {
+    "purchase": {
+      "title": "Get Started",
+      "subtitle": "Choose your one-time purchase option"
+    },
+    "subscription": {
+      "title": "Choose Your Plan",
+      "subtitle": "Select the perfect plan for your needs",
+      "billingToggle": {
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "save20": "Save 20%"
+      }
+    },
+    "checkout": {
+      "title": "Complete Your Purchase",
+      "description": "Secure checkout powered by Stripe",
+      "completePurchase": "Complete Purchase",
+      "startSubscription": "Start Subscription"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "Most Popular",
+      "limitedTime": "Limited Time",
+      "exclVat": "excl VAT",
+      "purchaseNow": "Purchase Now",
+      "subscribeNow": "Subscribe Now"
+    },
+    "buttons": {
+      "purchase": "Purchase",
+      "subscribe": "Subscribe",
+      "processing": "Processing...",
+      "signInToPurchase": "Sign in to purchase",
+      "signInToSubscribe": "Sign in to subscribe"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Redirecting to Stripe",
+        "message": "Initializing secure payment...",
+        "subtitle": "This may take a moment on first load",
+        "ariaLabel": "Preparing secure checkout, please wait"
+      },
+      "portal": {
+        "title": "Redirecting to Stripe",
+        "message": "Opening billing portal...",
+        "subtitle": "Manage your subscription and invoices",
+        "ariaLabel": "Opening billing portal, please wait"
+      }
+    },
+    "subscriptionManager": {
+      "title": "Subscription Management",
+      "signInRequired": "Please sign in to manage your subscription.",
+      "noSubscription": "You don't have an active subscription.",
+      "currentPlan": "Current Plan",
+      "ends": "Ends",
+      "managePaymentMethod": "Manage Payment Method",
+      "cancelSubscription": "Cancel Subscription",
+      "cancelConfirm": "Are you sure you want to cancel? You'll keep access until {{date}}.",
+      "yesCancel": "Yes, Cancel",
+      "noKeep": "No, Keep",
+      "changePlan": "Change Plan",
+      "current": "Current",
+      "subscriptionEnds": "Subscription will end on {{date}}",
+      "planChanged": "Plan changed successfully!",
+      "status": {
+        "active": "Active",
+        "cancelled": "Cancelled",
+        "pastDue": "Past Due",
+        "trialing": "Trial"
+      }
+    }
+  }
+}
