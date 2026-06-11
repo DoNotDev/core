@@ -5,6 +5,7 @@
 
 import fs from 'node:fs';
 import { createFontPreloadWebpackPlugin } from './plugins/FontPreloadWebpackPlugin.js';
+import { createLowerDestructuringWebpackPlugin } from './plugins/LowerDestructuringWebpackPlugin.js';
 import { createPostCSSConfig } from './postcss.js';
 import { isPlainObject } from './utils.js';
 import { PathResolver } from '../utils/PathResolver.js';
@@ -136,6 +137,19 @@ export function createWebpackConfig({
       );
     } catch (e) {
       logger.debug(`Font preload webpack plugin skipped: ${e?.message}`);
+    }
+
+    // Safari fix: lower JS destructuring on the production client bundle so it
+    // parses on older Safari (< 14.1), which has a destructuring parser bug that
+    // blanks the page. Client build only; the plugin self-guards dev/server.
+    if (!isServer) {
+      try {
+        config.plugins.push(
+          createLowerDestructuringWebpackPlugin({ logger, debug })
+        );
+      } catch (e) {
+        logger.debug(`Lower-destructuring webpack plugin skipped: ${e?.message}`);
+      }
     }
 
     // Feature exclusion logic

@@ -1,6 +1,6 @@
 {
   "name": "@donotdev/i18n",
-  "version": "0.1.42",
+  "version": "0.1.43",
   "private": true,
   "type": "module",
   "description": "Internationalization with i18next and react-i18next",
