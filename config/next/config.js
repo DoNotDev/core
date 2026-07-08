@@ -130,11 +130,13 @@ function defineNextConfig(userOptions = {}) {
   // CRITICAL: Resolve appRoot BEFORE creating handlers
   const { appRoot, appRootSet } = resolveAppRoot({ logger, debug });
   let assetsCopied = false;
+  // Routing mode resolved once (SSOT) — used both for the build log below and
+  // for the Pages-Router shadow-redirect gate inside the config function.
+  const routingMode = routeOptions?.routingMode || 'app';
 
   // Framework-level logging (skip on Turbopack's second worker — marker already set)
   const isSecondPass = appRootSet && isBuildComplete(appRoot);
   if (!isSecondPass) {
-    const routingMode = routeOptions?.routingMode || 'app';
     logger.info(
       `\n🏗️  DnDev Framework - Building for ${mode}${buildId ? ` [build:${buildId}]` : ''}`
     );
@@ -251,6 +253,15 @@ function defineNextConfig(userOptions = {}) {
     const i18nDiscoveryData = await handlers.i18nHandler?.getDiscoveryData?.();
     const flagCodes = i18nDiscoveryData?.flagCodes || [];
 
+    // Extract discovered routes so redirects can shadow Next's legacy Pages
+    // Router paths (src/pages/<X>Page.tsx → /<X>Page) onto canonical app routes.
+    // Only in app-router mode: in 'pages' mode the framework's own output IS the
+    // pages router, so shadowing would redirect the real routes.
+    const routeDiscoveryData =
+      routingMode === 'app'
+        ? await handlers.routeHandler?.getDiscoveryData?.()
+        : null;
+
     // Build webpack and rewrites configs
     const webpackConfig = createWebpackConfig({
       originalWebpack,
@@ -277,6 +288,7 @@ function defineNextConfig(userOptions = {}) {
     const redirectsConfig = createRedirectsConfig({
       originalRedirects,
       seoRedirects: seoOptions?.redirects || [],
+      routes: routeDiscoveryData?.routes || [],
       logger,
     });
 

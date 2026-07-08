@@ -285,6 +285,57 @@ export function createRewritesConfig({ originalRewrites, handlers, logger }) {
 }
 
 /**
+ * Derive shadow redirects that neutralize Next.js's built-in Pages Router.
+ *
+ * The framework authors page sources in `src/pages/` (a dual-target convention
+ * shared with the Vite adapter) and generates the canonical App Router routes
+ * from them. But Next also treats `src/pages/` as its legacy Pages Router and
+ * publishes each source by filename — e.g. `src/pages/legal/TermsPage.tsx`
+ * becomes a stray `/legal/TermsPage`. Next offers no supported flag to disable
+ * that, and `pageExtensions` breaks the App Router (vercel/next.js#51478).
+ *
+ * So we 301 each stray Pages-Router path onto its canonical App route. This is
+ * derived from live route-discovery data — no hardcoded list — so it stays in
+ * sync with whatever pages exist, for every app, on every build.
+ *
+ * @param {Array<{file?: string, path?: string}>} routes - discovered routes
+ * @returns {Array<{from: string, to: string, permanent: boolean}>}
+ */
+function derivePagesRouterShadowRedirects(routes) {
+  const list = routes || [];
+  // Never shadow a path that is itself a real canonical route — fail-safe against
+  // e.g. a stray `pages/index.tsx` whose filename path collides with a real route.
+  const canonicalPaths = new Set(list.map((r) => r?.path).filter(Boolean));
+  const shadow = [];
+  const seenSources = new Set();
+  for (const route of list) {
+    // route.file at runtime is relative to `src/` — e.g. "pages/AboutPage.tsx"
+    // (RouteDiscovery builds importPath as `/src/` + this). Fall back to
+    // importPath, and tolerate a leading "/src/" or "src/" from either shape.
+    let rel = String(route?.file || route?.importPath || '').replace(/\\/g, '/');
+    rel = rel.replace(/^\/?(?:src\/)?/, ''); // drop optional leading "/src/" or "src/"
+    if (!rel.startsWith('pages/')) continue; // only src/pages sources are shadowed
+    rel = rel.slice('pages/'.length).replace(/\.[jt]sx?$/, '');
+    // Pages Router ignores private (`_app`, `_document`) files and the api/ tree
+    if (!rel || rel.split('/').some((seg) => seg.startsWith('_'))) continue;
+    if (rel === 'api' || rel.startsWith('api/')) continue;
+    // Index collapse: Next serves pages/index → /, pages/x/index → /x (no /index)
+    rel = rel.replace(/(?:^|\/)index$/, '');
+    const from = rel ? '/' + rel : '/';
+    const to = route?.path;
+    if (!to || from === to) continue; // no-op / loop
+    // A dynamic filename ([slug]) is not a clean static source, and a parameterized
+    // canonical (/blog/:id) cannot be a redirect destination — skip both.
+    if (/[[\]]/.test(from) || /[:[]/.test(to)) continue;
+    if (canonicalPaths.has(from)) continue; // don't shadow a real route
+    if (seenSources.has(from)) continue; // de-dupe sources
+    seenSources.add(from);
+    shadow.push({ from, to, permanent: true });
+  }
+  return shadow;
+}
+
+/**
  * Build redirects configuration
  * @param {Object} options - Options
  * @returns {Function} Redirects config function
@@ -292,14 +343,23 @@ export function createRewritesConfig({ originalRewrites, handlers, logger }) {
 export function createRedirectsConfig({
   originalRedirects,
   seoRedirects,
+  routes,
   logger,
 }) {
   return async function () {
     try {
       const baseRedirects = originalRedirects ? await originalRedirects() : [];
 
+      // Combine explicit SEO redirects with dynamically-derived shadow redirects
+      // that cancel Next's legacy Pages Router duplication of `src/pages/` sources.
+      const shadowRedirects = derivePagesRouterShadowRedirects(routes);
+      const combinedFrameworkRedirects = [
+        ...(seoRedirects || []),
+        ...shadowRedirects,
+      ];
+
       // Map framework format { from, to, permanent } to Next.js format { source, destination, permanent }
-      const frameworkRedirects = (seoRedirects || []).map(
+      const frameworkRedirects = combinedFrameworkRedirects.map(
         ({ from, to, permanent }) => ({
           source: from,
           destination: to,
