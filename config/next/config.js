@@ -164,7 +164,11 @@ function defineNextConfig(userOptions = {}) {
     debug,
     verbose,
     generateManifest,
-    routeOptions,
+    // Thread SSR into the route codegen. SSR is the default for Next apps —
+    // generated *PageClient wrappers render directly (server-rendered content in
+    // the initial HTML). An app opts OUT of SSR (legacy client-only render) with
+    // appConfig.ssr === false.
+    routeOptions: { ...routeOptions, ssr: appConfig?.ssr !== false },
     themeOptions,
     i18nOptions,
     assetOptions,

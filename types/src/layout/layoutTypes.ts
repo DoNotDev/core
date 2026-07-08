@@ -602,6 +602,15 @@ export interface AppConfig {
   features?: FeaturesConfig;
   /** Query cache configuration (defaults: 5min staleTime, refetch on focus/reconnect) */
   query?: QueryConfig;
+  /**
+   * Server-side rendering (Next adapter). **Defaults to `true`** — generated page
+   * wrappers render directly and the provider tree renders on the server, so page
+   * content is present in the initial HTML (real, crawlable SSR). Set to `false`
+   * to opt OUT and restore the legacy client-only render (content appears only
+   * after hydration). The provider tree is store-driven, so SSR routes render
+   * dynamically at request time.
+   */
+  ssr?: boolean;
 }
 
 /**
