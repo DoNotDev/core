@@ -14,11 +14,15 @@ import { PathResolver } from '../../utils/PathResolver.js';
 
 export class BaseNextHandler {
   constructor(discoveryClass, defaultOptions = {}) {
-    // Trust merged config - no local defaults override
-    // Handler-specific defaults come from getHandlerDefaults(), which should be minimal
+    // Trust merged config - no local defaults override.
+    // getHandlerDefaults() is spread FIRST so it only fills gaps: spreading it last
+    // let a hardcoded default silently beat an explicit app setting. That is how an
+    // app declaring i18n.fallbackLanguage: 'fr' still shipped <html lang="en">,
+    // which disables French hyphenation and mislabels the page for screen readers
+    // and crawlers.
     this.options = {
-      ...defaultOptions, // Already merged from config
-      ...this.getHandlerDefaults(), // Handler-specific overrides only
+      ...this.getHandlerDefaults(), // Handler-specific fallbacks
+      ...defaultOptions, // Already merged from config — always wins
     };
 
     // Initialize logger

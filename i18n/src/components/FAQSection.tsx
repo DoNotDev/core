@@ -10,10 +10,10 @@
  * @author AMBROISE PARK Consulting
  */
 
+import type { TFunction } from 'i18next';
+
 import { Accordion, Stack, Text } from '@donotdev/components';
 import { translateObjectArray } from '@donotdev/utils';
-
-import type { TFunction } from 'i18next';
 
 /** Props for the FAQ accordion section with i18n support. */
 export interface FAQSectionProps {

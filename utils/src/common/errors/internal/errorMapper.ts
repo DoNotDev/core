@@ -19,7 +19,6 @@ import {
   createErrorHandler,
   commonErrorCodeMappings,
 } from './serviceErrorHandler';
-
 import type { ErrorHandlerFunction } from './serviceErrorHandler';
 
 // -----------------------------------------------------------------------------

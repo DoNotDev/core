@@ -17,9 +17,9 @@ import { useCallback } from 'react';
 import { Stack, Tag, Text } from '@donotdev/components';
 
 import { Flag } from '../flags';
+import LanguageDropdown from './LanguageDropdown';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguageSelector } from '../utils/languageSelector';
-import LanguageDropdown from './LanguageDropdown';
 
 /**
  * Label format for the pill trigger

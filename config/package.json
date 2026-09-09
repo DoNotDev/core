@@ -52,6 +52,9 @@
     },
     "vite": {
       "optional": true
+    },
+    "babel-plugin-react-compiler": {
+      "optional": true
     }
   },
   "dependencies": {},

@@ -10,10 +10,10 @@
  * @author AMBROISE PARK Consulting
  */
 
+import type { ReactNode } from 'react';
+
 import { QueryClientProvider, getQueryClient } from '../core';
 import { useAppConfig } from './AppConfigProvider';
-
-import type { ReactNode } from 'react';
 
 /**
  * QueryProviders - TanStack Query Provider Component

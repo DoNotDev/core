@@ -12,7 +12,6 @@ import {
   formatCookieList,
   getCookieExamples,
 } from '../cookieMapping';
-
 import type { CookieInfo } from '../cookieMapping';
 
 const mockIsFeatureAvailable = vi.mocked(isFeatureAvailable);

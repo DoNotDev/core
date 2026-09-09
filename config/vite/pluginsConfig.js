@@ -51,6 +51,7 @@ export function createVitePlugins(options = {}) {
       pwa: pwaOptions = {},
       serverShim: serverShimOptions = {},
       pluginFactory: pluginFactoryOptions = {},
+      reactCompiler = false,
     } = options;
 
     // Enterprise-grade debug cascade: global debug cascades to all plugins unless explicitly overridden
@@ -233,11 +234,20 @@ export function createVitePlugins(options = {}) {
       })
     );
 
-    // React plugin with Fast Refresh enabled
+    // React plugin with Fast Refresh enabled.
+    // reactCompiler adds automatic memoization at build time, replacing hand-written
+    // memo/useMemo/useCallback. Opt-in per app — see DEFAULT_OPTIONS.reactCompiler.
     plugins.push(
       react({
         fastRefresh: true,
         jsxRuntime: 'automatic',
+        ...(reactCompiler
+          ? {
+              babel: {
+                plugins: [['babel-plugin-react-compiler', { target: '19' }]],
+              },
+            }
+          : {}),
       })
     );
     plugins.push(

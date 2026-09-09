@@ -10,6 +10,7 @@
  */
 
 import { createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
 
 import type {
   AppConfig,
@@ -30,8 +31,6 @@ import {
   resolveAppConfig,
   getPlatformEnvVar,
 } from '@donotdev/utils';
-
-import type { ReactNode } from 'react';
 
 /**
  * Default authentication configuration

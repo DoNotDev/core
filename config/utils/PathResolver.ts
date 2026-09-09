@@ -20,6 +20,7 @@
 
 import * as fs from 'node:fs';
 import { constants as fsConstants } from 'node:fs';
+import type { Dirent, Stats } from 'node:fs';
 import { createRequire } from 'node:module';
 import {
   resolve,
@@ -36,8 +37,6 @@ import { fileURLToPath } from 'node:url';
 import fastGlob from 'fast-glob';
 
 import * as constantsModule from '../constants.js';
-
-import type { Dirent, Stats } from 'node:fs';
 
 // Static imports (config context only)
 

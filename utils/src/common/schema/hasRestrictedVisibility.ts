@@ -10,9 +10,9 @@
  * @author AMBROISE PARK Consulting
  */
 
-import type { dndevSchema } from '@donotdev/types';
-
 import type * as v from 'valibot';
+
+import type { dndevSchema } from '@donotdev/types';
 
 /**
  * Extracts the entries map from a Valibot schema, traversing wrappers (pipe, nullable,

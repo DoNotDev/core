@@ -15,9 +15,9 @@ import { Languages } from 'lucide-react';
 import { Button, BUTTON_VARIANT, DISPLAY } from '@donotdev/components';
 
 import { Flag } from '../flags';
+import LanguageDropdown from './LanguageDropdown';
 import { useTranslation } from '../hooks/useTranslation';
 import { useLanguageSelector } from '../utils/languageSelector';
-import LanguageDropdown from './LanguageDropdown';
 
 /**
  * Props for LanguageSelector component

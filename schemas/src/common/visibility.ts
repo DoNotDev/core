@@ -96,11 +96,7 @@
  * @author AMBROISE PARK Consulting
  */
 
-import {
-  type EntityField,
-  type FieldType,
-  type Visibility,
-} from '@donotdev/types';
+import type { EntityField, FieldType, Visibility } from '@donotdev/types';
 
 // Visibility logic moved to @donotdev/utils
 // Import from: import { isFieldVisible, getVisibleFields } from '@donotdev/utils';

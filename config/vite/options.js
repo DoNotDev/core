@@ -23,6 +23,12 @@ export const DEFAULT_OPTIONS = {
   // Shared defaults (debug, verbose, seo, serverShim, discovery, features)
   ...SHARED_DEFAULTS,
 
+  // React Compiler (stable since 1.0). Off by default: it changes the render
+  // behaviour of every component in the app, so each app opts in once its
+  // components are verified against the rules of React.
+  // Enable per app with `reactCompiler: true` in the app's vite config.
+  reactCompiler: false,
+
   // Vite-specific core options
   base: '/',
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -425,6 +431,8 @@ export function normalizeOptions(options) {
     plugins: pluginsOptions = [],
     css: cssOptions = {},
     envDir,
+    // Framework option, not a Vite one — destructured so it doesn't leak into restOptions
+    reactCompiler = false,
     // All other Vite options (publicDir, clearScreen, logLevel, etc.)
     ...restOptions
   } = options;
@@ -474,6 +482,7 @@ export function normalizeOptions(options) {
     pluginsOptions,
     cssOptions,
     envDir,
+    reactCompiler,
 
     // Rest options (publicDir, clearScreen, logLevel, etc.)
     restOptions,

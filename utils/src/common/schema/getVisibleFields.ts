@@ -21,6 +21,8 @@
  * @author AMBROISE PARK Consulting
  */
 
+import type * as v from 'valibot';
+
 import type {
   dndevSchema,
   EntityOwnershipConfig,
@@ -29,8 +31,6 @@ import type {
 } from '@donotdev/types';
 
 import { hasRoleAccess } from '../roleHierarchy';
-
-import type * as v from 'valibot';
 
 /**
  * Type for Valibot schema with custom visibility property

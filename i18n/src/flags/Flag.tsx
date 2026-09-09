@@ -9,9 +9,9 @@
  */
 
 import { lazy, Suspense } from 'react';
+import type { LazyExoticComponent, ComponentType } from 'react';
 
 import type { FlagBaseProps } from './raw/FlagBase';
-import type { LazyExoticComponent, ComponentType } from 'react';
 
 const flagComponents: Record<
   string,

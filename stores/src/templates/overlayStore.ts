@@ -9,6 +9,8 @@
  * @author AMBROISE PARK Consulting
  */
 
+import type { ReactNode } from 'react';
+
 import type {
   ModalActions,
   ModalState,
@@ -20,8 +22,6 @@ import type {
 } from '@donotdev/types';
 
 import { createDoNotDevStore } from '../createDoNotDevStore';
-
-import type { ReactNode } from 'react';
 
 /** Default timeout before showing cancel button (10 seconds) */
 const DEFAULT_CANCEL_TIMEOUT = 10000;

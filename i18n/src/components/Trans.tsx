@@ -20,9 +20,8 @@
  * @author AMBROISE PARK Consulting
  */
 
-import { Trans as I18nTrans } from 'react-i18next';
-
 import type { ReactElement } from 'react';
+import { Trans as I18nTrans } from 'react-i18next';
 import type { TransProps } from 'react-i18next';
 
 // CSS for Trans components (to override gradient text)

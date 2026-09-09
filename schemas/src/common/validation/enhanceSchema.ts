@@ -9,9 +9,9 @@
  * @author AMBROISE PARK Consulting
  */
 
-import type { dndevSchema, SchemaMetadata } from '@donotdev/types';
-
 import type * as v from 'valibot';
+
+import type { dndevSchema, SchemaMetadata } from '@donotdev/types';
 
 /**
  * Enhances a Valibot schema with additional metadata.

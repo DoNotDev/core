@@ -10,14 +10,13 @@
  * @author AMBROISE PARK Consulting
  */
 
+import type { TFunction } from 'i18next';
 import { useTranslation as useI18NextTranslation } from 'react-i18next';
 
 import { useIsClient } from '@donotdev/hooks';
 
 import { getI18nInstance } from '../instance.vite';
 import { getEagerNamespaces } from '../utils/config';
-
-import type { TFunction } from 'i18next';
 
 /**
  * DoNotDev default namespace for core framework translations

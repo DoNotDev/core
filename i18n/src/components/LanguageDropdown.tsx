@@ -11,9 +11,8 @@
  * @author AMBROISE PARK Consulting
  */
 
-import type { ReactNode } from 'react';
-
 import { Check } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 import { DropdownMenu, Stack } from '@donotdev/components';
 import type { DropdownMenuItemData } from '@donotdev/components';

@@ -13,7 +13,6 @@
  */
 
 import type { LanguageData } from '@donotdev/types';
-
 import { getGlobalSingleton } from '@donotdev/utils';
 
 import { createDoNotDevStore } from '../createDoNotDevStore';

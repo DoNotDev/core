@@ -16,13 +16,13 @@
  */
 
 import i18next from 'i18next';
+import type { i18n } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import { createSingleton, handleError } from '@donotdev/utils';
 
-import { I18nBackend } from './utils/i18nBackend';
 import { getI18nConfig, getTranslationLoaders } from './utils/config';
-import type { i18n } from 'i18next';
+import { I18nBackend } from './utils/i18nBackend';
 
 // Global declaration moved to global.d.ts to avoid duplicate declaration errors
 

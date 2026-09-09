@@ -15,8 +15,8 @@ import { isRTLLanguage } from '@donotdev/components';
 import { useLanguageStore } from '@donotdev/stores';
 import type { LanguageData } from '@donotdev/types';
 
-import { getI18nInstance } from '../instance.vite';
 import { useTranslation } from '../hooks/useTranslation';
+import { getI18nInstance } from '../instance.vite';
 import { getSupportedLanguages } from './languages';
 
 /**

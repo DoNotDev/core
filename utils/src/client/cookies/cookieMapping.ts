@@ -10,7 +10,6 @@
  */
 
 import { isFeatureAvailable } from '../features/featureDetection';
-
 import type { FrameworkFeature } from '../features/featureDetection';
 
 /** Metadata for a single cookie used by the consent banner. */

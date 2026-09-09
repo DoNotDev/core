@@ -10,13 +10,12 @@
  */
 
 import { create } from 'zustand';
+import type { StateCreator, StoreApi, UseBoundStore } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
+import type { PersistOptions } from 'zustand/middleware';
 
 import type { BaseStoreActions, BaseStoreState } from '@donotdev/types';
 import { isClient, isDev } from '@donotdev/utils';
-
-import type { StateCreator, StoreApi, UseBoundStore } from 'zustand';
-import type { PersistOptions } from 'zustand/middleware';
 
 /**
  * DoNotDev store interface
@@ -228,7 +227,11 @@ export function createDoNotDevStore<T extends Record<string, any>>(
     // Guarded because persist middleware short-circuits without attaching `api.persist`
     // when running in non-browser environments (no window.localStorage) — e.g. SSR,
     // Bun-driven codegen tools that dynamically import entity modules.
-    const persistApi = (store as unknown as { persist?: { onFinishHydration: (cb: () => void) => () => void } }).persist;
+    const persistApi = (
+      store as unknown as {
+        persist?: { onFinishHydration: (cb: () => void) => () => void };
+      }
+    ).persist;
     if (persistApi) {
       persistApi.onFinishHydration(() => {
         store.setState({ _hasHydrated: true } as Partial<T & DoNotDevStore>);

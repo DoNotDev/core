@@ -11,10 +11,9 @@
 
 import { handleError } from './errors';
 import { globalEmitter } from './eventEmitter';
+import type { EventEmitter } from './eventEmitter';
 import { isClient } from './platformDetection';
 import { createSingletonWithParams } from '../common/singleton';
-
-import type { EventEmitter } from './eventEmitter';
 
 /**
  * React Query bridge configuration interface

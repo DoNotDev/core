@@ -11,9 +11,8 @@
 
 import type { NetworkStatus } from '@donotdev/types';
 
-import { useNetworkStore } from '../templates/networkStore';
-
 import type { DoNotDevStore } from '../createDoNotDevStore';
+import { useNetworkStore } from '../templates/networkStore';
 
 interface NetworkState {
   status: NetworkStatus;

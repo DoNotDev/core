@@ -437,6 +437,7 @@ export function buildFinalConfig({
   // Build options
   restNextConfig,
   discoveredPackages,
+  reactCompiler = false,
 
   // Webpack/rewrites/redirects
   webpackConfig,
@@ -474,6 +475,10 @@ export function buildFinalConfig({
     // serverExternalPackages list — without this, Node.js can't resolve it and warns).
     // Turbopack's resolveAlias then resolves them to the empty CJS module.
     transpilePackages: [...discoveredPackages, ...(missingOptionalDeps || [])],
+
+    // React Compiler — top-level key in Next 16 (not experimental). Placed before
+    // the restNextConfig spread so an app's own next config still wins.
+    ...(reactCompiler ? { reactCompiler } : {}),
 
     // PostCSS configuration removed - Next.js 16 requires postcss.config.js file
     // TODO: Generate postcss.config.js if needed

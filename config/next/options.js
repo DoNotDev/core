@@ -20,6 +20,12 @@ export const DEFAULT_OPTIONS = {
   // Next.js-specific core options
   generateManifest: true,
 
+  // React Compiler (stable since 1.0). Off by default: it changes the render
+  // behaviour of every component in the app, so each app opts in once its
+  // components are verified against the rules of React.
+  // Next runs the compiler natively — unlike Vite, no Babel plugin to wire.
+  reactCompiler: false,
+
   // Plugin options — debug cascades from global debug at runtime via ?? (handlerFactory.js)
   // Only declare platform-specific keys here. Shared sections (seo, serverShim, discovery, features)
   // come from ...SHARED_DEFAULTS above.

@@ -22,14 +22,13 @@
  */
 
 import { useMutation as tanstackUseMutation } from '@tanstack/react-query';
-
-import { handleError } from '@donotdev/utils';
-
 import type {
   UseMutationOptions,
   UseMutationResult,
   MutationFunctionContext,
 } from '@tanstack/react-query';
+
+import { handleError } from '@donotdev/utils';
 
 /**
  * Framework default mutation options

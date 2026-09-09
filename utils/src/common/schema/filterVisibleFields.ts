@@ -20,12 +20,12 @@
  * @author AMBROISE PARK Consulting
  */
 
+import type * as v from 'valibot';
+
 import type { dndevSchema, UserRole } from '@donotdev/types';
 
 import { getVisibleFields } from './getVisibleFields';
-
 import type { GetVisibleFieldsOptions } from './getVisibleFields';
-import type * as v from 'valibot';
 
 /**
  * Options for owner-level visibility (per-document check).

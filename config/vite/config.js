@@ -181,6 +181,7 @@ export function defineViteConfig(userOptions = {}) {
         serverShimOptions,
         chunkingOptions,
         pluginFactoryOptions,
+        reactCompiler,
         // Vite options - all handled at DEFAULT_OPTIONS level
         base,
         defineOptions,
@@ -242,6 +243,7 @@ export function defineViteConfig(userOptions = {}) {
         serverShim: serverShimOptions,
         chunkingOptions,
         pluginFactory: pluginFactoryOptions,
+        reactCompiler,
         // Note: appUrl removed - SEO/PWA plugins read from process.env.VITE_APP_URL directly
       });
 

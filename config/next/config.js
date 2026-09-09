@@ -123,6 +123,7 @@ function defineNextConfig(userOptions = {}) {
     seoOptions,
     serverShimOptions,
     nextConfigOptions,
+    reactCompiler,
   } = normalized;
 
   const logger = createLogger('next-config', debug, verbose);
@@ -315,6 +316,7 @@ function defineNextConfig(userOptions = {}) {
       serverShimResult,
       restNextConfig,
       discoveredPackages,
+      reactCompiler,
 
       webpackConfig,
       rewritesConfig,

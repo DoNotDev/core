@@ -23,13 +23,12 @@
  */
 
 import { useQuery as tanstackUseQuery, isServer } from '@tanstack/react-query';
+import type { UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 
 import { handleError } from '@donotdev/utils';
 
 import { useAppConfig } from '../providers/AppConfigProvider';
-
-import type { UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
 
 /**
  * Framework default query options (fallback when no config)

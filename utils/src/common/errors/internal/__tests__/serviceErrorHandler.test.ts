@@ -4,7 +4,6 @@ import {
   createErrorHandler,
   commonErrorCodeMappings,
 } from '../serviceErrorHandler';
-
 import type { ErrorHandlerConfig } from '../serviceErrorHandler';
 
 describe('commonErrorCodeMappings', () => {
