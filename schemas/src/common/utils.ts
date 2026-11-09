@@ -10,7 +10,7 @@
  */
 
 import type { dndevSchema } from '@donotdev/types';
-import { handleError } from '@donotdev/utils';
+import { handleError } from '@donotdev/utils/server';
 
 /**
  * Checks if an object has schema metadata (works with Valibot schemas)

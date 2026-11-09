@@ -21,7 +21,7 @@ import type {
   ScopeConfig,
   UniqueKeyDefinition,
 } from '@donotdev/types';
-import { handleError, getListCardFieldNames } from '@donotdev/utils';
+import { handleError, getListCardFieldNames } from '@donotdev/utils/server';
 
 import { baseFields, DEFAULT_STATUS_OPTIONS } from './visibility';
 

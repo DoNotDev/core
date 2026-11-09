@@ -9,13 +9,36 @@
  * @author AMBROISE PARK Consulting
  */
 
-import { create } from 'zustand';
+import { createStore, useStore } from 'zustand';
 import type { StateCreator, StoreApi, UseBoundStore } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import type { PersistOptions } from 'zustand/middleware';
 
 import type { BaseStoreActions, BaseStoreState } from '@donotdev/types';
 import { isClient, isDev } from '@donotdev/utils';
+
+/**
+ * Hooks bound to this bundle's React, one per shared store.
+ *
+ * The store API lives on globalThis and is shared process-wide; a React hook must not be.
+ * Next evaluates this module once per layer (Pages Router against Node's `react`, App Router
+ * SSR against its vendored React), and a hook closes over the React of the layer that made it.
+ * Called while another React is rendering, it sees a null dispatcher and crashes.
+ */
+const boundHooks = new WeakMap<object, unknown>();
+
+function bindStoreHook<S>(api: StoreApi<S>): UseBoundStore<StoreApi<S>> {
+  const bound = boundHooks.get(api);
+  if (bound) return bound as UseBoundStore<StoreApi<S>>;
+
+  const useBoundStore = ((selector?: (state: S) => unknown) =>
+    useStore(api, selector as (state: S) => unknown)) as UseBoundStore<
+    StoreApi<S>
+  >;
+  Object.assign(useBoundStore, api);
+  boundHooks.set(api, useBoundStore);
+  return useBoundStore;
+}
 
 /**
  * DoNotDev store interface
@@ -130,9 +153,9 @@ export function createDoNotDevStore<T extends Record<string, any>>(
 
     // Return cached store if it exists (CRITICAL: prevents multiple instances)
     if (globalThis._DNDEV_STORES_[name]) {
-      return globalThis._DNDEV_STORES_[name] as UseBoundStore<
-        StoreApi<T & DoNotDevStore>
-      >;
+      return bindStoreHook(
+        globalThis._DNDEV_STORES_[name] as StoreApi<T & DoNotDevStore>
+      );
     }
   }
 
@@ -212,16 +235,16 @@ export function createDoNotDevStore<T extends Record<string, any>>(
    * Create store with conditional middleware application
    * Order: devtools(persist(wrappedCreator)) when persist is enabled
    */
-  let store: UseBoundStore<StoreApi<T & DoNotDevStore>>;
+  let store: StoreApi<T & DoNotDevStore>;
 
   if (persistOptions) {
     // With persistence: devtools(persist(...))
     store =
       isDev() && isClient()
-        ? create<T & DoNotDevStore>()(
+        ? createStore<T & DoNotDevStore>()(
             devtools(persist(wrappedCreator, persistOptions), { name })
           )
-        : create<T & DoNotDevStore>()(persist(wrappedCreator, persistOptions));
+        : createStore<T & DoNotDevStore>()(persist(wrappedCreator, persistOptions));
 
     // Zustand 5 built-in: set _hasHydrated after rehydration + user's onRehydrateStorage.
     // Guarded because persist middleware short-circuits without attaching `api.persist`
@@ -241,8 +264,8 @@ export function createDoNotDevStore<T extends Record<string, any>>(
     // Without persistence: devtools(...)
     store =
       isDev() && isClient()
-        ? create<T & DoNotDevStore>()(devtools(wrappedCreator, { name }))
-        : create<T & DoNotDevStore>()(wrappedCreator);
+        ? createStore<T & DoNotDevStore>()(devtools(wrappedCreator, { name }))
+        : createStore<T & DoNotDevStore>()(wrappedCreator);
   }
 
   // ========== SINGLETON REGISTRATION START ==========
@@ -255,7 +278,7 @@ export function createDoNotDevStore<T extends Record<string, any>>(
   }
   // ========== SINGLETON REGISTRATION END ==========
 
-  return store;
+  return bindStoreHook(store);
 }
 
 /**

@@ -10,7 +10,7 @@
  */
 
 import type { dndevSchema, UniqueConstraintValidator } from '@donotdev/types';
-import { handleError } from '@donotdev/utils';
+import { handleError } from '@donotdev/utils/server';
 
 /**
  * Registry for database adapters

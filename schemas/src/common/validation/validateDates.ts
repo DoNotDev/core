@@ -9,7 +9,7 @@
  * @author AMBROISE PARK Consulting
  */
 
-import { handleError } from '@donotdev/utils';
+import { handleError } from '@donotdev/utils/server';
 
 // ISO 8601 format regex (YYYY-MM-DDTHH:mm:ss.sssZ)
 const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;

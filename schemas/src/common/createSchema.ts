@@ -23,7 +23,7 @@ import {
   type Visibility,
   type dndevSchema,
 } from '@donotdev/types';
-import { getListCardFieldNames } from '@donotdev/utils';
+import { getListCardFieldNames } from '@donotdev/utils/server';
 
 import { getSchemaType } from './validation/getSchemaType';
 import { baseFields, BACKEND_GENERATED_FIELD_NAMES } from './visibility';

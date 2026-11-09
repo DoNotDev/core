@@ -22,5 +22,4 @@ export * from '../common';
 // Removed EDA - PayloadEventBridge no longer needed
 export * from './dateUtils';
 export * from './validation';
-// Logger requires explicit import: import { logger } from '@donotdev/utils/server/logger'
 export * from './cookieUtils';
