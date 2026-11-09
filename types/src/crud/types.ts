@@ -352,7 +352,13 @@ export interface PaginatedQueryResult<T> {
  */
 export interface CrudListQuery<T> {
   readonly queryKey: readonly ['crud', string, 'query', string];
-  readonly queryFn: () => Promise<PaginatedQueryResult<T>>;
+  /**
+   * Receives TanStack's query context; `client` (the request's QueryClient on the
+   * server) selects a request-scoped adapter when one is bound.
+   */
+  readonly queryFn: (context: {
+    client: object;
+  }) => Promise<PaginatedQueryResult<T>>;
   readonly staleTime: number;
 }
 

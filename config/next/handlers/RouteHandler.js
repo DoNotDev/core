@@ -353,7 +353,9 @@ export default { routes: routeMapping, manifest: routeManifest };
   async cleanGeneratedPageFiles() {
     try {
       const appRoot = this.pathResolver.getAppRoot();
-      const patterns = ['src/app/**/page.tsx', 'src/app/[...slug]/page.tsx'];
+      // Generated pages and their client wrappers: a route removed from src/pages
+      // must not leave a *PageClient.tsx importing a page that no longer exists.
+      const patterns = ['src/app/**/page.tsx', 'src/app/**/*PageClient.tsx', 'src/app/[...slug]/page.tsx'];
       const files = await this.pathResolver._globWithNormalization(patterns, {
         cwd: appRoot,
         absolute: true,

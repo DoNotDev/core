@@ -13,7 +13,12 @@
  */
 
 import type { LanguageData } from '@donotdev/types';
-import { getGlobalSingleton } from '@donotdev/utils';
+import {
+  getCookie,
+  getGlobalSingleton,
+  LANGUAGE_COOKIE,
+  setCookie,
+} from '@donotdev/utils';
 
 import { createDoNotDevStore } from '../createDoNotDevStore';
 
@@ -65,13 +70,18 @@ function isRTL(lng: string): boolean {
 }
 
 /**
- * Apply language-related DOM attributes
+ * Apply language-related DOM attributes and record the language in the language
+ * cookie, so the server renders the next request in it (see resolveLanguage).
+ * SameSite=Lax: the cookie must reach the server on arrival from another site too.
  * @internal
  */
 function applyDOMAttributes(lng: string): void {
   if (typeof document === 'undefined') return;
   document.documentElement.lang = lng;
   document.documentElement.dir = isRTL(lng) ? 'rtl' : 'ltr';
+  if (getCookie(LANGUAGE_COOKIE) !== lng) {
+    setCookie(LANGUAGE_COOKIE, lng, { sameSite: 'lax' });
+  }
 }
 
 /**

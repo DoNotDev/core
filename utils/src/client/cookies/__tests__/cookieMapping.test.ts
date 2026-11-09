@@ -71,8 +71,8 @@ describe('getActiveCookies', () => {
     );
 
     const cookies = getActiveCookies();
-    // 3 framework + 2 auth + 2 billing = 7
-    expect(cookies).toHaveLength(7);
+    // 3 framework + 3 auth + 2 billing = 8
+    expect(cookies).toHaveLength(8);
   });
 
   it('adds no cookies for features with empty cookie arrays', () => {
@@ -133,8 +133,8 @@ describe('getCookiesByCategory', () => {
     mockIsFeatureAvailable.mockImplementation((f) => f === 'auth');
 
     const necessary = getCookiesByCategory('necessary');
-    // 3 framework + 2 auth = 5
-    expect(necessary).toHaveLength(5);
+    // 3 framework + 3 auth = 6
+    expect(necessary).toHaveLength(6);
   });
 });
 
@@ -297,9 +297,9 @@ describe('edge cases', () => {
     mockIsFeatureAvailable.mockReturnValue(true);
 
     const cookies = getActiveCookies();
-    // 3 framework + 2 auth + 2 billing + 1 oauth = 8
+    // 3 framework + 3 auth + 2 billing + 1 oauth = 9
     // (i18n, routes, crud, themes, components, forms, realtime, storage have empty arrays)
-    expect(cookies).toHaveLength(8);
+    expect(cookies).toHaveLength(9);
   });
 
   it('getCookiesByCategory with all features returns correct count', () => {
@@ -307,6 +307,6 @@ describe('edge cases', () => {
 
     const necessary = getCookiesByCategory('necessary');
     // All cookies in the system are 'necessary'
-    expect(necessary).toHaveLength(8);
+    expect(necessary).toHaveLength(9);
   });
 });

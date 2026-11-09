@@ -23,6 +23,7 @@ export * from './lazyImport';
 export * from './roleHierarchy';
 export * from './tierHierarchy';
 export * from './providers';
+export * from './requestLanguage';
 export * from './singleton';
 export * from './updateMetadata';
 export * from './schema';

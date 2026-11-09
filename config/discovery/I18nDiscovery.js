@@ -66,8 +66,40 @@ export class I18nDiscovery extends BaseDiscovery {
       // Additional locale paths from workspace packages (e.g., shared entities)
       // Example: ['../../entities/locales'] relative to app root
       additionalPaths: [],
+      // Language restriction (`only`). Discovery always scans everything on disk;
+      // this restricts what the app *uses*: languages outside the list are
+      // dropped from supportedLanguages, the mapping and the inlined content, so
+      // they are never bundled or chunked. Falls back to `fallbackLanguage` when
+      // the list matches nothing. null / [] = use every discovered language.
+      only: null,
       ...options,
     });
+  }
+
+  /**
+   * Language allowlist from config, or null when discovery is unrestricted
+   * @returns {string[]|null}
+   * @private
+   */
+  _getLanguageAllowlist() {
+    const allowed = this.options.only;
+    return Array.isArray(allowed) && allowed.length > 0 ? allowed : null;
+  }
+
+  /**
+   * Drop every language outside `keep` from a namespace → language → value map.
+   * Namespaces left with nothing are removed entirely.
+   * @param {Record<string, Record<string, any>>} byNamespace - Map to prune in place
+   * @param {string[]} keep - Languages to keep
+   * @private
+   */
+  _restrictByLanguage(byNamespace, keep) {
+    for (const [namespace, languages] of Object.entries(byNamespace)) {
+      for (const language of Object.keys(languages)) {
+        if (!keep.includes(language)) delete languages[language];
+      }
+      if (Object.keys(languages).length === 0) delete byNamespace[namespace];
+    }
   }
 
   // === ABSTRACT METHOD IMPLEMENTATIONS ===
@@ -416,10 +448,42 @@ export class I18nDiscovery extends BaseDiscovery {
 
     // Convert sets to sorted arrays
     // Use app-specific languages if available, otherwise only show fallback (no LanguageSelector)
-    const finalLanguages =
+    const discoveredLanguages =
       appLanguages.size > 0
         ? [...appLanguages].sort()
         : [this.options.fallbackLanguage];
+
+    // Everything on disk is discovered; `only` restricts what the app uses.
+    // A restriction matching nothing falls back to the fallback language.
+    const allowlist = this._getLanguageAllowlist();
+    let finalLanguages = discoveredLanguages;
+
+    if (allowlist) {
+      const restricted = discoveredLanguages.filter((lang) =>
+        allowlist.includes(lang)
+      );
+      finalLanguages =
+        restricted.length > 0 ? restricted : [this.options.fallbackLanguage];
+
+      this._restrictByLanguage(result.mapping, finalLanguages);
+      this._restrictByLanguage(result.content, finalLanguages);
+      result.files = result.files.filter((file) =>
+        finalLanguages.includes(file.language)
+      );
+
+      // A namespace with nothing left in the restricted languages is not usable
+      const usableNamespaces = new Set(Object.keys(result.mapping));
+      result.allNamespaces = new Set(
+        [...result.allNamespaces].filter((ns) => usableNamespaces.has(ns))
+      );
+      result.eagerNamespaces = new Set(
+        [...result.eagerNamespaces].filter((ns) => usableNamespaces.has(ns))
+      );
+
+      this.logger.debug(
+        `I18n restricted by i18n.only [${allowlist.join(', ')}]: languages [${finalLanguages.join(', ')}], namespaces ${usableNamespaces.size}`
+      );
+    }
 
     // Derive flag codes from supported languages
     // Most languages use their ID as country code; overrides handle exceptions

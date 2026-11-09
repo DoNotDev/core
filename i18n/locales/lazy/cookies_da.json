@@ -28,5 +28,8 @@
   "enabled": "Aktiveret",
   "disabled": "Deaktiveret",
   "examples": "Eksempler",
-  "essentialOnlyNotice": "Vi bruger kun nødvendige cookies, så sitet fungerer"
+  "essentialOnlyNotice": "Vi bruger kun nødvendige cookies, så sitet fungerer",
+  "necessaryOnlyTitle": "Cookies",
+  "necessaryOnlyDescription": "Dette websted bruger kun cookies, der er nødvendige for, at det virker: login, sprog og denne besked. De bruges ikke til at spore dig.",
+  "acknowledge": "OK"
 }

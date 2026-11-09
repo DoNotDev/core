@@ -1,6 +1,6 @@
 {
   "name": "@donotdev/config",
-  "version": "0.1.42",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Unified configuration system for DoNotDev framework - build tool configs for Vite, Next.js, ESBuild",

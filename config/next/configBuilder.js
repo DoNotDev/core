@@ -39,6 +39,8 @@ const DNDEV_CSS_ALIAS = {
  *   Regex matches exact name + subpaths (e.g. 'shiki' and 'shiki/engine/javascript').
  * @param {string[]} [options.flagCodes=[]] - Allowed flag country codes from I18n discovery.
  *   Flag files not in this list are aliased to an empty component.
+ * @param {string[]} [options.languages=[]] - Languages the app actually uses, from I18n
+ *   discovery (already restricted by i18n.only). Drives font subset filtering.
  * @param {Object} options.logger - Framework logger
  * @param {boolean} options.debug - Enable debug logging
  * @returns {Function} Webpack config function for next.config.js
@@ -49,6 +51,7 @@ export function createWebpackConfig({
   usedFeaturePackages,
   missingOptionalDeps = [],
   flagCodes = [],
+  languages = [],
   logger,
   debug,
 }) {
@@ -133,7 +136,7 @@ export function createWebpackConfig({
     try {
       const pathResolver = PathResolver.getInstance();
       config.plugins.push(
-        createFontPreloadWebpackPlugin({ pathResolver, debug })
+        createFontPreloadWebpackPlugin({ pathResolver, debug, languages })
       );
     } catch (e) {
       logger.debug(`Font preload webpack plugin skipped: ${e?.message}`);

@@ -11,3 +11,4 @@
 
 export * from './QueryProviders';
 export * from './AppConfigProvider';
+export * from './AuthSessionProvider';

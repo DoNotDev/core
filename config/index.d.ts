@@ -221,6 +221,13 @@ export interface I18nOptions extends BaseDiscoveryOptions {
   /** Example: ['../../packages/shared/locales'] */
   /** Note: '../../entities/locales' is auto-detected by default, no config needed */
   additionalPaths?: string[];
+  /** Restrict the app to these language codes — everything else is ignored. */
+  /** Translation files for any other language stay on disk but contribute */
+  /** nothing: no inlined content, no lazy chunk, and supportedLanguages */
+  /** shrinks (a single language hides the LanguageSelector automatically). */
+  /** Example: only: ['ko'] for a Korean-only app in a multi-language monorepo. */
+  /** Default: undefined = every language discovered on disk. */
+  only?: string[];
 }
 
 /**

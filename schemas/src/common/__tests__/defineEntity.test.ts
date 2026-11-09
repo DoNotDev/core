@@ -169,7 +169,7 @@ describe('defineEntity', () => {
       expect(values.filter((v) => v === 'draft').length).toBe(1);
     });
 
-    it('preserves status field type and visibility even with overrides', () => {
+    it('lets the entity override status field defaults (type, visibility)', () => {
       const result = defineEntity(
         minimalEntity({
           fields: {
@@ -179,16 +179,16 @@ describe('defineEntity', () => {
               validation: { required: true },
             },
             status: {
-              visibility: 'user', // attempt to override
-              type: 'text', // attempt to override
+              visibility: 'user',
+              type: 'text',
             },
           },
         })
       );
 
       const statusField = result.fields.status;
-      expect(statusField.type).toBe('select'); // preserved
-      expect(statusField.visibility).toBe('admin'); // preserved
+      expect(statusField.type).toBe('text');
+      expect(statusField.visibility).toBe('user');
     });
   });
 

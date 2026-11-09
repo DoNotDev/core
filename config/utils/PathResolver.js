@@ -1,3 +1,4 @@
+// GENERATED from PathResolver.ts by bun run bpr. Do not edit; edit the .ts and rerun bpr.
 import * as fs from 'node:fs';
 import { constants as fsConstants } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -66,6 +67,7 @@ class PathResolver {
   options;
   _repoRoot;
   _appRoot = null;
+  _writtenPaths = null;
   /**
    * Get or create singleton instance
    * @param options - Configuration options
@@ -384,7 +386,8 @@ class PathResolver {
     if (Buffer.isBuffer(content)) {
       writeContent = content;
     } else if (detectedFormat === 'json' && typeof content === 'object') {
-      writeContent = JSON.stringify(content, null, 2);
+      writeContent = `${JSON.stringify(content, null, 2)}
+`;
     } else {
       writeContent = String(content);
     }
@@ -445,7 +448,8 @@ class PathResolver {
     if (Buffer.isBuffer(content)) {
       writeContent = content;
     } else if (detectedFormat === 'json' && typeof content === 'object') {
-      writeContent = JSON.stringify(content, null, 2);
+      writeContent = `${JSON.stringify(content, null, 2)}
+`;
     } else {
       writeContent = String(content);
     }
@@ -455,6 +459,7 @@ class PathResolver {
       } else {
         fs.writeFileSync(normalizedPath, writeContent, 'utf8');
       }
+      this._writtenPaths?.add(normalizedPath);
       if (verbose) {
         log.info(
           `${fileExists ? 'Updated' : 'Created'} file: ${normalizedPath}`
@@ -539,6 +544,7 @@ class PathResolver {
     }
     try {
       fs.copyFileSync(srcPath, normalizedDestPath);
+      this._writtenPaths?.add(normalizedDestPath);
       if (verbose) {
         log.info(
           `${fileExists ? 'Updated' : 'Created'} file: ${normalizedDestPath}`
@@ -707,6 +713,28 @@ class PathResolver {
    * Get app root (where vite.config.ts is, Vite's config.root)
    * Falls back to repoRoot if not set
    */
+  /**
+   * Start recording every path written by writeSync/copySync.
+   * Lets a generator know exactly which files the current run produced,
+   * without comparing file timestamps to a clock.
+   */
+  startWriteRecording() {
+    this._writtenPaths = /* @__PURE__ */ new Set();
+  }
+  /**
+   * Stop recording and return the normalized paths written since
+   * startWriteRecording().
+   */
+  stopWriteRecording() {
+    if (!this._writtenPaths) {
+      throw new Error(
+        'stopWriteRecording() called without startWriteRecording()'
+      );
+    }
+    const written = this._writtenPaths;
+    this._writtenPaths = null;
+    return written;
+  }
   getAppRoot() {
     if (!this._appRoot) {
       return this._repoRoot;
@@ -986,6 +1014,8 @@ class PathResolver {
   /**
    * Get absolute path to empty ESM module for optional dependency aliasing.
    * Used by Vite resolveId — served directly to the browser in dev mode.
+   * Note: resolvePackage uses require.resolve (CJS) which picks the "default"
+   * condition (.cjs), so we derive the ESM path from it.
    */
   getEmptyModulePath() {
     const cjsPath = this.getEmptyCjsModulePath();
@@ -1009,7 +1039,7 @@ class PathResolver {
     const resolved = this.resolvePackage('@donotdev/core/empty');
     if (!resolved)
       throw new Error(
-        'Cannot resolve @donotdev/core/empty — package setup is broken'
+        'Cannot resolve @donotdev/core/empty \u2014 package setup is broken'
       );
     return resolved;
   }

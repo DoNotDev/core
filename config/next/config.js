@@ -253,6 +253,8 @@ function defineNextConfig(userOptions = {}) {
     // Extract flagCodes from i18n discovery for flag chunk filtering
     const i18nDiscoveryData = await handlers.i18nHandler?.getDiscoveryData?.();
     const flagCodes = i18nDiscoveryData?.flagCodes || [];
+    // Languages the app uses (already restricted by i18n.only) — drives font subsets
+    const i18nLanguages = i18nDiscoveryData?.supportedLanguages || [];
 
     // Extract discovered routes so redirects can shadow Next's legacy Pages
     // Router paths (src/pages/<X>Page.tsx → /<X>Page) onto canonical app routes.
@@ -270,6 +272,7 @@ function defineNextConfig(userOptions = {}) {
       usedFeaturePackages,
       missingOptionalDeps,
       flagCodes,
+      languages: i18nLanguages,
       logger,
       debug,
     });

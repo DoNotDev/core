@@ -28,5 +28,8 @@
   "enabled": "활성화됨",
   "disabled": "비활성화됨",
   "examples": "예시",
-  "essentialOnlyNotice": "사이트가 올바르게 작동하도록 필수 쿠키만 사용합니다"
+  "essentialOnlyNotice": "사이트가 올바르게 작동하도록 필수 쿠키만 사용합니다",
+  "necessaryOnlyTitle": "쿠키",
+  "necessaryOnlyDescription": "이 사이트는 작동에 필요한 쿠키(로그인, 언어, 이 안내)만 사용합니다. 추적에는 사용하지 않습니다.",
+  "acknowledge": "확인"
 }

@@ -407,6 +407,12 @@ export function createFunctionsConfig(options = {}) {
       }
       if (Object.keys(entries).length > 0) {
         config.entryPoints = entries;
+        // Shared code goes to chunks and dynamic imports stay dynamic: without
+        // splitting, esbuild inlines lazily imported modules (e.g. the Firebase
+        // server helpers) into every entry, hoisting their firebase-admin imports
+        // to the top of the Supabase entry, which then fails to load without them.
+        config.splitting = true;
+        config.chunkNames = 'chunks/[name]-[hash]';
       }
     }
   }

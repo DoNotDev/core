@@ -24,43 +24,9 @@ import { createSingleton, handleError } from '@donotdev/utils';
 
 import { getI18nConfig, getTranslationLoaders } from './utils/config';
 import { I18nBackend } from './utils/i18nBackend';
+import { getInitialLanguage } from './utils/initialLanguage';
 
 // Global declaration moved to global.d.ts to avoid duplicate declaration errors
-
-/**
- * Detect language manually - SSR-safe
- * Only runs browser detection on client, returns fallback on server
- */
-function detectLanguage(
-  supportedLanguages: string[],
-  fallback: string
-): string {
-  if (typeof window === 'undefined') {
-    return fallback;
-  }
-
-  // Check localStorage first (user preference)
-  try {
-    const stored = localStorage.getItem('i18nextLng');
-    if (stored && supportedLanguages.includes(stored)) {
-      return stored;
-    }
-  } catch {
-    // localStorage not available
-  }
-
-  // Check browser language
-  try {
-    const browserLang = navigator.language?.split('-')[0];
-    if (browserLang && supportedLanguages.includes(browserLang)) {
-      return browserLang;
-    }
-  } catch {
-    // navigator not available
-  }
-
-  return fallback;
-}
 
 /**
  * Creates the i18next instance with all configuration and initialization
@@ -103,8 +69,8 @@ const getI18nInstance = createSingleton((): i18n => {
     );
   }
 
-  // Detect initial language - SSR-safe
-  const detectedLanguage = detectLanguage(config.languages, config.fallback);
+  // Initial language: cookie > persisted > browser > fallback (fallback on the server)
+  const detectedLanguage = getInitialLanguage(config.languages, config.fallback);
 
   // Configure - NO LanguageDetector plugin (SSR-unsafe)
   instance.use(backend);

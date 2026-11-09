@@ -117,7 +117,7 @@
   "signUp": "Opret konto",
   "alreadyHaveAccount": "Har du allerede en konto? Log ind",
   "unavailable.title": "Login er ikke tilgængelig",
-  "unavailable.description": "Accepter cookies for at logge ind.",
+  "unavailable.description": "Login er midlertidigt utilgængeligt. Prøv igen senere.",
   "errorGeneric": "Login mislykkedes. Prøv igen.",
   "errors": {
     "rate_limit": "For mange forsøg. Vent venligst et øjeblik og prøv igen.",

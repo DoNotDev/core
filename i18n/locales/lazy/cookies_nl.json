@@ -28,5 +28,8 @@
   "enabled": "Ingeschakeld",
   "disabled": "Uitgeschakeld",
   "examples": "Voorbeelden",
-  "essentialOnlyNotice": "We gebruiken alleen noodzakelijke cookies zodat de site werkt"
+  "essentialOnlyNotice": "We gebruiken alleen noodzakelijke cookies zodat de site werkt",
+  "necessaryOnlyTitle": "Cookies",
+  "necessaryOnlyDescription": "Deze site gebruikt alleen cookies die nodig zijn om te werken: inloggen, taal en deze melding. Ze worden niet gebruikt om u te volgen.",
+  "acknowledge": "OK"
 }

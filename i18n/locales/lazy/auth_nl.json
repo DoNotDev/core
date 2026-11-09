@@ -117,7 +117,7 @@
   "signUp": "Registreren",
   "alreadyHaveAccount": "Heb je al een account? Log in",
   "unavailable.title": "Inloggen niet beschikbaar",
-  "unavailable.description": "Accepteer cookies om in te loggen.",
+  "unavailable.description": "Inloggen is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
   "errorGeneric": "Inloggen mislukt. Probeer het opnieuw.",
   "errors": {
     "rate_limit": "Te veel pogingen. Wacht even en probeer het opnieuw.",

@@ -117,7 +117,7 @@
   "signUp": "サインアップ",
   "alreadyHaveAccount": "すでにアカウントをお持ちですか？ログイン",
   "unavailable.title": "認証が利用できません",
-  "unavailable.description": "認証を有効にするには、Cookieを承認してください。",
+  "unavailable.description": "現在ログインできません。しばらくしてからもう一度お試しください。",
   "errorGeneric": "認証に失敗しました。もう一度お試しください。",
   "errors": {
     "rate_limit": "試行回数が多すぎます。しばらくお待ちいただき、もう一度お試しください。",

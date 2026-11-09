@@ -117,7 +117,7 @@
   "signUp": "Registrieren",
   "alreadyHaveAccount": "Haben Sie bereits ein Konto? Anmelden",
   "unavailable.title": "Authentifizierung nicht verfügbar",
-  "unavailable.description": "Bitte akzeptieren Sie Cookies, um die Authentifizierung zu aktivieren.",
+  "unavailable.description": "Die Anmeldung ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.",
   "errorGeneric": "Authentifizierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
   "errors": {
     "rate_limit": "Zu viele Versuche. Bitte warten Sie einen Moment und versuchen Sie es erneut.",

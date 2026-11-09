@@ -28,5 +28,8 @@
   "enabled": "Enabled",
   "disabled": "Disabled",
   "examples": "Examples",
-  "essentialOnlyNotice": "We use essential cookies to ensure the site functions properly"
+  "essentialOnlyNotice": "We use essential cookies to ensure the site functions properly",
+  "necessaryOnlyTitle": "Cookies",
+  "necessaryOnlyDescription": "This site only uses cookies needed for it to work: sign-in, language and this notice. They are not used to track you.",
+  "acknowledge": "OK"
 }

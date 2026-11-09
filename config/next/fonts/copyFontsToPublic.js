@@ -298,7 +298,7 @@ export function copyFontsToPublic({
 
   // Ensure public/fonts/ exists
   const fontsDir = pathResolver.resolveAppPath(`public/${PUBLIC_FONTS_DIR}`);
-  pathResolver.ensureDir(fontsDir);
+  pathResolver.ensureDirSync(fontsDir);
 
   // Resolve needed subsets from languages
   const subsets = languages?.length ? resolveSubsets(languages) : null;

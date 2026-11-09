@@ -247,13 +247,15 @@ export default ${handlerName}Config;
   // === UTILITY METHODS ===
 
   /**
-   * Ensure directory exists and write file
+   * Write a generated file, replacing any previous version in place.
+   * Generated files are never deleted before regeneration (a running dev
+   * server would see them missing); stale ones are swept after discovery.
    */
   writeGeneratedFile(filePath, content, description = 'file') {
     const fullPath = this.pathResolver.resolveAppPath(filePath);
 
-    // PathResolver.writeFile handles directory creation automatically
-    this.pathResolver.writeSync(fullPath, content);
+    // PathResolver.writeSync handles directory creation automatically
+    this.pathResolver.writeSync(fullPath, content, { overwrite: true });
     this.logger.debug(`Generated ${description}: ${fullPath}`);
 
     return fullPath;

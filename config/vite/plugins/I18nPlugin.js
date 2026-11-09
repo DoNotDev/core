@@ -516,6 +516,9 @@ const i18nFilePatterns = [
  * @param {string[]} [options.additionalPaths=[]] - Additional locale paths from workspace packages
  *   Paths are relative to app root. Useful for shared entities in monorepos.
  *   Example: ['../../entities/locales'] scans for *_*.json files in that directory
+ * @param {string[]} [options.only] - Restrict the app to these language codes.
+ *   Files for other languages stay on disk but are ignored (no inlined content,
+ *   no lazy chunks, smaller supportedLanguages). Example: ['ko'] for Korean-only.
  * @returns {import('vite').Plugin[]} Vite plugin array (Vite flattens nested arrays)
  *
  * @example

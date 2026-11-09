@@ -22,6 +22,7 @@ import { initReactI18next } from 'react-i18next';
 import { createSingleton, handleError } from '@donotdev/utils';
 
 import { getI18nConfig, getTranslationLoaders } from './utils/config';
+import { getInitialLanguage } from './utils/initialLanguage';
 import { I18nBackend } from './utils/i18nBackend';
 
 // Global declaration moved to global.d.ts to avoid duplicate declaration errors
@@ -71,10 +72,10 @@ const getI18nInstance = createSingleton((): i18n => {
   instance.use(backend);
   instance.use(initReactI18next);
 
-  // Initialize with all resources synchronously
-  // lng set explicitly — language store handles user override from localStorage
+  // Initialize with all resources synchronously, in the visitor's language from the
+  // first frame (cookie > persisted > browser > fallback; fallback on the server).
   instance.init({
-    lng: config.fallback,
+    lng: getInitialLanguage(config.languages, config.fallback),
     fallbackLng: config.fallback,
     supportedLngs: config.languages,
     ns: config.eager,

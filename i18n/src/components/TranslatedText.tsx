@@ -97,7 +97,7 @@ export function TranslatedText({
   const { t } = useTranslation(namespace || 'common');
 
   // Get translated text with fallback
-  const translatedText = t(i18nKey, fallback || i18nKey, values);
+  const translatedText = t(i18nKey, { ...values, defaultValue: fallback || i18nKey });
 
   // Build accessibility-compliant className
   const accessibleClassName = [

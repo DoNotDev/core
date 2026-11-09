@@ -117,7 +117,7 @@
   "signUp": "Sign Up",
   "alreadyHaveAccount": "Already have an account? Sign In",
   "unavailable.title": "Authentication Unavailable",
-  "unavailable.description": "Please accept cookies to enable authentication.",
+  "unavailable.description": "Sign-in is temporarily unavailable. Please try again later.",
   "errorGeneric": "Authentication failed. Please try again.",
   "errors": {
     "rate_limit": "Too many attempts. Please wait a moment and try again.",

@@ -77,6 +77,17 @@ export default defineViteConfig({
   themes: { debug: true },
   i18n: { debug: true },
 
+  // i18n — language set is discovered from *_<lang>.json filenames.
+  // `only` restricts what the app uses without touching the files:
+  // languages outside the list are dropped from supportedLanguages,
+  // the mapping and the inlined content (nothing bundled, no chunks,
+  // and a single language hides the LanguageSelector). Same option on
+  // defineNextConfig. Remove it to get the other languages back.
+  i18n: {
+    fallbackLanguage: 'ko',
+    only: ['ko'],
+  },
+
   // Server
   server: {
     port: 3000,

@@ -4,7 +4,7 @@
  * @fileoverview Schema Definitions for Billing and Subscription Management
  * @description Single source of truth for all billing-related data validation. Defines Valibot schemas for billing, subscriptions, checkout sessions, and related data structures.
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
@@ -21,41 +21,102 @@ import {
 // =============================================================================
 
 /**
- * Schema for creating a checkout session request
- * Uses constants for enum values to ensure consistency
+ * Maximum line items per checkout request (framework limit).
  *
- * @version 0.1.0
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export const MAX_CHECKOUT_LINE_ITEMS = 100;
+
+/**
+ * One requested line: what the client wants, never what it costs.
+ * Names and prices are resolved on the server.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export const CheckoutLineItemInputSchema = v.object({
+  /** App product ID. For StripePayment/StripeSubscription: the billing config key. */
+  productId: v.pipe(v.string(), v.minLength(1), v.maxLength(200)),
+  quantity: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10000)),
+});
+
+/**
+ * Schema for creating a checkout session request.
+ * The client sends what it wants (config key + line items); the server derives
+ * prices, mode and user from the back config and the auth context.
+ *
+ * 0.1.x requests keep working unchanged: the key may come from
+ * `metadata.billingConfigKey`, `lineItems` defaults to the single product, and
+ * the 0.1.x fields (`priceId`, `unitAmount` + `productName`, `currency`, `mode`)
+ * are kept and honoured for StripePayment/StripeSubscription items exactly as in
+ * 0.1.x (priceId checked against the back config, dynamic amounts capped by
+ * `maxUnitAmount`). StripeOrder ignores them. `userId` is never trusted by the
+ * framework providers: they pass the authenticated user.
+ * The output is always normalized (`billingConfigKey` + `lineItems` set).
+ *
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
 export const CreateCheckoutSessionRequestSchema = v.pipe(
   v.object({
-    userId: v.optional(v.string()), // Optional: server uses context.uid from Firebase Auth
-    productId: v.optional(v.string()),
-    /** Stripe price ID (fixed pricing mode) */
-    priceId: v.optional(v.string()),
-    /** Amount in cents (dynamic pricing mode) */
-    unitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
-    /** Product name shown on Stripe checkout (dynamic pricing mode) */
-    productName: v.optional(v.pipe(v.string(), v.minLength(1))),
-    /** Currency code, defaults to 'eur' (dynamic pricing mode) */
-    currency: v.optional(
-      v.pipe(v.string(), v.length(3, 'Currency must be 3-letter ISO code'))
+    /** Key in the app's StripeBackConfig */
+    billingConfigKey: v.optional(v.pipe(v.string(), v.minLength(1))),
+    lineItems: v.optional(
+      v.pipe(
+        v.array(CheckoutLineItemInputSchema),
+        v.minLength(1, 'At least one line item is required'),
+        v.maxLength(
+          MAX_CHECKOUT_LINE_ITEMS,
+          `At most ${MAX_CHECKOUT_LINE_ITEMS} line items`
+        )
+      )
     ),
     successUrl: v.pipe(v.string(), v.url()),
     cancelUrl: v.pipe(v.string(), v.url()),
     customerEmail: v.optional(v.pipe(v.string(), v.email())),
-    userEmail: v.optional(v.pipe(v.string(), v.email())),
     metadata: v.optional(v.record(v.string(), v.string())),
     allowPromotionCodes: v.optional(v.boolean()),
+    // 0.1.x fields (single-price items only)
+    /** 0.1.x: ignored by the framework providers (they pass the authenticated user) */
+    userId: v.optional(v.string()),
+    productId: v.optional(v.string()),
+    /** 0.1.x: Stripe price ID (must match the back config priceId when it has one) */
+    priceId: v.optional(v.string()),
+    /** 0.1.x: amount in cents (dynamic pricing, capped by the back config `maxUnitAmount`) */
+    unitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
+    /** 0.1.x: product name shown on Stripe checkout (dynamic pricing) */
+    productName: v.optional(v.pipe(v.string(), v.minLength(1))),
+    /** 0.1.x: currency code (dynamic pricing), defaults to the back config currency */
+    currency: v.optional(
+      v.pipe(v.string(), v.length(3, 'Currency must be 3-letter ISO code'))
+    ),
+    userEmail: v.optional(v.pipe(v.string(), v.email())),
+    /** 0.1.x: Stripe mode. Omitted: derived from the back config item type. */
     mode: v.optional(
       v.picklist([STRIPE_MODES.PAYMENT, STRIPE_MODES.SUBSCRIPTION])
     ),
   }),
-  v.check(
-    (data) => !!(data.priceId || (data.unitAmount && data.productName)),
-    'Either priceId or (unitAmount + productName) is required'
-  )
+  v.rawTransform(({ dataset, addIssue, NEVER }) => {
+    const data = dataset.value;
+    /** @grill-refuted Conflicting metadata.billingConfigKey is harmless: server metadata overwrites it, hooks get ctx.billingConfigKey. */
+    const billingConfigKey =
+      data.billingConfigKey || data.metadata?.billingConfigKey;
+    if (!billingConfigKey) {
+      addIssue({ message: 'billingConfigKey is required' });
+      return NEVER;
+    }
+    return {
+      ...data,
+      billingConfigKey,
+      lineItems: data.lineItems ?? [
+        { productId: billingConfigKey, quantity: 1 },
+      ],
+    };
+  })
 );
 
 /**
@@ -153,13 +214,23 @@ export const CheckoutSessionMetadataSchema = v.looseObject({
 // =============================================================================
 
 /**
- * Create checkout session request type
+ * Create checkout session request type (normalized: `billingConfigKey` and `lineItems` set)
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
 export type CreateCheckoutSessionRequest = v.InferOutput<
+  typeof CreateCheckoutSessionRequestSchema
+>;
+/**
+ * Create checkout session request as sent by a client (before normalization)
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export type CreateCheckoutSessionRequestInput = v.InferInput<
   typeof CreateCheckoutSessionRequestSchema
 >;
 /**
@@ -260,9 +331,9 @@ export type ProductDeclaration = v.InferOutput<
 // =============================================================================
 
 /**
- * Validate create checkout session request
+ * Validate (and normalize) a create checkout session request
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
@@ -458,34 +529,143 @@ export const StripeFrontConfigSchema = v.record(
 );
 
 /**
+ * Fields shared by StripePayment and StripeSubscription back-config items.
+ */
+const StripePriceBackFields = {
+  name: v.string(),
+  price: v.number(),
+  currency: v.string(),
+  /**
+   * Stripe price ID charged for this item. Requests without a price use it; a
+   * request priceId must match it. Omit only for 0.1.x client-supplied prices.
+   */
+  priceId: v.optional(v.string()),
+  /** @deprecated Not read at checkout (0.1.x: same). Prefer StripeOrder for server-priced lines. */
+  unitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
+  /** @deprecated Not read at checkout (0.1.x: same). */
+  productName: v.optional(v.pipe(v.string(), v.minLength(1))),
+  /**
+   * Maximum unit amount in cents for 0.1.x dynamic pricing (request
+   * `unitAmount` + `productName`). Required for it: security cap.
+   * @deprecated Prefer StripeOrder (`resolveLineItems`) for server-priced lines.
+   */
+  maxUnitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
+  tier: v.string(),
+  duration: v.string(),
+  description: v.optional(v.string()),
+  metadata: v.optional(v.record(v.string(), v.string())),
+  allowPromotionCodes: v.optional(v.boolean()),
+};
+
+/**
+ * Tax handling for StripeOrder. Unit amounts are always excl. VAT
+ * (`tax_behavior: 'exclusive'`).
+ * - `manual`: Stripe Tax Rate IDs applied to every line
+ * - `automatic`: Stripe Tax computes the tax (reverse charge from the buyer's tax ID)
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export const StripeOrderTaxSchema = v.variant('mode', [
+  v.object({
+    mode: v.literal('manual'),
+    taxRateIds: v.pipe(
+      v.array(v.pipe(v.string(), v.minLength(1))),
+      v.minLength(1)
+    ),
+  }),
+  v.object({ mode: v.literal('automatic') }),
+]);
+
+/**
+ * Maximum shipping rates per Checkout Session (Stripe `shipping_options` limit).
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export const MAX_SHIPPING_RATE_IDS = 5;
+
+/**
+ * Shipping collection for StripeOrder.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export const StripeOrderShippingSchema = v.object({
+  /** Uppercase ISO 3166-1 alpha-2 country codes the order can ship to (e.g. `FR`) */
+  allowedCountries: v.pipe(
+    v.array(
+      v.pipe(
+        v.string(),
+        v.regex(
+          /^[A-Z]{2}$/,
+          'allowedCountries: uppercase ISO 3166-1 alpha-2 code expected (e.g. FR)'
+        )
+      )
+    ),
+    v.minLength(1)
+  ),
+  /** Stripe Shipping Rate IDs offered at checkout (Stripe allows at most 5) */
+  shippingRateIds: v.optional(
+    v.pipe(
+      v.array(v.pipe(v.string(), v.minLength(1))),
+      v.maxLength(
+        MAX_SHIPPING_RATE_IDS,
+        `shippingRateIds: at most ${MAX_SHIPPING_RATE_IDS} (Stripe limit)`
+      )
+    )
+  ),
+});
+
+/**
+ * Back-config item for a multi-line, one-time order priced on the server
+ * (`resolveLineItems` hook, TypeScript only).
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export const StripeOrderBackSchema = v.object({
+  type: v.literal('StripeOrder'),
+  name: v.string(),
+  /** ISO 4217 currency of every resolved line */
+  currency: v.pipe(v.string(), v.length(3)),
+  description: v.optional(v.string()),
+  metadata: v.optional(v.record(v.string(), v.string())),
+  allowPromotionCodes: v.optional(v.boolean()),
+  tax: StripeOrderTaxSchema,
+  /** Collect the buyer's tax ID (VAT number) */
+  taxIdCollection: v.picklist(['disabled', 'optional', 'required']),
+  billingAddressCollection: v.picklist(['auto', 'required']),
+  shipping: v.optional(StripeOrderShippingSchema),
+  customerCreation: v.picklist(['always', 'if_required']),
+  /** Generate a post-payment Stripe invoice */
+  invoiceCreation: v.boolean(),
+  /** Stripe Payment Method Configuration ID (card, SEPA debit...). Omit to use the account default. */
+  paymentMethodConfiguration: v.optional(v.pipe(v.string(), v.minLength(1))),
+});
+
+/**
  * Schema for backend billing configuration (with hooks)
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
 export const StripeBackConfigSchema = v.record(
-  v.string(), // Product key
-  v.object({
-    type: v.picklist(['StripePayment', 'StripeSubscription']),
-    name: v.string(),
-    price: v.number(),
-    currency: v.string(),
-    /** Stripe price ID (fixed pricing). Optional for dynamic pricing products. */
-    priceId: v.optional(v.string()),
-    /** Default amount in cents (dynamic pricing). */
-    unitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
-    /** Product name for Stripe checkout (dynamic pricing). */
-    productName: v.optional(v.pipe(v.string(), v.minLength(1))),
-    /** Maximum allowed unit amount in cents. Security cap. */
-    maxUnitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
-    tier: v.string(),
-    duration: v.string(),
-    description: v.optional(v.string()),
-    metadata: v.optional(v.record(v.string(), v.string())),
-    allowPromotionCodes: v.optional(v.boolean()),
-    // Hooks are TypeScript-only, not validated by Valibot
-  })
+  v.string(), // Billing config key
+  v.variant('type', [
+    v.object({ type: v.literal('StripePayment'), ...StripePriceBackFields }),
+    v.object({
+      type: v.literal('StripeSubscription'),
+      ...StripePriceBackFields,
+    }),
+    StripeOrderBackSchema,
+  ])
+  // Hooks are TypeScript-only, not validated by Valibot
 );
 
 /**

@@ -67,56 +67,54 @@ function markBuildComplete(appRoot) {
   const buildId = process.env.DNDEV_BUILD_ID;
 
   try {
-    pathResolver.writeSync(markerPath, buildId);
+    pathResolver.writeSync(markerPath, buildId, { overwrite: true });
   } catch {
     // Ignore errors
   }
 }
 
 /**
- * Clean discovery artifacts from previous builds
+ * Remove discovery artifacts that the current run did not rewrite.
+ *
+ * Runs AFTER generation, never before: generated files are overwritten in
+ * place, so a dev server compiling while another Next process (build, second
+ * dev server, config re-evaluation) runs discovery never sees them missing.
+ * Only leftovers from features no longer generated (artifacts this run did
+ * not write) are removed. Staleness is decided by the set of paths written
+ * during the run, never by comparing file timestamps to a clock: the kernel
+ * can stamp a just-written file slightly before a Date.now() taken earlier.
+ *
  * @param {string} appRoot - App root directory
  * @param {Object} logger - Logger instance
+ * @param {Set<string>} writtenPaths - Normalized paths written during this run
  */
-export function cleanDiscoveryArtifacts(appRoot, logger) {
+export function removeStaleDiscoveryArtifacts(appRoot, logger, writtenPaths) {
   if (!appRoot) return;
 
   const pathResolver = PathResolver.getInstance();
-
-  // Clean manifest files
-  for (const artifact of DISCOVERY_ARTIFACTS) {
-    const filePath = pathResolver.resolveAppPath(artifact);
-    if (pathResolver.pathExists(filePath)) {
-      try {
-        pathResolver.removeSync(filePath);
-        logger.debug(`Cleaned: ${artifact}`);
-      } catch {
-        // Ignore errors (file might be locked)
-      }
+  const removeIfStale = (filePath, label) => {
+    const normalized = pathResolver.normalizePath(filePath);
+    if (writtenPaths.has(normalized) || !pathResolver.pathExists(normalized))
+      return;
+    try {
+      pathResolver.removeSync(filePath);
+      logger.debug(`Removed stale: ${label}`);
+    } catch {
+      // Ignore errors (file might be locked)
     }
+  };
+
+  for (const artifact of DISCOVERY_ARTIFACTS) {
+    removeIfStale(pathResolver.resolveAppPath(artifact), artifact);
   }
 
-  // Clean generated font assets (public/fonts/ directory)
-  cleanFontAssets();
-
-  // Clean dndev-config-*.js files in src/config
   const configDir = pathResolver.resolveAppPath('src/config');
-  if (pathResolver.pathExists(configDir)) {
-    try {
-      const files = pathResolver.readdirSync(configDir);
-      for (const file of files) {
-        if (file.startsWith(CONFIG_PREFIX) && file.endsWith('.js')) {
-          try {
-            const filePath = pathResolver.resolvePath(file, configDir);
-            pathResolver.removeSync(filePath);
-            logger.debug(`Cleaned: src/config/${file}`);
-          } catch {
-            // Ignore errors
-          }
-        }
-      }
-    } catch {
-      // Ignore errors reading directory
+  for (const file of pathResolver.readdirSync(configDir)) {
+    if (file.startsWith(CONFIG_PREFIX) && file.endsWith('.js')) {
+      removeIfStale(
+        pathResolver.resolvePath(file, configDir),
+        `src/config/${file}`
+      );
     }
   }
 }
@@ -179,73 +177,83 @@ export async function runDiscoveries(
   // This must happen BEFORE any async work to avoid race conditions.
   markBuildComplete(appRoot);
 
-  // Clean stale artifacts from previous builds
-  cleanDiscoveryArtifacts(appRoot, logger);
-
   const discoveryStartTime = Date.now();
-
-  // 1. Routes (must be first - Next.js needs app/page.tsx before compilation)
-  if (routeHandler) {
-    try {
-      logger.info('🔍 Starting route discovery...');
-      const routeData = await routeHandler.generateFiles();
-      const routeCount = routeData?.routes?.length || 0;
-      logger.info(`✅ Routes generated: ${routeCount} routes found`);
-      if (routeCount === 0) {
-        logger.error(
-          '❌ NO ROUTES FOUND! Check that pages exist in src/pages/'
-        );
-      }
-    } catch (error) {
-      logger.error(`❌ Route generation failed: ${error.message}`);
-      if (error.stack) logger.error(`Stack: ${error.stack}`);
-      throw error;
-    }
-  } else {
-    logger.warn('⚠️ Route handler is disabled - no routes will be discovered');
-  }
-
-  // 2-6: Other discoveries (non-critical, continue on error)
-  const nonCriticalHandlers = [
-    { name: 'Theme', handler: themeHandler },
-    { name: 'I18n', handler: i18nHandler },
-    { name: 'Asset', handler: assetHandler },
-    { name: 'SEO', handler: seoHandler },
-    { name: 'PWA', handler: pwaHandler },
-    { name: 'BlogContent', handler: blogContentHandler },
-  ];
-
-  /** @type {string[]|undefined} */
-  let supportedLanguages;
-
-  for (const { name, handler } of nonCriticalHandlers) {
-    try {
-      const result = await handler.generateFiles();
-      // Capture I18n languages for font subset filtering
-      if (name === 'I18n' && result?.supportedLanguages?.length) {
-        supportedLanguages = result.supportedLanguages;
-      }
-    } catch (error) {
-      logger.debug(`${name} generation failed: ${error.message}`);
-    }
-  }
-
-  // Generate env config (NEXT_PUBLIC_* vars → _DNDEV_CONFIG_.env)
+  pathResolver.startWriteRecording();
+  let writtenPaths;
   try {
-    generateEnvConfig(pathResolver, logger);
-  } catch (error) {
-    logger.debug(
-      `Env config generation failed (non-critical): ${error.message}`
-    );
+    // Font assets are copied, not overwritten: clear them before copying.
+    // Every other artifact is overwritten in place and swept after the run.
+    cleanFontAssets();
+
+    // 1. Routes (must be first - Next.js needs app/page.tsx before compilation)
+    if (routeHandler) {
+      try {
+        logger.info('🔍 Starting route discovery...');
+        const routeData = await routeHandler.generateFiles();
+        const routeCount = routeData?.routes?.length || 0;
+        logger.info(`✅ Routes generated: ${routeCount} routes found`);
+        if (routeCount === 0) {
+          logger.error(
+            '❌ NO ROUTES FOUND! Check that pages exist in src/pages/'
+          );
+        }
+      } catch (error) {
+        logger.error(`❌ Route generation failed: ${error.message}`);
+        if (error.stack) logger.error(`Stack: ${error.stack}`);
+        throw error;
+      }
+    } else {
+      logger.warn(
+        '⚠️ Route handler is disabled - no routes will be discovered'
+      );
+    }
+
+    // 2-6: Other discoveries (non-critical, continue on error)
+    const nonCriticalHandlers = [
+      { name: 'Theme', handler: themeHandler },
+      { name: 'I18n', handler: i18nHandler },
+      { name: 'Asset', handler: assetHandler },
+      { name: 'SEO', handler: seoHandler },
+      { name: 'PWA', handler: pwaHandler },
+      { name: 'BlogContent', handler: blogContentHandler },
+    ];
+
+    /** @type {string[]|undefined} */
+    let supportedLanguages;
+
+    for (const { name, handler } of nonCriticalHandlers) {
+      try {
+        const result = await handler.generateFiles();
+        // Capture I18n languages for font subset filtering
+        if (name === 'I18n' && result?.supportedLanguages?.length) {
+          supportedLanguages = result.supportedLanguages;
+        }
+      } catch (error) {
+        logger.debug(`${name} generation failed: ${error.message}`);
+      }
+    }
+
+    // Generate env config (NEXT_PUBLIC_* vars → _DNDEV_CONFIG_.env)
+    try {
+      generateEnvConfig(pathResolver, logger);
+    } catch (error) {
+      logger.debug(
+        `Env config generation failed (non-critical): ${error.message}`
+      );
+    }
+
+    // Copy @fontsource font files to public/ (Turbopack CSS url() workaround)
+    // When languages are known, filter to only needed subsets + woff2 only
+    try {
+      copyFontsToPublic({ languages: supportedLanguages });
+    } catch (error) {
+      logger.debug(`Font copy failed (non-critical): ${error.message}`);
+    }
+  } finally {
+    writtenPaths = pathResolver.stopWriteRecording();
   }
 
-  // Copy @fontsource font files to public/ (Turbopack CSS url() workaround)
-  // When languages are known, filter to only needed subsets + woff2 only
-  try {
-    copyFontsToPublic({ languages: supportedLanguages });
-  } catch (error) {
-    logger.debug(`Font copy failed (non-critical): ${error.message}`);
-  }
+  removeStaleDiscoveryArtifacts(appRoot, logger, writtenPaths);
 
   const discoveryDuration = Date.now() - discoveryStartTime;
   logger.verbose?.(
@@ -300,7 +308,7 @@ export default envConfig;
 `;
 
   const fullPath = pathResolver.resolveAppPath(GENERATED_PATHS.next.configEnv);
-  pathResolver.writeSync(fullPath, configContent);
+  pathResolver.writeSync(fullPath, configContent, { overwrite: true });
   const varCount = Object.keys(envVars).length;
   logger.debug(`Generated env config: ${varCount} NEXT_PUBLIC_* vars`);
 }

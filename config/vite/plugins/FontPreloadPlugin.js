@@ -32,7 +32,7 @@ const KNOWN_STEMS = Object.keys(FONT_WEIGHTS);
  * @returns {Object} Vite plugin
  */
 export function createViteFontPreloadPlugin(options = {}) {
-  const { debug = false } = options;
+  const { debug = false, i18nOptions = {} } = options;
   const logger = createLogger('font-preload', debug, false);
 
   let pathResolver;
@@ -71,10 +71,11 @@ export function createViteFontPreloadPlugin(options = {}) {
 
       try {
         // 1. Discover locales from I18n (determines which subsets to keep)
-        let locales = ['en'];
+        let locales = [i18nOptions.fallbackLanguage || 'en'];
         try {
           const i18n = new I18nDiscovery(pathResolver, {
-            fallbackLanguage: 'en',
+            fallbackLanguage: i18nOptions.fallbackLanguage || 'en',
+            only: i18nOptions.only,
           });
           const data = await i18n.discoverTranslations();
           if (data?.supportedLanguages?.length) {
@@ -97,7 +98,9 @@ export function createViteFontPreloadPlugin(options = {}) {
         logger.debug(
           `Font preload: discovery failed, using defaults: ${err?.message}`
         );
-        const manifest = resolveFontManifest(['en']);
+        const manifest = resolveFontManifest([
+          i18nOptions.fallbackLanguage || 'en',
+        ]);
         allowedStems = manifest.stems;
       }
     },

@@ -117,7 +117,7 @@
   "signUp": "注册",
   "alreadyHaveAccount": "已有账户？登录",
   "unavailable.title": "身份验证不可用",
-  "unavailable.description": "请接受 Cookie 以启用身份验证。",
+  "unavailable.description": "登录暂时不可用，请稍后再试。",
   "errorGeneric": "身份验证失败。请重试。",
   "errors": {
     "rate_limit": "尝试次数过多。请稍候后再试。",

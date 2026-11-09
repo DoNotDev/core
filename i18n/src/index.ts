@@ -10,7 +10,11 @@
  */
 
 // External API - what framework consumers import
-export { useTranslation, useI18nReady } from './hooks/useTranslation';
+export {
+  RequestLanguageProvider,
+  useTranslation,
+  useI18nReady,
+} from './hooks/useTranslation';
 export { getI18nInstance } from './instance.vite';
 
 // Components (language selectors, translation components, etc.)
@@ -19,6 +23,7 @@ export * from './components';
 // Utils
 export { useLanguageSelector } from './utils/languageSelector';
 export { getSupportedLanguages } from './utils/languages';
+export { getRequestLanguage } from './utils/initialLanguage';
 
 // Flag component and utilities (bundled from assets)
 export { Flag, getFlagCodes, hasFlag } from './flags';

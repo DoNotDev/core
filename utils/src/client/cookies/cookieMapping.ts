@@ -37,6 +37,12 @@ const FEATURE_COOKIES: Record<FrameworkFeature, CookieInfo[]> = {
       purpose: 'Security tokens',
       provider: 'Firebase Auth',
     },
+    {
+      name: 'sb-*-auth-token',
+      category: 'necessary',
+      purpose: 'Authentication session (read by the server to render the signed-in state)',
+      provider: 'Supabase Auth',
+    },
   ],
   billing: [
     {

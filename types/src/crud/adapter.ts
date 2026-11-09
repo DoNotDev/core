@@ -58,6 +58,14 @@ export interface ICrudAdapter {
    */
   readonly dbLevelSecurity?: boolean;
 
+  /**
+   * A view of this adapter whose reads run as the holder of `accessToken` (the
+   * visitor's session during the server render). Only for adapters whose backend
+   * verifies the token itself (`dbLevelSecurity`), so a forged token reads nothing.
+   * Absent: the server render does not prefetch signed-in visitors' data.
+   */
+  forAccessToken?(accessToken: string): ICrudAdapter;
+
   /** Fetch a single document by ID. Returns null if not found. */
   get<T>(
     collection: string,

@@ -117,7 +117,7 @@
   "signUp": "S'inscrire",
   "alreadyHaveAccount": "Vous avez déjà un compte ? Se connecter",
   "unavailable.title": "Authentification indisponible",
-  "unavailable.description": "Veuillez accepter les cookies pour activer l'authentification.",
+  "unavailable.description": "La connexion est momentanément indisponible. Réessayez plus tard.",
   "errorGeneric": "Échec de l'authentification. Veuillez réessayer.",
   "errors": {
     "rate_limit": "Trop de tentatives. Veuillez patienter un instant et réessayer.",

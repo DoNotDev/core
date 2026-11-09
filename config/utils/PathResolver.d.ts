@@ -368,6 +368,17 @@ export declare class PathResolver {
    */
   getRepoRoot(): string;
   /**
+   * Start recording every path written by writeSync/copySync.
+   * Lets a generator know exactly which files the current run produced,
+   * without comparing file timestamps to a clock.
+   */
+  startWriteRecording(): void;
+  /**
+   * Stop recording and return the normalized paths written since
+   * startWriteRecording().
+   */
+  stopWriteRecording(): Set<string>;
+  /**
    * Get app root (where vite.config.ts is, Vite's config.root)
    * Falls back to repoRoot if not set
    */
@@ -439,6 +450,10 @@ export declare class PathResolver {
    * Get absolute path to empty CJS module for esbuild pre-bundling.
    * CJS because esbuild statically analyzes ESM exports — CJS has dynamic exports.
    */
+  /**
+   * Get absolute path to empty flag component module.
+   */
+  getEmptyFlagModulePath(): string;
   getEmptyCjsModulePath(): string;
   /**
    * Find repo root by looking for DnDev monorepo markers or apps/ directory

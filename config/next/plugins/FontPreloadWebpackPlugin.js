@@ -19,11 +19,14 @@ const MANIFEST_FILENAME = 'dndev-font-preloads.json';
  * @param {Object} options
  * @param {Object} options.pathResolver - PathResolver instance
  * @param {boolean} [options.debug] - Debug logging
+ * @param {string[]} [options.languages=[]] - Languages the app uses, from I18n discovery
+ *   (already restricted by i18n.only). When empty, discovery runs here as a fallback.
  * @returns {Object} Webpack plugin
  */
 export function createFontPreloadWebpackPlugin({
   pathResolver,
   debug = false,
+  languages = [],
 }) {
   const logger = createLogger('font-preload-next', debug, false);
 
@@ -43,18 +46,21 @@ export function createFontPreloadWebpackPlugin({
             const appRoot = pathResolver.getAppRoot();
             if (!appRoot) return callback();
 
-            // Get locales from I18n discovery
-            let locales = ['en'];
-            try {
-              const i18n = new I18nDiscovery(pathResolver, {
-                fallbackLanguage: 'en',
-              });
-              const data = await i18n.discoverTranslations();
-              if (data?.supportedLanguages?.length) {
-                locales = data.supportedLanguages;
+            // Locales the app uses — passed in from the shared i18n discovery
+            // (honours i18n.only). Own discovery only when nothing was provided.
+            let locales = languages.length ? languages : ['en'];
+            if (!languages.length) {
+              try {
+                const i18n = new I18nDiscovery(pathResolver, {
+                  fallbackLanguage: 'en',
+                });
+                const data = await i18n.discoverTranslations();
+                if (data?.supportedLanguages?.length) {
+                  locales = data.supportedLanguages;
+                }
+              } catch {
+                // fallback to ['en']
               }
-            } catch {
-              // fallback to ['en']
             }
 
             // Resolve manifest — all installed framework fonts, filtered by locale subsets

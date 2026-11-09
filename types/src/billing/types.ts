@@ -14,6 +14,7 @@ import type * as v from 'valibot';
 
 import type { FeatureStatus } from '../common';
 import type {
+  CheckoutLineItemInputSchema,
   CreateCheckoutSessionRequest,
   CreateCheckoutSessionResponse,
   StripeBackConfigSchema,
@@ -316,6 +317,9 @@ export type BillingErrorCode =
 
 /**
  * Stripe checkout session creation request
+ *
+ * 0.1.x request shape, still accepted. New code sends
+ * `CreateCheckoutSessionRequestInput` (`billingConfigKey`, plus `lineItems` for StripeOrder).
  *
  * @version 0.1.0
  * @since 0.0.1
@@ -878,58 +882,281 @@ export interface StripePrice {
 // =============================================================================
 
 /**
- * Result of a beforeCheckout hook invocation.
- * Allows blocking checkout or overriding pricing before Stripe session creation.
+ * Result of a beforeCheckout hook invocation. Blocks or allows checkout.
+ * StripeOrder prices come from `resolveLineItems`, never from here.
+ *
+ * @version 0.2.0
+ * @since 0.0.1
+ * @author AMBROISE PARK Consulting
  */
 export interface BeforeCheckoutResult {
   /** Whether checkout is allowed to proceed */
   allowed: boolean;
   /** Reason for blocking (shown in error response) */
   reason?: string;
-  /** Optional overrides applied to checkout options before Stripe session creation */
-  overrides?: Partial<Pick<CheckoutOptions, 'unitAmount' | 'productName'>>;
+  /**
+   * 0.1.x dynamic pricing only (request `unitAmount` + `productName`, no
+   * `priceId`): replaces the amount/name before session creation. The amount
+   * stays capped by the back config `maxUnitAmount`. Ignored otherwise.
+   * @deprecated Prefer StripeOrder `resolveLineItems` for server-priced lines.
+   */
+  overrides?: { unitAmount?: number; productName?: string };
 }
 
 /**
+ * Second argument of a `beforeCheckout` hook: the normalized request plus the
+ * 0.1.x checkout options, so 0.1.x guards (`options.mode === 'subscription'`,
+ * `options.priceId`) keep working.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export type BeforeCheckoutOptions = Omit<
+  CreateCheckoutSessionRequest,
+  'userId' | 'mode' | 'priceId' | 'metadata' | 'allowPromotionCodes'
+> & {
+  /** Authenticated user ID (never the client value) */
+  userId: string;
+  /** Stripe mode of the session (request `mode`, else derived from the item type; StripeOrder: `payment`) */
+  mode: CheckoutMode;
+  /** Stripe price charged (request priceId, else the back config priceId). Undefined for dynamic pricing and StripeOrder. */
+  priceId?: string;
+  /** Request metadata as sent (before sanitization; 0.1.x behaviour) */
+  metadata: Record<string, string>;
+  /** Request value, default `true` (0.1.x behaviour) */
+  allowPromotionCodes: boolean;
+};
+
+/**
  * Hook called before Stripe checkout session creation.
- * Use for ownership checks, status validation, server-resolved pricing.
+ * Use for ownership checks and status validation.
+ *
+ * @example
+ * ```typescript
+ * const beforeCheckout: BeforeCheckoutHook = async (userId, options) =>
+ *   options.mode === 'subscription' && options.billingConfigKey !== 'pro_monthly'
+ *     ? { allowed: false, reason: 'Unknown plan' }
+ *     : { allowed: true };
+ * ```
  *
  * @param userId - Authenticated user ID
- * @param options - Checkout options from the client request
+ * @param options - Normalized request + 0.1.x checkout options (`mode`, `priceId`, `unitAmount`, `currency`...)
  * @param metadata - Request metadata (sanitized)
- * @returns Whether to allow checkout, optional reason, optional overrides
+ * @returns Whether to allow checkout, optional reason (and 0.1.x dynamic-pricing overrides)
+ *
+ * @version 0.2.0
+ * @since 0.0.1
+ * @author AMBROISE PARK Consulting
  */
 export type BeforeCheckoutHook = (
   userId: string,
-  options: CheckoutOptions,
+  options: BeforeCheckoutOptions,
   metadata: Record<string, string>
 ) => Promise<BeforeCheckoutResult>;
+
+/**
+ * One requested checkout line (client input).
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export type CheckoutLineItemInput = v.InferOutput<
+  typeof CheckoutLineItemInputSchema
+>;
+
+/**
+ * One line priced by the app's `resolveLineItems` hook.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface ResolvedLineItem {
+  /** App product ID, copied to the Stripe product metadata and returned in `onOrderPaid` */
+  productId: string;
+  /** Name shown on the Stripe checkout page and invoice */
+  name: string;
+  description?: string;
+  /** Unit price excl. VAT, in the smallest currency unit (cents) */
+  unitAmount: number;
+  quantity: number;
+}
+
+/**
+ * Output of `resolveLineItems`: the server-side order and its priced lines.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface ResolvedOrder {
+  /** App order ID (created by the hook, e.g. a pending order row) */
+  orderId: string;
+  lineItems: ResolvedLineItem[];
+  /** Per-order session options decided by the server (omit to use the back config). */
+  session?: ResolvedOrderSession;
+}
+
+/**
+ * Checkout session options a StripeOrder decides per order in `resolveLineItems`
+ * (they depend on the buyer or the order, not on the back config).
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface ResolvedOrderSession {
+  /**
+   * Manual tax only: Tax Rate IDs applied to every line of this order instead of
+   * `tax.taxRateIds` (each must be exclusive). `[]` = no tax (e.g. EU B2B reverse charge).
+   */
+  taxRateIds?: string[];
+  /** Payment methods offered for this order. Replaces `paymentMethodConfiguration`. */
+  paymentMethodTypes?: Array<'card' | 'sepa_debit'>;
+  /** Session expiry, Unix seconds. Stripe: 30 minutes to 24 hours after creation. */
+  expiresAt?: number;
+  /** Footer printed on the post-payment invoice (e.g. a legal mention). Needs `invoiceCreation`. */
+  invoiceFooter?: string;
+}
+
+/**
+ * Context passed to `resolveLineItems`.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface ResolveLineItemsContext {
+  userId: string;
+  billingConfigKey: string;
+  /** Request metadata (sanitized) */
+  metadata: Record<string, string>;
+}
+
+/**
+ * Postal address as reported by Stripe.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface CheckoutAddress {
+  line1: string | null;
+  line2: string | null;
+  postalCode: string | null;
+  city: string | null;
+  state: string | null;
+  /** ISO 3166-1 alpha-2 */
+  country: string | null;
+}
+
+/**
+ * Provider-neutral snapshot of a completed/expired Stripe Checkout Session,
+ * passed to order hooks.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface CheckoutSessionSnapshot {
+  id: string;
+  /** 'paid' | 'unpaid' | 'no_payment_required' */
+  paymentStatus: string;
+  currency: string | null;
+  /** Amounts in the smallest currency unit */
+  amountSubtotal: number | null;
+  amountTax: number | null;
+  amountShipping: number | null;
+  amountDiscount: number | null;
+  amountTotal: number | null;
+  customerId: string | null;
+  customer: {
+    email: string | null;
+    name: string | null;
+    phone: string | null;
+    /** Business name, when collected */
+    businessName: string | null;
+    address: CheckoutAddress | null;
+    taxIds: Array<{ type: string; value: string | null }>;
+    /** 'none' | 'exempt' | 'reverse' */
+    taxExempt: string | null;
+  } | null;
+  shipping: { name: string; address: CheckoutAddress } | null;
+  invoiceId: string | null;
+  paymentIntentId: string | null;
+  metadata: Record<string, string>;
+}
+
+/**
+ * One paid line, read back from Stripe (amounts as charged).
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface PaidLineItem {
+  productId: string;
+  name: string;
+  quantity: number;
+  /** Amounts in the smallest currency unit */
+  amountSubtotal: number;
+  amountDiscount: number;
+  amountTax: number;
+  amountTotal: number;
+}
+
+/**
+ * Context passed to order webhook hooks.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface OrderHookContext {
+  userId: string;
+  orderId: string;
+  billingConfigKey: string;
+  /**
+   * Stripe event ID. Delivery is at-least-once: the same event can reach a hook
+   * again (retry after a failed or unrecorded run). Key side effects on
+   * `orderId` (or `eventId`) so a replay is a no-op.
+   */
+  eventId: string;
+}
 
 // =============================================================================
 // Hook API Types
 // =============================================================================
 
 /**
- * Checkout options for Stripe checkout session
+ * Client checkout options (useStripeBilling `checkout`).
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
 export interface CheckoutOptions {
-  /** Stripe price ID (fixed pricing mode) */
-  priceId?: string;
-  /** Amount in cents (dynamic pricing mode) */
-  unitAmount?: number;
-  /** Product name for Stripe checkout (dynamic pricing mode) */
-  productName?: string;
-  /** Currency code, defaults to 'eur' (dynamic pricing mode) */
-  currency?: string;
-  mode: 'payment' | 'subscription';
+  /** Key in the app's StripeBackConfig. 0.1.x callers may pass it as `metadata.billingConfigKey`. */
+  billingConfigKey?: string;
+  /** Requested lines. Defaults to `[{ productId: billingConfigKey, quantity: 1 }]` (single product / subscription). */
+  lineItems?: CheckoutLineItemInput[];
   successUrl?: string;
   cancelUrl?: string;
   metadata?: Record<string, string>;
+  /** Single-price items: show the promotion code field (default true). StripeOrder: set in the back config. */
   allowPromotionCodes?: boolean;
+  /** Stripe price ID (single-price items). Must match the back config priceId when it has one; defaults to it. */
+  priceId?: string;
+  /** Dynamic pricing amount in cents (with `productName`, no `priceId`). Capped by the back config `maxUnitAmount`. */
+  unitAmount?: number;
+  /** Product name for dynamic pricing. */
+  productName?: string;
+  /** Currency for dynamic pricing (default 'eur'). */
+  currency?: string;
+  /** Stripe mode for single-price items. Defaults to the back config item type. */
+  mode?: CheckoutMode;
 }
 
 /**
@@ -977,33 +1204,35 @@ export interface BillingAPI {
  */
 export type StripeFrontConfig = v.InferOutput<typeof StripeFrontConfigSchema>;
 
+type StripeBackConfigItemData = v.InferOutput<
+  typeof StripeBackConfigSchema
+>[string];
+
 /**
- * Backend billing configuration type with hooks
+ * Hooks shared by every back-config item.
+ */
+interface StripeBackItemCommonHooks {
+  /** Called before Stripe checkout session creation. Can block checkout. */
+  beforeCheckout?: BeforeCheckoutHook;
+}
+
+/**
+ * One-time payment item (single Stripe price) granting a tier.
+ * The tier is granted once the payment is settled: at checkout completion when
+ * `payment_status` is `paid` / `no_payment_required`, else on
+ * `checkout.session.async_payment_succeeded` (e.g. SEPA debit).
+ * Hooks run at least once per Stripe event and may run again for the same
+ * purchase: make them idempotent. Their errors are logged, not retried.
  *
- * @version 0.1.0
- * @since 0.0.1
+ * @version 0.2.0
+ * @since 0.2.0
  * @author AMBROISE PARK Consulting
  */
-export type StripeBackConfig = {
-  [key: string]: {
-    type: 'StripePayment' | 'StripeSubscription';
-    name: string;
-    price: number;
-    currency: string;
-    /** Stripe price ID (fixed pricing). Optional for dynamic pricing products. */
-    priceId?: string;
-    /** Default amount in cents (dynamic pricing). */
-    unitAmount?: number;
-    /** Product name for Stripe checkout (dynamic pricing). */
-    productName?: string;
-    /** Maximum allowed unit amount in cents. Security cap for client-provided amounts. */
-    maxUnitAmount?: number;
-    tier: string;
-    duration: string;
-    description?: string;
-    metadata?: Record<string, string>;
-    allowPromotionCodes?: boolean;
-    // Hooks are TypeScript-only extensions
+export type StripePaymentBackItem = Extract<
+  StripeBackConfigItemData,
+  { type: 'StripePayment' }
+> &
+  StripeBackItemCommonHooks & {
     onPurchaseSuccess?: (
       userId: string,
       metadata: Record<string, string>
@@ -1012,6 +1241,23 @@ export type StripeBackConfig = {
       userId: string,
       metadata: Record<string, string>
     ) => Promise<void>;
+  };
+
+/**
+ * Recurring subscription item (single Stripe price) granting a tier.
+ * Granted once the first payment is settled (same rule as StripePayment).
+ * Hooks run at least once per Stripe event and may run again for the same
+ * event: make them idempotent. Their errors are logged, not retried.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export type StripeSubscriptionBackItem = Extract<
+  StripeBackConfigItemData,
+  { type: 'StripeSubscription' }
+> &
+  StripeBackItemCommonHooks & {
     onSubscriptionCreated?: (
       userId: string,
       metadata: Record<string, string>
@@ -1028,10 +1274,59 @@ export type StripeBackConfig = {
       userId: string,
       metadata: Record<string, string>
     ) => Promise<void>;
-    /** Hook called before Stripe checkout session creation. Can block or override pricing. */
-    beforeCheckout?: BeforeCheckoutHook;
   };
-};
+
+/**
+ * Multi-line, one-time order priced on the server.
+ * Order hooks are delivered at least once and must be idempotent on
+ * `ctx.orderId` / `ctx.eventId`: a hook re-runs when it threw (the webhook
+ * answers non-2xx and Stripe retries) and also after it succeeded when the
+ * framework could not record the event as processed. A store write cannot be
+ * atomic with an arbitrary hook, so exactly-once is not possible.
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
+ */
+export type StripeOrderBackItem = Extract<
+  StripeBackConfigItemData,
+  { type: 'StripeOrder' }
+> &
+  StripeBackItemCommonHooks & {
+    /** Resolve requested lines to names and unit prices (excl. VAT) and create the app order. */
+    resolveLineItems: (
+      items: CheckoutLineItemInput[],
+      ctx: ResolveLineItemsContext
+    ) => Promise<ResolvedOrder>;
+    /** Payment confirmed (card at completion, or async method such as SEPA debit later). */
+    onOrderPaid: (
+      session: CheckoutSessionSnapshot,
+      lineItems: PaidLineItem[],
+      ctx: OrderHookContext
+    ) => Promise<void>;
+    /** Async payment (e.g. SEPA debit) failed after checkout completion. */
+    onOrderPaymentFailed?: (
+      session: CheckoutSessionSnapshot,
+      ctx: OrderHookContext
+    ) => Promise<void>;
+    /** Checkout session expired without payment. */
+    onOrderExpired?: (
+      session: CheckoutSessionSnapshot,
+      ctx: OrderHookContext
+    ) => Promise<void>;
+  };
+
+/**
+ * Backend billing configuration type with hooks
+ *
+ * @version 0.2.0
+ * @since 0.0.1
+ * @author AMBROISE PARK Consulting
+ */
+export type StripeBackConfig = Record<
+  string,
+  StripePaymentBackItem | StripeSubscriptionBackItem | StripeOrderBackItem
+>;
 
 /**
  * Stripe configuration interface
@@ -1074,4 +1369,106 @@ export interface StripeConfig {
       url?: string;
     };
   };
+}
+
+// =============================================================================
+// Server billing contracts (implemented by @donotdev/functions per platform)
+// =============================================================================
+
+/**
+ * Auth operations the server billing code needs: read a user's custom claims
+ * and write them back (subscription tier lives in the claims).
+ *
+ * @version 0.1.0
+ * @since 0.5.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface BillingAuthProvider {
+  getUser(userId: string): Promise<{
+    customClaims?: Record<string, unknown>;
+  }>;
+  setCustomUserClaims(
+    userId: string,
+    claims: Record<string, unknown>
+  ): Promise<void>;
+}
+
+/**
+ * Subscription fields written to a user by the webhook and subscription helpers
+ * (the stored record, {@link SubscriptionData}, adds userId and updatedAt).
+ *
+ * @version 0.1.0
+ * @since 0.5.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface SubscriptionUpdate {
+  tier: string;
+  status: 'active' | 'canceled' | 'past_due' | 'trialing' | 'incomplete';
+  subscriptionEnd: string | null;
+  cancelAtPeriodEnd?: boolean;
+  subscriptionId?: string | null;
+  customerId?: string;
+}
+
+/**
+ * Writes a subscription update for a user.
+ *
+ * @version 0.1.0
+ * @since 0.5.0
+ * @author AMBROISE PARK Consulting
+ */
+export type UpdateSubscriptionFn = (
+  userId: string,
+  data: SubscriptionUpdate,
+  authProvider: BillingAuthProvider
+) => Promise<void>;
+
+/**
+ * Checkout Session created by a provider.
+ *
+ * @version 0.1.0
+ * @since 0.5.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface CheckoutSessionResult {
+  id: string;
+  url: string | null;
+}
+
+/**
+ * 0.1.x single-price session params, sent to a {@link StripeCheckoutProvider}.
+ *
+ * @version 0.2.0
+ * @since 0.5.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface CheckoutSessionParams {
+  priceId?: string;
+  /** Amount in cents (dynamic pricing mode) */
+  unitAmount?: number;
+  /** Product name for Stripe checkout (dynamic pricing mode) */
+  productName?: string;
+  /** Currency code, defaults to 'eur' */
+  currency?: string;
+  customerEmail?: string;
+  metadata: Record<string, string>;
+  allowPromotionCodes: boolean;
+  successUrl: string;
+  cancelUrl: string;
+  mode?: 'payment' | 'subscription';
+}
+
+/**
+ * 0.1.x provider interface for Stripe checkout operations. Supports
+ * StripePayment/StripeSubscription items only; StripeOrder needs the full-session
+ * provider of @donotdev/functions (StripeSessionProvider).
+ *
+ * @version 0.1.0
+ * @since 0.5.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface StripeCheckoutProvider {
+  createCheckoutSession(
+    params: CheckoutSessionParams
+  ): Promise<CheckoutSessionResult>;
 }

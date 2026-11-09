@@ -54,7 +54,6 @@ const VENDOR_CHUNKS = {
     '/i18next/',
     // react-i18next moved to react-core (needs React context)
     '/i18next-browser-languagedetector/',
-    '/i18next-http-backend/',
     '/@donotdev/i18n/',
   ],
   zustand: ['/zustand/'],

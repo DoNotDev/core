@@ -20,7 +20,12 @@
 
 import * as fs from 'node:fs';
 import { constants as fsConstants } from 'node:fs';
-import type { Dirent, Stats } from 'node:fs';
+import type {
+  Dirent,
+  FSWatcher,
+  Stats,
+  WatchOptionsWithStringEncoding,
+} from 'node:fs';
 import { createRequire } from 'node:module';
 import {
   resolve,
@@ -144,6 +149,7 @@ export class PathResolver {
   };
   private _repoRoot!: string;
   private _appRoot: string | null = null;
+  private _writtenPaths: Set<string> | null = null;
 
   /**
    * Get or create singleton instance
@@ -555,7 +561,7 @@ export class PathResolver {
     if (Buffer.isBuffer(content)) {
       writeContent = content;
     } else if (detectedFormat === 'json' && typeof content === 'object') {
-      writeContent = JSON.stringify(content, null, 2);
+      writeContent = `${JSON.stringify(content, null, 2)}\n`;
     } else {
       writeContent = String(content);
     }
@@ -629,7 +635,7 @@ export class PathResolver {
     if (Buffer.isBuffer(content)) {
       writeContent = content;
     } else if (detectedFormat === 'json' && typeof content === 'object') {
-      writeContent = JSON.stringify(content, null, 2);
+      writeContent = `${JSON.stringify(content, null, 2)}\n`;
     } else {
       writeContent = String(content);
     }
@@ -642,6 +648,7 @@ export class PathResolver {
       } else {
         fs.writeFileSync(normalizedPath, writeContent, 'utf8');
       }
+      this._writtenPaths?.add(normalizedPath);
       if (verbose) {
         log.info(
           `${fileExists ? 'Updated' : 'Created'} file: ${normalizedPath}`
@@ -744,6 +751,7 @@ export class PathResolver {
 
     try {
       fs.copyFileSync(srcPath, normalizedDestPath);
+      this._writtenPaths?.add(normalizedDestPath);
       if (verbose) {
         log.info(
           `${fileExists ? 'Updated' : 'Created'} file: ${normalizedDestPath}`
@@ -850,6 +858,30 @@ export class PathResolver {
   }
 
   /**
+   * Resolve the real path of a file, following symlinks
+   * @param filePath - Path to resolve
+   * @returns Resolved real path
+   */
+  realpathSync(filePath: string): string {
+    return fs.realpathSync(filePath);
+  }
+
+  /**
+   * Watch a directory for changes
+   * @param dirPath - Directory to watch
+   * @param options - fs.watch options
+   * @param callback - Callback for change events
+   * @returns FSWatcher instance
+   */
+  watch(
+    dirPath: string,
+    options: WatchOptionsWithStringEncoding,
+    callback: (eventType: string, filename: string | null) => void
+  ): FSWatcher {
+    return fs.watch(dirPath, options, callback);
+  }
+
+  /**
    * Get file stats synchronously (follows symlinks)
    * Returns null if file doesn't exist (graceful degradation)
    *
@@ -940,6 +972,30 @@ export class PathResolver {
    * Get app root (where vite.config.ts is, Vite's config.root)
    * Falls back to repoRoot if not set
    */
+  /**
+   * Start recording every path written by writeSync/copySync.
+   * Lets a generator know exactly which files the current run produced,
+   * without comparing file timestamps to a clock.
+   */
+  startWriteRecording(): void {
+    this._writtenPaths = new Set();
+  }
+
+  /**
+   * Stop recording and return the normalized paths written since
+   * startWriteRecording().
+   */
+  stopWriteRecording(): Set<string> {
+    if (!this._writtenPaths) {
+      throw new Error(
+        'stopWriteRecording() called without startWriteRecording()'
+      );
+    }
+    const written = this._writtenPaths;
+    this._writtenPaths = null;
+    return written;
+  }
+
   getAppRoot(): string {
     if (!this._appRoot) {
       // CRITICAL: Do not fallback to process.cwd() or repoRoot
@@ -1314,6 +1370,16 @@ export class PathResolver {
   getEmptyModulePath(): string {
     const cjsPath = this.getEmptyCjsModulePath();
     return cjsPath.replace(/\.cjs$/, '.js');
+  }
+
+  /**
+   * Get absolute path to empty flag component module.
+   * Returns `export default () => null;` — used by flag filtering plugins
+   * to replace unused flag files at build time.
+   */
+  getEmptyFlagModulePath(): string {
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    return this.normalizePath(resolve(__dirname, 'emptyFlag.js'));
   }
 
   /**

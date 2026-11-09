@@ -44,24 +44,20 @@ export function wrapCrudError(
   collection: string,
   id?: string
 ): DoNotDevError {
-  const fullContext = `${context}.${operation}(${collection}${id ? `, ${id}` : ''})`;
-  const originalMessage = getErrorMessage(error);
+  if (error instanceof DoNotDevError) return error;
 
   // Core stays framework-generic: no CRUD UX copy, no i18n concerns here.
-  // Preserve low-level details for logs/devtools; feature/UI layers decide
-  // localized end-user wording.
-  return mapToDoNotDevError(
-    {
-      ...(error instanceof Error ? error : new Error(originalMessage)),
-      message: 'Request failed.',
-      details: {
-        context: fullContext,
-        originalMessage,
-        originalError: error,
-      },
+  // The client-facing message stays generic; the code is mapped from the real
+  // error, and the low-level cause sits in `details` for logs/devtools.
+  const { code } = mapToDoNotDevError(error, 'api');
+  return new DoNotDevError('Request failed.', code, {
+    source: 'api',
+    details: {
+      context: `${context}.${operation}(${collection}${id ? `, ${id}` : ''})`,
+      originalMessage: getErrorMessage(error),
+      originalError: error,
     },
-    'api'
-  );
+  });
 }
 
 /**

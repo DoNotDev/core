@@ -1,6 +1,6 @@
 {
   "name": "@donotdev/hooks",
-  "version": "0.1.43",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "React Query hooks for Firebase operations",
@@ -23,13 +23,13 @@
     "@donotdev/stores": "workspace:*",
     "@donotdev/types": "workspace:*",
     "@donotdev/utils": "workspace:*",
-    "@tanstack/react-query": "^5.90.21"
+    "@tanstack/react-query": "^5.107.1"
   },
   "peerDependencies": {
-    "zustand": "^5.0.11"
+    "zustand": "^5.1.0"
   },
   "devDependencies": {
-    "zustand": "^5.0.11"
+    "zustand": "^5.1.0"
   },
   "peerDependenciesMeta": {},
   "license": "MIT"

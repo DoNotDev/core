@@ -117,7 +117,7 @@
   "signUp": "Registrar-se",
   "alreadyHaveAccount": "Já tem uma conta? Entrar",
   "unavailable.title": "Autenticação Indisponível",
-  "unavailable.description": "Por favor, aceite cookies para ativar autenticação.",
+  "unavailable.description": "O início de sessão está temporariamente indisponível. Tente novamente mais tarde.",
   "errorGeneric": "Autenticação falhou. Por favor, tente novamente.",
   "errors": {
     "rate_limit": "Muitas tentativas. Por favor, aguarde um momento e tente novamente.",

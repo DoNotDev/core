@@ -325,6 +325,8 @@ export function createVitePlugins(options = {}) {
     plugins.push(
       createViteFontPreloadPlugin({
         debug,
+        // Font subsets follow the languages the app actually uses (i18n.only)
+        i18nOptions,
       })
     );
 

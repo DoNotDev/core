@@ -28,5 +28,8 @@
   "enabled": "Abilitato",
   "disabled": "Disabilitato",
   "examples": "Esempi",
-  "essentialOnlyNotice": "Utilizziamo solo cookie essenziali per garantire il corretto funzionamento del sito"
+  "essentialOnlyNotice": "Utilizziamo solo cookie essenziali per garantire il corretto funzionamento del sito",
+  "necessaryOnlyTitle": "Cookie",
+  "necessaryOnlyDescription": "Questo sito usa solo i cookie necessari al suo funzionamento: accesso, lingua e questo avviso. Non servono a tracciarti.",
+  "acknowledge": "OK"
 }

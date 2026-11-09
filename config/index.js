@@ -12,4 +12,4 @@ export * from './vite/index.js';
 export * from './next/index.js';
 
 // Internal framework configurations (for CLI and functions build scripts)
-export * from './esbuild/index.js';
+export * from './functions/index.js';

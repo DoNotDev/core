@@ -28,5 +28,8 @@
   "enabled": "已启用",
   "disabled": "已禁用",
   "examples": "示例",
-  "essentialOnlyNotice": "我们使用必需 Cookie 以确保网站正常运行"
+  "essentialOnlyNotice": "我们使用必需 Cookie 以确保网站正常运行",
+  "necessaryOnlyTitle": "Cookie",
+  "necessaryOnlyDescription": "本网站仅使用运行所必需的 Cookie：登录、语言和本提示。它们不会用于跟踪您。",
+  "acknowledge": "确定"
 }

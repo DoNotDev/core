@@ -15,7 +15,13 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // MOCKS - must be before imports that use them
 // ============================================================================
 
+const cookieJar = new Map<string, string>();
 vi.mock('@donotdev/utils', () => ({
+  LANGUAGE_COOKIE: 'dndev-lang',
+  getCookie: vi.fn((name: string) => cookieJar.get(name) ?? null),
+  setCookie: vi.fn((name: string, value: string) => {
+    cookieJar.set(name, value);
+  }),
   isClient: vi.fn(() => true),
   isDev: vi.fn(() => false),
   handleError: vi.fn((error: unknown) => {
@@ -200,6 +206,12 @@ describe('setLanguage', () => {
     useLanguageStore.getState().setAvailableLanguages(LANGUAGES);
     await useLanguageStore.getState().setLanguage('fr');
     expect(document.documentElement.lang).toBe('fr');
+  });
+
+  it('records the language in the language cookie (server renders in it)', async () => {
+    useLanguageStore.getState().setAvailableLanguages(LANGUAGES);
+    await useLanguageStore.getState().setLanguage('fr');
+    expect(cookieJar.get('dndev-lang')).toBe('fr');
   });
 
   it('updates DOM dir attribute to rtl for Arabic', async () => {

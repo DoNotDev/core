@@ -28,5 +28,8 @@
   "enabled": "Aktiviert",
   "disabled": "Deaktiviert",
   "examples": "Beispiele",
-  "essentialOnlyNotice": "Wir verwenden nur essenzielle Cookies, um die ordnungsgemäße Funktion der Website zu gewährleisten"
+  "essentialOnlyNotice": "Wir verwenden nur essenzielle Cookies, um die ordnungsgemäße Funktion der Website zu gewährleisten",
+  "necessaryOnlyTitle": "Cookies",
+  "necessaryOnlyDescription": "Diese Website verwendet nur Cookies, die für ihren Betrieb nötig sind: Anmeldung, Sprache und dieser Hinweis. Sie dienen nicht der Nachverfolgung.",
+  "acknowledge": "OK"
 }

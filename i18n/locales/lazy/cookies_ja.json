@@ -28,5 +28,8 @@
   "enabled": "有効",
   "disabled": "無効",
   "examples": "例",
-  "essentialOnlyNotice": "サイトが正常に機能するために必須のCookieのみを使用しています"
+  "essentialOnlyNotice": "サイトが正常に機能するために必須のCookieのみを使用しています",
+  "necessaryOnlyTitle": "Cookie",
+  "necessaryOnlyDescription": "このサイトは動作に必要なCookie（ログイン、言語、このお知らせ）のみを使用します。追跡には使用しません。",
+  "acknowledge": "OK"
 }

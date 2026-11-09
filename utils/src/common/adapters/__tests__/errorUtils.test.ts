@@ -19,18 +19,19 @@ describe('wrapCrudError', () => {
     );
 
     expect(result).toBeInstanceOf(DoNotDevError);
-    expect(result.message).toContain('connection refused');
-    expect(result.message).toContain('TestAdapter');
-    expect(result.message).toContain('get');
-    expect(result.message).toContain('users');
-    expect(result.message).toContain('123');
+    expect(result.message).toBe('Request failed.');
+    expect(result.details).toMatchObject({
+      context: 'TestAdapter.get(users, 123)',
+      originalMessage: 'connection refused',
+      originalError: original,
+    });
   });
 
   it('wraps string errors', () => {
     const result = wrapCrudError('timeout', 'Adapter', 'query', 'posts');
 
     expect(result).toBeInstanceOf(DoNotDevError);
-    expect(result.message).toContain('timeout');
+    expect(result.details).toMatchObject({ originalMessage: 'timeout' });
   });
 
   it('works without optional id', () => {
@@ -42,8 +43,9 @@ describe('wrapCrudError', () => {
     );
 
     expect(result).toBeInstanceOf(DoNotDevError);
-    expect(result.message).toContain('query');
-    expect(result.message).toContain('collection');
+    expect(result.details).toMatchObject({
+      context: 'Adapter.query(collection)',
+    });
   });
 
   it('passes through existing DoNotDevError', () => {
@@ -59,7 +61,7 @@ describe('wrapCrudError', () => {
     const result = wrapCrudError(42, 'Adapter', 'add', 'items');
 
     expect(result).toBeInstanceOf(DoNotDevError);
-    expect(result.message).toContain('42');
+    expect(result.details).toMatchObject({ originalMessage: '42' });
   });
 });
 

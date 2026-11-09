@@ -1,6 +1,6 @@
 {
   "name": "@donotdev/schemas",
-  "version": "0.1.43",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Validation schemas and type generation for DoNotDev",
@@ -23,10 +23,10 @@
     "@donotdev/utils": "workspace:*"
   },
   "peerDependencies": {
-    "valibot": "^1.2.0"
+    "valibot": "^1.5.0"
   },
   "devDependencies": {
-    "valibot": "^1.2.0"
+    "valibot": "^1.5.0"
   },
   "peerDependenciesMeta": {},
   "license": "MIT"

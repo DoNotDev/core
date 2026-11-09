@@ -1028,6 +1028,40 @@ export interface AuthProvider {
    * @param remember - true for persistent session, false for session-only
    */
   setRememberMe?(remember: boolean): Promise<void>;
+
+  /**
+   * Signed-in state read synchronously from the request cookies, without the auth
+   * service. Lets the server render, and the client's hydration pass, show the real
+   * signed-in state before the provider has initialised.
+   * Display only: never an authorisation decision (the cookie is not verified).
+   * Implemented by providers that keep their session in cookies (Supabase via
+   * `createBrowserClient`); absent otherwise.
+   *
+   * @param cookieHeader - The request's `Cookie` header (`a=1; b=2`)
+   * @returns The snapshot (`user: null` = signed out), or `null` when the cookies
+   *   cannot tell
+   */
+  readSessionSnapshot?(cookieHeader: string): AuthSessionSnapshot | null;
+}
+
+/**
+ * Signed-in state known from the request cookies, before the auth provider has
+ * initialised (see AuthProvider.readSessionSnapshot). Display only.
+ *
+ * @version 0.1.0
+ * @since 0.1.50
+ * @author AMBROISE PARK Consulting
+ */
+export interface AuthSessionSnapshot {
+  /** The signed-in user, or `null` when signed out */
+  user: AuthUser | null;
+  /**
+   * The session's access token while it is still valid, else absent. Server render
+   * only: lets CRUD reads run as the visitor (ICrudAdapter.forAccessToken), so the
+   * HTML carries the visitor's own data. The database verifies the token; the
+   * framework never trusts it for anything else.
+   */
+  accessToken?: string;
 }
 
 // =============================================================================

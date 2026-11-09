@@ -117,7 +117,7 @@
   "signUp": "Registrati",
   "alreadyHaveAccount": "Hai già un account? Accedi",
   "unavailable.title": "Autenticazione non disponibile",
-  "unavailable.description": "Per favore accetta i cookie per abilitare l'autenticazione.",
+  "unavailable.description": "L'accesso è temporaneamente non disponibile. Riprova più tardi.",
   "errorGeneric": "Autenticazione fallita. Per favore riprova.",
   "errors": {
     "rate_limit": "Troppi tentativi. Attendi un momento e riprova.",
