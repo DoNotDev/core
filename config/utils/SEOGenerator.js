@@ -8,6 +8,7 @@
  * @author AMBROISE PARK Consulting
  */
 
+import { DEFAULT_OG_IMAGE } from '../constants.js';
 import { PathResolver } from './PathResolver.js';
 import { createLogger } from './debugLog.js';
 import { RouteDiscovery } from '../discovery/RouteDiscovery.js';
@@ -69,7 +70,7 @@ export class SEOGenerator {
       crawlDelay,
       aiCrawlers,
       routes: routeOptions,
-      defaultImage: '/og-image.jpg',
+      defaultImage: DEFAULT_OG_IMAGE,
       twitterHandle: '@donotdev',
       defaultAuthor: 'DNDev Team',
       defaultLanguage: 'en',

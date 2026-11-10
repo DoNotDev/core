@@ -10,4 +10,3 @@
  */
 
 export * from './useNetwork';
-export * from './useRateLimit';

@@ -450,26 +450,6 @@ function DataFetcher() {
 
 ## Hooks
 
-### useRateLimit
-
-```typescript
-import { useRateLimit } from '@donotdev/stores';
-
-function LoginForm() {
-  const { isLimited, remaining, formattedBlockTime, recordAttempt, reset } =
-    useRateLimit('user@example.com', 'auth:signin');
-
-  const handleSubmit = () => {
-    if (isLimited) {
-      alert(`Rate limited. Try again in ${formattedBlockTime}`);
-      return;
-    }
-
-    recordAttempt();
-    // Perform login...
-  };
-}
-```
 
 ### useNavigationAbort
 

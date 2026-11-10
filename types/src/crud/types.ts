@@ -50,8 +50,6 @@ export interface CrudAPI<T = unknown> {
    * - `error`: CRUD encountered error
    */
   status: FeatureStatus;
-  /** Current data (from get/subscribe) */
-  data: T | null;
   /** Loading state for async operations */
   loading: boolean;
   /** Last error encountered */
@@ -373,7 +371,11 @@ export interface CrudListQuery<T> {
  */
 export interface CrudDocQuery<T> {
   readonly queryKey: readonly ['crud', string, 'get', string];
-  readonly queryFn: () => Promise<T | null>;
+  /**
+   * Receives TanStack's query context; `client` (the request's QueryClient on the
+   * server) selects a request-scoped adapter when one is bound.
+   */
+  readonly queryFn: (context: { client: object }) => Promise<T | null>;
   readonly staleTime: number;
 }
 

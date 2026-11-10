@@ -55,6 +55,9 @@ export const GENERATED_PATHS: {
   readonly vite: Record<string, string>;
 };
 
+/** Site-wide link-preview image, generated from public/logo.svg unless the app provides it. */
+export const DEFAULT_OG_IMAGE: string;
+
 export const FRAMEWORK_CONFIG: Record<string, any>;
 
 export const DIR_PATHS: Record<string, any>;

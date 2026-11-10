@@ -97,6 +97,9 @@ export const GENERATED_PATHS = {
 };
 
 // ===== FRAMEWORK CONFIGURATION =====
+/** Site-wide link-preview image, generated from public/logo.svg unless the app provides it. */
+export const DEFAULT_OG_IMAGE = '/og-image.png';
+
 export const FRAMEWORK_CONFIG = {
   // Default framework package
   package: '@donotdev/ui',

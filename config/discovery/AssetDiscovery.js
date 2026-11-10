@@ -11,10 +11,20 @@ import { BaseDiscovery } from './BaseDiscovery.js';
 import {
   SCAN_PATTERNS,
   FRAMEWORK_CONFIG,
+  DEFAULT_OG_IMAGE,
   DIR_PATHS,
   GLOB_OPTIONS,
   getGlobOptionsFor,
 } from '../constants.js';
+
+/** Link-preview canvas and the box the logo is fitted into. */
+const OG_IMAGE = {
+  width: 1200,
+  height: 630,
+  logoWidth: 720,
+  logoHeight: 360,
+  background: '#ffffff',
+};
 
 export class AssetDiscovery extends BaseDiscovery {
   constructor(pathResolver, options = {}) {
@@ -584,6 +594,36 @@ export class AssetDiscovery extends BaseDiscovery {
   }
 
   /**
+   * Render the link-preview image: the logo centered on a 1200x630 canvas.
+   * The SVG is rasterized at the density of its final size, so it stays sharp.
+   * @param {Function} sharp - sharp factory
+   * @param {string} logoPath - Absolute path to logo.svg
+   * @returns {Promise<Buffer>} PNG bytes
+   */
+  async _renderOgImage(sharp, logoPath) {
+    const { width, height } = await sharp(logoPath).metadata();
+    const scale = Math.min(OG_IMAGE.logoWidth / width, OG_IMAGE.logoHeight / height);
+    const logo = await sharp(logoPath, { density: Math.ceil(72 * scale) })
+      .resize(OG_IMAGE.logoWidth, OG_IMAGE.logoHeight, {
+        fit: 'inside',
+      })
+      .png()
+      .toBuffer();
+
+    return sharp({
+      create: {
+        width: OG_IMAGE.width,
+        height: OG_IMAGE.height,
+        channels: 4,
+        background: OG_IMAGE.background,
+      },
+    })
+      .composite([{ input: logo }])
+      .png()
+      .toBuffer();
+  }
+
+  /**
    * Generate missing PWA assets from logo.svg
    * Creates favicon, icons, and manifest assets from logo.svg if they don't exist
    * @param {string} appRoot - Application root directory
@@ -685,6 +725,20 @@ export class AssetDiscovery extends BaseDiscovery {
               `Failed to generate ${asset.name}: ${error.message}`
             );
             skipped.push(asset.name);
+          }
+        }
+
+        const ogName = DEFAULT_OG_IMAGE.slice(1);
+        if (this.pathResolver.pathExists(`${publicDir}/${ogName}`)) {
+          skipped.push(ogName);
+        } else {
+          try {
+            const ogImage = await this._renderOgImage(sharp.default, logoPath);
+            await this.pathResolver.write(`public/${ogName}`, ogImage);
+            generated.push(ogName);
+          } catch (error) {
+            this.logger.debug(`Failed to generate ${ogName}: ${error.message}`);
+            skipped.push(ogName);
           }
         }
       }

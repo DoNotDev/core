@@ -234,10 +234,6 @@ export interface RefreshSubscriptionRequest {
 export interface StripeProvider {
   createCheckoutSession(params: {
     priceId?: string;
-    /** Amount in cents (dynamic pricing mode, used with price_data) */
-    unitAmount?: number;
-    /** Product name for Stripe checkout (dynamic pricing mode) */
-    productName?: string;
     /** Currency code, defaults to 'eur' */
     currency?: string;
     userId: string;
@@ -328,12 +324,6 @@ export type BillingErrorCode =
 export interface StripeCheckoutRequest {
   /** Stripe price ID (fixed pricing mode) */
   priceId?: string;
-
-  /** Amount in cents (dynamic pricing mode, used with price_data) */
-  unitAmount?: number;
-
-  /** Product name for Stripe checkout (dynamic pricing mode) */
-  productName?: string;
 
   /** Currency code, defaults to 'eur' (dynamic pricing mode) */
   currency?: string;
@@ -894,13 +884,6 @@ export interface BeforeCheckoutResult {
   allowed: boolean;
   /** Reason for blocking (shown in error response) */
   reason?: string;
-  /**
-   * 0.1.x dynamic pricing only (request `unitAmount` + `productName`, no
-   * `priceId`): replaces the amount/name before session creation. The amount
-   * stays capped by the back config `maxUnitAmount`. Ignored otherwise.
-   * @deprecated Prefer StripeOrder `resolveLineItems` for server-priced lines.
-   */
-  overrides?: { unitAmount?: number; productName?: string };
 }
 
 /**
@@ -1149,10 +1132,6 @@ export interface CheckoutOptions {
   allowPromotionCodes?: boolean;
   /** Stripe price ID (single-price items). Must match the back config priceId when it has one; defaults to it. */
   priceId?: string;
-  /** Dynamic pricing amount in cents (with `productName`, no `priceId`). Capped by the back config `maxUnitAmount`. */
-  unitAmount?: number;
-  /** Product name for dynamic pricing. */
-  productName?: string;
   /** Currency for dynamic pricing (default 'eur'). */
   currency?: string;
   /** Stripe mode for single-price items. Defaults to the back config item type. */
@@ -1444,10 +1423,6 @@ export interface CheckoutSessionResult {
  */
 export interface CheckoutSessionParams {
   priceId?: string;
-  /** Amount in cents (dynamic pricing mode) */
-  unitAmount?: number;
-  /** Product name for Stripe checkout (dynamic pricing mode) */
-  productName?: string;
   /** Currency code, defaults to 'eur' */
   currency?: string;
   customerEmail?: string;

@@ -50,10 +50,9 @@ export const CheckoutLineItemInputSchema = v.object({
  *
  * 0.1.x requests keep working unchanged: the key may come from
  * `metadata.billingConfigKey`, `lineItems` defaults to the single product, and
- * the 0.1.x fields (`priceId`, `unitAmount` + `productName`, `currency`, `mode`)
+ * the 0.1.x fields (`priceId`, `currency`, `mode`)
  * are kept and honoured for StripePayment/StripeSubscription items exactly as in
- * 0.1.x (priceId checked against the back config, dynamic amounts capped by
- * `maxUnitAmount`). StripeOrder ignores them. `userId` is never trusted by the
+ * 0.1.x (priceId checked against the back config). StripeOrder ignores them. `userId` is never trusted by the
  * framework providers: they pass the authenticated user.
  * The output is always normalized (`billingConfigKey` + `lineItems` set).
  *
@@ -86,11 +85,7 @@ export const CreateCheckoutSessionRequestSchema = v.pipe(
     productId: v.optional(v.string()),
     /** 0.1.x: Stripe price ID (must match the back config priceId when it has one) */
     priceId: v.optional(v.string()),
-    /** 0.1.x: amount in cents (dynamic pricing, capped by the back config `maxUnitAmount`) */
-    unitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
-    /** 0.1.x: product name shown on Stripe checkout (dynamic pricing) */
-    productName: v.optional(v.pipe(v.string(), v.minLength(1))),
-    /** 0.1.x: currency code (dynamic pricing), defaults to the back config currency */
+    /** 0.1.x: currency code, defaults to the back config currency */
     currency: v.optional(
       v.pipe(v.string(), v.length(3, 'Currency must be 3-letter ISO code'))
     ),
@@ -417,16 +412,10 @@ export const StripePaymentSchema = v.object({
     v.pipe(v.string(), v.length(3, 'Currency must be 3-letter ISO code')),
     'EUR'
   ),
-  /** Stripe price ID (fixed pricing). Optional when using dynamic pricing. */
+  /** Stripe price ID. */
   priceId: v.optional(
     v.pipe(v.string(), v.minLength(1, 'Stripe price ID is required'))
   ),
-  /** Default amount in cents (dynamic pricing). Used when no priceId. */
-  unitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
-  /** Product name for Stripe checkout (dynamic pricing). */
-  productName: v.optional(v.pipe(v.string(), v.minLength(1))),
-  /** Maximum allowed unit amount in cents. Security cap for client-provided amounts. */
-  maxUnitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
   tier: v.pipe(v.string(), v.minLength(1, 'Tier is required')),
   duration: v.pipe(v.string(), v.minLength(1, 'Duration is required')), // 'lifetime', '6months', etc.
   allowPromotionCodes: v.optional(v.boolean()),
@@ -518,12 +507,8 @@ export const StripeFrontConfigSchema = v.record(
     currency: v.string(),
     description: v.optional(v.string()),
     features: v.optional(v.array(v.string())),
-    /** Stripe price ID (fixed pricing). Optional for dynamic pricing products. */
+    /** Stripe price ID. */
     priceId: v.optional(v.string()),
-    /** Amount in cents (dynamic pricing). For display purposes. */
-    unitAmount: v.optional(v.number()),
-    /** Product name (dynamic pricing). For display purposes. */
-    productName: v.optional(v.string()),
     allowPromotionCodes: v.optional(v.boolean()),
   })
 );
@@ -540,16 +525,6 @@ const StripePriceBackFields = {
    * request priceId must match it. Omit only for 0.1.x client-supplied prices.
    */
   priceId: v.optional(v.string()),
-  /** @deprecated Not read at checkout (0.1.x: same). Prefer StripeOrder for server-priced lines. */
-  unitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
-  /** @deprecated Not read at checkout (0.1.x: same). */
-  productName: v.optional(v.pipe(v.string(), v.minLength(1))),
-  /**
-   * Maximum unit amount in cents for 0.1.x dynamic pricing (request
-   * `unitAmount` + `productName`). Required for it: security cap.
-   * @deprecated Prefer StripeOrder (`resolveLineItems`) for server-priced lines.
-   */
-  maxUnitAmount: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
   tier: v.string(),
   duration: v.string(),
   description: v.optional(v.string()),

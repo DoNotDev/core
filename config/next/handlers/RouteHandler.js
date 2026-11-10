@@ -16,6 +16,7 @@ import {
   GENERATED_PATHS,
   ROUTE_DISCOVERY,
   CONFIG_KEYS,
+  DEFAULT_OG_IMAGE,
 } from '../../constants.js';
 import { RouteDiscovery } from '../../discovery/RouteDiscovery.js';
 import { createMissingResourceError } from '../../utils/buildError.js';
@@ -280,7 +281,7 @@ export default { routes: routeMapping, manifest: routeManifest };
         }
 
         // Other metadata
-        const image = seo.image || i18nMeta.image || '/og-image.png';
+        const image = seo.image || i18nMeta.image || DEFAULT_OG_IMAGE;
         const type = seo.type || i18nMeta.type || 'website';
         const keywords = seo.keywords || i18nMeta.keywords;
         const noindex = seo.noindex || false;
@@ -749,7 +750,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
   
   const pageTitle = title ? ${backtick}\${title} | \${siteName}${backtick} : siteName;
   const pageDescription = description || '';
-  const pageImage = metaObject?.image || '/og-image.png';
+  const pageImage = metaObject?.image || '${DEFAULT_OG_IMAGE}';
   const pageType = metaObject?.type || 'website';
   const pageKeywords = metaObject?.keywords;
   const pageAuthor = metaObject?.author;

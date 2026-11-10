@@ -128,9 +128,11 @@ export interface UseTranslationResult {
  *
  * @example
  * ```tsx
- * // Array translations
+ * // Array translations - use indexed access
  * const { t } = useTranslation('features');
- * const benefits = t('benefits', { returnObjects: true }) as unknown as string[];
+ * const benefits = [0, 1, 2]
+ *   .map(i => t(`benefits.${i}`))
+ *   .filter(text => text && !text.startsWith('['));
  * ```
  *
  * @public
@@ -176,7 +178,7 @@ export function useTranslation(
     const result = tInitial ? tInitial(key, opts) : tRaw(key, opts);
 
     // Check if translation was found (i18next returns key when missing)
-    if (result !== key && (typeof result === 'string' || opts?.returnObjects)) {
+    if (typeof result === 'string' && result !== key) {
       return result;
     }
 

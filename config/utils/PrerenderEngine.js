@@ -18,6 +18,7 @@
  * @author AMBROISE PARK Consulting
  */
 
+import { DEFAULT_OG_IMAGE } from '../constants.js';
 import { parseRouteManifest } from './routeParser.js';
 import { PathResolver } from './PathResolver.js';
 
@@ -262,7 +263,7 @@ export class PrerenderEngine {
         : i18nDescription || i18nSubtitle || null;
 
     // --- Other fields ---
-    const image = seo.image || i18nMeta.image || null;
+    const image = seo.image || i18nMeta.image || DEFAULT_OG_IMAGE;
     const type = seo.type || i18nMeta.type || 'website';
     const keywords = seo.keywords || i18nMeta.keywords || null;
     const noindex = seo.noindex || false;
@@ -361,7 +362,13 @@ export class PrerenderEngine {
       );
     }
     if (image) {
-      tags.push(`<meta property="og:image" content="${escapeAttr(image)}" />`);
+      // Link-preview crawlers need an absolute URL
+      const imageUrl = image.startsWith('http')
+        ? image
+        : `${(appUrl ?? '').replace(/\/$/, '')}${image}`;
+      tags.push(
+        `<meta property="og:image" content="${escapeAttr(imageUrl)}" />`
+      );
       tags.push(`<meta property="og:image:width" content="1200" />`);
       tags.push(`<meta property="og:image:height" content="630" />`);
     }

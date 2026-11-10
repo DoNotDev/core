@@ -202,7 +202,6 @@ export const DEGRADED_AI_API: AIAPI = {
  */
 export const DEGRADED_CRUD_API: CrudAPI = {
   status: FEATURE_STATUS.DEGRADED,
-  data: null,
   loading: false,
   error: null,
   get: async () => null,
