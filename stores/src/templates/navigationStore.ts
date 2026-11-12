@@ -102,7 +102,7 @@ const createDefaultCache = (): NavigationCache => ({
   allRoutes: [],
   filteredRoutes: new Map(),
   routeGroups: new Map(),
-  manifest: null as Record<string, unknown> | null,
+  manifest: null,
   lastUpdated: 0,
 });
 

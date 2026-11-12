@@ -17,10 +17,14 @@ import type { ReactNode } from 'react';
 
 import type { AuthSessionSnapshot } from '@donotdev/types';
 
+import { syncQueryCacheIdentity } from '../core';
+
 const AuthSessionContext = createContext<AuthSessionSnapshot | null>(null);
 
 /**
- * Provides the request's auth session snapshot (`null` = unknown).
+ * Provides the request's auth session snapshot (`null` = unknown). A known snapshot
+ * seeds the identity the query cache is filled under (syncQueryCacheIdentity), so the
+ * provider confirming the same user keeps the hydrated cache.
  *
  * @version 0.1.0
  * @since 0.1.50
@@ -33,6 +37,8 @@ export function AuthSessionProvider({
   snapshot: AuthSessionSnapshot | null;
   children: ReactNode;
 }) {
+  // Seed only: idempotent, never resets, so safe during render (hydration pass first)
+  if (snapshot !== null) syncQueryCacheIdentity(snapshot.user?.id ?? null, true);
   return (
     <AuthSessionContext.Provider value={snapshot}>
       {children}

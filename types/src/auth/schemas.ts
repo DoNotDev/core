@@ -17,6 +17,7 @@ import {
   PERMISSIONS,
 } from './constants';
 import { SUBSCRIPTION_STATUS } from '../billing';
+import { picklistOptions } from '../common/picklistOptions';
 
 // =============================================================================
 // Auth User Schema
@@ -52,9 +53,7 @@ export const AuthUserSchema = v.object({
       })
     )
   ),
-  role: v.optional(
-    v.picklist(Object.values(USER_ROLES) as [string, ...string[]])
-  ),
+  role: v.optional(v.picklist(picklistOptions(USER_ROLES))),
   customClaims: v.optional(v.record(v.string(), v.any())),
 });
 
@@ -72,10 +71,8 @@ export const AuthUserSchema = v.object({
  */
 export const UserSubscriptionSchema = v.object({
   userId: v.string(),
-  tier: v.picklist(Object.values(SUBSCRIPTION_TIERS) as [string, ...string[]]),
-  status: v.picklist(
-    Object.values(SUBSCRIPTION_STATUS) as [string, ...string[]]
-  ),
+  tier: v.picklist(picklistOptions(SUBSCRIPTION_TIERS)),
+  status: v.picklist(picklistOptions(SUBSCRIPTION_STATUS)),
   isActive: v.optional(v.boolean()),
   features: v.optional(v.array(v.string())),
   subscriptionId: v.nullable(v.string()),
@@ -98,16 +95,10 @@ export const UserSubscriptionSchema = v.object({
  * @author AMBROISE PARK Consulting
  */
 export const CustomClaimsSchema = v.object({
-  role: v.optional(
-    v.picklist(Object.values(USER_ROLES) as [string, ...string[]])
-  ),
+  role: v.optional(v.picklist(picklistOptions(USER_ROLES))),
   subscription: v.optional(UserSubscriptionSchema),
-  features: v.optional(
-    v.array(v.picklist(Object.values(FEATURES) as [string, ...string[]]))
-  ),
-  permissions: v.optional(
-    v.array(v.picklist(Object.values(PERMISSIONS) as [string, ...string[]]))
-  ),
+  features: v.optional(v.array(v.picklist(picklistOptions(FEATURES)))),
+  permissions: v.optional(v.array(v.picklist(picklistOptions(PERMISSIONS)))),
   githubAccess: v.optional(
     v.object({
       username: v.optional(v.string()),

@@ -47,7 +47,7 @@ export function validateWithSchema<T>(
   context: string
 ): T {
   try {
-    return v.parse(schema, data) as T;
+    return v.parse(schema, data);
   } catch (error) {
     if (error instanceof v.ValiError) {
       throw new DoNotDevError(
@@ -96,7 +96,7 @@ export function safeValidate<T>(
   data: unknown
 ): T | null {
   try {
-    return v.parse(schema, data) as T;
+    return v.parse(schema, data);
   } catch {
     return null;
   }
@@ -121,10 +121,11 @@ export function safeValidate<T>(
  */
 export function ensureSpreadable<T>(data: T): Record<string, unknown> {
   if (data && typeof data === 'object' && !Array.isArray(data)) {
+    // why: generic `T & object` has no index signature; non-array object checked above
     return data as Record<string, unknown>;
   }
   // Fallback: wrap primitive/null in object
-  return { value: data } as Record<string, unknown>;
+  return { value: data };
 }
 
 /**

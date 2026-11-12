@@ -36,6 +36,7 @@ export function getConfigSection<T>(
   section: keyof DndevFrameworkConfig
 ): T | null {
   const config = getDndevConfig();
+  // why: public generic accessor — caller-chosen T over a heterogeneous config section
   return (config?.[section] as T) || null;
 }
 

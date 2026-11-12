@@ -253,7 +253,7 @@ export const selectSchema: CustomSchemaGenerator = (field) => {
   if (Array.isArray(options) && options.length > 0) {
     const values = options.map(
       (opt: { value: string; label: string }) => opt.value
-    ) as [string, ...string[]];
+    );
     const schema = v.picklist(values);
     return applyRequired(schema, field.validation?.required);
   }
@@ -271,7 +271,7 @@ export const multiselectSchema: CustomSchemaGenerator = (field) => {
   if (Array.isArray(options) && options.length > 0) {
     const values = options.map(
       (opt: { value: string; label: string }) => opt.value
-    ) as [string, ...string[]];
+    );
     const schema = v.array(v.picklist(values));
     return applyRequired(schema, field.validation?.required);
   }
@@ -340,10 +340,7 @@ export const switchSchema: CustomSchemaGenerator = (field) => {
 
   if (fieldSpecific?.checkedValue && fieldSpecific?.uncheckedValue) {
     // 2-value string switch (e.g., 'Automatic' / 'Manual')
-    const values = [
-      fieldSpecific.checkedValue,
-      fieldSpecific.uncheckedValue,
-    ] as [string, string];
+    const values = [fieldSpecific.checkedValue, fieldSpecific.uncheckedValue];
     const schema = v.picklist(values);
     return applyRequired(schema, field.validation?.required);
   }
@@ -362,7 +359,7 @@ export const gdprConsentSchema: CustomSchemaGenerator = (field) => {
     // If required, must be an object with gdprConsent: true
     if (field.validation?.required) {
       if (typeof input === 'object' && input !== null) {
-        return (input as { gdprConsent?: boolean }).gdprConsent === true;
+        return 'gdprConsent' in input && input.gdprConsent === true;
       }
       return false;
     }
@@ -371,7 +368,7 @@ export const gdprConsentSchema: CustomSchemaGenerator = (field) => {
       return true;
     }
     if (typeof input === 'object' && input !== null) {
-      return (input as { gdprConsent?: boolean }).gdprConsent === true;
+      return 'gdprConsent' in input && input.gdprConsent === true;
     }
     return false;
   }, 'GDPR consent must be given');

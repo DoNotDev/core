@@ -29,7 +29,10 @@
     "replySubject": "Re: Ihre Anfrage",
     "markResponded": "Als beantwortet markieren",
     "selectOptions": "Optionen auswählen...",
-    "use": "Diese Adresse verwenden"
+    "use": "Diese Adresse verwenden",
+    "edit": "Bearbeiten",
+    "refresh": "Aktualisieren",
+    "open": "Öffnen"
   },
   "address": {
     "placeholder": "Adresse eingeben...",
@@ -258,7 +261,9 @@
     "networkError": "Netzwerkfehler aufgetreten",
     "unauthorized": "Nicht autorisierter Zugriff",
     "forbidden": "Zugriff verboten",
-    "serverError": "Serverfehler aufgetreten"
+    "serverError": "Serverfehler aufgetreten",
+    "bulkPartialError_one": "{{count}} Zeile konnte nicht gespeichert werden",
+    "bulkPartialError_other": "{{count}} Zeilen konnten nicht gespeichert werden"
   },
   "form": {
     "submit": "Absenden",
@@ -272,7 +277,9 @@
     "uploading": "Hochladen {{progress}}%...",
     "processing": "Verarbeitung...",
     "validating": "Validierung...",
-    "saving": "Speichern..."
+    "saving": "Speichern...",
+    "saved": "Gespeichert",
+    "error": "Fehler — bitte erneut versuchen"
   },
   "gdprConsent": {
     "consent": "Ich stimme der",
@@ -366,5 +373,35 @@
   },
   "recommendations": {
     "title": "Das könnte Ihnen auch gefallen"
+  },
+  "addNew": "Hinzufügen",
+  "delete": {
+    "title": "Element löschen",
+    "confirm": "Möchten Sie dieses Element wirklich löschen?",
+    "loading": "Wird gelöscht...",
+    "titleSelected_one": "{{count}} Element löschen",
+    "titleSelected_other": "{{count}} Elemente löschen",
+    "confirmSelected_one": "Das ausgewählte Element löschen? Dies kann nicht rückgängig gemacht werden.",
+    "confirmSelected_other": "Die {{count}} ausgewählten Elemente löschen? Dies kann nicht rückgängig gemacht werden."
+  },
+  "errors": {
+    "notFound": "{{entity}} nicht gefunden",
+    "fetchFailed": "{{entity}} konnte nicht geladen werden"
+  },
+  "emptyState": {
+    "title": "Nichts gefunden",
+    "description": "Hier gibt es noch nichts anzuzeigen."
+  },
+  "bulkEdit": {
+    "pending_one": "{{count}} ungespeicherte Änderung",
+    "pending_other": "{{count}} ungespeicherte Änderungen",
+    "discard": "Änderungen verwerfen",
+    "selected": "{{count}} ausgewählt",
+    "field": "Feld",
+    "value": "Wert",
+    "apply": "Auf Auswahl anwenden",
+    "deleteSelected": "Auswahl löschen ({{count}})",
+    "failed_one": "{{count}} Zeile nicht gespeichert: Sie bleibt in der Liste, bitte erneut versuchen",
+    "failed_other": "{{count}} Zeilen nicht gespeichert: Sie bleiben in der Liste, bitte erneut versuchen"
   }
 }

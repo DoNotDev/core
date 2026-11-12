@@ -12,11 +12,13 @@
 import { createRequire } from 'node:module';
 
 import { BaseNextHandler } from './BaseNextHandler.js';
+import { NEXT_FILE_MARKER, nextFileName } from '../nextFiles.js';
 import {
   GENERATED_PATHS,
   ROUTE_DISCOVERY,
   CONFIG_KEYS,
   DEFAULT_OG_IMAGE,
+  NEXT_RENDER,
 } from '../../constants.js';
 import { RouteDiscovery } from '../../discovery/RouteDiscovery.js';
 import { createMissingResourceError } from '../../utils/buildError.js';
@@ -30,6 +32,19 @@ import {
 export class NextRouteHandler extends BaseNextHandler {
   constructor(options = {}) {
     super(RouteDiscovery, options);
+    /**
+     * Whether the per-request tree (src/app/dndev-session) is generated: cookie session
+     * and a generated proxy to rewrite to it. Set by generateMiddleware, which runs
+     * before the page generation.
+     * @type {boolean}
+     */
+    this.rendersSessionTree = false;
+    /**
+     * First URL segments of the app's own route files outside `src/app/[lang]` (2+
+     * languages, set by generateMiddleware): the proxy passes them untouched.
+     * @type {string[]}
+     */
+    this.appRouteSegments = [];
   }
 
   // === HANDLER CONFIGURATION ===
@@ -39,10 +54,95 @@ export class NextRouteHandler extends BaseNextHandler {
       routingMode: 'app', // 'app' or 'pages'
       generateMiddleware: true,
       generateAppPages: true, // NEW: Generate app/** page files
-      // Note: catch-all removed - incompatible with Next.js 16+ static export, use not-found.tsx instead
-      middlewarePath: GENERATED_PATHS.next.middleware,
+      // Note: catch-all removed - incompatible with Next.js 16+ static export, use not-found.next.tsx instead
+      proxyPath: GENERATED_PATHS.next.proxy,
       manifestPath: GENERATED_PATHS.next.routeManifest,
+      // App languages (set by useLanguages from the i18n discovery before generation).
+      // One language: no URL prefix, pages at the app root.
+      languages: [],
+      defaultLanguage: null,
     };
+  }
+
+  /**
+   * Languages of the app, from the i18n discovery (runDiscoveries calls this before
+   * generating routes, which run before the i18n handler). 2+ languages: pages are
+   * generated under `src/app/[lang]/` and the proxy serves the default language at
+   * the root.
+   *
+   * @param {{ languages: string[], defaultLanguage: string }} i18n
+   * @since 0.2.3
+   */
+  useLanguages({ languages, defaultLanguage }) {
+    if (languages.length > 1 && !languages.includes(defaultLanguage)) {
+      throw new Error(
+        `i18n fallbackLanguage "${defaultLanguage}" has no translations among [${languages.join(', ')}]: it is the language served at the root URL. Add its locale files or set i18n.fallbackLanguage to one of them.`
+      );
+    }
+    this.options.languages = languages;
+    this.options.defaultLanguage = defaultLanguage;
+  }
+
+  /**
+   * Whether every language has its own URL (2+ languages).
+   *
+   * @returns {boolean}
+   * @since 0.2.3
+   */
+  isMultilingual() {
+    return this.options.languages.length > 1;
+  }
+
+  /**
+   * Directory of the root layout, relative to `src/app`: `/[lang]` with 2+ languages
+   * (the root layout reads the language of the URL), `''` with one.
+   *
+   * @returns {string}
+   * @since 0.2.3
+   */
+  rootDir() {
+    return this.isMultilingual() ? '/[lang]' : '';
+  }
+
+  /**
+   * Root directory of a render tree, relative to `src/app` (NEXT_RENDER), under the
+   * root layout: the `(site)` route group (static, cached pages) or the internal
+   * per-request tree. `/[lang]/(site)` with 2+ languages, `/(site)` with one.
+   *
+   * @param {'site'|'session'} [tree='site']
+   * @returns {string}
+   * @since 0.2.3
+   */
+  treeDir(tree = 'site') {
+    return `${this.rootDir()}/${tree === 'session' ? NEXT_RENDER.sessionSegment : NEXT_RENDER.siteGroup}`;
+  }
+
+  /**
+   * App directory of a route, relative to `src/app`: `/[lang]/(site)/produits/[slug]`
+   * with 2+ languages, `/(site)/produits/[slug]` with one; under the per-request tree
+   * (`/[lang]/dndev-session/…`) for `tree: 'session'`.
+   *
+   * @param {string} routePath - Route path in React Router syntax
+   * @param {'site'|'session'} [tree='site'] - Render tree
+   * @returns {string}
+   * @since 0.2.3
+   */
+  appDirFor(routePath, tree = 'site') {
+    return `${this.treeDir(tree)}${this.convertRouteToAppPath(routePath)}`;
+  }
+
+  /**
+   * Import path of an app file of `src/app` (ClientLayout, AppDocument) from a
+   * directory below it.
+   *
+   * @param {string} dir - Directory relative to `src/app` (`/[lang]/(site)`, `''`)
+   * @param {string} name - Module name in `src/app` (`ClientLayout`)
+   * @returns {string} `../../ClientLayout`, `./ClientLayout` from `src/app` itself
+   * @since 0.2.3
+   */
+  appImport(dir, name) {
+    const depth = dir.split('/').filter(Boolean).length;
+    return depth === 0 ? `./${name}` : `${'../'.repeat(depth)}${name}`;
   }
 
   createDiscovery(discoveryClass) {
@@ -166,6 +266,8 @@ export default { routes: routeMapping, manifest: routeManifest };
   // === FILE GENERATION ===
 
   async generateSpecificFiles(routeData) {
+    await this.assertAppDocument();
+
     if (this.options.generateMiddleware) {
       await this.generateMiddleware(routeData);
     }
@@ -316,8 +418,21 @@ export default { routes: routeMapping, manifest: routeManifest };
   }
 
   /**
-   * Generate app/** page files from discovered routes
-   * Creates bridge files that import actual page components for optimal SEO
+   * Generate app/** page files from discovered routes, in two render trees:
+   *
+   * - `src/app/(site)/…` (every app): the providers without request data, so each page
+   *   is static and served from the cache, revalidated every
+   *   NEXT_RENDER.revalidateSeconds (ISR). One cache entry per URL, i.e. per page and
+   *   per language. Guests, crawlers and every visitor of an app whose session the
+   *   server cannot read (Firebase, localStorage) get it.
+   * - `src/app/dndev-session/…` (cookie session + generated proxy): the same pages
+   *   rendered per request with the request cookies (signed-in state, the visitor's
+   *   data). The proxy rewrites requests carrying an auth cookie to it.
+   *
+   * Both trees sit under the generated root layout (`src/app/layout.next.tsx`, or
+   * `src/app/[lang]/layout.next.tsx` with 2+ languages): the app's AppDocument with the
+   * page's `<html lang>`, no providers, no request data, so the site tree stays static.
+   * The 404 pages are generated next to it.
    *
    * @param {Object} routeData - Route discovery results
    * @returns {Promise<void>}
@@ -329,11 +444,21 @@ export default { routes: routeMapping, manifest: routeManifest };
       // Clean existing generated page files first
       await this.cleanGeneratedPageFiles();
 
+      this.generateRootLayout();
+      this.generateNotFoundPages();
+      const trees = this.rendersSessionTree ? ['site', 'session'] : ['site'];
+      for (const tree of trees) {
+        await this.generateTreeLayout(tree);
+      }
+
       // Generate a page file for each discovered route
       let generatedCount = 0;
       for (const route of routeData.routes) {
         const wasGenerated = await this.generateSingleAppPage(route);
         if (wasGenerated) generatedCount++;
+        if (wasGenerated && this.rendersSessionTree) {
+          this.generateSessionPage(route);
+        }
       }
 
       this.logger.debug(
@@ -343,6 +468,420 @@ export default { routes: routeMapping, manifest: routeManifest };
       this.logger.error(`Failed to generate app/** files: ${error.message}`);
       throw error;
     }
+  }
+
+  /**
+   * Request-reading parts of the app's document (src/app/AppDocument.tsx): the
+   * providers (`<ClientLayout>`), `next/headers`, an exported `dynamic`.
+   *
+   * @param {string} content - AppDocument source
+   * @returns {string[]} What it does, empty for an HTML shell
+   * @since 0.2.3
+   */
+  requestDocumentParts(content) {
+    return [
+      [/<ClientLayout\b/, 'renders <ClientLayout>'],
+      [/from\s+['"]next\/headers['"]/, 'imports next/headers'],
+      [/export\s+const\s+dynamic\b/, 'exports `dynamic`'],
+    ]
+      .filter(([pattern]) => pattern.test(content))
+      .map(([, label]) => label);
+  }
+
+  /**
+   * Fail the build unless the app's HTML document is `src/app/AppDocument.tsx` and the
+   * framework owns the root layout and the 404 pages.
+   *
+   * - An app-owned root layout (`src/app/layout.next.tsx`, `src/app/[lang]/layout.next.tsx`)
+   *   or root 404 (`not-found.next.tsx`, `global-not-found.next.tsx`): the generated
+   *   root layout renders AppDocument with the page's language (`<html lang>`), which
+   *   a root layout above the `[lang]` segment cannot know.
+   * - AppDocument missing, or reading the request / rendering the providers: it is the
+   *   HTML shell of every cached page; the generated tree layouts render ClientLayout
+   *   (cached pages for guests, per request for an auth cookie).
+   *
+   * @returns {Promise<void>}
+   * @throws {Error} With the files to move or delete and the shape AppDocument takes
+   * @since 0.2.3
+   */
+  async assertAppDocument() {
+    const documentPath = GENERATED_PATHS.next.appDocument;
+    const documentShape =
+      `${documentPath} exports \`metadata\` (site-level: metadataBase) and ` +
+      '`AppDocument({ lang, children })`, which renders <html lang={lang}>, the <head> ' +
+      'links (favicon, <FontPreloadLinks />), imports the global CSS and puts {children} ' +
+      'in <body> (see the @donotdev/cli app-next template)';
+    const appOwned = [];
+    for (const rel of this.frameworkRootFiles()) {
+      const fullPath = this.pathResolver.resolveAppPath(rel);
+      if (
+        this.pathResolver.pathExists(fullPath) &&
+        !(await this.hasGenerationMarker(fullPath))
+      ) {
+        appOwned.push(rel);
+      }
+    }
+    if (appOwned.length > 0) {
+      throw new Error(
+        `[dndev] ${appOwned.join(', ')}: the framework generates the root layout and the ` +
+          "404 pages, so every page's HTML carries its language (<html lang>). Move the " +
+          `HTML shell into ${documentPath}: ${documentShape}. Then delete ${appOwned.join(', ')}.`
+      );
+    }
+
+    const fullPath = this.pathResolver.resolveAppPath(documentPath);
+    if (!this.pathResolver.pathExists(fullPath)) {
+      throw new Error(`[dndev] ${documentPath} is missing: ${documentShape}.`);
+    }
+    const parts = this.requestDocumentParts(
+      await this.pathResolver.read(fullPath, { format: 'text' })
+    );
+    if (parts.length === 0) return;
+    throw new Error(
+      `[dndev] ${documentPath} ${parts.join(', ')}. It must be the HTML shell: ` +
+        'render {children} in <body>, drop the ClientLayout / headers() wrapper and ' +
+        '`export const dynamic`. The generated layouts render ClientLayout: cached pages ' +
+        'for guests, per-request pages for visitors with an auth cookie.'
+    );
+  }
+
+  /**
+   * Root files the framework generates (root layouts, 404 pages), in both language
+   * modes: an app-owned one is refused (assertAppDocument), a generated one of the
+   * other mode is removed by cleanGeneratedPageFiles.
+   *
+   * @returns {string[]} Paths relative to the app root
+   * @since 0.2.3
+   */
+  frameworkRootFiles() {
+    const layout = nextFileName('layout', 'tsx');
+    const notFound = nextFileName('not-found', 'tsx');
+    return [
+      GENERATED_PATHS.next.appLayout,
+      `src/app/[lang]/${layout}`,
+      `src/app/${notFound}`,
+      `src/app/[lang]/${notFound}`,
+      `src/app/${nextFileName('global-not-found', 'tsx')}`,
+    ];
+  }
+
+  /**
+   * Layout of a render tree: `src/app/(site)/layout.next.tsx` or
+   * `src/app/dndev-session/layout.next.tsx` (under `src/app/[lang]` with 2+ languages).
+   * The per-request one is removed when the app has no cookie session.
+   *
+   * @param {'site'|'session'} tree
+   * @returns {Promise<void>}
+   * @since 0.2.3
+   */
+  async generateTreeLayout(tree) {
+    const layoutPath = `src/app${this.treeDir(tree)}/${nextFileName('layout', 'tsx')}`;
+    const fullPath = this.pathResolver.resolveAppPath(layoutPath);
+    if (
+      this.pathResolver.pathExists(fullPath) &&
+      !(await this.hasGenerationMarker(fullPath))
+    ) {
+      this.logger.debug(`Skipping ${layoutPath} - user-created file detected`);
+      return;
+    }
+    this.writeGeneratedFile(
+      layoutPath,
+      tree === 'session'
+        ? this.generateSessionLayoutContent()
+        : this.generateSiteLayoutContent(),
+      `${tree} layout`
+    );
+  }
+
+  /**
+   * Content of `src/app/(site)/layout.next.tsx` (`src/app/[lang]/(site)` with 2+
+   * languages): the app's ClientLayout without request
+   * data. Signed-out snapshot (`serverCookies=""`: a cookie-session provider reads it
+   * as signed out, the others as unknown), language from the URL only. The Suspense
+   * boundary keeps a page that reads the query string (useSearchParams /
+   * useLocation().search) to itself: that page renders in the browser, the layout and
+   * every other page stay in the cached HTML.
+   *
+   * @returns {string}
+   * @since 0.2.3
+   */
+  generateSiteLayoutContent() {
+    return `// Generated by @donotdev/config - DO NOT EDIT
+// Cached pages: rendered without request data (no cookies, no headers), served from the
+// cache and re-rendered at most every ${NEXT_RENDER.revalidateSeconds}s. One entry per URL (page and language).
+
+import { Suspense } from 'react';
+import type { ReactNode } from 'react';
+
+import { ClientLayout } from '${this.appImport(this.treeDir('site'), 'ClientLayout')}';
+
+export const revalidate = ${NEXT_RENDER.revalidateSeconds};
+
+export default function SiteLayout({ children }: { children: ReactNode }) {
+  return (
+    <ClientLayout serverCookies="" acceptLanguage={null}>
+      <Suspense fallback={null}>{children}</Suspense>
+    </ClientLayout>
+  );
+}
+`;
+  }
+
+  /**
+   * Content of `src/app/dndev-session/layout.next.tsx` (`src/app/[lang]/dndev-session`
+   * with 2+ languages): the app's ClientLayout with the
+   * request's Cookie and Accept-Language headers (signed-in state on the first paint,
+   * the visitor's data). Reading the headers renders these pages per request.
+   *
+   * @returns {string}
+   * @since 0.2.3
+   */
+  generateSessionLayoutContent() {
+    return `// Generated by @donotdev/config - DO NOT EDIT
+// Per-request pages for visitors with an auth cookie (the proxy rewrites them here; a
+// direct hit is a 404): the providers read the request cookies, so the server render
+// shows the visitor's signed-in state and data. Never cached.
+
+import { headers } from 'next/headers';
+import type { ReactNode } from 'react';
+
+import { ClientLayout } from '${this.appImport(this.treeDir('session'), 'ClientLayout')}';
+
+export default async function SessionLayout({ children }: { children: ReactNode }) {
+  const requestHeaders = await headers();
+  return (
+    <ClientLayout
+      serverCookies={requestHeaders.get('cookie') ?? ''}
+      acceptLanguage={requestHeaders.get('accept-language')}
+    >
+      {children}
+    </ClientLayout>
+  );
+}
+`;
+  }
+
+  /**
+   * The root layout: `src/app/layout.next.tsx` with one language,
+   * `src/app/[lang]/layout.next.tsx` with 2+ (the generated one of the other mode is
+   * removed by cleanGeneratedPageFiles). It renders the app's AppDocument with the
+   * page's language, so every page's HTML carries its `<html lang>`, cached pages
+   * included. Both render trees are its children: moving between them (sign-in,
+   * sign-out) and between languages is a client-side navigation.
+   *
+   * @returns {void}
+   * @since 0.2.3
+   */
+  generateRootLayout() {
+    this.writeGeneratedFile(
+      `src/app${this.rootDir()}/${nextFileName('layout', 'tsx')}`,
+      this.generateRootLayoutContent(),
+      'root layout'
+    );
+  }
+
+  /**
+   * Content of the root layout. 2+ languages: lists the languages
+   * (generateStaticParams, every language URL is prerendered) and 404s any other
+   * first segment. One language: the default language.
+   *
+   * @returns {string}
+   * @since 0.2.3
+   */
+  generateRootLayoutContent() {
+    const documentImport = this.appImport(this.rootDir(), 'AppDocument');
+    if (!this.isMultilingual()) {
+      return `// Generated by @donotdev/config - DO NOT EDIT
+// Root layout: the app's AppDocument (src/app/AppDocument.tsx) in the app's language.
+
+import type { ReactNode } from 'react';
+
+import { AppDocument } from '${documentImport}';
+
+export { metadata } from '${documentImport}';
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return <AppDocument lang=${JSON.stringify(this.options.defaultLanguage)}>{children}</AppDocument>;
+}
+`;
+    }
+    return `// Generated by @donotdev/config - DO NOT EDIT
+// Root layout: the app's AppDocument (src/app/AppDocument.tsx) in the URL's language.
+// One URL per language: the default language (${this.options.defaultLanguage}) at the root, served here by
+// the proxy's rewrite; the others under their prefix. Any other first segment is a 404.
+
+import { notFound } from 'next/navigation';
+import type { ReactNode } from 'react';
+
+import { AppDocument } from '${documentImport}';
+
+export { metadata } from '${documentImport}';
+
+const LANGUAGES: readonly string[] = ${JSON.stringify(this.options.languages)};
+
+export function generateStaticParams() {
+  return LANGUAGES.map((lang) => ({ lang }));
+}
+
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: ReactNode;
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  if (!LANGUAGES.includes(lang)) notFound();
+  return <AppDocument lang={lang}>{children}</AppDocument>;
+}
+`;
+  }
+
+  /**
+   * The 404 pages, rendered with the app's providers (ClientLayout) and the
+   * framework's NotFoundPage, without request data:
+   *
+   * - `not-found.next.tsx` next to the root layout: a page calling notFound().
+   * - `src/app/global-not-found.next.tsx` (Next `experimental.globalNotFound`, set by
+   *   the framework's Next config, which then serves every unknown URL from it): its
+   *   own document, in the app's language with one language (static), in the URL's
+   *   language with 2+ (the proxy's NEXT_RENDER.languageHeader, rendered per request),
+   *   since no root layout sits above `[lang]`.
+   *
+   * @returns {void}
+   * @since 0.2.3
+   */
+  generateNotFoundPages() {
+    this.writeGeneratedFile(
+      `src/app${this.rootDir()}/${nextFileName('not-found', 'tsx')}`,
+      this.generateNotFoundContent(),
+      '404 page'
+    );
+    this.writeGeneratedFile(
+      `src/app/${nextFileName('global-not-found', 'tsx')}`,
+      this.generateGlobalNotFoundContent(),
+      'global 404 page'
+    );
+  }
+
+  /**
+   * Content of `not-found.next.tsx` (next to the root layout).
+   *
+   * @returns {string}
+   * @since 0.2.3
+   */
+  generateNotFoundContent() {
+    return `// Generated by @donotdev/config - DO NOT EDIT
+// 404 page: the app's providers without request data (static, like every cached page).
+// The Suspense boundary keeps a query-string read (useSearchParams) to the 404 content.
+
+import { Suspense } from 'react';
+
+import { NotFoundPage } from '@donotdev/ui';
+
+import { ClientLayout } from '${this.appImport(this.rootDir(), 'ClientLayout')}';
+
+export default function NotFound() {
+  return (
+    <ClientLayout serverCookies="" acceptLanguage={null}>
+      <Suspense fallback={null}>
+        <NotFoundPage />
+      </Suspense>
+    </ClientLayout>
+  );
+}
+`;
+  }
+
+  /**
+   * Content of `src/app/global-not-found.next.tsx`.
+   *
+   * @returns {string}
+   * @since 0.2.3
+   */
+  generateGlobalNotFoundContent() {
+    const content = `
+    <AppDocument lang={lang}>
+      <ClientLayout serverCookies="" acceptLanguage={null}>
+        <Suspense fallback={null}>
+          <NotFoundPage />
+        </Suspense>
+      </ClientLayout>
+    </AppDocument>`;
+    if (!this.isMultilingual()) {
+      return `// Generated by @donotdev/config - DO NOT EDIT
+// 404 of an unknown URL: the app's AppDocument in the app's language (static).
+
+import { Suspense } from 'react';
+
+import { NotFoundPage } from '@donotdev/ui';
+
+import { AppDocument } from './AppDocument';
+import { ClientLayout } from './ClientLayout';
+
+export { metadata } from './AppDocument';
+
+const lang = ${JSON.stringify(this.options.defaultLanguage)};
+
+export default function GlobalNotFound() {
+  return (${content}
+  );
+}
+`;
+    }
+    return `// Generated by @donotdev/config - DO NOT EDIT
+// 404 of an unknown URL (no root layout above [lang]): the app's AppDocument in the URL's
+// language, which the proxy sets on the request (${NEXT_RENDER.languageHeader}); a request the proxy
+// does not see (API route, file) gets the default language (${this.options.defaultLanguage}).
+
+import { headers } from 'next/headers';
+import { Suspense } from 'react';
+
+import { NotFoundPage } from '@donotdev/ui';
+
+import { AppDocument } from './AppDocument';
+import { ClientLayout } from './ClientLayout';
+
+export { metadata } from './AppDocument';
+
+const LANGUAGES: readonly string[] = ${JSON.stringify(this.options.languages)};
+
+export default async function GlobalNotFound() {
+  const requested = (await headers()).get(${JSON.stringify(NEXT_RENDER.languageHeader)});
+  const lang =
+    requested && LANGUAGES.includes(requested) ? requested : ${JSON.stringify(this.options.defaultLanguage)};
+  return (${content}
+  );
+}
+`;
+  }
+
+  /**
+   * Per-request page of a route (`src/app/dndev-session/…/page.next.tsx`): re-exports
+   * the site tree's page (and the blog post metadata), so both trees render the same
+   * component. Its layout makes it per request.
+   *
+   * @param {Object} route - Route object from discovery
+   * @returns {void}
+   * @since 0.2.3
+   */
+  generateSessionPage(route) {
+    const sessionDir = this.appDirFor(route.path, 'session');
+    const up = '../'.repeat(sessionDir.split('/').filter(Boolean).length);
+    const sitePage = `${up}${this.appDirFor(route.path).slice(1)}/${nextFileName('page', 'tsx').replace(/\.tsx$/, '')}`;
+    const names = ['default'];
+    if (route.metaExport?.namespace === 'blog' && this.hasDynamicSegment(route.path)) {
+      names.push('generateMetadata');
+    }
+    this.writeGeneratedFile(
+      `src/app${sessionDir}/${nextFileName('page', 'tsx')}`,
+      `// Generated by @donotdev/config - DO NOT EDIT
+// Per-request render of ${route.path} (visitors with an auth cookie): same page as the cached one.
+
+export { ${names.join(', ')} } from '${sitePage}';
+`,
+      `session page: ${sessionDir}`
+    );
   }
 
   /**
@@ -356,7 +895,13 @@ export default { routes: routeMapping, manifest: routeManifest };
       const appRoot = this.pathResolver.getAppRoot();
       // Generated pages and their client wrappers: a route removed from src/pages
       // must not leave a *PageClient.tsx importing a page that no longer exists.
-      const patterns = ['src/app/**/page.tsx', 'src/app/**/*PageClient.tsx', 'src/app/[...slug]/page.tsx'];
+      const patterns = [
+        `src/app/**/${nextFileName('page', 'tsx')}`,
+        `src/app/**/${nextFileName('layout', 'tsx')}`,
+        `src/app/**/${nextFileName('not-found', 'tsx')}`,
+        `src/app/${nextFileName('global-not-found', 'tsx')}`,
+        'src/app/**/*PageClient.tsx',
+      ];
       const files = await this.pathResolver._globWithNormalization(patterns, {
         cwd: appRoot,
         absolute: true,
@@ -399,8 +944,8 @@ export default { routes: routeMapping, manifest: routeManifest };
    */
   async generateSingleAppPage(route) {
     try {
-      const appPath = this.convertRouteToAppPath(route.path);
-      const pageFilePath = `src/app${appPath}/page.tsx`;
+      const appPath = this.appDirFor(route.path);
+      const pageFilePath = `src/app${appPath}/${nextFileName('page', 'tsx')}`;
       const fullPagePath = this.pathResolver.resolveAppPath(pageFilePath);
 
       // Skip if user-created file exists (no generation marker)
@@ -590,60 +1135,64 @@ export default { routes: routeMapping, manifest: routeManifest };
 
     // Client components render after hydration through a mounted client wrapper.
     // The generated page stays a server component so Next.js can keep metadata/static export stable.
+    // Pages whose PageMeta sets `auth` render inside AuthGuard, and pages that set
+    // `signedInRedirect` inside SignedInRedirect, as on Vite (vite-routing/AppRoutes).
+    // The proxy, when generated, redirects before render.
+    const auth = this.normalizeAuth(route.auth) ? route.auth : null;
+    const signedInTo = route.meta?.signedInRedirect ?? null;
+    const guards = [
+      ...(auth ? ['AuthGuard'] : []),
+      ...(signedInTo ? ['SignedInRedirect'] : []),
+    ];
+    const guardImport = guards.length
+      ? `import { ${guards.join(', ')} } from '@donotdev/ui';\n`
+      : '';
+    const guard = (jsx) => {
+      const inner = signedInTo
+        ? `<SignedInRedirect to={${JSON.stringify(signedInTo)}}>${jsx}</SignedInRedirect>`
+        : jsx;
+      return auth
+        ? `<AuthGuard auth={${JSON.stringify(auth === true ? { required: true } : auth)}}>${inner}</AuthGuard>`
+        : inner;
+    };
+
     if (isClientComponent) {
       return `// Generated by @donotdev/config - DO NOT EDIT
 // This file will be regenerated when src/pages changes
 // To customize: edit ${route.filePath} or create manual app/** files
 
-import ${componentName}Client from './${componentName}Client';
-${this.ssrDynamicExport()}
+${guardImport}import ${componentName}Client from './${componentName}Client';
+${this.onDemandParamsExport(route)}
 export default function ${componentName}Route() {
-  return <${componentName}Client />;
+  return ${guard(`<${componentName}Client />`)};
 }
 `;
     }
 
-    // Server components: include generateMetadata from manifest
-    // Same PageMeta works in Vite (AutoMetaTags) and Next.js (this)
+    // Server components: head tags come from AutoMetaTags (NextJsAppProviders), the
+    // same PageMeta resolution as Vite. No generateMetadata here: a second <title>
+    // source would ship twice (React 19 does not dedupe), and getMetadataForPath
+    // pulls the build tooling (@babel/core) into the Next server bundle.
+    if (guards.length) {
+      return `// Generated by @donotdev/config - DO NOT EDIT
+// This file will be regenerated when src/pages changes
+// To customize: edit ${route.filePath} or create manual app/** files
+
+${guardImport}import ${componentName} from '${relativeImportPath}';
+${this.onDemandParamsExport(route)}
+export default function ${componentName}Route(props: Record<string, unknown>) {
+  return ${guard(`<${componentName} {...props} />`)};
+}
+`;
+    }
+
     return `// Generated by @donotdev/config - DO NOT EDIT
 // This file will be regenerated when src/pages changes
 // To customize: edit ${route.filePath} or create manual app/** files
 
-import type { Metadata } from 'next';
-
-import { getMetadataForPath } from '@donotdev/core/next';
-
 import ${componentName} from '${relativeImportPath}';
-${this.ssrDynamicExport()}
-export async function generateMetadata(): Promise<Metadata> {
-  return getMetadataForPath('${route.path}');
-}
-
+${this.onDemandParamsExport(route)}
 export default ${componentName};
-`;
-  }
-
-  /**
-   * When appConfig.ssr is set, generated route wrappers render dynamically at
-   * request time. The framework's client provider tree is not static-generation
-   * safe under Next 16 (null-dispatcher during SSG prerender), but renders
-   * correctly per request — content is still fully server-rendered and crawlable.
-   * Returns an empty string when SSR is off (legacy static/CSR behavior).
-   *
-   * @returns {string}
-   */
-  ssrDynamicExport() {
-    if (!this.options.ssr) return '';
-    // Dynamic rendering is the correct mode for this framework: the provider and
-    // layout tree reads live zustand stores (theme, layout, i18n, overlay) during
-    // render, which makes it inherently dynamic. React 19 static prerendering (SSG)
-    // cannot statically render components that read mutable external stores, so we
-    // render on the server at request time — full, real SSR (content is in the
-    // initial HTML and crawlable). Not a workaround: it matches the architecture.
-    return `
-// SSR (appConfig.ssr): render at request time — the provider tree is store-driven
-// and therefore dynamic. Content is fully server-rendered.
-export const dynamic = 'force-dynamic';
 `;
   }
 
@@ -888,105 +1437,563 @@ ${alternates}
     }
   }
 
+  /**
+   * Generate `src/proxy.next.ts` (Next 16), the request gate before anything renders:
+   *
+   * - 2+ languages: serves an unprefixed URL as the default language (internal
+   *   rewrite to `/<default>/…`, the app/[lang] route), redirects a first visit to the
+   *   visitor's language (language cookie, then Accept-Language) and `/<default>/…`
+   *   to the root URL (resolveLanguageRoute in @donotdev/core).
+   * - Session in cookies (Supabase `createBrowserClient`): a request without an auth
+   *   cookie is signed out and gets the cached page (src/app/(site)); with one, the
+   *   session is verified and refreshed when expired (refreshSupabaseSession in
+   *   @donotdev/supabase/server) and, signed in or unknown, the page renders per
+   *   request (internal rewrite to src/app/dndev-session, under src/app/[lang] with 2+
+   *   languages; 404 on a direct hit). The redirects below use a verified session only.
+   * - 2+ languages, a request that is not a page: sets NEXT_RENDER.languageHeader to
+   *   the URL's language (an unknown URL's 404 renders in it).
+   * - Auth redirects for pages whose PageMeta sets `auth`, cookie session only: a
+   *   session the server cannot read (Firebase, localStorage) would redirect signed-in
+   *   users, so those apps rely on the page's AuthGuard alone. Redirect gate only: data
+   *   access stays enforced by RLS.
+   * - Signed-in redirects for pages whose PageMeta sets `signedInRedirect`, same
+   *   cookie-session condition (else the page's SignedInRedirect alone).
+   *
+   * Generated when any applies; removed (if generated) when none does.
+   *
+   * @param {Object} routeData - Discovered routes
+   */
   async generateMiddleware(routeData) {
-    // Get protected routes
-    const protectedRoutes = routeData.routes.filter(
-      (route) => route.auth && route.auth !== false && route.auth.required
-    );
+    this.removeLegacyMiddleware();
+    this.rendersSessionTree = false;
 
-    if (protectedRoutes.length === 0) {
+    const authRoutes = routeData.routes.filter((route) =>
+      Boolean(this.normalizeAuth(route.auth))
+    );
+    const signedInPages = routeData.routes.filter(
+      (route) => route.meta?.signedInRedirect
+    );
+    const cookieSession = this.usesCookieSession();
+    if ((authRoutes.length > 0 || signedInPages.length > 0) && !cookieSession) {
       this.logger.debug(
-        'No protected routes found, skipping middleware generation'
+        'Auth session not in cookies (no Supabase createBrowserClient): pages use the client AuthGuard / SignedInRedirect only, no proxy auth redirects'
+      );
+    }
+    const protectedRoutes = cookieSession ? authRoutes : [];
+    const signedInRoutes = cookieSession ? signedInPages : [];
+
+    const proxyPath = this.pathResolver.resolveAppPath(this.options.proxyPath);
+    const isHandWritten =
+      this.pathResolver.pathExists(proxyPath) &&
+      !(await this.hasGenerationMarker(proxyPath));
+
+    if (!this.isMultilingual() && !cookieSession) {
+      this.logger.debug('One language and no cookie session: no proxy.next.ts');
+      if (this.pathResolver.pathExists(proxyPath) && !isHandWritten) {
+        await this.pathResolver.remove(proxyPath);
+      }
+      return;
+    }
+    if (isHandWritten) {
+      this.logger.warn(
+        `${this.options.proxyPath} is hand-written: not generating language routing / session refresh / auth redirects / per-request pages (add them to your proxy; every visitor gets the cached pages)`
       );
       return;
     }
 
-    const middlewareContent = this.generateMiddlewareContent(protectedRoutes);
+    if (this.isMultilingual()) {
+      this.appRouteSegments = await this.findAppRouteSegments();
+    }
     this.writeGeneratedFile(
-      this.options.middlewarePath,
-      middlewareContent,
-      'middleware'
+      this.options.proxyPath,
+      this.generateMiddlewareContent(
+        protectedRoutes,
+        routeData.routes,
+        signedInRoutes,
+        cookieSession
+      ),
+      'proxy'
+    );
+    this.rendersSessionTree = cookieSession;
+  }
+
+  /**
+   * First URL segments of the app's own (not generated) route files outside
+   * `src/app/[lang]` (2+ languages): route handlers such as
+   * `src/app/auth/callback/route.next.ts` → `auth`. Route groups are not URL segments.
+   *
+   * @returns {Promise<string[]>} Sorted, unique
+   * @since 0.2.3
+   */
+  async findAppRouteSegments() {
+    const appRoot = this.pathResolver.getAppRoot();
+    const appDir = this.pathResolver.resolveAppPath(GENERATED_PATHS.next.appPages);
+    const files = await this.pathResolver._globWithNormalization(
+      [`${GENERATED_PATHS.next.appPages}/**/{route,page}.${NEXT_FILE_MARKER}.{ts,tsx,js,jsx}`],
+      { cwd: appRoot, absolute: true, onlyFiles: true, braceExpansion: true }
+    );
+    const segments = new Set();
+    for (const file of files) {
+      if (await this.hasGenerationMarker(file)) continue;
+      const [first] = file
+        .slice(appDir.length + 1)
+        .split('/')
+        .slice(0, -1)
+        .filter((segment) => !/^\(.*\)$/.test(segment));
+      if (first && first !== '[lang]') segments.add(first);
+    }
+    return [...segments].sort();
+  }
+
+  /**
+   * Regex source of a route path (`/produits/:slug` → `^/produits/[^/]+$`).
+   *
+   * @param {string} path - Route path in React Router syntax
+   * @returns {string}
+   */
+  routePattern(path) {
+    return (
+      '^' +
+      path
+        .split('/')
+        .map((seg) => {
+          if (seg === '*') return '.*';
+          if (seg.startsWith(':')) return '[^/]+';
+          return seg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        })
+        .join('/') +
+      '$'
     );
   }
 
-  generateMiddlewareContent(protectedRoutes) {
-    const routePatterns = protectedRoutes
+  /**
+   * Content of the generated proxy.next.ts.
+   *
+   * @param {Array<Object>} protectedRoutes - Routes whose auth requires a user (cookie session only)
+   * @param {Array<Object>} [pageRoutes] - Every discovered route (language routing, 2+ languages)
+   * @param {Array<Object>} [signedInRoutes] - Routes whose PageMeta sets `signedInRedirect` (cookie session only)
+   * @param {boolean} [cookieSession] - The auth session lives in cookies: refresh it on every page request with an auth cookie (implied by protected or signed-in routes)
+   * @returns {string}
+   */
+  generateMiddlewareContent(
+    protectedRoutes,
+    pageRoutes = [],
+    signedInRoutes = [],
+    cookieSession = false
+  ) {
+    const multilingual = this.isMultilingual();
+    const hasAuth = protectedRoutes.length > 0;
+    const hasSignedIn = signedInRoutes.length > 0;
+    const hasRedirects = hasAuth || hasSignedIn;
+    const hasSession = cookieSession || hasRedirects;
+    const auth = this.options.auth ?? {};
+
+    const authEntries = protectedRoutes
       .map((route) => {
-        // Convert dynamic routes to Next.js patterns
-        const pattern = route.path
-          .replace(/\[([^\]]+)\]/g, ':$1') // [id] -> :id
-          .replace(/\.\.\./g, '*'); // [...slug] -> *
-
-        return `    '${pattern}'`;
+        const { role } = this.normalizeAuth(route.auth);
+        return `  { pattern: new RegExp(${JSON.stringify(this.routePattern(route.path))})${
+          role ? `, role: ${JSON.stringify(role)}` : ''
+        } },`;
       })
-      .join(',\n');
+      .join('\n');
+    const signedInEntries = signedInRoutes
+      .map(
+        (route) =>
+          `  { pattern: new RegExp(${JSON.stringify(this.routePattern(route.path))}), to: ${JSON.stringify(route.meta.signedInRedirect)} },`
+      )
+      .join('\n');
+    const pageEntries = [...new Set(pageRoutes.map((r) => r.path))]
+      .map((path) => `  new RegExp(${JSON.stringify(this.routePattern(path))}),`)
+      .join('\n');
+    // Every page request: language routing sees every page, and every page renders
+    // the session snapshot (refreshed here). Not API routes, _next or files.
+    const matcherLines = `    ${JSON.stringify('/((?!api|_next|.*\\..*).*)')},`;
 
-    return `// Auto-generated middleware by @donotdev/config
-// Generated at ${new Date().toISOString()}
+    const coreImports = [
+      ...(hasAuth ? ['hasRoleAccess'] : []),
+      ...(multilingual
+        ? [
+            'LANGUAGE_COOKIE',
+            ...(hasRedirects ? ['localizePath'] : []),
+            'parseAcceptLanguage',
+            'readCookieValue',
+            'resolveLanguageRoute',
+            'splitLanguagePath',
+          ]
+        : []),
+    ];
+    const supabaseImports = [
+      'hasSupabaseSessionCookie',
+      'refreshSupabaseSession',
+      ...(hasRedirects ? ['type SupabaseProxySession'] : []),
+    ];
+    const sessionParam = hasRedirects
+      ? ",\n  session: SupabaseProxySession['session']"
+      : '';
+    const languageParam = multilingual ? ',\n  language: string' : '';
+    // With a session, the forwarded request carries the refreshed cookies to the render
+    const forward = hasSession ? '{ request }' : '';
+    const sessionTreePath = `/${NEXT_RENDER.sessionSegment}`;
+
+    const header = `// Generated by @donotdev/config - DO NOT EDIT
+// Request gate (Next 16 proxy)${multilingual ? `: one URL per language, the default language (${this.options.defaultLanguage}) at the
+// root, the others under their prefix (resolveLanguageRoute in @donotdev/core)` : ''}.${
+      hasSession
+        ? `
+// Session: the Supabase cookie (createBrowserClient). No auth cookie: signed out, the
+// page comes from the cache (src/app${this.treeDir('site')}, static). With one: verified and refreshed
+// when expired (refreshSupabaseSession), then rendered per request with the refreshed
+// cookies (src/app${this.rootDir()}${sessionTreePath}, an internal path: a direct hit is a 404); the browser
+// gets the refreshed cookies on the response.`
+        : ''
+    }${
+      hasAuth
+        ? `
+// Auth redirects for pages whose PageMeta sets \`auth\`, on the verified session.
+// Redirect gate only: data access stays enforced by RLS, and the page's AuthGuard still
+// runs on the client.`
+        : ''
+    }${
+      hasSignedIn
+        ? `
+// Signed-in redirects for pages whose PageMeta sets \`signedInRedirect\` (verified
+// session); the page's SignedInRedirect still runs on the client.`
+        : ''
+    }
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Protected route patterns
-const protectedRoutes = [
-${routePatterns}
+${coreImports.length ? `import { ${coreImports.join(', ')} } from '@donotdev/core/server';\n` : ''}${hasSession ? `import { ${supabaseImports.join(', ')} } from '@donotdev/supabase/server';\n` : ''}`;
+
+    const sessionBlock = hasSession
+      ? `
+/** Supabase project of the cookie session (same env as src/config/providers.ts) */
+const SUPABASE = supabaseProject(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY
+);
+
+function supabaseProject(url: string | undefined, publicKey: string | undefined) {
+  if (!url || !publicKey) {
+    throw new Error(
+      '[dndev] Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: the proxy refreshes the auth session on every page request.'
+    );
+  }
+  return { url, publicKey };
+}
+${
+  multilingual
+    ? `
+/** Internal tree of the per-request pages (src/app/[lang]${sessionTreePath}), after the language: never a public URL */
+const SESSION_SEGMENT = ${JSON.stringify(NEXT_RENDER.sessionSegment)};
+
+/** Internal URL path of a page rendered per request: \`/fr/compte\` → \`/fr${sessionTreePath}/compte\` */
+function sessionPath(path: string): string {
+  const [, language, ...rest] = path.split('/');
+  return ['', language, SESSION_SEGMENT, ...rest].join('/');
+}
+
+/** A direct request for the internal tree (\`/fr${sessionTreePath}/…\`) */
+function isSessionTreePath(pathname: string): boolean {
+  return pathname.split('/').slice(1, 3).includes(SESSION_SEGMENT);
+}
+`
+    : `
+/** Internal tree of the per-request pages (src/app${sessionTreePath}): never a public URL */
+const SESSION_TREE = ${JSON.stringify(sessionTreePath)};
+
+/** Internal URL path of a page rendered per request */
+function sessionPath(path: string): string {
+  return path === '/' ? SESSION_TREE : SESSION_TREE + path;
+}
+
+/** A direct request for the internal tree */
+function isSessionTreePath(pathname: string): boolean {
+  return pathname === SESSION_TREE || pathname.startsWith(\`\${SESSION_TREE}/\`);
+}
+`
+}${
+  hasRedirects
+    ? `
+/** Session of a request without an auth cookie: signed out, nothing to verify */
+const SIGNED_OUT: SupabaseProxySession['session'] = { user: null };
+`
+    : ''
+}`
+      : '';
+
+    const authBlock = hasAuth
+      ? `
+/** appConfig.auth.authRoute: where a signed-out visitor goes (null: page fallback) */
+const AUTH_ROUTE: string | null = ${JSON.stringify(auth.authRoute ?? null)};
+/** appConfig.auth.roleRoute: where a visitor without the role goes (null: page fallback) */
+const ROLE_ROUTE: string | null = ${JSON.stringify(auth.roleRoute ?? null)};
+
+const protectedRoutes: Array<{ pattern: RegExp; role?: string }> = [
+${authEntries}
 ];
 
-// Auth check function (customize as needed)
-function isAuthenticated(request: NextRequest): boolean {
-  // TODO: Implement your authentication logic
-  // Example: check for auth cookie, JWT token, etc.
-  const authToken = request.cookies.get('auth-token')?.value;
-  return Boolean(authToken);
+/** Redirect of a protected route, or null to let the page render. */
+function authRedirect(
+  request: NextRequest${sessionParam},
+  routePath: string${languageParam}
+): NextResponse | null {
+  const route = protectedRoutes.find((r) => r.pattern.test(routePath));
+  if (!route) return null;
+  // Cannot tell (Supabase unreachable, several projects' cookies): the page's AuthGuard decides
+  if (session === null) return null;
+
+  if (!session.user) {
+    if (!AUTH_ROUTE) return null;
+    const url = new URL(${multilingual ? 'localizePath(AUTH_ROUTE, language, LANGUAGE_ROUTING)' : 'AUTH_ROUTE'}, request.url);
+    url.searchParams.set('returnTo', request.nextUrl.pathname + request.nextUrl.search);
+    return NextResponse.redirect(url);
+  }
+  if (route.role && !hasRoleAccess(session.user.role, route.role)) {
+    if (!ROLE_ROUTE) return null;
+    return NextResponse.redirect(new URL(${multilingual ? 'localizePath(ROLE_ROUTE, language, LANGUAGE_ROUTING)' : 'ROLE_ROUTE'}, request.url));
+  }
+  return null;
 }
+`
+      : '';
 
-// Route matching function
-function matchesProtectedRoute(pathname: string): boolean {
-  return protectedRoutes.some(pattern => {
-    if (pattern.includes(':')) {
-      // Dynamic route matching
-      const regex = new RegExp('^' + pattern.replace(/:[^/]+/g, '[^/]+') + '$');
-      return regex.test(pathname);
-    }
-    if (pattern.includes('*')) {
-      // Wildcard matching
-      const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
-      return regex.test(pathname);
-    }
-    // Exact match
-    return pathname === pattern;
-  });
+    const signedInBlock = hasSignedIn
+      ? `
+/** PageMeta \`signedInRedirect\`: where a signed-in visitor of the page goes */
+const signedInRoutes: Array<{ pattern: RegExp; to: string }> = [
+${signedInEntries}
+];
+
+/** Redirect of a signed-in visitor, or null to let the page render. */
+function signedInRedirect(
+  request: NextRequest${sessionParam},
+  routePath: string${languageParam}
+): NextResponse | null {
+  const route = signedInRoutes.find((r) => r.pattern.test(routePath));
+  if (!route) return null;
+  // A pending return-to wins: the page's AuthReturnTo takes the visitor there
+  if (request.nextUrl.searchParams.has('returnTo')) return null;
+  // Signed out, or cannot tell: the page renders (its SignedInRedirect decides on the client)
+  if (!session?.user) return null;
+  return NextResponse.redirect(new URL(${multilingual ? 'localizePath(route.to, language, LANGUAGE_ROUTING)' : 'route.to'}, request.url));
 }
+`
+      : '';
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+    const languageBlock = multilingual
+      ? `
+const LANGUAGE_ROUTING = {
+  languages: ${JSON.stringify(this.options.languages)},
+  defaultLanguage: ${JSON.stringify(this.options.defaultLanguage)},
+};
 
-  // Check if the current route is protected
-  if (matchesProtectedRoute(pathname)) {
-    if (!isAuthenticated(request)) {
-      // Redirect to login page
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('from', pathname);
-      return NextResponse.redirect(loginUrl);
+/** Request header of the URL's language, read by the 404 page (src/app/global-not-found) */
+const LANGUAGE_HEADER = ${JSON.stringify(NEXT_RENDER.languageHeader)};
+
+/** First URL segments of the app's hand-written routes outside src/app/[lang] (route handlers) */
+const APP_ROUTE_SEGMENTS: readonly string[] = ${JSON.stringify(this.appRouteSegments)};
+`
+      : '';
+    const pageRoutesBlock =
+      multilingual || hasSession
+        ? `
+/** App pages (src/pages): API routes, files and hand-written app routes pass untouched */
+const pageRoutes: RegExp[] = [
+${pageEntries}
+];
+`
+        : '';
+
+    const sessionArg = hasRedirects ? 'session, ' : '';
+    const refresh = `  // Verified session, refreshed when expired: the redirects and the server render
+  // (refreshed cookies forwarded with \`request\`) see the same signed-in state
+  const auth = await refreshSupabaseSession(request, SUPABASE.url, SUPABASE.publicKey);`;
+    // route(): language routing, redirects, then the render tree of a page request
+    const routeParams = `\n  request: NextRequest${sessionParam}${hasSession ? ',\n  personal: boolean' : ''}\n`;
+    const redirects = (path, language) =>
+      `${
+        hasAuth
+          ? `
+  const redirect = authRedirect(request, ${sessionArg}${path}${language});
+  if (redirect) return redirect;
+`
+          : ''
+      }${
+        hasSignedIn
+          ? `
+  const signedIn = signedInRedirect(request, ${sessionArg}${path}${language});
+  if (signedIn) return signedIn;
+`
+          : ''
+      }`;
+    const personalRewrite = (page) =>
+      hasSession
+        ? `
+  // Auth cookie: rendered per request with the visitor's cookies
+  if (personal) {${page === 'pathname' ? '' : `
+    const page = ${page};`}
+    return NextResponse.rewrite(new URL(sessionPath(${page === 'pathname' ? 'pathname' : 'page'}) + search, request.url), { request });
+  }`
+        : '';
+
+    let routeFn;
+    if (multilingual) {
+      routeFn = `
+/** Language routing, redirects and render tree of a page request. */
+function route(${routeParams}): NextResponse {
+  const { pathname, search } = request.nextUrl;
+  const decision = resolveLanguageRoute(
+    pathname,
+    {
+      stored: readCookieValue(request.headers.get('cookie'), LANGUAGE_COOKIE),
+      preferred: parseAcceptLanguage(request.headers.get('accept-language')),
+    },
+    LANGUAGE_ROUTING
+  );
+  if (!pageRoutes.some((pattern) => pattern.test(decision.path))) {
+    // Not a page (API route, hand-written route, unknown URL): an unknown URL's 404
+    // renders in the URL's language
+    const url = splitLanguagePath(pathname, LANGUAGE_ROUTING);
+    request.headers.set(LANGUAGE_HEADER, url.language);
+    // Unprefixed and not a hand-written route: the app/[lang] route would read its first
+    // segment as a language. Served as an unknown URL of the default language instead.
+    if (!url.prefixed && !APP_ROUTE_SEGMENTS.includes(pathname.split('/')[1] ?? '')) {
+      return NextResponse.rewrite(
+        new URL('/' + LANGUAGE_ROUTING.defaultLanguage + pathname + search, request.url),
+        { request }
+      );
     }
+    return NextResponse.next({ request });
   }
 
-  return NextResponse.next();
+  // Language redirects set no language cookie (the browser language store does)
+  if (decision.type === 'redirect') {
+    return NextResponse.redirect(
+      new URL(decision.location + search, request.url),
+      decision.permanent ? 308 : 307
+    );
+  }
+${redirects('decision.path', ', decision.language')}${personalRewrite("decision.type === 'rewrite' ? decision.destination : pathname")}
+  if (decision.type === 'rewrite') {
+    return NextResponse.rewrite(new URL(decision.destination + search, request.url)${hasSession ? ', { request }' : ''});
+  }
+  return NextResponse.next(${forward});
 }
+`;
+    } else {
+      routeFn = `
+/** Redirects and render tree of a page request. */
+function route(${routeParams}): NextResponse {
+  const { ${hasSession ? 'pathname, search' : 'pathname'} } = request.nextUrl;
+  if (!pageRoutes.some((pattern) => pattern.test(pathname))) {
+    return NextResponse.next({ request });
+  }
+${redirects('pathname', '')}${personalRewrite('pathname')}
+  return NextResponse.next({ request });
+}
+`;
+    }
 
+    let proxyFn;
+    if (hasSession) {
+      proxyFn = `
+export async function proxy(request: NextRequest) {
+  if (isSessionTreePath(request.nextUrl.pathname)) {
+    return new NextResponse(null, { status: 404 });
+  }
+  // No auth cookie: signed out. Nothing to verify or refresh, no cookie written: the
+  // page is served from the cache.
+  if (!hasSupabaseSessionCookie(request)) {
+    return route(request${hasRedirects ? ', SIGNED_OUT' : ''}, false);
+  }
+
+${refresh}
+  // Signed in, or cannot tell (Supabase unreachable): per-request render. Signed out
+  // (refresh failed, session revoked): the cached page, with the cleared cookies.
+  return auth.apply(route(request, ${hasRedirects ? 'auth.session, ' : ''}auth.session?.user !== null));
+}
+${routeFn}`;
+    } else {
+      proxyFn = `
+export function proxy(request: NextRequest) {
+  return route(request);
+}
+${routeFn}`;
+    }
+
+    return `${header}${sessionBlock}${languageBlock}${pageRoutesBlock}${authBlock}${signedInBlock}${proxyFn}
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+${matcherLines}
   ],
 };
 `;
+  }
+
+  /**
+   * Route `auth` (PageMeta) as `{ role?, tier? }` when the page needs a signed-in user,
+   * else null. Same reading as the Vite router's parseAuthConfig.
+   *
+   * @param {boolean|Object|null|undefined} auth
+   * @returns {{ role?: string, tier?: string }|null}
+   */
+  normalizeAuth(auth) {
+    if (auth === true) return {};
+    if (!auth || typeof auth !== 'object') return null;
+    if (!auth.required && !auth.role && !auth.tier) return null;
+    return { role: auth.role, tier: auth.tier };
+  }
+
+  /**
+   * Whether the app keeps its auth session in cookies the server can read:
+   * @donotdev/supabase with `createBrowserClient` in src/config/providers.ts.
+   *
+   * @returns {boolean}
+   */
+  usesCookieSession() {
+    try {
+      // readSync parses .json files
+      const pkg = this.pathResolver.readSync(
+        this.pathResolver.resolveAppPath('package.json')
+      );
+      const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+      if (!deps['@donotdev/supabase']) return false;
+      const providersPath = this.pathResolver.resolveAppPath(
+        'src/config/providers.ts'
+      );
+      if (!this.pathResolver.pathExists(providersPath)) return false;
+      return this.pathResolver
+        .readSync(providersPath)
+        .includes('createBrowserClient(');
+    } catch (error) {
+      this.logger.debug(`Cookie session detection failed: ${error.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Remove the generated `middleware.ts` of earlier versions (root or src/): it never
+   * parsed, read a cookie no provider sets, and Next 16 replaces it with proxy.ts.
+   */
+  removeLegacyMiddleware() {
+    for (const rel of ['middleware.ts', 'src/middleware.ts']) {
+      const file = this.pathResolver.resolveAppPath(rel);
+      try {
+        if (
+          this.pathResolver.pathExists(file) &&
+          this.pathResolver
+            .readSync(file)
+            .startsWith('// Auto-generated middleware by @donotdev/config')
+        ) {
+          this.pathResolver.removeSync(file);
+          this.logger.debug(`Removed legacy generated ${rel}`);
+        }
+      } catch (error) {
+        this.logger.debug(`Could not remove legacy ${rel}: ${error.message}`);
+      }
+    }
   }
 
   async generateAppRoutes(routeData) {
@@ -1107,13 +2114,14 @@ export default pageRoutes;
     // Remove src/ prefix
     const pathFromSrc = pathWithoutExt.replace(/^src\//, '');
 
-    // Calculate depth: routePath '/' = depth 0, '/legal/privacy' = depth 2
-    const routeDepth =
-      routePath === '/' ? 0 : routePath.split('/').filter(Boolean).length;
+    // Directories below src/app: the (site) group, the [lang] directory with 2+
+    // languages, then one per route segment ('/' = none)
+    const routeDepth = this.appDirFor(routePath).split('/').filter(Boolean).length;
 
     // Build relative path: go up from app/**/page.tsx to src/, then into pages/
-    // app/page.tsx (depth 0) -> ../pages/HomePage
-    // app/legal/privacy/page.tsx (depth 2) -> ../../../pages/legal/PrivacyPage
+    // app/(site)/page.tsx (depth 1) -> ../../pages/HomePage
+    // app/(site)/legal/privacy/page.tsx (depth 3) -> ../../../../pages/legal/PrivacyPage
+    // app/(site)/[lang]/legal/privacy/page.tsx (depth 4) -> ../../../../../pages/legal/PrivacyPage
     const upLevels = '../'.repeat(routeDepth + 1); // +1 for app/ directory
 
     return `${upLevels}${pathFromSrc}`;
@@ -1133,6 +2141,25 @@ export default pageRoutes;
    * @param {string} routePath - e.g. '/blog/:slug'
    * @returns {boolean}
    */
+  /**
+   * Segment config of a page with dynamic segments (`/produits/:slug`): an empty
+   * generateStaticParams, so no URL is prerendered at build and each one is rendered
+   * on its first request, then cached (ISR) instead of rendered per request.
+   *
+   * @param {Object} route - Route object (`path` in React Router syntax)
+   * @returns {string} The export, or `''` for a static path
+   * @since 0.2.3
+   */
+  onDemandParamsExport(route) {
+    if (!this.convertRouteToAppPath(route.path).includes('[')) return '';
+    return `
+// Each URL renders on its first request, then is cached like the static pages (ISR)
+export function generateStaticParams() {
+  return [];
+}
+`;
+  }
+
   hasDynamicSegment(routePath) {
     return routePath.includes(':') || routePath.includes('[');
   }
@@ -1236,7 +2263,7 @@ export default function BlogPostClient() {
    * @returns {string}
    */
   calculateBlogContentImportPath(routePath) {
-    const appPath = this.convertRouteToAppPath(routePath);
+    const appPath = this.appDirFor(routePath);
     const segments = appPath.split('/').filter(Boolean);
     const prefix = '../'.repeat(segments.length + 1);
     return `${prefix}content/blog/blog-content.generated`;

@@ -126,8 +126,11 @@ export interface RateLimitBackend {
 export interface AuthHardeningContext {
   /** @throws if identifier is currently locked out */
   checkLockout(identifier: string): void;
-  /** Record a failed auth attempt; may trigger lockout */
-  recordFailure(identifier: string): void;
+  /**
+   * Record a failed auth attempt; may trigger lockout.
+   * @returns Failure count for the identifier and whether this attempt locked it
+   */
+  recordFailure(identifier: string): { locked: boolean; attempts: number };
   /** Clear failure counter on successful auth */
   recordSuccess(identifier: string): void;
 }

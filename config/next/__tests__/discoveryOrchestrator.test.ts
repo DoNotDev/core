@@ -22,6 +22,22 @@ const logger = {
   debug: () => {},
 };
 
+/** i18n + SEO handlers: runDiscoveries reads the app languages before routes. */
+const languageHandlers = {
+  i18nHandler: {
+    getDiscoveryData: async () => ({
+      supportedLanguages: ['en'],
+      fallbackLanguage: 'en',
+    }),
+    generateFiles: async () => ({}),
+  },
+  seoHandler: {
+    useLanguages: () => {},
+    useTranslations: () => {},
+    generateFiles: async () => ({}),
+  },
+};
+
 describe('runDiscoveries build marker', () => {
   let appRoot: string;
   const previousBuildId = process.env.DNDEV_BUILD_ID;
@@ -45,14 +61,15 @@ describe('runDiscoveries build marker', () => {
     let routeRuns = 0;
     const routeHandler = {
       pathResolver,
+      useLanguages: () => {},
       generateFiles: async () => {
         routeRuns += 1;
         return { routes: [{}] };
       },
     };
 
-    await runDiscoveries({ routeHandler }, logger);
-    await runDiscoveries({ routeHandler }, logger);
+    await runDiscoveries({ routeHandler, ...languageHandlers }, logger);
+    await runDiscoveries({ routeHandler, ...languageHandlers }, logger);
 
     expect(readFileSync(join(appRoot, '.dndev-build'), 'utf8')).toBe(
       'new-build'
@@ -77,6 +94,7 @@ describe('runDiscoveries build marker', () => {
     let routeConfigPresentDuringRun = false;
     const routeHandler = {
       pathResolver,
+      useLanguages: () => {},
       generateFiles: async () => {
         routeConfigPresentDuringRun = existsSync(routeConfig);
         pathResolver.writeSync(routeConfig, 'new route config', {
@@ -86,7 +104,7 @@ describe('runDiscoveries build marker', () => {
       },
     };
 
-    await runDiscoveries({ routeHandler }, logger);
+    await runDiscoveries({ routeHandler, ...languageHandlers }, logger);
 
     expect(routeConfigPresentDuringRun).toBe(true);
     expect(readFileSync(routeConfig, 'utf8')).toBe('new route config');
@@ -103,6 +121,7 @@ describe('runDiscoveries build marker', () => {
     const pathResolver = PathResolver.getInstance();
     const routeHandler = {
       pathResolver,
+      useLanguages: () => {},
       generateFiles: async () => {
         pathResolver.writeSync(routeConfig, 'route config', {
           overwrite: true,
@@ -112,7 +131,7 @@ describe('runDiscoveries build marker', () => {
       },
     };
 
-    await runDiscoveries({ routeHandler }, logger);
+    await runDiscoveries({ routeHandler, ...languageHandlers }, logger);
 
     expect(readFileSync(routeConfig, 'utf8')).toBe('route config');
   });
@@ -122,12 +141,13 @@ describe('runDiscoveries build marker', () => {
     const pathResolver = PathResolver.getInstance();
     const routeHandler = {
       pathResolver,
+      useLanguages: () => {},
       generateFiles: async () => {
         throw new Error('route discovery failed');
       },
     };
 
-    await expect(runDiscoveries({ routeHandler }, logger)).rejects.toThrow(
+    await expect(runDiscoveries({ routeHandler, ...languageHandlers }, logger)).rejects.toThrow(
       'route discovery failed'
     );
     expect(() => pathResolver.stopWriteRecording()).toThrow(

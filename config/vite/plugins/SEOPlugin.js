@@ -11,12 +11,14 @@ import { loadEnv } from 'vite';
 
 import { createLogger } from '../../utils/debugLog.js';
 import { PathResolver } from '../../utils/PathResolver.js';
-import { SEOGenerator } from '../../utils/SEOGenerator.js';
 import {
-  generateLlmsTxt,
   generateLlmsFullTxt,
+  generateStaticLlmsTxt,
+  getLlmsTxtSource,
 } from '../../utils/LlmsTxtGenerator.js';
 import { parseRouteManifest } from '../../utils/routeParser.js';
+import { assertPublicBaseUrl, SEOGenerator } from '../../utils/SEOGenerator.js';
+import { createI18nDiscovery } from './I18nPlugin.js';
 
 /**
  * Create Vite SEO plugin
@@ -39,6 +41,7 @@ export function createViteSEOPlugin(options = {}) {
     llmsTxt = true, // Already merged from DEFAULT_OPTIONS.seo
     redirects: seoRedirects, // From appConfig.seo.redirects
     isDev,
+    i18n: i18nOptions = {}, // i18n plugin options (llms.txt labels)
     ...pluginOptions
   } = options;
 
@@ -135,6 +138,9 @@ export function createViteSEOPlugin(options = {}) {
       if (isDisabled) {
         return;
       }
+      // A build publishes absolute URLs (sitemap, llms.txt, robots): never localhost.
+      // Outside the try: a wrong production URL fails the build instead of being logged.
+      if (!isDev) assertPublicBaseUrl(resolvedBaseUrl, 'VITE_APP_URL');
       try {
         // Create SEO generator with resolved values
         const seoGenerator = new SEOGenerator({
@@ -193,18 +199,25 @@ export function createViteSEOPlugin(options = {}) {
         if (llmsTxt) {
           const appRoot = pathResolver.getAppRoot();
           const blogPosts = seoGenerator.discoverBlogPosts();
-          const llmsContent = generateLlmsTxt({
+          // Same routes as the sitemap (static: Vite has no runtime to expand records)
+          const i18nData =
+            await createI18nDiscovery(i18nOptions).discoverTranslations();
+          const llmsSource = getLlmsTxtSource({
             siteName: resolvedSiteName,
-            baseUrl: resolvedBaseUrl,
             description: siteDescription,
-            appRoot,
+            baseUrl: resolvedBaseUrl,
+            sitemapRoutes: seoGenerator.getSitemapRoutes(
+              routeData.routes || [],
+              blogPosts
+            ),
+            routes: routeData.routes || [],
             blogPosts,
-            logger,
+            blogPath: seoGenerator.options.blogPath,
+            translations: i18nData.content,
+            language: i18nData.fallbackLanguage,
           });
-          if (llmsContent) {
-            await writeFile('llms.txt', llmsContent);
-            logger.info('📄 llms.txt');
-          }
+          await writeFile('llms.txt', generateStaticLlmsTxt(llmsSource));
+          logger.info('📄 llms.txt');
 
           // llms-full.txt — full blog content for direct AI consumption
           if (blogPosts.length > 0) {

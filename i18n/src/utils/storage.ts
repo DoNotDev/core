@@ -29,7 +29,7 @@ export interface StorageStrategy {
   size(): Promise<number>;
 }
 
-interface StorageItem<T = any> {
+interface StorageItem<T = unknown> {
   value: T;
   created: number;
   expires?: number;
@@ -282,8 +282,8 @@ class IndexedDBStrategy extends BaseStorage {
         this.db = request.result;
         resolve(this.db);
       };
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
+      request.onupgradeneeded = () => {
+        const db = request.result;
         if (!db.objectStoreNames.contains(this.storeName)) {
           db.createObjectStore(this.storeName, { keyPath: 'key' });
         }
@@ -383,9 +383,9 @@ class IndexedDBStrategy extends BaseStorage {
         const request = store.getAllKeys();
         request.onerror = () => reject(request.error);
         request.onsuccess = () => {
-          const allKeys = request.result as string[];
-          const filteredKeys = allKeys.filter((key) =>
-            key.startsWith(this.prefix)
+          const filteredKeys = request.result.filter(
+            (key): key is string =>
+              typeof key === 'string' && key.startsWith(this.prefix)
           );
           resolve(filteredKeys);
         };
@@ -414,6 +414,7 @@ class MemoryStrategy extends BaseStorage {
       this.cache.delete(fullKey);
       return null;
     }
+    // why: heterogeneous cache; get<T> trusts the caller's T, as set<T> stored it
     return item.value as T;
   }
 

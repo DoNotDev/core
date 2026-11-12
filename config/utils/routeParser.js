@@ -1,7 +1,7 @@
 /**
  * @fileoverview Route Parser - Shared Route Manifest Parsing
  * @description Parses route data from public/route-manifest.json (written by both Vite and Next.js).
- * Single source of truth for route manifest parsing — used by SEOPlugin, PrerenderPlugin, and LlmsTxtGenerator.
+ * Single source of truth for route manifest parsing — used by SEOPlugin and PrerenderPlugin.
  *
  * @version 0.0.1
  * @since 0.1.0

@@ -10,7 +10,7 @@
  * @author AMBROISE PARK Consulting
  */
 
-import type { DateValue, FirestoreTimestamp } from '@donotdev/types';
+import type { DateValue } from '@donotdev/types';
 
 /**
  * Convert compact date format (YYYYMMDD:HHMM) to ISO string
@@ -137,9 +137,8 @@ export function normalizeToISOString(
   }
 
   if (typeof date === 'object' && date !== null && 'toDate' in date) {
-    const timestamp = date as FirestoreTimestamp;
-    if (typeof timestamp.toDate === 'function') {
-      return timestamp.toDate().toISOString();
+    if (typeof date.toDate === 'function') {
+      return date.toDate().toISOString();
     }
   }
 
@@ -265,7 +264,7 @@ export function formatRelativeTime(
   } else if (typeof date === 'number') {
     dateObj = new Date(date);
   } else if (typeof date === 'object' && 'toDate' in date) {
-    dateObj = (date as FirestoreTimestamp).toDate();
+    dateObj = date.toDate();
   } else {
     return '';
   }
@@ -417,7 +416,7 @@ export function formatDate(
   } else if (typeof date === 'number') {
     dateObj = new Date(date);
   } else if (typeof date === 'object' && 'toDate' in date) {
-    dateObj = (date as FirestoreTimestamp).toDate();
+    dateObj = date.toDate();
   } else {
     return '';
   }
@@ -493,10 +492,10 @@ export function parseDate(value: unknown): string | undefined {
 
   // Firestore Timestamp or similar object with toDate()
   if (typeof value === 'object' && value !== null && 'toDate' in value) {
-    const obj = value as { toDate: unknown };
-    if (typeof obj.toDate === 'function') {
+    if (typeof value.toDate === 'function') {
       try {
-        const date = obj.toDate() as Date;
+        // why: duck-typed `toDate()` on an unknown input returns untyped; Firestore-like contract assumed
+        const date = value.toDate() as Date;
         return isNaN(date.getTime()) ? undefined : date.toISOString();
       } catch {
         return undefined;
@@ -509,8 +508,9 @@ export function parseDate(value: unknown): string | undefined {
     typeof value === 'object' &&
     value !== null &&
     'seconds' in value &&
-    typeof (value as { seconds: unknown }).seconds === 'number'
+    typeof value.seconds === 'number'
   ) {
+    // why: raw Firestore timestamp shape; `seconds` checked above, `nanoseconds` kept loosely typed for parity
     const timestamp = value as { seconds: number; nanoseconds?: number };
     const ms =
       timestamp.seconds * 1000 + (timestamp.nanoseconds || 0) / 1000000;

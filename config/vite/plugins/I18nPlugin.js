@@ -492,6 +492,33 @@ const i18nFilePatterns = [
 // ============================================================================
 
 /**
+ * The app's i18n discovery, configured as the i18n plugin configures it (also used by
+ * the SEO plugin to label llms.txt in the app's language).
+ *
+ * @param {Object} [options] - i18n plugin options (fallbackLanguage, additionalPaths, only, ...)
+ * @returns {I18nDiscovery}
+ */
+export function createI18nDiscovery(options = {}) {
+  return new I18nDiscovery(
+    PathResolver.getInstance(),
+    i18nDiscoveryOptions(options)
+  );
+}
+
+/**
+ * Discovery options of the i18n plugin (defaults + plugin options).
+ * @param {Object} [options] - i18n plugin options
+ * @returns {Object}
+ */
+function i18nDiscoveryOptions(options = {}) {
+  return {
+    ...DEFAULT_OPTIONS.discovery,
+    fallbackLanguage: options.fallbackLanguage || 'en',
+    ...options,
+  };
+}
+
+/**
  * Create the i18n virtual module plugin using the unified factory
  *
  * Returns an array of 2 plugins:
@@ -538,12 +565,7 @@ export function createViteI18nPlugin(options = {}) {
 
   // Shared discovery instance — used by both plugins
   const pathResolver = PathResolver.getInstance();
-  const mergedDiscoveryOptions = {
-    ...DEFAULT_OPTIONS.discovery,
-    fallbackLanguage: options.fallbackLanguage || 'en',
-    ...options,
-  };
-  const lazyDiscovery = new I18nDiscovery(pathResolver, mergedDiscoveryOptions);
+  const lazyDiscovery = createI18nDiscovery(options);
 
   /**
    * Populate the lazy module registry from discovery data.
@@ -586,7 +608,7 @@ export function createViteI18nPlugin(options = {}) {
     templates: wrappedTemplates,
     manifestFileName: GENERATED_PATHS.manifests.i18n,
     configKey: 'i18n',
-    discoveryOptions: mergedDiscoveryOptions,
+    discoveryOptions: i18nDiscoveryOptions(options),
   })({
     ...options,
     hmrSmartDetection: false, // Disable smart detection for i18n - we want .json files to trigger HMR

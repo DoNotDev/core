@@ -29,7 +29,10 @@
     "replySubject": "回复：您的询问",
     "markResponded": "标记为已回复",
     "selectOptions": "选择选项...",
-    "use": "使用此地址"
+    "use": "使用此地址",
+    "edit": "编辑",
+    "refresh": "刷新",
+    "open": "打开"
   },
   "address": {
     "placeholder": "输入地址...",
@@ -70,7 +73,9 @@
       "suggestions": "您可能在查找：",
       "goHome": "返回首页",
       "goBack": "返回上一页"
-    }
+    },
+    "bulkPartialError_one": "{{count}} 行未能保存",
+    "bulkPartialError_other": "{{count}} 行未能保存"
   },
   "pagination": {
     "showing": "显示第 {{from}} 到 {{to}} 条，共 {{total}} 条",
@@ -264,7 +269,9 @@
     "uploading": "上传中 {{progress}}%...",
     "processing": "处理中...",
     "validating": "验证中...",
-    "saving": "保存中..."
+    "saving": "保存中...",
+    "saved": "已保存",
+    "error": "出错 — 请重试"
   },
   "navigation": {
     "more": "更多",
@@ -519,7 +526,9 @@
     "unsupportedFieldType": "不支持的字段类型：{{type}}",
     "fieldRendering": "渲染字段 {{field}} 出错",
     "fallingBackToTextField": "为不支持的类型 {{type}} 使用文本字段",
-    "invalidFieldProps": "字段 {{field}} 的配置无效"
+    "invalidFieldProps": "字段 {{field}} 的配置无效",
+    "notFound": "未找到{{entity}}",
+    "fetchFailed": "无法加载{{entity}}"
   },
   "visibility": {
     "viewAs": "查看为",
@@ -531,5 +540,31 @@
   },
   "recommendations": {
     "title": "您可能也喜欢"
+  },
+  "addNew": "添加",
+  "delete": {
+    "title": "删除项目",
+    "confirm": "确定要删除此项目吗？",
+    "loading": "正在删除...",
+    "titleSelected_one": "删除 {{count}} 项",
+    "titleSelected_other": "删除 {{count}} 项",
+    "confirmSelected_one": "删除所选的 {{count}} 项？此操作无法撤销。",
+    "confirmSelected_other": "删除所选的 {{count}} 项？此操作无法撤销。"
+  },
+  "emptyState": {
+    "title": "未找到结果",
+    "description": "暂时没有可显示的内容。"
+  },
+  "bulkEdit": {
+    "pending_one": "{{count}} 项未保存的更改",
+    "pending_other": "{{count}} 项未保存的更改",
+    "discard": "放弃更改",
+    "selected": "已选择 {{count}} 项",
+    "field": "字段",
+    "value": "值",
+    "apply": "应用到所选项",
+    "deleteSelected": "删除所选 ({{count}})",
+    "failed_one": "{{count}} 行未保存：仍保留在列表中，请重试",
+    "failed_other": "{{count}} 行未保存：仍保留在列表中，请重试"
   }
 }

@@ -270,6 +270,7 @@ export class HybridStorageStrategy implements IStorageStrategy {
         );
       }
 
+      // why: generic storage contract — caller-chosen T, no schema available to validate the cloud payload
       const data = (await response.json()) as {
         value: T;
         expiresAt?: string;

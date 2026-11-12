@@ -32,6 +32,14 @@ const log = {
     console.log(message);
   },
 };
+function isEexistError(error) {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    error.code === 'EEXIST'
+  );
+}
 function safeExecuteAsync(fn, message) {
   return fn().catch((error) => {
     throw new Error(
@@ -379,7 +387,7 @@ class PathResolver {
     try {
       await fs.promises.mkdir(dir, { recursive: true });
     } catch (error) {
-      if (error?.code !== 'EEXIST') throw error;
+      if (!isEexistError(error)) throw error;
     }
     const detectedFormat = this._detectFormat(filePath, format);
     let writeContent;
@@ -441,7 +449,7 @@ class PathResolver {
     try {
       fs.mkdirSync(dir, { recursive: true });
     } catch (error) {
-      if (error?.code !== 'EEXIST') throw error;
+      if (!isEexistError(error)) throw error;
     }
     const detectedFormat = this._detectFormat(filePath, format);
     let writeContent;
@@ -498,7 +506,7 @@ class PathResolver {
     try {
       await fs.promises.mkdir(dir, { recursive: true });
     } catch (error) {
-      if (error?.code !== 'EEXIST') throw error;
+      if (!isEexistError(error)) throw error;
     }
     try {
       return await safeExecuteAsync(async () => {
@@ -540,7 +548,7 @@ class PathResolver {
     try {
       fs.mkdirSync(dir, { recursive: true });
     } catch (error) {
-      if (error?.code !== 'EEXIST') throw error;
+      if (!isEexistError(error)) throw error;
     }
     try {
       fs.copyFileSync(srcPath, normalizedDestPath);
@@ -660,7 +668,7 @@ class PathResolver {
     try {
       await fs.promises.mkdir(dirPath, { recursive: true });
     } catch (error) {
-      if (error?.code !== 'EEXIST') throw error;
+      if (!isEexistError(error)) throw error;
     }
   }
   /**
@@ -672,7 +680,7 @@ class PathResolver {
     try {
       fs.mkdirSync(dirPath, { recursive: true });
     } catch (error) {
-      if (error?.code !== 'EEXIST') throw error;
+      if (!isEexistError(error)) throw error;
     }
   }
   /**

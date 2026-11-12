@@ -42,6 +42,7 @@ export type RouteManifest = RoutesPluginConfig['manifest'];
  */
 export function getSmartDefaults(
   path: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   pageModule: any
 ): Partial<RouteData['meta']> {
   const pathSegments = path.split('/').filter(Boolean);
@@ -73,6 +74,7 @@ export function getSmartDefaults(
  */
 export function resolvePageMeta(
   path: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   pageModule: any
 ): RouteData['meta'] {
   const explicitMeta = pageModule?.meta || {};
@@ -94,6 +96,7 @@ export function resolvePageMeta(
  */
 export function resolveAuthConfig(
   path: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   pageModule: any
 ): RouteData['auth'] {
   // Explicit meta always wins
@@ -196,6 +199,7 @@ export function buildRoutePath(basePath: string, params?: string[]): string {
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
 export function extractRoutePath(pageModule: any): string | undefined {
   return pageModule?.meta?.route;
 }

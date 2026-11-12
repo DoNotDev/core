@@ -1,0 +1,200 @@
+{
+  "title": "Regulamin",
+  "lastUpdated": "Ostatnia aktualizacja",
+  "common": {
+    "we": "my",
+    "our": "nasz",
+    "or": "lub",
+    "us": "nas"
+  },
+  "sections": {
+    "introduction": {
+      "title": "1. Wprowadzenie",
+      "welcome": "Witamy w",
+      "govern": "Niniejszy Regulamin („Regulamin”) określa zasady korzystania przez Państwa z naszego frameworka programistycznego, narzędzi i usług (łącznie: „Usługa”). Uzyskując dostęp do naszej Usługi lub korzystając z niej, zobowiązują się Państwo przestrzegać niniejszego Regulaminu.",
+      "organization": "Jeżeli korzystają Państwo z naszej Usługi w imieniu organizacji, oświadczają Państwo, że są uprawnieni do zaciągania zobowiązań w imieniu tej organizacji na podstawie niniejszego Regulaminu. Jeżeli nie akceptują Państwo niniejszego Regulaminu, prosimy nie korzystać z naszej Usługi."
+    },
+    "service": {
+      "title": "2. Opis Usługi",
+      "description": "to kompleksowy framework programistyczny dostarczający narzędzia, komponenty i infrastrukturę do tworzenia nowoczesnych aplikacji webowych. Nasza Usługa obejmuje:",
+      "framework": "framework programistyczny i biblioteki",
+      "ui": "komponenty interfejsu użytkownika i system projektowy",
+      "auth": "usługi uwierzytelniania i autoryzacji",
+      "i18n": "narzędzia do internacjonalizacji i lokalizacji",
+      "billing": "rozliczenia i zarządzanie subskrypcjami",
+      "docs": "dokumentację i zasoby pomocy technicznej"
+    },
+    "account": {
+      "title": "3. Rejestracja konta i bezpieczeństwo",
+      "creation": {
+        "title": "3.1 Tworzenie konta",
+        "desc": "Aby korzystać z określonych funkcji naszej Usługi, muszą Państwo utworzyć konto. Zobowiązują się Państwo podać podczas rejestracji prawdziwe, aktualne i pełne informacje oraz aktualizować je tak, aby pozostawały prawdziwe, aktualne i pełne."
+      },
+      "security": {
+        "title": "3.2 Bezpieczeństwo konta",
+        "desc": "Są Państwo odpowiedzialni za ochronę danych dostępowych do konta oraz za wszelkie działania podejmowane za pośrednictwem Państwa konta. Zobowiązują się Państwo niezwłocznie powiadomić nas o każdym nieuprawnionym użyciu konta lub innym naruszeniu bezpieczeństwa."
+      },
+      "eligibility": {
+        "title": "3.3 Warunki uprawniające do posiadania konta",
+        "desc": "Aby korzystać z naszej Usługi, muszą Państwo mieć ukończone co najmniej 13 lat. Osoby poniżej 18. roku życia muszą uzyskać zgodę rodzica lub opiekuna prawnego na korzystanie z naszej Usługi."
+      }
+    },
+    "acceptable": {
+      "title": "4. Zasady dopuszczalnego korzystania",
+      "intro": "Zobowiązują się Państwo korzystać z naszej Usługi wyłącznie w celach zgodnych z prawem oraz zgodnie z niniejszym Regulaminem. Zobowiązują się Państwo nie:",
+      "laws": "wykorzystywać Usługi do naruszania obowiązujących przepisów prawa lub regulacji",
+      "infringe": "naruszać praw własności intelektualnej innych osób",
+      "harmful": "przesyłać treści szkodliwych, obraźliwych lub nieodpowiednich",
+      "unauthorized": "podejmować prób uzyskania nieuprawnionego dostępu do naszych systemów lub kont innych użytkowników",
+      "spam": "wykorzystywać Usługi do spamu, phishingu lub innych działań szkodliwych",
+      "disrupt": "zakłócać ani utrudniać działania Usługi lub serwerów",
+      "reverse": "dokonywać inżynierii wstecznej, dekompilacji ani dezasemblacji naszego oprogramowania",
+      "automated": "korzystać z zautomatyzowanych systemów w celu uzyskania dostępu do Usługi bez zezwolenia",
+      "share": "udostępniać innym osobom danych dostępowych do swojego konta",
+      "competing": "wykorzystywać Usługi do tworzenia produktów lub usług konkurencyjnych"
+    },
+    "payment": {
+      "title": "5. Warunki subskrypcji i płatności",
+      "plans": {
+        "title": "5.1 Plany subskrypcji",
+        "desc": "Oferujemy różne plany subskrypcji o zróżnicowanych funkcjach i cenach. Szczegóły subskrypcji, w tym ceny i funkcje, są dostępne na naszej stronie internetowej i mogą być od czasu do czasu aktualizowane."
+      },
+      "processing": {
+        "title": "5.2 Przetwarzanie płatności",
+        "desc": "Płatności są przetwarzane za pośrednictwem bezpiecznych zewnętrznych operatorów płatności. Upoważniają Państwo nas do obciążania Państwa metody płatności wszystkimi opłatami związanymi z subskrypcją."
+      },
+      "billing": {
+        "title": "5.3 Rozliczenia i odnowienie",
+        "desc": "Subskrypcje odnawiają się automatycznie, chyba że zostaną anulowane przed datą odnowienia. W każdej dacie odnowienia zostanie pobrana należna opłata subskrypcyjna."
+      },
+      "refunds": {
+        "title": "5.4 Zwroty i anulowanie",
+        "desc": "Mogą Państwo w dowolnym momencie anulować subskrypcję w ustawieniach konta. Zwroty są dokonywane zgodnie z naszą polityką zwrotów, która może się różnić w zależności od planu i sposobu korzystania."
+      }
+    },
+    "ip": {
+      "title": "6. Prawa własności intelektualnej",
+      "ours": {
+        "title": "6.1 Nasza własność intelektualna",
+        "desc": "Usługa, w tym całe oprogramowanie, treści i materiały, należy do nas lub naszych licencjodawców i jest chroniona przepisami o własności intelektualnej. Udzielamy Państwu ograniczonej, niewyłącznej, niezbywalnej licencji na korzystanie z Usługi zgodnie z niniejszym Regulaminem."
+      },
+      "yours": {
+        "title": "6.2 Państwa treści",
+        "desc": "Zachowują Państwo prawa własności do wszelkich treści utworzonych za pomocą naszej Usługi. Udzielają Państwo nam licencji na wykorzystywanie, przechowywanie i przetwarzanie Państwa treści wyłącznie w celu świadczenia i ulepszania naszej Usługi."
+      },
+      "opensource": {
+        "title": "6.3 Komponenty open source",
+        "desc": "Nasza Usługa może zawierać komponenty oprogramowania open source. Korzystanie z takich komponentów podlega ich odpowiednim licencjom open source."
+      }
+    },
+    "privacy": {
+      "title": "7. Prywatność i ochrona danych",
+      "desc": "Państwa prywatność jest dla nas ważna. Gromadzenie i wykorzystywanie przez nas Państwa danych osobowych podlega naszej Polityce prywatności, która została włączona do niniejszego Regulaminu przez odesłanie."
+    },
+    "availability": {
+      "title": "8. Dostępność Usługi i pomoc techniczna",
+      "service": {
+        "title": "8.1 Dostępność Usługi",
+        "desc": "Dokładamy starań, aby utrzymać wysoką dostępność Usługi, jednak nie gwarantujemy nieprzerwanego dostępu. Usługa może być tymczasowo niedostępna z powodu prac konserwacyjnych, aktualizacji lub innych czynników pozostających poza naszą kontrolą."
+      },
+      "support": {
+        "title": "8.2 Usługi pomocy technicznej",
+        "desc": "Dostępność pomocy technicznej zależy od planu subskrypcji. Świadczymy pomoc za pośrednictwem dokumentacji, forów społeczności i bezpośrednich kanałów wsparcia, zgodnie z Państwa planem."
+      },
+      "updates": {
+        "title": "8.3 Aktualizacje i zmiany",
+        "desc": "Możemy od czasu do czasu aktualizować Usługę w celu poprawy jej funkcjonalności, bezpieczeństwa lub komfortu użytkowania. O istotnych zmianach, które mogą wpłynąć na korzystanie przez Państwa z Usługi, powiadomimy Państwa z odpowiednim wyprzedzeniem."
+      }
+    },
+    "termination": {
+      "title": "9. Rozwiązanie i zawieszenie",
+      "you": {
+        "title": "9.1 Rozwiązanie przez Państwa",
+        "desc": "Mogą Państwo w dowolnym momencie usunąć swoje konto, anulując subskrypcję i usuwając konto w ustawieniach konta."
+      },
+      "us": {
+        "title": "9.2 Rozwiązanie przez nas",
+        "desc": "Możemy rozwiązać lub zawiesić Państwa konto ze skutkiem natychmiastowym, jeżeli naruszą Państwo niniejszy Regulamin, podejmą działania o charakterze oszukańczym lub z jakiejkolwiek innej przyczyny według naszego wyłącznego uznania."
+      },
+      "effect": {
+        "title": "9.3 Skutki rozwiązania",
+        "desc": "Z chwilą rozwiązania Państwa prawo do korzystania z Usługi wygasa natychmiast. Możemy usunąć dane Państwa konta zgodnie z naszymi politykami przechowywania danych."
+      }
+    },
+    "disclaimers": {
+      "title": "10. Wyłączenia i ograniczenia odpowiedzialności",
+      "service": {
+        "title": "10.1 Wyłączenia gwarancji dotyczące Usługi",
+        "desc": "USŁUGA JEST ŚWIADCZONA W STANIE „TAKIM, JAKI JEST” I „W MIARĘ DOSTĘPNOŚCI”, BEZ JAKICHKOLWIEK GWARANCJI, WYRAŹNYCH LUB DOROZUMIANYCH, W TYM MIĘDZY INNYMI DOROZUMIANYCH GWARANCJI PRZYDATNOŚCI HANDLOWEJ, PRZYDATNOŚCI DO OKREŚLONEGO CELU ORAZ NIENARUSZANIA PRAW OSÓB TRZECICH."
+      },
+      "liability": {
+        "title": "10.2 Ograniczenie odpowiedzialności",
+        "desc": "W NAJSZERSZYM ZAKRESIE DOZWOLONYM PRZEZ PRAWO NIE PONOSIMY ODPOWIEDZIALNOŚCI ZA JAKIEKOLWIEK SZKODY POŚREDNIE, PRZYPADKOWE, SZCZEGÓLNE, NASTĘPCZE LUB KARNE, W TYM MIĘDZY INNYMI UTRATĘ ZYSKÓW, DANYCH LUB MOŻLIWOŚCI KORZYSTANIA, PONIESIONE PRZEZ PAŃSTWA LUB JAKĄKOLWIEK OSOBĘ TRZECIĄ."
+      },
+      "maximum": {
+        "title": "10.3 Maksymalna odpowiedzialność",
+        "desc": "NASZA ŁĄCZNA ODPOWIEDZIALNOŚĆ WOBEC PAŃSTWA Z TYTUŁU JAKICHKOLWIEK ROSZCZEŃ WYNIKAJĄCYCH Z NINIEJSZEGO REGULAMINU LUB USŁUGI LUB Z NIMI ZWIĄZANYCH NIE PRZEKROCZY KWOTY ZAPŁACONEJ PRZEZ PAŃSTWA ZA USŁUGĘ W CIĄGU DWUNASTU MIESIĘCY POPRZEDZAJĄCYCH ROSZCZENIE."
+      }
+    },
+    "indemnification": {
+      "title": "11. Zwolnienie z odpowiedzialności",
+      "desc": "Zobowiązują się Państwo zwolnić nas oraz naszych członków kadry zarządzającej, dyrektorów, pracowników i przedstawicieli z odpowiedzialności, bronić ich i zabezpieczyć przed wszelkimi roszczeniami, szkodami, stratami i wydatkami wynikającymi z korzystania przez Państwa z Usługi lub naruszenia niniejszego Regulaminu albo z nimi związanymi."
+    },
+    "governing": {
+      "title": "12. Prawo właściwe i rozstrzyganie sporów",
+      "law": {
+        "title": "12.1 Prawo właściwe",
+        "desc": "Niniejszy Regulamin podlega prawu i jest interpretowany zgodnie z prawem obowiązującym w",
+        "without": "z wyłączeniem jego norm kolizyjnych."
+      },
+      "dispute": {
+        "title": "12.2 Rozstrzyganie sporów",
+        "desc": "Wszelkie spory wynikające z niniejszego Regulaminu lub Usługi albo z nimi związane będą rozstrzygane w drodze wiążącego arbitrażu zgodnie z regulaminem",
+        "location": "Postępowanie arbitrażowe zostanie przeprowadzone w"
+      },
+      "class": {
+        "title": "12.3 Zrzeczenie się pozwów zbiorowych",
+        "desc": "Zgadzają się Państwo, że wszelkie postępowania arbitrażowe lub sądowe będą prowadzone w trybie indywidualnym, a nie jako pozew zbiorowy ani pozew w imieniu grupy."
+      }
+    },
+    "miscellaneous": {
+      "title": "13. Postanowienia różne",
+      "entire": {
+        "title": "13.1 Całość umowy",
+        "desc": "Niniejszy Regulamin wraz z naszą Polityką prywatności stanowi całość porozumienia między Państwem a nami w odniesieniu do Usługi i zastępuje wszelkie wcześniejsze umowy i ustalenia."
+      },
+      "severability": {
+        "title": "13.2 Rozłączność postanowień",
+        "desc": "Jeżeli jakiekolwiek postanowienie niniejszego Regulaminu zostanie uznane za nieważne lub niewykonalne, pozostałe postanowienia pozostają w pełnej mocy."
+      },
+      "waiver": {
+        "title": "13.3 Brak zrzeczenia się praw",
+        "desc": "Niewyegzekwowanie przez nas jakiegokolwiek postanowienia niniejszego Regulaminu nie oznacza zrzeczenia się tego postanowienia ani żadnego innego postanowienia."
+      },
+      "assignment": {
+        "title": "13.4 Przeniesienie praw",
+        "desc": "Nie mogą Państwo przenosić ani cedować swoich praw lub obowiązków wynikających z niniejszego Regulaminu bez naszej pisemnej zgody. My możemy przenieść niniejszy Regulamin bez ograniczeń."
+      },
+      "force": {
+        "title": "13.5 Siła wyższa",
+        "desc": "Nie ponosimy odpowiedzialności za niewykonanie naszych zobowiązań wynikające z okoliczności pozostających poza naszą rozsądną kontrolą, w tym między innymi klęsk żywiołowych, wojny, terroryzmu lub działań organów państwowych."
+      }
+    },
+    "changes": {
+      "title": "14. Zmiany niniejszego Regulaminu",
+      "desc": "Możemy od czasu do czasu aktualizować niniejszy Regulamin, aby odzwierciedlić zmiany w naszych praktykach lub obowiązujących przepisach. O istotnych zmianach powiadomimy Państwa, publikując zaktualizowany Regulamin na naszej stronie internetowej i zmieniając datę „Ostatnia aktualizacja”."
+    },
+    "contact": {
+      "title": "15. Kontakt",
+      "intro": "W razie pytań dotyczących niniejszego Regulaminu prosimy o kontakt:",
+      "email": "E-mail",
+      "address": "Adres",
+      "phone": "Telefon",
+      "support": "E-mail pomocy technicznej"
+    }
+  },
+  "footer": {
+    "effective": "Niniejszy Regulamin obowiązuje od dnia",
+    "remain": "i pozostanie w mocy, z wyjątkiem ewentualnych zmian jego postanowień w przyszłości."
+  }
+}

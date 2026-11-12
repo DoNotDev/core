@@ -185,11 +185,11 @@ my-project/
 | `dndev coach` | Show what to configure (numbered checklist) |
 | `dndev setup` | Validate .env, automate provider config, health check |
 | `dndev doctor` | Check project health (providers, .env) |
-| `dndev deploy` | **Firebase:** hosting + functions + rules. **Supabase:** deploys frontend to Vercel (via scaffolded vercel.json) and Edge Functions to Supabase. Set `VITE_SUPABASE_*` in Vercel project env. |
+| `dndev deploy` | **Firebase:** hosting + functions + rules. **Supabase:** deploys frontend to Vercel (via scaffolded vercel.json) and Edge Functions to Supabase. Vercel apps get their public `.env` vars (`VITE_*` / `NEXT_PUBLIC_*`) pushed to the Vercel project automatically. |
 | `dndev staging` | Deploy to staging environment |
-| `dndev sync-secrets` | Push .dndev.secrets to runtime (Firebase/Vercel) |
+| `dndev sync-secrets` | **Firebase:** push function secrets to Secret Manager. **Vercel** (`--platform vercel --app <app>`): push only the public vars of `apps/<app>/.env`; `.dndev.secrets` never goes to Vercel. |
 | `dndev sync-secrets --target github` | Push secrets to GitHub Secrets (CI/CD) |
-| `bun test` | Run tests (after Phase 4) |
+| `bun run test` | Run tests (after Phase 4) |
 | `bun run type-check` | TypeScript validation |
 
 ---

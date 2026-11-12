@@ -39,6 +39,13 @@ function isPotentialDateString(value: string): boolean {
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+/** Non-null object (plain object or array) that validateDates can walk */
+function isWalkable(
+  value: unknown
+): value is Record<string, unknown> | unknown[] {
+  return typeof value === 'object' && value !== null;
+}
+
 export function validateDates(
   data: Record<string, unknown> | unknown[],
   currentPath: string = ''
@@ -59,8 +66,8 @@ export function validateDates(
             }
           );
         }
-      } else if (typeof item === 'object' && item !== null) {
-        validateDates(item as Record<string, unknown> | unknown[], path); // Recurse into nested objects/arrays
+      } else if (isWalkable(item)) {
+        validateDates(item, path); // Recurse into nested objects/arrays
       }
     });
   } else if (typeof data === 'object' && data !== null) {
@@ -80,9 +87,9 @@ export function validateDates(
             }
           );
         }
-      } else if (typeof value === 'object' && value !== null) {
+      } else if (isWalkable(value)) {
         // Recurse into nested objects or arrays
-        validateDates(value as Record<string, unknown> | unknown[], path);
+        validateDates(value, path);
       }
       // Ignore other types (numbers, booleans, etc.)
     }

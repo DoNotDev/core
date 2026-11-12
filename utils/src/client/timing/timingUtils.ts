@@ -21,6 +21,7 @@
  * @param immediate Whether to invoke the function on the leading edge instead of trailing
  * @returns A debounced version of the function
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params required so any function type satisfies the constraint (parameter contravariance)
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number = 300,
@@ -28,7 +29,7 @@ export function debounce<T extends (...args: any[]) => any>(
 ): (...args: Parameters<T>) => void {
   let timeout: ReturnType<typeof setTimeout> | null = null;
 
-  return function (this: any, ...args: Parameters<T>): void {
+  return function (this: unknown, ...args: Parameters<T>): void {
     const context = this;
 
     const later = function () {
@@ -63,6 +64,7 @@ export function debounce<T extends (...args: any[]) => any>(
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params required so any function type satisfies the constraint (parameter contravariance)
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
   wait: number = 300,
@@ -72,7 +74,7 @@ export function throttle<T extends (...args: any[]) => any>(
   let lastArgs: Parameters<T> | null = null;
   let lastCallTime: number = 0;
 
-  return function (this: any, ...args: Parameters<T>): void {
+  return function (this: unknown, ...args: Parameters<T>): void {
     const context = this;
     const now = Date.now();
     const remaining = wait - (now - lastCallTime);
@@ -111,13 +113,14 @@ export function throttle<T extends (...args: any[]) => any>(
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params required so any function type satisfies the constraint (parameter contravariance)
 export function cooldown<T extends (...args: any[]) => any>(
   func: T,
   wait: number = 1000
 ): (...args: Parameters<T>) => void {
   let onCooldown = false;
 
-  return function (this: any, ...args: Parameters<T>): void {
+  return function (this: unknown, ...args: Parameters<T>): void {
     if (onCooldown) return;
 
     onCooldown = true;
@@ -140,11 +143,12 @@ export function cooldown<T extends (...args: any[]) => any>(
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params required so any function type satisfies the constraint (parameter contravariance)
 export function delay<T extends (...args: any[]) => any>(
   func: T,
   delay: number = 300
 ): (...args: Parameters<T>) => void {
-  return function (this: any, ...args: Parameters<T>): void {
+  return function (this: unknown, ...args: Parameters<T>): void {
     const context = this;
     setTimeout(() => {
       func.apply(context, args);

@@ -174,23 +174,6 @@ if (typeof globalThis !== 'undefined') {
 export default themeConfig;
 `;
   }
-
-  // === UTILITY METHODS ===
-
-  getThemeHook() {
-    return `
-// Auto-generated theme hook by @donotdev/config
-// Generated at ${new Date().toISOString()}
-
-import { useThemeStore } from '@donotdev/stores';
-
-export function useTheme() {
-  return useThemeStore();
-}
-
-export default useTheme;
-`;
-  }
 }
 
 export function createNextThemeHandler(options = {}) {

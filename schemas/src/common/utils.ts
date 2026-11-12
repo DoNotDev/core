@@ -27,8 +27,8 @@ export function hasMetadata(obj: unknown): obj is dndevSchema<unknown> {
     obj !== undefined &&
     typeof obj === 'object' &&
     'metadata' in obj &&
-    typeof (obj as { metadata?: unknown }).metadata === 'object' &&
-    (obj as { metadata?: unknown }).metadata !== null
+    typeof obj.metadata === 'object' &&
+    obj.metadata !== null
   );
 }
 
@@ -43,6 +43,7 @@ export function hasMetadata(obj: unknown): obj is dndevSchema<unknown> {
  */
 export function getCollectionName(schema: dndevSchema<unknown>): string {
   if (!hasMetadata(schema)) {
+    // why: TS narrows `schema` to never here; this branch guards untyped (JS) callers
     const schemaObj = schema as Record<string, unknown>;
     const schemaType =
       schemaObj &&

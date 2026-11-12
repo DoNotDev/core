@@ -153,8 +153,10 @@ export interface ColumnDef<T extends FieldValues> {
  * include only the buckets they need. Items are processed in input order per
  * bucket and returned in the same order in {@link BulkResult}.
  *
- * Semantics (enforced by the service, not the adapter):
- * - Atomic: all ops succeed or none do.
+ * Semantics:
+ * - Partial success: each row succeeds or fails on its own. Rows that worked
+ *   stay written (no rollback); rows that failed are listed in
+ *   {@link BulkResult.failed} with the reason.
  * - Collision rejection: an id appearing in both `updates` and `deletes`, or both
  *   `inserts` and `updates`, fails up-front with {@link BulkCollisionError}.
  * - Empty bulk (`{}`) is a no-op that returns a zeroed {@link BulkResult}
@@ -185,28 +187,48 @@ export interface BulkOperations<T extends Record<string, unknown>> {
 }
 
 /**
- * Result of a bulk CRUD operation. Each id list preserves the input order of the
- * corresponding bucket in {@link BulkOperations}.
- *
- * @example
- * const r: BulkResult = await adapter.bulk('events', {
- *   inserts: [{ title: 'A' }],
- *   deletes: ['x'],
- * });
- * r.insertedIds; // ['evt_123']
- * r.deletedIds;  // ['x']
+ * One row of a bulk operation that was not written.
  *
  * @version 0.1.0
+ * @since 0.2.3
+ * @author AMBROISE PARK Consulting
+ */
+export interface BulkFailure {
+  /** Bucket the row came from. */
+  op: 'insert' | 'update' | 'delete';
+  /** Record id (updates and deletes). */
+  id?: string;
+  /** Position in `inserts` (inserted rows have no id yet). */
+  index?: number;
+  /** Why the row was not written (backend message, or access denied / not found). */
+  error: string;
+}
+
+/**
+ * Result of a bulk CRUD operation: partial success. Rows that were written are
+ * listed per bucket in input order; rows that were not are in `failed`. Nothing
+ * that succeeded is rolled back.
+ *
+ * @example
+ * const r: BulkResult = await adapter.bulk('products', {
+ *   updates: [{ id: 'p1', patch: { size: '50 ml' } }, { id: 'p2', patch: { size: '50 ml' } }],
+ * });
+ * r.updatedIds; // ['p1']
+ * r.failed;     // [{ op: 'update', id: 'p2', error: 'Update affected 0 rows: …' }]
+ *
+ * @version 0.2.0
  * @since 0.2.0
  * @author AMBROISE PARK Consulting
  */
 export interface BulkResult {
-  /** Server-assigned IDs for `inserts`, in input order. */
+  /** Server-assigned IDs of the inserted rows, in input order of the inserts that succeeded. */
   insertedIds: string[];
   /** IDs that were updated, in input order. */
   updatedIds: string[];
   /** IDs that were deleted, in input order. */
   deletedIds: string[];
+  /** Rows that were not written, with the reason. Empty when everything succeeded. */
+  failed: BulkFailure[];
 }
 
 // =============================================================================

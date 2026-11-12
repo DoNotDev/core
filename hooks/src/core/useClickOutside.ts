@@ -190,8 +190,8 @@ export function useClickOutside(
     (event: Event) => {
       if (!enabled) return;
 
-      const target = event.target as Element;
-      if (!target) return;
+      const target = event.target;
+      if (!(target instanceof Node)) return;
 
       // Check if click is inside the monitored element
       if (ref.current && ref.current.contains(target)) {

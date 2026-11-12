@@ -909,14 +909,13 @@ export function getCountries(): CountryData[] {
     (lang): lang is LanguageData & { countryCode: string; dialCode: string } =>
       lang.countryCode !== undefined && lang.dialCode !== undefined
   ).map((lang) => ({
-    code: lang.countryCode!,
-    dialCode: lang.dialCode!,
+    code: lang.countryCode,
+    dialCode: lang.dialCode,
     flagCode: lang.flagCode || lang.id,
     // Prefer explicit countryName ("France", "United States"), then COUNTRY_LABELS,
     // then fall back to the language display name
-    name: lang.countryName || COUNTRY_LABELS[lang.countryCode!] || lang.name,
+    name: lang.countryName || COUNTRY_LABELS[lang.countryCode] || lang.name,
   }));
 }
 
-export const COUNTRIES: readonly CountryData[] =
-  getCountries() as readonly CountryData[];
+export const COUNTRIES: readonly CountryData[] = getCountries();

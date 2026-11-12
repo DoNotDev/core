@@ -230,7 +230,8 @@ export function areFeaturesAvailable(features: FrameworkFeature[]): boolean {
  * @author AMBROISE PARK Consulting
  */
 export function getFeatureSummary(): Record<FrameworkFeature, boolean> {
-  const summary: Record<FrameworkFeature, boolean> = {} as any;
+  // why: filled for every FrameworkFeature by the loop below; TS cannot type an incrementally built record
+  const summary = {} as Record<FrameworkFeature, boolean>;
 
   Object.values(FRAMEWORK_FEATURES).forEach((feature) => {
     summary[feature] = isFeatureAvailable(feature);

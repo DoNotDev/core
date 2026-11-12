@@ -13,6 +13,7 @@ export * from './validation';
 export * from './utils';
 export * from './visibility';
 export * from './defineEntity';
+export { getEntityByCollection } from './entityRegistry';
 export * from './createSchema';
 export * from './optionHelpers';
 export * from './scopeProvider';

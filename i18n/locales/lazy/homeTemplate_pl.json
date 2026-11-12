@@ -1,0 +1,52 @@
+{
+  "homeTemplate": {
+    "hero": {
+      "title": "Witamy w DoNotDev",
+      "subtitle": "Twórz, wdrażaj i skaluj zaawansowane aplikacje dzięki naszemu nowoczesnemu szablonowi startowemu TypeScript i Firebase.",
+      "getStarted": "Rozpocznij",
+      "learnMore": "Dowiedz się więcej",
+      "viewDemo": "Zobacz demo"
+    },
+    "features": {
+      "title": "Dlaczego DoNotDev?",
+      "subtitle": "Wszystko, czego potrzebujesz do tworzenia nowoczesnych, skalowalnych aplikacji",
+      "modern": {
+        "title": "Nowoczesny stos technologiczny",
+        "description": "Zbudowany w TypeScript, React i nowoczesnych technologiach webowych"
+      },
+      "scalable": {
+        "title": "Skalowalna architektura",
+        "description": "Backend oparty na Firebase, który rośnie wraz z Twoimi potrzebami"
+      },
+      "fast": {
+        "title": "Błyskawiczna szybkość",
+        "description": "Zoptymalizowany pod kątem wydajności i komfortu pracy programistów"
+      },
+      "secure": {
+        "title": "Bezpieczeństwo klasy enterprise",
+        "description": "Wbudowane uwierzytelnianie, autoryzacja i funkcje bezpieczeństwa"
+      }
+    },
+    "cta": {
+      "title": "Gotowy, by zacząć?",
+      "subtitle": "Dołącz do tysięcy programistów tworzących wspaniałe aplikacje",
+      "signUp": "Zarejestruj się za darmo",
+      "contactSales": "Skontaktuj się z działem sprzedaży",
+      "viewDocumentation": "Zobacz dokumentację"
+    },
+    "footer": {
+      "description": "Nowoczesny framework programistyczny do tworzenia skalowalnych aplikacji",
+      "links": {
+        "product": "Produkt",
+        "developers": "Dla programistów",
+        "company": "Firma",
+        "support": "Pomoc"
+      },
+      "legal": {
+        "privacy": "Polityka prywatności",
+        "terms": "Regulamin",
+        "cookies": "Polityka plików cookie"
+      }
+    }
+  }
+}

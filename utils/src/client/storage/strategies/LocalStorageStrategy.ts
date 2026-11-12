@@ -119,6 +119,7 @@ export class LocalStorageStrategy extends BaseStorageStrategy {
         value = await decryptData(value);
       }
 
+      // why: generic storage contract — caller-chosen T, no schema available to validate the stored value
       return value as T;
     } catch (error) {
       throw handleError(error, {
@@ -146,13 +147,14 @@ export class LocalStorageStrategy extends BaseStorageStrategy {
     }
 
     try {
-      let storedValue = value;
+      let storedValue: T | string = value;
 
       // Encrypt if needed
       if (encryption) {
-        storedValue = (await encryptData(
+        // why: generic T is unconstrained; encryption callers store JSON-serialisable non-null values
+        storedValue = await encryptData(
           value as string | object | number | boolean
-        )) as T;
+        );
       }
 
       // Calculate expiration
@@ -168,11 +170,19 @@ export class LocalStorageStrategy extends BaseStorageStrategy {
       if (typeof window !== 'undefined') {
         localStorage.setItem(fullKey, data);
       }
-    } catch (error: any) {
+    } catch (error) {
+      const errorName =
+        typeof error === 'object' && error !== null && 'name' in error
+          ? error.name
+          : undefined;
+      const errorCode =
+        typeof error === 'object' && error !== null && 'code' in error
+          ? error.code
+          : undefined;
       const errorMessage =
-        error?.name === 'QuotaExceededError' || error?.code === 22
+        errorName === 'QuotaExceededError' || errorCode === 22
           ? 'Storage quota exceeded. Please free up space or login to sync to cloud.'
-          : error?.name === 'SecurityError' || error?.code === 18
+          : errorName === 'SecurityError' || errorCode === 18
             ? 'Storage access denied. Please enable localStorage or login to sync to cloud.'
             : 'Failed to store data in local storage';
 

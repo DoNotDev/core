@@ -4,7 +4,7 @@
  *
  * @example Root layout usage
  * ```tsx
- * // app/layout.tsx
+ * // app/layout.next.tsx
  * import { getMetadataForPath } from '@donotdev/core/next';
  *
  * export async function generateMetadata() {

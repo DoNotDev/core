@@ -39,6 +39,46 @@ function escapeCdata(str) {
   return str.replace(/\]\]>/g, ']]]]><![CDATA[>');
 }
 
+/** Hosts that only resolve on the build machine. */
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '0.0.0.0', '[::1]']);
+
+/**
+ * Fail a production build whose base URL is not public: the sitemap, robots.txt and
+ * llms.txt publish absolute URLs, and a localhost URL makes them useless to crawlers.
+ * @param {string} baseUrl - Resolved base URL
+ * @param {string} envVar - Env var that sets it (for the error message)
+ * @throws {Error} When the URL is not absolute http(s) or its host is local
+ */
+export function assertPublicBaseUrl(baseUrl, envVar) {
+  let hostname;
+  try {
+    const url = new URL(baseUrl);
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') throw new Error();
+    hostname = url.hostname;
+  } catch {
+    throw new Error(
+      `[dndev] SEO: base URL "${baseUrl}" is not an absolute http(s) URL. Set ${envVar} (or seo.baseUrl) to the production URL.`
+    );
+  }
+  if (LOCAL_HOSTS.has(hostname) || hostname.endsWith('.localhost')) {
+    throw new Error(
+      `[dndev] SEO: production build with base URL "${baseUrl}". The sitemap, robots.txt and llms.txt ` +
+        `would publish local URLs. Set ${envVar} (or seo.baseUrl) to the production URL in the build environment.`
+    );
+  }
+}
+
+/**
+ * Whether a route may be indexed: not auth-only and not marked `seo: { noindex: true }`
+ * in its PageMeta. Private pages that gate client-side (`auth: false`) use noindex.
+ * @param {Object} route - Route from discovery
+ * @returns {boolean}
+ */
+export function isIndexableRoute(route) {
+  if (route.auth && route.auth !== false) return false;
+  return route.meta?.seo?.noindex !== true;
+}
+
 /**
  * SEO Generator class - single source of truth for SEO generation
  */
@@ -170,8 +210,9 @@ export class SEOGenerator {
       }
     });
 
-    // Add common disallowed paths
-    disallowedPaths.push('/admin', '/api', '/_next', '/static');
+    // Add common disallowed paths. Never /_next: it serves the JS, CSS and images
+    // Google fetches to render the page, and it does not render blocked resources.
+    disallowedPaths.push('/admin', '/api');
 
     const robotsContent = this.generateRobotsTxtContent({
       disallowedPaths: [...new Set(disallowedPaths)], // Remove duplicates
@@ -197,9 +238,9 @@ export class SEOGenerator {
    */
   async generateSitemap(seoData, writeFile, blogPosts = []) {
     const publicRoutes = (seoData.routes || []).filter((route) => {
-      // Exclude auth-protected routes
-      if (route.auth && route.auth !== false) return false;
-      // Exclude dynamic :param routes (not real URLs)
+      // Exclude auth-protected and noindex routes
+      if (!isIndexableRoute(route)) return false;
+      // Exclude dynamic :param routes (not real URLs; the Next runtime sitemap expands them)
       if (typeof route.path === 'string' && route.path.includes(':'))
         return false;
       // Exclude /blog if blog posts exist (blog discovery adds it with proper lastmod)
@@ -244,6 +285,50 @@ export class SEOGenerator {
       content: sitemapContent,
       publicRoutes: sitemapUrls.length,
     };
+  }
+
+  /**
+   * Routes of the runtime sitemap (Next `app/sitemap.xml` route, see buildSitemap in @donotdev/core/next).
+   * Static indexable routes, dynamic routes with the collection of their entity
+   * (`meta.entity`), and blog posts (file-based, resolved at build).
+   * @param {Array} routes - Routes from discovery
+   * @param {Array} blogPosts - Discovered blog posts
+   * @returns {Array<{path: string, collection?: string, lastModified?: string, priority?: number, changeFrequency?: string}>}
+   */
+  getSitemapRoutes(routes, blogPosts = []) {
+    const { blogPath } = this.options;
+    const sitemapRoutes = [];
+    for (const route of routes || []) {
+      if (!isIndexableRoute(route) || typeof route.path !== 'string') continue;
+      const isBlogRoute =
+        route.path === blogPath || route.path.startsWith(`${blogPath}/`);
+      if (blogPosts.length > 0 && isBlogRoute) continue;
+      if (route.path.includes(':')) {
+        if (isBlogRoute) continue;
+        sitemapRoutes.push({
+          path: route.path,
+          ...(route.meta?.entity && { collection: route.meta.entity }),
+        });
+      } else {
+        sitemapRoutes.push({ path: route.path });
+      }
+    }
+    if (blogPosts.length > 0) {
+      sitemapRoutes.push({
+        path: blogPath,
+        priority: 0.7,
+        ...(blogPosts[0]?.date && { lastModified: blogPosts[0].date }),
+      });
+      for (const post of blogPosts) {
+        sitemapRoutes.push({
+          path: `${blogPath}/${post.slug}`,
+          priority: 0.6,
+          changeFrequency: 'monthly',
+          ...(post.date && { lastModified: post.date }),
+        });
+      }
+    }
+    return sitemapRoutes;
   }
 
   /**

@@ -62,17 +62,51 @@ export const CONFIG_KEYS = {
   env: 'env',
 };
 
+// ===== NEXT RENDER TREES =====
+/**
+ * Next.js render trees of the generated app (RouteHandler). Both sit under the
+ * generated root layout (`src/app/layout.next.tsx` with one language,
+ * `src/app/[lang]/layout.next.tsx` with 2+), which renders the app's AppDocument with
+ * the page's `<html lang>`; the trees are its children, so moving between them
+ * (sign-in, sign-out) stays a client-side navigation.
+ * - `siteGroup`: route group of every generated page. Its layout renders the providers
+ *   without request data (no cookies, no headers): the pages are static and served
+ *   from the cache, revalidated every `revalidateSeconds` (ISR). Guests, crawlers and
+ *   every visitor of an app whose session the server cannot read get this render.
+ * - `sessionSegment`: internal tree of the same pages rendered per request with the
+ *   request cookies (personalized SSR). Generated only with a cookie session; the proxy
+ *   rewrites requests carrying an auth cookie to it and answers 404 on a direct hit.
+ *   Same value as SESSION_RENDER_SEGMENT in @donotdev/core (the Next routing hooks
+ *   strip it from the server pathname). With 2+ languages it follows the language
+ *   segment (`/fr/dndev-session/…`).
+ * - `languageHeader`: request header the proxy sets (2+ languages) on requests that
+ *   are not a page, so the 404 page (`src/app/global-not-found.next.tsx`) carries the
+ *   URL's language.
+ */
+export const NEXT_RENDER = {
+  siteGroup: '(site)',
+  sessionSegment: 'dndev-session',
+  languageHeader: 'x-dndev-language',
+  /** Cache lifetime of static pages and of the sitemap / llms.txt routes (seconds) */
+  revalidateSeconds: 3600,
+};
+
 // ===== GENERATED FILE PATHS =====
 export const GENERATED_PATHS = {
   // Next.js generated files (app-specific only, no providers)
   next: {
-    middleware: 'middleware.ts',
+    // Next 16 proxy (was middleware.ts): inside src/, next to src/app.
+    // Next files carry the `.next.` marker (next/nextFiles.js).
+    proxy: 'src/proxy.next.ts',
     routeManifest: 'public/route-manifest.json',
     assetManifest: 'public/asset-manifest.json',
     utilities: 'src/styles/utilities.generated.css',
     // NEW: App directory generation paths for Site template
     appPages: 'src/app', // Base directory for generated app/** files
-    appLayout: 'src/app/layout.tsx', // Layout file location (user-owned)
+    // Root layout, generated with one language (2+: src/app/[lang]/layout.next.tsx)
+    appLayout: 'src/app/layout.next.tsx',
+    // The app's HTML document (user-owned): <html lang>, head links, global CSS, metadata
+    appDocument: 'src/app/AppDocument.tsx',
     // Config files (one per handler to avoid overwrites)
     configRoute: 'src/config/dndev-config-route.js',
     configTheme: 'src/config/dndev-config-theme.js',

@@ -27,7 +27,5 @@ export function enhanceSchema<T>(
   schema: v.BaseSchema<unknown, T, v.BaseIssue<unknown>>,
   metadata: SchemaMetadata
 ): dndevSchema<T> {
-  const enhanced = schema as dndevSchema<T>;
-  enhanced.metadata = metadata;
-  return enhanced;
+  return Object.assign(schema, { metadata });
 }

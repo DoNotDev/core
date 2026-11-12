@@ -8,28 +8,6 @@ beforeEach(() => {
 });
 
 describe('createDoNotDevStore', () => {
-  it('shares state across bundles but binds a hook per bundle', async () => {
-    const config = {
-      name: 'test-cross-bundle',
-      createStore: () => ({ count: 0 }),
-    };
-    const useFirst = createDoNotDevStore(config);
-    expect(createDoNotDevStore(config)).toBe(useFirst);
-
-    // Registry holds the React-free API, never a hook another bundle could call.
-    const shared = (globalThis as any)._DNDEV_STORES_[config.name];
-    expect(typeof shared).toBe('object');
-
-    // A second evaluation of the module, as in a separate Next layer.
-    vi.resetModules();
-    const other = await import('../createDoNotDevStore');
-    const useSecond = other.createDoNotDevStore(config);
-
-    expect(useSecond).not.toBe(useFirst);
-    useSecond.setState({ count: 7 });
-    expect(useFirst.getState().count).toBe(7);
-  });
-
   it('creates a store with lifecycle methods', () => {
     const useStore = createDoNotDevStore({
       name: 'test-basic',

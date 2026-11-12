@@ -30,7 +30,10 @@
     "replySubject": "Re : Votre demande",
     "markResponded": "Marquer comme répondu",
     "selectOptions": "Sélectionner des options...",
-    "use": "Utiliser cette adresse"
+    "use": "Utiliser cette adresse",
+    "edit": "Modifier",
+    "refresh": "Actualiser",
+    "open": "Ouvrir"
   },
   "address": {
     "placeholder": "Saisir une adresse...",
@@ -259,7 +262,9 @@
     "networkError": "Erreur réseau survenue",
     "unauthorized": "Accès non autorisé",
     "forbidden": "Accès interdit",
-    "serverError": "Erreur serveur survenue"
+    "serverError": "Erreur serveur survenue",
+    "bulkPartialError_one": "{{count}} ligne n’a pas pu être enregistrée",
+    "bulkPartialError_other": "{{count}} lignes n’ont pas pu être enregistrées"
   },
   "form": {
     "submit": "Soumettre",
@@ -273,7 +278,9 @@
     "uploading": "Téléchargement {{progress}}%...",
     "processing": "Traitement...",
     "validating": "Validation...",
-    "saving": "Enregistrement..."
+    "saving": "Enregistrement...",
+    "saved": "Enregistré",
+    "error": "Erreur — réessayez"
   },
   "gdprConsent": {
     "consent": "J'accepte la",
@@ -367,5 +374,34 @@
   },
   "recommendations": {
     "title": "Vous aimerez aussi"
+  },
+  "delete": {
+    "title": "Supprimer l'élément",
+    "confirm": "Voulez-vous vraiment supprimer cet élément ?",
+    "loading": "Suppression...",
+    "titleSelected_one": "Supprimer {{count}} élément",
+    "titleSelected_other": "Supprimer {{count}} éléments",
+    "confirmSelected_one": "Supprimer l'élément sélectionné ? Cette action est définitive.",
+    "confirmSelected_other": "Supprimer les {{count}} éléments sélectionnés ? Cette action est définitive."
+  },
+  "errors": {
+    "notFound": "{{entity}} introuvable",
+    "fetchFailed": "Impossible de charger {{entity}}"
+  },
+  "emptyState": {
+    "title": "Aucun résultat",
+    "description": "Il n'y a rien à afficher pour le moment."
+  },
+  "bulkEdit": {
+    "pending_one": "{{count}} modification non enregistrée",
+    "pending_other": "{{count}} modifications non enregistrées",
+    "discard": "Annuler les modifications",
+    "selected": "{{count}} sélectionné(s)",
+    "field": "Champ",
+    "value": "Valeur",
+    "apply": "Appliquer à la sélection",
+    "deleteSelected": "Supprimer la sélection ({{count}})",
+    "failed_one": "{{count}} ligne non enregistrée : elle reste dans la liste, réessayez",
+    "failed_other": "{{count}} lignes non enregistrées : elles restent dans la liste, réessayez"
   }
 }

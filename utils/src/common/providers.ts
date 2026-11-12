@@ -101,7 +101,7 @@ export function getProvider<K extends keyof DndevProviders>(
       `[dndev] Provider "${key}" not configured. Pass it to configureProviders().`
     );
   }
-  return provider as NonNullable<DndevProviders[K]>;
+  return provider;
 }
 
 /**

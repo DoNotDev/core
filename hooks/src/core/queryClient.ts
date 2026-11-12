@@ -127,3 +127,46 @@ export function getQueryClient(queryConfig?: QueryConfig): QueryClient {
   }
   return browserQueryClient;
 }
+
+/**
+ * Signed-in user id the browser cache was filled under: `undefined` until known (no
+ * session snapshot, provider not ready), `null` signed out.
+ */
+let cacheIdentity: string | null | undefined = undefined;
+
+/**
+ * Track the signed-in identity the browser query cache serves. When it changes
+ * (signed out → user, user → signed out, user → other user), every cached query is
+ * reset before the new identity renders: data fetched under the previous identity (or
+ * as anonymous with a dead session) is never served to the new one, and active queries
+ * refetch with the new session.
+ *
+ * The first identity known is adopted without a reset: the request snapshot during
+ * hydration (seed), else the auth provider's first state. So a server render and a
+ * client that agree on the user keep the hydrated cache. No-op on the server
+ * (per-request clients) and before the browser QueryClient exists.
+ *
+ * Called by the auth store on every auth transition (`setAuthenticated`,
+ * `setUnauthenticated`) and by AuthSessionProvider with the snapshot (`seed`).
+ *
+ * @param userId - The signed-in user id, `null` signed out
+ * @param seed - Adopt the identity only when none is known yet (never resets)
+ *
+ * @version 0.1.0
+ * @since 0.2.3
+ * @author AMBROISE PARK Consulting
+ */
+export function syncQueryCacheIdentity(
+  userId: string | null,
+  seed = false
+): void {
+  if (isServer) return;
+  if (cacheIdentity === undefined) {
+    cacheIdentity = userId;
+    return;
+  }
+  if (seed || cacheIdentity === userId) return;
+  cacheIdentity = userId;
+  // Synchronous state reset (data gone before the next render), then active refetch
+  void browserQueryClient?.resetQueries();
+}

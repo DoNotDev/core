@@ -262,4 +262,4 @@ export type Permission =
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
-export type ProviderInstances = Record<AuthPartnerId, any>;
+export type ProviderInstances = Record<AuthPartnerId, any>; // why: third-party SDK provider instances with no shared shape

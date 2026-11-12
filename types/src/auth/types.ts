@@ -992,7 +992,14 @@ export interface AuthProvider {
    */
   getPasswordResetRedirectUrl?(): string;
 
-  sendEmailVerification(): Promise<void>;
+  /**
+   * Send (again) the address-confirmation email.
+   *
+   * @param email - Address to confirm. Needed when nobody is signed in (sign-up with
+   *   email confirmation leaves no session); providers that can only resend to the
+   *   signed-in user ignore it.
+   */
+  sendEmailVerification(email?: string): Promise<void>;
 
   sendSignInLinkToEmail(
     email: string,
@@ -1020,14 +1027,20 @@ export interface AuthProvider {
   deleteAccount(password?: string): Promise<void>;
 
   /**
-   * Set session persistence (remember me).
+   * Set session persistence (remember me) for the next sign-in.
    * Provider-specific: Firebase uses browserLocal/browserSession persistence,
-   * Supabase uses cookie duration, etc.
-   * No-op if the provider doesn't support persistence control.
+   * Supabase uses persistent or session cookies.
+   * Throws when this provider instance cannot honour it (see `supportsRememberMe`).
    *
    * @param remember - true for persistent session, false for session-only
    */
   setRememberMe?(remember: boolean): Promise<void>;
+
+  /**
+   * Whether `setRememberMe` works on this instance (e.g. Supabase only with the cookie
+   * client). Omitted = it works whenever `setRememberMe` exists.
+   */
+  supportsRememberMe?(): boolean;
 
   /**
    * Signed-in state read synchronously from the request cookies, without the auth
@@ -1174,7 +1187,7 @@ export interface AuthAPI {
   updatePassword: (newPassword: string) => Promise<void>;
   verifyPasswordResetCode: (code: string) => Promise<string | null>;
   confirmPasswordReset: (code: string, newPassword: string) => Promise<void>;
-  sendEmailVerification: () => Promise<void>;
+  sendEmailVerification: (email?: string) => Promise<void>;
   getEmailVerificationStatus: () => Promise<{ status: string }>;
   isEmailVerificationEnabled: () => Promise<boolean>;
   sendSignInLinkToEmail: (email: string, settings?: any) => Promise<void>;
@@ -1190,7 +1203,10 @@ export interface AuthAPI {
     method?: AuthMethod
   ) => Promise<void>;
   deleteAccount: (password?: string) => Promise<void>;
+  /** Choose persistent vs session-only for the next sign-in. Throws when unsupported. */
   setRememberMe: (remember: boolean) => Promise<void>;
+  /** Whether the provider can honour `setRememberMe` (render the checkbox only then). */
+  canRememberMe: () => boolean;
 
   // ==========================================================================
   // COMPUTED VALUES (derived from state) - REACTIVE

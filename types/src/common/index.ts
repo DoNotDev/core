@@ -510,6 +510,23 @@ export interface PageMeta {
   hideFromMenu?: boolean;
 
   /**
+   * Signed-in visitors of this page are sent to this path (e.g. a landing page whose
+   * members work from `/catalogue`). A same-site app path (`/x`), never the page itself.
+   * @description Next + Supabase cookie session: the generated proxy redirects before
+   * render (no flash). Every app: the page renders inside `SignedInRedirect`, which
+   * navigates (replace) once the user is known, for sign-ins on the page itself and
+   * sessions the server cannot read. A pending return-to (`?returnTo=` or the saved
+   * `dndev.auth.returnTo`) skips the redirect.
+   * @example
+   * ```tsx
+   * export const meta: PageMeta = {
+   *   signedInRedirect: '/catalogue',
+   * };
+   * ```
+   */
+  signedInRedirect?: string;
+
+  /**
    * Hide breadcrumbs on this page (default: false)
    * @description Set to true to hide framework breadcrumbs on this route
    * @default false

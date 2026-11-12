@@ -172,6 +172,7 @@ export function useQuery<TData = unknown, TError = Error>(
       });
 
       // Call user's error handler if provided
+      // why: the framework replaces TError with its wrapped DoNotDevError; the public TError generic cannot express that
       onError?.(wrappedError as TError);
     }
   }, [result.error, userMessage, showNotification, onError]);

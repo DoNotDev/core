@@ -15,8 +15,5 @@ export { default } from './config.js';
 // PostCSS configuration for consumer postcss.config.js
 export { definePostCSSConfig } from './postcss.js';
 
-// Server-side SEO utilities
-export {
-  getMetadataForPath,
-  clearMetadataCache,
-} from './getMetadataForPath.js';
+// Server runtime (also the `react-server` entry of @donotdev/core/next)
+export * from './runtime.js';

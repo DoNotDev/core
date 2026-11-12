@@ -30,7 +30,7 @@ describe('RouteHandler.cleanGeneratedPageFiles', () => {
   });
 
   it('removes the generated page and its PageClient wrapper of a deleted route, keeps hand-written files', async () => {
-    const page = put('src/app/kickstart/page.tsx', `${MARKER}export default function P() {}\n`);
+    const page = put('src/app/kickstart/page.next.tsx', `${MARKER}export default function P() {}\n`);
     const client = put('src/app/kickstart/KickstartPageClient.tsx', `${MARKER}'use client';\n`);
     const own = put('src/app/custom/CustomPageClient.tsx', "'use client';\n");
 
@@ -40,5 +40,54 @@ describe('RouteHandler.cleanGeneratedPageFiles', () => {
     expect(existsSync(page)).toBe(false);
     expect(existsSync(client)).toBe(false);
     expect(existsSync(own)).toBe(true);
+  });
+
+  it('removes generated layouts and 404 pages of a dropped render tree or language mode, keeps hand-written files', async () => {
+    const legacyLang = put('src/app/(site)/[lang]/layout.next.tsx', `${MARKER}export default function L() {}\n`);
+    const session = put('src/app/dndev-session/layout.next.tsx', `${MARKER}export default function L() {}\n`);
+    const root = put('src/app/[lang]/layout.next.tsx', `${MARKER}export default function L() {}\n`);
+    const notFound = put('src/app/[lang]/not-found.next.tsx', `${MARKER}export default function N() {}\n`);
+    const globalNotFound = put('src/app/global-not-found.next.tsx', `${MARKER}export default function N() {}\n`);
+    const own = put('src/app/legacy/layout.next.tsx', 'export default function L() {}\n');
+
+    await new NextRouteHandler({}).cleanGeneratedPageFiles();
+
+    for (const file of [legacyLang, session, root, notFound, globalNotFound]) {
+      expect(existsSync(file)).toBe(false);
+    }
+    expect(existsSync(own)).toBe(true);
+  });
+});
+
+describe('RouteHandler.findAppRouteSegments', () => {
+  let appRoot: string;
+  const put = (rel: string, content: string) => {
+    const file = join(appRoot, rel);
+    mkdirSync(join(file, '..'), { recursive: true });
+    writeFileSync(file, content);
+  };
+
+  beforeEach(() => {
+    appRoot = mkdtempSync(join(tmpdir(), 'dndev-routes-'));
+    PathResolver._reset();
+    PathResolver.getInstance().setAppRoot(appRoot);
+  });
+
+  afterEach(() => {
+    rmSync(appRoot, { recursive: true, force: true });
+    PathResolver._reset();
+  });
+
+  it("lists the first URL segment of the app's own routes outside [lang], route groups dropped", async () => {
+    put('src/app/auth/callback/route.next.ts', 'export function GET() {}\n');
+    put('src/app/(hooks)/webhook/route.next.ts', 'export function POST() {}\n');
+    put('src/app/sitemap.xml/route.next.ts', `${MARKER}export function GET() {}\n`);
+    put('src/app/[lang]/(site)/page.next.tsx', `${MARKER}export default function P() {}\n`);
+    put('src/app/[lang]/custom/page.next.tsx', 'export default function P() {}\n');
+
+    expect(await new NextRouteHandler({}).findAppRouteSegments()).toEqual([
+      'auth',
+      'webhook',
+    ]);
   });
 });

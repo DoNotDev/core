@@ -612,5 +612,9 @@
         "openAria": "Open \"{{subject}}\""
       }
     }
+  },
+  "seo": {
+    "llmsPages": "الصفحات",
+    "llmsBlog": "المدونة"
   }
 }

@@ -46,6 +46,7 @@ export function validateUrl(url: string, name: string = 'URL'): string {
  * @returns Sanitized metadata object
  */
 export function validateMetadata(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   metadata: Record<string, any>
 ): Record<string, string> {
   const sanitized: Record<string, string> = {};

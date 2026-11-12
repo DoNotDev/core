@@ -121,7 +121,8 @@ export class PWADiscovery extends BaseDiscovery {
     const fileName = fileInfo.fileName;
 
     // Analyze different PWA asset types
-    if (fileName.includes('manifest.json')) {
+    // Exact name: route-manifest.json, pwa-manifest.json, … are discovery outputs
+    if (fileName === 'manifest.json') {
       return this._parseManifestFile(content, relativePath);
     }
 
@@ -218,21 +219,42 @@ export class PWADiscovery extends BaseDiscovery {
 
   _generatePWAManifest(assets) {
     const icons = assets.filter((asset) => asset.type === 'icon');
-    const existingManifest = assets.find((asset) => asset.type === 'manifest');
 
-    const manifest = existingManifest?.content || this._getDefaultManifest();
+    // Built from appConfig.app every time. public/manifest.json is this method's
+    // own output (or the framework placeholder), so reading it back as the base
+    // would freeze stale values (placeholder name) across builds.
+    const manifest = this._getDefaultManifest();
 
     // Enhance manifest with discovered icons
     if (icons.length > 0) {
-      manifest.icons = icons.map((icon) => ({
-        src: `/${icon.path}`,
-        sizes: `${icon.size.width}x${icon.size.height}`,
-        type: `image/${icon.format}`,
-        purpose: icon.purpose,
-      }));
+      manifest.icons = icons.map((icon) => this.toManifestIcon(icon));
     }
 
     return manifest;
+  }
+
+  /**
+   * Discovered icon asset → Web App Manifest icon entry.
+   * - src is the served URL: public/ is the web root, so its prefix is dropped.
+   * - type is a real MIME type (image/x-icon, image/svg+xml, …).
+   * - SVG is resolution independent: sizes "any".
+   * - purpose only takes manifest values (any | maskable | monochrome).
+   */
+  toManifestIcon(icon) {
+    const MIME = {
+      ico: 'image/x-icon',
+      svg: 'image/svg+xml',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+    };
+    const format = (icon.format || '').toLowerCase();
+    return {
+      src: `/${icon.path.replace(/^\/?public\//, '')}`,
+      sizes:
+        format === 'svg' ? 'any' : `${icon.size.width}x${icon.size.height}`,
+      type: MIME[format] || `image/${format}`,
+      purpose: icon.purpose === 'maskable' ? 'maskable' : 'any',
+    };
   }
 
   _getDefaultManifest() {

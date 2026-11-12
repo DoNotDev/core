@@ -23,6 +23,7 @@ import type {
 } from '@donotdev/types';
 import { handleError, getListCardFieldNames } from '@donotdev/utils/server';
 
+import { registerEntity } from './entityRegistry';
 import { baseFields, DEFAULT_STATUS_OPTIONS } from './visibility';
 
 /** Field names that would cause prototype pollution if used as entity field keys */
@@ -492,6 +493,7 @@ export function defineEntity<const F extends Record<string, EntityField>>(
                 | undefined
             ),
           },
+          // why: spread of the consumer's generic status field; TS cannot prove the merge is a select field
         } as EntityField<'select'>,
       }),
       // Scope field for multi-tenancy (auto-added if entity.scope is defined)
@@ -566,7 +568,8 @@ export function defineEntity<const F extends Record<string, EntityField>>(
     // Set default namespace if not provided
     const namespace = entity.namespace || `entity-${entity.name.toLowerCase()}`;
 
-    return {
+    // why: mergedFields is built dynamically from the generic F; TS cannot map it to MutableMergedEntityFieldMap<F>
+    const defined = {
       ...entity,
       form: formConfig,
       fields: mergedFields as Entity<MutableMergedEntityFieldMap<F>>['fields'],
@@ -575,6 +578,11 @@ export function defineEntity<const F extends Record<string, EntityField>>(
       ...(entity.search && { search: entity.search }),
       ...(entity.defaultSort && { defaultSort: entity.defaultSort }),
     } as Entity<MutableMergedEntityFieldMap<F>>;
+
+    // Reference fields resolve their target entity by collection (no app wiring)
+    registerEntity(defined);
+
+    return defined;
   } catch (error) {
     throw handleError(error, {
       userMessage: `Failed to define entity '${entity.name}'`,

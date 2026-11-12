@@ -45,9 +45,9 @@ const RTL_LANGUAGES = [
  */
 interface I18nLike {
   language: string;
-  changeLanguage(lng: string): Promise<any>;
-  on(event: string, callback: (...args: any[]) => void): void;
-  off(event: string, callback: (...args: any[]) => void): void;
+  changeLanguage(lng: string): Promise<unknown>;
+  on(event: 'languageChanged', callback: (lng: string) => void): void;
+  off(event: 'languageChanged', callback: (lng: string) => void): void;
 }
 
 /** i18n instance holder (globalThis-backed, not serializable - never stored in zustand state) */
@@ -66,12 +66,14 @@ function getI18nHolder(): I18nHolder {
  */
 function isRTL(lng: string): boolean {
   const base = lng.split('-')[0];
-  return RTL_LANGUAGES.includes(base as (typeof RTL_LANGUAGES)[number]);
+  return RTL_LANGUAGES.some((rtl) => rtl === base);
 }
 
 /**
  * Apply language-related DOM attributes and record the language in the language
- * cookie, so the server renders the next request in it (see resolveLanguage).
+ * cookie: a later first visit to an unprefixed URL goes to this language (proxy /
+ * applyFirstVisitLanguage, see resolveLanguageRoute). Written by the browser only, so
+ * server responses carry no Set-Cookie and stay cacheable.
  * SameSite=Lax: the cookie must reach the server on arrival from another site too.
  * @internal
  */
@@ -199,13 +201,13 @@ export const useLanguageStore = createDoNotDevStore<
    *
    * - Stores i18n instance in module-level closure
    * - Populates available languages
-   * - Resolves initial language (persisted > i18n detected > fallback)
-   * - Syncs persisted language back to i18next if needed
+   * - Resolves initial language (the URL's, via the i18n instance > fallback)
    * - Subscribes to i18next languageChanged as safety net
    * - Applies DOM attributes
    */
   initialize: async (data?: Record<string, unknown>): Promise<boolean> => {
     try {
+      // why: DoNotDevStore.initialize takes an untyped bag; this store's callers pass this shape
       const initData = data as
         | {
             i18n?: I18nLike;
@@ -238,41 +240,17 @@ export const useLanguageStore = createDoNotDevStore<
       const i18nLanguage = getI18nHolder().instance?.language;
       const fallback = initData?.fallbackLanguage || 'en';
 
-      // Check if zustand persist has a stored preference
-      let hasPersistedPreference = false;
-      if (typeof localStorage !== 'undefined') {
-        try {
-          hasPersistedPreference =
-            localStorage.getItem('dndev-language-store') !== null;
-        } catch {
-          // localStorage not available (SSR, private browsing)
-        }
-      }
-
-      let targetLanguage: string;
-      const persistedLanguage = state.currentLanguage;
-
-      if (
-        hasPersistedPreference &&
-        supportedCodes.includes(persistedLanguage)
-      ) {
-        // Persisted preference is valid — sync to i18next
-        targetLanguage = persistedLanguage;
-        const i18nRef = getI18nHolder().instance;
-        if (i18nRef && i18nRef.language !== persistedLanguage) {
-          await i18nRef.changeLanguage(persistedLanguage);
-        }
-      } else if (i18nLanguage && supportedCodes.includes(i18nLanguage)) {
-        // Use i18next detected language
-        targetLanguage = i18nLanguage;
-      } else {
-        targetLanguage = fallback;
-      }
+      // The URL carries the language (the i18n instance starts in it, see
+      // getInitialLanguage): a persisted earlier choice must not override the page
+      // the visitor opened. Persisted/cookie choices only steer a first visit
+      // (proxy / applyFirstVisitLanguage).
+      const targetLanguage =
+        i18nLanguage && supportedCodes.includes(i18nLanguage)
+          ? i18nLanguage
+          : fallback;
 
       console.log('[language-store] Resolved language:', {
         target: targetLanguage,
-        persisted: persistedLanguage,
-        hasPersistedPreference,
         i18nLanguage,
         supportedCodes,
       });

@@ -63,6 +63,7 @@ export function getViteEnvVar(name: string): string | undefined {
     if (import.meta.env) {
       // Try direct property access (Vite static replacement)
       // This only works for vars that are statically referenced in the code
+      // why: import.meta.env typing depends on the consumer's bundler types (vite/client); absent in non-Vite compiles
       // @ts-ignore
       rawValue = (import.meta.env as unknown as Record<string, string>)[name];
     }
@@ -134,9 +135,11 @@ export function getPlatformEnvVar(
       return config.env.MODE;
     }
     // Fallback to import.meta.env for Vite
-    // @ts-ignore - import.meta.env available in Vite, guarded at runtime
-    if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
-      const env = (import.meta as any).env;
+    // @ts-ignore - import.meta available in ESM builds, guarded at runtime
+    const meta = typeof import.meta !== 'undefined' ? import.meta : undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: import.meta.env typing depends on the consumer's bundler types (vite/client); absent in non-Vite compiles
+    const env = (meta as any)?.env;
+    if (env) {
       // @ts-ignore
       if (baseName === 'MODE' && env.MODE) return env.MODE;
       // @ts-ignore

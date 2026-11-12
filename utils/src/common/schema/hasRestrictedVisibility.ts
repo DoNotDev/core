@@ -14,6 +14,11 @@ import type * as v from 'valibot';
 
 import type { dndevSchema } from '@donotdev/types';
 
+/** Non-null object, viewed as a string-keyed record for schema introspection. */
+function isObjectRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
 /**
  * Extracts the entries map from a Valibot schema, traversing wrappers (pipe, nullable,
  * optional, union) to reach the underlying object schema.
@@ -24,11 +29,10 @@ import type { dndevSchema } from '@donotdev/types';
  * because client adapters cannot enforce per-document ownership server-side.
  * Use FunctionsAdapter or ensure RLS is active (SupabaseCrudAdapter).
  */
-function _extractEntries(schema: any): Record<string, any> | undefined {
-  if (!schema || typeof schema !== 'object') return undefined;
+function _extractEntries(schema: unknown): Record<string, unknown> | undefined {
+  if (!isObjectRecord(schema)) return undefined;
   // Direct object schema: v.object({ ... })
-  if (schema.entries && typeof schema.entries === 'object')
-    return schema.entries;
+  if (isObjectRecord(schema.entries)) return schema.entries;
   // Piped schema: v.pipe(v.object(...), validator, ...)
   if (Array.isArray(schema.pipe)) {
     for (const s of schema.pipe) {
@@ -72,12 +76,17 @@ function _extractEntries(schema: any): Record<string, any> | undefined {
  * @since 0.0.1
  */
 export function hasRestrictedVisibility(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: accepts schemas of any output type; v.GenericSchema would make InferOutput unknown for callers (breaking)
   schema: v.BaseSchema<unknown, any, v.BaseIssue<unknown>> | dndevSchema<any>
 ): boolean {
   const entries = _extractEntries(schema);
   if (!entries) return false;
   for (const field of Object.values(entries)) {
-    const vis = (field as any)?.visibility;
+    // why: entries values are untyped schema objects; read `visibility` exactly as before (`?.` on any value)
+    const vis =
+      field == null
+        ? undefined
+        : (field as { visibility?: unknown }).visibility;
     if (vis !== undefined && vis !== 'guest') return true;
   }
   return false;

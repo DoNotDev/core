@@ -178,9 +178,25 @@ export function getTranslationContent() {
  */
 export function getTranslationLoaders(): Record<
   string,
-  Record<string, () => Promise<any>>
+  Record<string, () => Promise<unknown>>
 > {
   return getI18nConfig().loaders || {};
+}
+
+/**
+ * Unwrap a lazy translation module returned by a loader: its ESM `default`
+ * export when truthy, the module itself otherwise.
+ */
+export function unwrapTranslationModule(mod: unknown): unknown {
+  if (
+    typeof mod === 'object' &&
+    mod !== null &&
+    'default' in mod &&
+    mod.default
+  ) {
+    return mod.default;
+  }
+  return mod;
 }
 
 /**

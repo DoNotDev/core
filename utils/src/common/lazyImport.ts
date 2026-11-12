@@ -9,7 +9,7 @@
  * @author AMBROISE PARK Consulting
  */
 
-const importCache = new Map<string, Promise<any>>();
+const importCache = new Map<string, Promise<unknown>>();
 
 /**
  * Lazy import with caching
@@ -26,7 +26,8 @@ export function lazyImport<T>(
   cacheKey: string
 ): Promise<T> {
   if (importCache.has(cacheKey)) {
-    return importCache.get(cacheKey)!;
+    // why: heterogeneous cache keyed by string; the same cacheKey always maps to the same module type
+    return importCache.get(cacheKey) as Promise<T>;
   }
 
   const importPromise = importFn().catch((error) => {

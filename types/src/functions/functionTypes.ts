@@ -110,6 +110,7 @@ export type WithMetadata<T> = T & EntityMetadata;
  * @author AMBROISE PARK Consulting
  */
 export interface CreateEntityData<T extends Record<string, any>> {
+  // why: `any` so interface entity types (no index signature) satisfy it; `unknown` rejects them
   /** The schema to validate against */
   schema: dndevSchema<T>;
   /** The entity data to create */
@@ -127,6 +128,7 @@ export interface CreateEntityData<T extends Record<string, any>> {
  * @author AMBROISE PARK Consulting
  */
 export interface UpdateEntityData<T extends Record<string, any>> {
+  // why: `any` so interface entity types (no index signature) satisfy it; `unknown` rejects them
   /** The schema to validate against */
   schema: dndevSchema<T>;
   /** The ID of the entity to update */
@@ -146,6 +148,7 @@ export interface UpdateEntityData<T extends Record<string, any>> {
  * @author AMBROISE PARK Consulting
  */
 export interface GetEntityData<T extends Record<string, any>> {
+  // why: `any` so interface entity types (no index signature) satisfy it; `unknown` rejects them
   /** The schema to validate against */
   schema: dndevSchema<T>;
   /** The ID of the entity to get */
@@ -161,7 +164,7 @@ export interface GetEntityData<T extends Record<string, any>> {
  * @author AMBROISE PARK Consulting
  */
 export interface ListEntityData<
-  T extends Record<string, any>,
+  T extends Record<string, any>, // why: `any` so interface entity types (no index signature) satisfy it; `unknown` rejects them
 > extends ListOptions {
   /** The schema to validate against */
   schema: dndevSchema<T>;

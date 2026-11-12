@@ -50,21 +50,31 @@ const constants = {
   getGlobOptionsFor: constantsModule.getGlobOptionsFor || undefined,
   SCAN_PATTERNS: constantsModule.SCAN_PATTERNS || undefined,
   getPatternsFor: constantsModule.getPatternsFor || undefined,
-  I18N_PATHS: (constantsModule as any).I18N_PATHS || undefined,
+  I18N_PATHS: constantsModule.I18N_PATHS || undefined,
 };
 
 // Optional logging - use console as fallback (works in both contexts)
 const log = {
-  error: (message: string, error?: any) => {
+  error: (message: string, error?: unknown) => {
     console.error(message, error);
   },
-  warn: (message: string, error?: any) => {
+  warn: (message: string, error?: unknown) => {
     console.warn(message, error);
   },
   info: (message: string) => {
     console.log(message);
   },
 };
+
+/** Whether a caught fs error is EEXIST (path already exists) */
+function isEexistError(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    error.code === 'EEXIST'
+  );
+}
 
 // Simple error wrapper for config context (no tooling dependency)
 function safeExecuteAsync<T>(
@@ -449,6 +459,7 @@ export class PathResolver {
   async read(
     filePath: string,
     options: FileOptions = {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: mirrors the public PathResolver.d.ts signature; tightening it is a breaking change (any-audit)
   ): Promise<string | any | Buffer | null> {
     const { format = 'auto', encoding = 'utf8' } = options;
     const detectedFormat = this._detectFormat(filePath, format);
@@ -488,6 +499,7 @@ export class PathResolver {
   readSync(
     filePath: string,
     options: FileOptions = {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: mirrors the public PathResolver.d.ts signature; tightening it is a breaking change (any-audit)
   ): string | any | Buffer | null {
     const { format = 'auto', encoding = 'utf8' } = options;
     const detectedFormat = this._detectFormat(filePath, format);
@@ -524,6 +536,7 @@ export class PathResolver {
    */
   async write(
     filePath: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: mirrors the public PathResolver.d.ts signature; tightening it is a breaking change (any-audit)
     content: string | any | Buffer,
     options: FileOptions = {}
   ): Promise<boolean> {
@@ -551,8 +564,8 @@ export class PathResolver {
 
     try {
       await fs.promises.mkdir(dir, { recursive: true });
-    } catch (error: any) {
-      if (error?.code !== 'EEXIST') throw error;
+    } catch (error) {
+      if (!isEexistError(error)) throw error;
     }
 
     const detectedFormat = this._detectFormat(filePath, format);
@@ -598,6 +611,7 @@ export class PathResolver {
    */
   writeSync(
     filePath: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: mirrors the public PathResolver.d.ts signature; tightening it is a breaking change (any-audit)
     content: string | any | Buffer,
     options: FileOptions = {}
   ): boolean {
@@ -625,8 +639,8 @@ export class PathResolver {
 
     try {
       fs.mkdirSync(dir, { recursive: true });
-    } catch (error: any) {
-      if (error?.code !== 'EEXIST') throw error;
+    } catch (error) {
+      if (!isEexistError(error)) throw error;
     }
 
     const detectedFormat = this._detectFormat(filePath, format);
@@ -694,8 +708,8 @@ export class PathResolver {
     const dir = this.normalizePath(dirname(normalizedDestPath));
     try {
       await fs.promises.mkdir(dir, { recursive: true });
-    } catch (error: any) {
-      if (error?.code !== 'EEXIST') throw error;
+    } catch (error) {
+      if (!isEexistError(error)) throw error;
     }
 
     try {
@@ -745,8 +759,8 @@ export class PathResolver {
     const dir = this.normalizePath(dirname(normalizedDestPath));
     try {
       fs.mkdirSync(dir, { recursive: true });
-    } catch (error: any) {
-      if (error?.code !== 'EEXIST') throw error;
+    } catch (error) {
+      if (!isEexistError(error)) throw error;
     }
 
     try {
@@ -825,6 +839,7 @@ export class PathResolver {
       | null
   ): string[] | Dirent[] {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: Node's readdir overloads cannot take this options union in one call
       return fs.readdirSync(dirPath, options as any);
     } catch (error) {
       if (this.options.debug) {
@@ -907,8 +922,8 @@ export class PathResolver {
   async ensureDir(dirPath: string): Promise<void> {
     try {
       await fs.promises.mkdir(dirPath, { recursive: true });
-    } catch (error: any) {
-      if (error?.code !== 'EEXIST') throw error;
+    } catch (error) {
+      if (!isEexistError(error)) throw error;
     }
   }
 
@@ -920,8 +935,8 @@ export class PathResolver {
   ensureDirSync(dirPath: string): void {
     try {
       fs.mkdirSync(dirPath, { recursive: true });
-    } catch (error: any) {
-      if (error?.code !== 'EEXIST') throw error;
+    } catch (error) {
+      if (!isEexistError(error)) throw error;
     }
   }
 
@@ -948,6 +963,7 @@ export class PathResolver {
     dirPath: string,
     options?: { encoding?: BufferEncoding | null; withFileTypes?: boolean }
   ): Promise<string[] | Dirent[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: Node's readdir overloads cannot take this options union in one call
     return fs.promises.readdir(dirPath, options as any);
   }
 
@@ -1050,6 +1066,7 @@ export class PathResolver {
   async findFiles(
     directory: string,
     pattern: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: mirrors the public PathResolver.d.ts signature; tightening it is a breaking change (any-audit)
     options: any = {}
   ): Promise<string[]> {
     const searchPattern = this.normalizePath(join(directory, pattern));
@@ -1137,6 +1154,7 @@ export class PathResolver {
    */
   async _globWithNormalization(
     patterns: string[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: mirrors the public PathResolver.d.ts signature; tightening it is a breaking change (any-audit)
     options: any
   ): Promise<string[]> {
     const results = await fastGlob(patterns, options);
@@ -1153,6 +1171,7 @@ export class PathResolver {
    * @returns Framework and consumer file lists
    */
   async resolveFiles(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: mirrors the public PathResolver.d.ts signature; tightening it is a breaking change (any-audit)
     patterns: any,
     patternType: string = 'css'
   ): Promise<{ frameworkFiles: string[]; consumerFiles: string[] }> {
@@ -1265,6 +1284,7 @@ export class PathResolver {
    * @param patternType - Type of patterns (css, routes, i18n, assets, pwa)
    * @returns Resolved patterns with absolute paths
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: mirrors the public PathResolver.d.ts signature; tightening it is a breaking change (any-audit)
   async resolvePatterns(patternType: string): Promise<any> {
     if (!constants.getPatternsFor) {
       // Tooling context - return empty (not used in tooling)
@@ -1284,6 +1304,7 @@ export class PathResolver {
     }
 
     // Get raw patterns from constants (PathResolver handles resolution)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: constants.getPatternsFor is declared any in the PathResolver .d.ts mirror; changes with that .d.ts
     const patterns = constants.getPatternsFor(patternType) as any;
     const isMonorepo = this.isMonorepo();
 

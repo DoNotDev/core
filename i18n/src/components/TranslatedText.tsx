@@ -23,6 +23,7 @@ interface TranslatedTextProps {
   fallback?: string;
 
   /** Values for interpolation (e.g., { name: 'John' }) */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: not yet narrowed (any-audit 2026-11-11 follow-up)
   values?: Record<string, any>;
 
   /** HTML element to render (defaults to 'span') */
@@ -44,6 +45,7 @@ interface TranslatedTextProps {
   srOnly?: boolean;
 
   /** Additional props passed to the component */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: not yet narrowed (any-audit 2026-11-11 follow-up)
   [key: string]: any;
 }
 
@@ -97,7 +99,10 @@ export function TranslatedText({
   const { t } = useTranslation(namespace || 'common');
 
   // Get translated text with fallback
-  const translatedText = t(i18nKey, { ...values, defaultValue: fallback || i18nKey });
+  const translatedText = t(i18nKey, {
+    ...values,
+    defaultValue: fallback || i18nKey,
+  });
 
   // Build accessibility-compliant className
   const accessibleClassName = [
@@ -108,7 +113,10 @@ export function TranslatedText({
     .join(' ');
 
   // Build accessibility props
-  const accessibilityProps: Record<string, any> = {
+  const accessibilityProps: Pick<
+    React.AriaAttributes,
+    'aria-label' | 'aria-describedby' | 'aria-live'
+  > & { className?: string; role?: string } = {
     className: accessibleClassName || undefined,
   };
 

@@ -29,7 +29,10 @@
     "replySubject": "Re: Sua consulta",
     "markResponded": "Marcar como respondido",
     "selectOptions": "Selecionar opções...",
-    "use": "Usar este endereço"
+    "use": "Usar este endereço",
+    "edit": "Editar",
+    "refresh": "Atualizar",
+    "open": "Abrir"
   },
   "address": {
     "placeholder": "Digite o endereço...",
@@ -70,7 +73,9 @@
       "suggestions": "Você pode estar procurando por:",
       "goHome": "Ir para o início",
       "goBack": "Voltar"
-    }
+    },
+    "bulkPartialError_one": "Não foi possível guardar {{count}} linha",
+    "bulkPartialError_other": "Não foi possível guardar {{count}} linhas"
   },
   "pagination": {
     "showing": "Mostrando {{from}} a {{to}} de {{total}} itens",
@@ -264,7 +269,9 @@
     "uploading": "Enviando {{progress}}%...",
     "processing": "Processando...",
     "validating": "Validando...",
-    "saving": "Salvando..."
+    "saving": "Salvando...",
+    "saved": "Salvo",
+    "error": "Erro — tente novamente"
   },
   "navigation": {
     "more": "Mais",
@@ -519,7 +526,9 @@
     "unsupportedFieldType": "Tipo de campo não suportado: {{type}}",
     "fieldRendering": "Erro ao renderizar campo {{field}}",
     "fallingBackToTextField": "Usando campo de texto para tipo não suportado {{type}}",
-    "invalidFieldProps": "Configuração inválida para campo {{field}}"
+    "invalidFieldProps": "Configuração inválida para campo {{field}}",
+    "notFound": "Não foi possível encontrar {{entity}}",
+    "fetchFailed": "Falha ao carregar {{entity}}"
   },
   "visibility": {
     "viewAs": "Visualizar como",
@@ -531,5 +540,31 @@
   },
   "recommendations": {
     "title": "Você também pode gostar"
+  },
+  "addNew": "Adicionar",
+  "delete": {
+    "title": "Deletar item",
+    "confirm": "Tem certeza de que deseja deletar este item?",
+    "loading": "Deletando...",
+    "titleSelected_one": "Excluir {{count}} item",
+    "titleSelected_other": "Excluir {{count}} itens",
+    "confirmSelected_one": "Excluir o item selecionado? Esta ação não pode ser desfeita.",
+    "confirmSelected_other": "Excluir os {{count}} itens selecionados? Esta ação não pode ser desfeita."
+  },
+  "emptyState": {
+    "title": "Nenhum resultado",
+    "description": "Ainda não há nada para mostrar."
+  },
+  "bulkEdit": {
+    "pending_one": "{{count}} alteração não salva",
+    "pending_other": "{{count}} alterações não salvas",
+    "discard": "Descartar alterações",
+    "selected": "{{count}} selecionado(s)",
+    "field": "Campo",
+    "value": "Valor",
+    "apply": "Aplicar à seleção",
+    "deleteSelected": "Excluir seleção ({{count}})",
+    "failed_one": "{{count}} linha não guardada: continua na lista, tente novamente",
+    "failed_other": "{{count}} linhas não guardadas: continuam na lista, tente novamente"
   }
 }

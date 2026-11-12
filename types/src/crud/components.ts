@@ -80,6 +80,40 @@ export interface EntityListProps extends EntityBrowseBaseProps {
    * @default true (admin tables typically need export)
    */
   exportable?: boolean;
+  /**
+   * Edit the list in place, spreadsheet-style: list fields of type text, email,
+   * url, tel, textarea, number, select, radio and reference are edited in their
+   * cells (references and selects as dropdowns), checked rows take one value
+   * for a field at once, blocks paste from Excel / Sheets. Fields the viewer may
+   * not edit (`editable`) stay read-only. Save writes every change in one
+   * `useCrud().bulk({ updates })`. Rows open from the leading open-link icon
+   * (a row click edits). Opt out with `editable={false}` (read-only cells, row
+   * click opens the record).
+   * @default true
+   * @since 0.2.3
+   */
+  editable?: boolean;
+  /**
+   * Nested list of one parent's children (e.g. the products of a brand on the
+   * brand page): lists only rows whose `field` equals `value`, hides that column
+   * and filter, and the add button opens the create form with `field` prefilled
+   * (`EntityFormRenderer` reads it from the URL). `field` must be a `reference`
+   * field of the entity.
+   * @example
+   * ```tsx
+   * <EntityList entity={productEntity} basePath="/produits" parent={{ field: 'brandId', value: brandId }} />
+   * ```
+   * @since 0.2.3
+   */
+  parent?: EntityListParent;
+}
+
+/** Parent of a nested `EntityList`: the reference field and the parent record id. */
+export interface EntityListParent {
+  /** Reference field of the listed entity pointing at the parent (e.g. `'brandId'`) */
+  field: string;
+  /** Parent record id */
+  value: string;
 }
 
 /** Props for the entity card grid component with filtering and sorting. */
@@ -127,8 +161,7 @@ export interface EntityCardListProps extends EntityBrowseBaseProps {
 
 /**
  * Props for CrudCard — presentational card built from entity + item + field slots.
- * Not route-aware: parent (e.g. EntityCardList) provides detailHref or onClick.
- * For a11y/SEO prefer detailHref so the card is wrapped in a Link.
+ * Not route-aware: parent (e.g. EntityCardList) passes `href` (real link, a11y/SEO) or onClick.
  */
 export interface CrudCardProps {
   /** The list item (must have id) */
@@ -140,6 +173,11 @@ export interface CrudCardProps {
    * Navigation via Link is handled by the parent wrapper (CrudCardLink), not by CrudCard itself.
    */
   onClick?: (id: string) => void;
+  /**
+   * Detail page URL: the card renders a real `<a href>` (crawlable, client-side
+   * navigation through the app router). Takes precedence over `onClick`.
+   */
+  href?: string;
   /** Field names for card title (values joined with space) */
   titleFields?: string[];
   /** Field names for subtitle */

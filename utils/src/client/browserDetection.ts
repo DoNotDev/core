@@ -154,6 +154,12 @@ export interface CompatibilityReport {
   score: number; // 0-100
 }
 
+/** `navigator` plus the non-standard Device Memory and Network Information APIs. */
+type NavigatorWithDeviceInfo = Navigator & {
+  deviceMemory?: number;
+  connection?: { effectiveType: string; downlink: number; rtt: number };
+};
+
 /**
  * Detect browser information from user agent and navigator
  *
@@ -241,6 +247,9 @@ export function detectBrowser(): BrowserInfo {
   );
   const isLaptop = !isMobile && !isTablet;
 
+  // Non-standard Device Memory / Network Information APIs (Chromium only, absent from lib.dom)
+  const nav: NavigatorWithDeviceInfo = navigator;
+
   return {
     type,
     version,
@@ -257,12 +266,12 @@ export function detectBrowser(): BrowserInfo {
     doNotTrack: navigator.doNotTrack === '1',
     hardwareConcurrency: navigator.hardwareConcurrency || 0,
     maxTouchPoints: navigator.maxTouchPoints || 0,
-    deviceMemory: (navigator as any).deviceMemory,
-    connection: (navigator as any).connection
+    deviceMemory: nav.deviceMemory,
+    connection: nav.connection
       ? {
-          effectiveType: (navigator as any).connection.effectiveType,
-          downlink: (navigator as any).connection.downlink,
-          rtt: (navigator as any).connection.rtt,
+          effectiveType: nav.connection.effectiveType,
+          downlink: nav.connection.downlink,
+          rtt: nav.connection.rtt,
         }
       : undefined,
   };

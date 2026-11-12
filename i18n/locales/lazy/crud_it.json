@@ -29,7 +29,10 @@
     "replySubject": "Re: La tua richiesta",
     "markResponded": "Segna come risposto",
     "selectOptions": "Seleziona opzioni...",
-    "use": "Usa questo indirizzo"
+    "use": "Usa questo indirizzo",
+    "edit": "Modifica",
+    "refresh": "Aggiorna",
+    "open": "Apri"
   },
   "address": {
     "placeholder": "Inserisci indirizzo...",
@@ -258,7 +261,9 @@
     "networkError": "Errore di rete verificatosi",
     "unauthorized": "Accesso non autorizzato",
     "forbidden": "Accesso vietato",
-    "serverError": "Errore del server verificatosi"
+    "serverError": "Errore del server verificatosi",
+    "bulkPartialError_one": "Impossibile salvare {{count}} riga",
+    "bulkPartialError_other": "Impossibile salvare {{count}} righe"
   },
   "form": {
     "submit": "Invia",
@@ -272,7 +277,9 @@
     "uploading": "Caricamento {{progress}}%...",
     "processing": "Elaborazione...",
     "validating": "Validazione...",
-    "saving": "Salvataggio..."
+    "saving": "Salvataggio...",
+    "saved": "Salvato",
+    "error": "Errore — riprova"
   },
   "gdprConsent": {
     "consent": "Accetto la",
@@ -366,5 +373,35 @@
   },
   "recommendations": {
     "title": "Potrebbe piacerti anche"
+  },
+  "addNew": "Aggiungi",
+  "delete": {
+    "title": "Elimina elemento",
+    "confirm": "Vuoi davvero eliminare questo elemento?",
+    "loading": "Eliminazione...",
+    "titleSelected_one": "Elimina {{count}} elemento",
+    "titleSelected_other": "Elimina {{count}} elementi",
+    "confirmSelected_one": "Eliminare l'elemento selezionato? L'operazione è irreversibile.",
+    "confirmSelected_other": "Eliminare i {{count}} elementi selezionati? L'operazione è irreversibile."
+  },
+  "errors": {
+    "notFound": "Impossibile trovare {{entity}}",
+    "fetchFailed": "Impossibile caricare {{entity}}"
+  },
+  "emptyState": {
+    "title": "Nessun risultato",
+    "description": "Non c’è ancora niente da mostrare."
+  },
+  "bulkEdit": {
+    "pending_one": "{{count}} modifica non salvata",
+    "pending_other": "{{count}} modifiche non salvate",
+    "discard": "Annulla modifiche",
+    "selected": "{{count}} selezionati",
+    "field": "Campo",
+    "value": "Valore",
+    "apply": "Applica alla selezione",
+    "deleteSelected": "Elimina selezione ({{count}})",
+    "failed_one": "{{count}} riga non salvata: resta nell’elenco, riprova",
+    "failed_other": "{{count}} righe non salvate: restano nell’elenco, riprova"
   }
 }

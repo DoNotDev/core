@@ -15,6 +15,7 @@ import {
   STRIPE_MODES,
   type SubscriptionClaims,
 } from './constants';
+import { picklistOptions } from '../common/picklistOptions';
 
 // =============================================================================
 // Billing Request Schemas
@@ -141,9 +142,7 @@ export const CreateCheckoutSessionResponseSchema = v.object({
 export const SubscriptionDataSchema = v.object({
   userId: v.string(),
   tier: v.string(),
-  status: v.picklist(
-    Object.values(SUBSCRIPTION_STATUS) as [string, ...string[]]
-  ),
+  status: v.picklist(picklistOptions(SUBSCRIPTION_STATUS)),
   subscriptionId: v.nullable(v.string()),
   customerId: v.string(),
   subscriptionEnd: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
@@ -162,9 +161,7 @@ export const SubscriptionClaimsSchema = v.object({
   tier: v.string(),
   subscriptionId: v.nullable(v.string()),
   customerId: v.string(),
-  status: v.picklist(
-    Object.values(SUBSCRIPTION_STATUS) as [string, ...string[]]
-  ),
+  status: v.picklist(picklistOptions(SUBSCRIPTION_STATUS)),
   subscriptionEnd: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
   cancelAtPeriodEnd: v.boolean(),
   updatedAt: v.pipe(v.string(), v.isoTimestamp()),

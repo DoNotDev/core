@@ -9,36 +9,13 @@
  * @author AMBROISE PARK Consulting
  */
 
-import { createStore, useStore } from 'zustand';
+import { create } from 'zustand';
 import type { StateCreator, StoreApi, UseBoundStore } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import type { PersistOptions } from 'zustand/middleware';
 
 import type { BaseStoreActions, BaseStoreState } from '@donotdev/types';
 import { isClient, isDev } from '@donotdev/utils';
-
-/**
- * Hooks bound to this bundle's React, one per shared store.
- *
- * The store API lives on globalThis and is shared process-wide; a React hook must not be.
- * Next evaluates this module once per layer (Pages Router against Node's `react`, App Router
- * SSR against its vendored React), and a hook closes over the React of the layer that made it.
- * Called while another React is rendering, it sees a null dispatcher and crashes.
- */
-const boundHooks = new WeakMap<object, unknown>();
-
-function bindStoreHook<S>(api: StoreApi<S>): UseBoundStore<StoreApi<S>> {
-  const bound = boundHooks.get(api);
-  if (bound) return bound as UseBoundStore<StoreApi<S>>;
-
-  const useBoundStore = ((selector?: (state: S) => unknown) =>
-    useStore(api, selector as (state: S) => unknown)) as UseBoundStore<
-    StoreApi<S>
-  >;
-  Object.assign(useBoundStore, api);
-  boundHooks.set(api, useBoundStore);
-  return useBoundStore;
-}
 
 /**
  * DoNotDev store interface
@@ -133,6 +110,7 @@ export interface DoNotDevStoreConfig<T> {
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: interface-typed records have no implicit index signature; Record<string, unknown> would reject them
 export function createDoNotDevStore<T extends Record<string, any>>(
   config: DoNotDevStoreConfig<T>
 ) {
@@ -144,6 +122,11 @@ export function createDoNotDevStore<T extends Record<string, any>>(
     persistOptions,
   } = config;
 
+  // why: Partial<T & DoNotDevStore> over a generic T is a deferred mapped type, so TS
+  // cannot see that a patch of framework-owned fields fits it. One typed helper, not N casts.
+  const patch = (fields: Partial<DoNotDevStore>) =>
+    fields as Partial<T & DoNotDevStore>;
+
   // ========== SINGLETON PATTERN START ==========
   // Initialize global stores registry
   if (typeof globalThis !== 'undefined') {
@@ -153,9 +136,10 @@ export function createDoNotDevStore<T extends Record<string, any>>(
 
     // Return cached store if it exists (CRITICAL: prevents multiple instances)
     if (globalThis._DNDEV_STORES_[name]) {
-      return bindStoreHook(
-        globalThis._DNDEV_STORES_[name] as StoreApi<T & DoNotDevStore>
-      );
+      // why: the global registry is keyed by name and holds heterogeneous stores
+      return globalThis._DNDEV_STORES_[name] as UseBoundStore<
+        StoreApi<T & DoNotDevStore>
+      >;
     }
   }
 
@@ -185,18 +169,17 @@ export function createDoNotDevStore<T extends Record<string, any>>(
         try {
           if (initialize) {
             const success = await initialize(data);
-            if (success)
-              set({ isReady: true } as unknown as Partial<T & DoNotDevStore>);
+            if (success) set(patch({ isReady: true }));
             return success;
           } else {
-            set({ isReady: true } as unknown as Partial<T & DoNotDevStore>);
+            set(patch({ isReady: true }));
             return true;
           }
         } catch (error) {
           if (isDev()) {
             console.error(`[${name}] Initialization error:`, error);
           }
-          set({ isReady: false } as unknown as Partial<T & DoNotDevStore>);
+          set(patch({ isReady: false }));
           return false;
         }
       },
@@ -211,45 +194,46 @@ export function createDoNotDevStore<T extends Record<string, any>>(
         }
       },
 
-      setReady: (ready: boolean): void =>
-        set({ isReady: ready } as unknown as Partial<T & DoNotDevStore>),
+      setReady: (ready: boolean): void => set(patch({ isReady: ready })),
       setLoading: (loading: boolean): void =>
-        set({ isLoading: loading } as unknown as Partial<T & DoNotDevStore>),
-      setError: (error: string | null): void =>
-        set({ error } as unknown as Partial<T & DoNotDevStore>),
-      clearError: (): void =>
-        set({ error: null } as unknown as Partial<T & DoNotDevStore>),
+        set(patch({ isLoading: loading })),
+      setError: (error: string | null): void => set(patch({ error })),
+      clearError: (): void => set(patch({ error: null })),
       // Only provide default reset if user didn't provide custom one
       ...(!hasCustomReset && {
         reset: (): void =>
-          set({
-            isReady: false,
-            isLoading: false,
-            error: null,
-          } as unknown as Partial<T & DoNotDevStore>),
+          set(
+            patch({
+              isReady: false,
+              isLoading: false,
+              error: null,
+            })
+          ),
       }),
-    } as unknown as T & DoNotDevStore;
+      // why: spreading a generic T plus lifecycle fields; TS cannot prove the result is T & DoNotDevStore
+    } as T & DoNotDevStore;
   };
 
   /**
    * Create store with conditional middleware application
    * Order: devtools(persist(wrappedCreator)) when persist is enabled
    */
-  let store: StoreApi<T & DoNotDevStore>;
+  let store: UseBoundStore<StoreApi<T & DoNotDevStore>>;
 
   if (persistOptions) {
     // With persistence: devtools(persist(...))
     store =
       isDev() && isClient()
-        ? createStore<T & DoNotDevStore>()(
+        ? create<T & DoNotDevStore>()(
             devtools(persist(wrappedCreator, persistOptions), { name })
           )
-        : createStore<T & DoNotDevStore>()(persist(wrappedCreator, persistOptions));
+        : create<T & DoNotDevStore>()(persist(wrappedCreator, persistOptions));
 
     // Zustand 5 built-in: set _hasHydrated after rehydration + user's onRehydrateStorage.
     // Guarded because persist middleware short-circuits without attaching `api.persist`
     // when running in non-browser environments (no window.localStorage) — e.g. SSR,
     // Bun-driven codegen tools that dynamically import entity modules.
+    // why: zustand types `persist` as always present; it is absent outside the browser (see above)
     const persistApi = (
       store as unknown as {
         persist?: { onFinishHydration: (cb: () => void) => () => void };
@@ -257,15 +241,15 @@ export function createDoNotDevStore<T extends Record<string, any>>(
     ).persist;
     if (persistApi) {
       persistApi.onFinishHydration(() => {
-        store.setState({ _hasHydrated: true } as Partial<T & DoNotDevStore>);
+        store.setState(patch({ _hasHydrated: true }));
       });
     }
   } else {
     // Without persistence: devtools(...)
     store =
       isDev() && isClient()
-        ? createStore<T & DoNotDevStore>()(devtools(wrappedCreator, { name }))
-        : createStore<T & DoNotDevStore>()(wrappedCreator);
+        ? create<T & DoNotDevStore>()(devtools(wrappedCreator, { name }))
+        : create<T & DoNotDevStore>()(wrappedCreator);
   }
 
   // ========== SINGLETON REGISTRATION START ==========
@@ -278,7 +262,7 @@ export function createDoNotDevStore<T extends Record<string, any>>(
   }
   // ========== SINGLETON REGISTRATION END ==========
 
-  return bindStoreHook(store);
+  return store;
 }
 
 /**
@@ -305,6 +289,7 @@ export function isDoNotDevStore(store: unknown): store is DoNotDevStore {
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params so functions with concrete parameter types satisfy the constraint (parameter contravariance)
 export type DoNotDevStoreState<T> = T extends (...args: any[]) => infer R
   ? R extends DoNotDevStore
     ? R

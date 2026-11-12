@@ -34,7 +34,14 @@ import {
   type DoNotDevStore,
 } from '../createDoNotDevStore';
 
-const FRAMEWORK_FEATURES_SET = new Set(Object.values(FRAMEWORK_FEATURES));
+const FRAMEWORK_FEATURES_SET: ReadonlySet<string> = new Set(
+  Object.values(FRAMEWORK_FEATURES)
+);
+
+/** Narrow an arbitrary feature name to a known framework feature */
+function isFrameworkFeature(feature: string): feature is FrameworkFeature {
+  return FRAMEWORK_FEATURES_SET.has(feature);
+}
 const CONSENT_COOKIE_NAME = 'dndev-cookie-consent';
 const CONSENT_COOKIE_EXPIRY = 365;
 
@@ -302,6 +309,7 @@ export const useConsentStore = createDoNotDevStore<ConsentAPI>({
   }),
   initialize: async (data?: Record<string, unknown>) => {
     try {
+      // why: DoNotDevStore.initialize takes an untyped bag; this store's callers pass this shape
       const initData = data as {
         cookieValue?: string | null;
         appConfig?: AppConfig;
@@ -505,8 +513,8 @@ export const useHasConsented = () =>
 export function useFeatureConsent(feature: string): boolean {
   // Feature availability is now purely based on detection (env vars, packages)
   // not consent. Consent is only for cookies/tracking.
-  if (FRAMEWORK_FEATURES_SET.has(feature as FrameworkFeature)) {
-    return isFeatureAvailable(feature as FrameworkFeature);
+  if (isFrameworkFeature(feature)) {
+    return isFeatureAvailable(feature);
   }
   // Unknown features default to available (no gating)
   return true;

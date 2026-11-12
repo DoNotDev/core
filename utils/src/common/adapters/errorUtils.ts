@@ -132,14 +132,14 @@ export function wrapAuthError(
     typeof error === 'object' &&
     error !== null &&
     'code' in error &&
-    typeof (error as any).code === 'string' &&
+    typeof error.code === 'string' &&
     wrapped.code === 'unknown' &&
-    (error as any).code !== 'unknown'
+    error.code !== 'unknown'
   ) {
     // The mapping didn't recognize the code — return a DoNotDevError with the original code
     // preserved in details so consumers can still access it.
     return new DoNotDevError(wrapped.message, wrapped.code, {
-      details: { ...wrapped.details, originalCode: (error as any).code },
+      details: { ...wrapped.details, originalCode: error.code },
       source: wrapped.source,
     });
   }

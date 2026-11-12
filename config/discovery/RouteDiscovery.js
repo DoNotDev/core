@@ -26,6 +26,34 @@ function extractComponentName(filePath) {
   return cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
 }
 
+/**
+ * Fail the build on a PageMeta `signedInRedirect` that is not a same-site app path
+ * (`/x`, never `//host` or `https://…`) or that points at the page itself (loop).
+ *
+ * @param {{ path: string, file: string, meta?: { signedInRedirect?: unknown } }} route - Discovered route
+ * @throws {Error} When the target is invalid
+ */
+export function validateSignedInRedirect(route) {
+  const to = route.meta?.signedInRedirect;
+  if (to === undefined) return;
+  if (
+    typeof to !== 'string' ||
+    !to.startsWith('/') ||
+    to.startsWith('//') ||
+    to.startsWith('/\\')
+  ) {
+    throw new Error(
+      `PageMeta signedInRedirect in ${route.file} must be an app path starting with '/' (got ${JSON.stringify(to)}). ` +
+        `Example: export const meta: PageMeta = { signedInRedirect: '/catalogue' };`
+    );
+  }
+  if (to.split(/[?#]/)[0] === route.path) {
+    throw new Error(
+      `PageMeta signedInRedirect in ${route.file} points at the page itself (${to}): signed-in visitors would loop. Use another page.`
+    );
+  }
+}
+
 export class RouteDiscovery extends BaseDiscovery {
   constructor(pathResolver, options = {}) {
     super(pathResolver, {
@@ -201,6 +229,7 @@ export class RouteDiscovery extends BaseDiscovery {
         );
       }
       pathMap.set(path, route);
+      validateSignedInRedirect(route);
     }
 
     this.logger.debug(

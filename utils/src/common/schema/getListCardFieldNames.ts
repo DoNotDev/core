@@ -30,7 +30,7 @@ export function getListCardFieldNames(entity: {
   if (lcf) {
     if (Array.isArray(lcf)) return lcf;
 
-    const layout = lcf as ListCardLayout;
+    const layout = lcf;
     const all = [
       ...(layout.title ?? []),
       ...(layout.subtitle ?? []),

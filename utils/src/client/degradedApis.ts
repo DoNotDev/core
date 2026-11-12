@@ -18,14 +18,11 @@
 
 import type {
   AIAPI,
-  AIMessage,
   AuthAPI,
-  AuthUser,
   PageAuth,
   BillingAPI,
   CrudAPI,
   OAuthAPI,
-  OAuthPartnerId,
   StripeCheckoutResponse,
 } from '@donotdev/types';
 import {
@@ -80,7 +77,7 @@ export const OAUTH_STORE_KEYS: Set<keyof OAuthAPI> = new Set([
  * Degraded Auth API - returned when @donotdev/auth is not installed or not available
  */
 export const DEGRADED_AUTH_API: AuthAPI = {
-  user: null as AuthUser | null,
+  user: null,
   userProfile: null,
   userSubscription: null,
   loading: false,
@@ -88,6 +85,7 @@ export const DEGRADED_AUTH_API: AuthAPI = {
   reauthenticateWithProvider: async () => {},
   deleteAccount: async () => {},
   setRememberMe: async () => {},
+  canRememberMe: () => false,
   error: null,
   emailVerification: { status: 'pending' as const },
   passwordResetPending: false,
@@ -117,7 +115,7 @@ export const DEGRADED_AUTH_API: AuthAPI = {
   sendSignInLinkToEmail: async () => {},
   signInWithEmailLink: async () => null,
   isSignInWithEmailLink: () => false,
-  getCurrentUser: async () => null as AuthUser | null,
+  getCurrentUser: async () => null,
   isAuthenticated: false,
   userRole: USER_ROLES.GUEST,
   userTier: SUBSCRIPTION_TIERS.FREE,
@@ -169,7 +167,7 @@ export const DEGRADED_BILLING_API: BillingAPI = {
  * Degraded AI API - returned when @donotdev/ai is not installed or not available
  */
 export const DEGRADED_AI_API: AIAPI = {
-  messages: [] as AIMessage[],
+  messages: [],
   append: () => {},
   stop: () => {},
   isLoading: false,
@@ -222,7 +220,8 @@ export const DEGRADED_CRUD_API: CrudAPI = {
 export const DEGRADED_OAUTH_API: OAuthAPI = {
   status: FEATURE_STATUS.DEGRADED,
   error: null,
-  partners: {} as Record<OAuthPartnerId, any>,
+  // why: degraded stub — no partners configured; empty object stands in for the full partner record
+  partners: {} as OAuthAPI['partners'],
   connectedPartners: [],
   connect: async () => {},
   disconnect: async () => {},

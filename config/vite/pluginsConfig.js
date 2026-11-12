@@ -309,6 +309,8 @@ export function createVitePlugins(options = {}) {
         ...seoOptions,
         debug: debug,
         isDev: isDev,
+        // Same discovery as the i18n plugin: llms.txt labels in the app's language
+        i18n: { ...pluginFactoryOptions, ...i18nOptions, debug: i18nDebug },
         // Note: appUrl removed - plugin reads process.env.VITE_APP_URL directly
       })
     );

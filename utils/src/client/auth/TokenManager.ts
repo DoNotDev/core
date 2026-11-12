@@ -85,8 +85,8 @@ function hasCurrentUser(instance: unknown): instance is AuthInstanceLike & {
     typeof instance === 'object' &&
     instance !== null &&
     'currentUser' in instance &&
-    typeof (instance as AuthInstanceLike).currentUser === 'object' &&
-    (instance as AuthInstanceLike).currentUser !== null
+    typeof instance.currentUser === 'object' &&
+    instance.currentUser !== null
   );
 }
 
@@ -503,7 +503,7 @@ export class TokenManager {
    *
    * @param error Error that occurred
    */
-  private handleRefreshError(error: any): void {
+  private handleRefreshError(error: unknown): void {
     // W-NEW-1 fix: gate console output behind isDev()
     if (isDev()) {
       console.error('Token refresh error:', error);
@@ -603,8 +603,8 @@ export class TokenManager {
 // Create singleton getter
 const getTokenManager = createSingleton(
   TokenManager,
-  null as unknown,
-  {} as TokenManagerOptions
+  null,
+  {} satisfies TokenManagerOptions
 );
 
 // Export factory function only - singleton accessed via registry pattern

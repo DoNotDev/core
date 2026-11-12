@@ -56,6 +56,7 @@ function resolveValue(
     let current: unknown = formValues;
     for (const part of parts) {
       if (current == null || typeof current !== 'object') return undefined;
+      // why: `object` has no string index signature; non-null object checked above
       current = (current as Record<string, unknown>)[part];
     }
     return current;
@@ -138,9 +139,8 @@ function evaluateNode(
  */
 function unwrap(input: ConditionInput): ConditionExpression {
   if (input instanceof ConditionBuilder) return input.expression;
-  if ('expression' in input)
-    return (input as { expression: ConditionExpression }).expression;
-  return input as ConditionExpression;
+  if ('expression' in input) return input.expression;
+  return input;
 }
 
 /**

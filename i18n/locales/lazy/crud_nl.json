@@ -29,7 +29,10 @@
     "replySubject": "Re: Je bericht",
     "markResponded": "Markeer als beantwoord",
     "selectOptions": "Selecteer opties...",
-    "use": "Gebruik dit adres"
+    "use": "Gebruik dit adres",
+    "edit": "Bewerken",
+    "refresh": "Vernieuwen",
+    "open": "Openen"
   },
   "address": {
     "placeholder": "Voer adres in...",
@@ -70,7 +73,9 @@
       "suggestions": "Misschien bedoel je:",
       "goHome": "Naar start",
       "goBack": "Terug"
-    }
+    },
+    "bulkPartialError_one": "{{count}} rij kon niet worden opgeslagen",
+    "bulkPartialError_other": "{{count}} rijen konden niet worden opgeslagen"
   },
   "pagination": {
     "showing": "{{from}} tot {{to}} van {{total}}",
@@ -264,7 +269,9 @@
     "uploading": "Uploaden {{progress}}%...",
     "processing": "Bezig...",
     "validating": "Valideren...",
-    "saving": "Opslaan..."
+    "saving": "Opslaan...",
+    "saved": "Opgeslagen",
+    "error": "Fout — probeer het opnieuw"
   },
   "navigation": {
     "more": "Meer",
@@ -519,7 +526,9 @@
     "unsupportedFieldType": "Veldtype {{type}} wordt niet ondersteund",
     "fieldRendering": "Fout bij veld {{field}}",
     "fallingBackToTextField": "Tekstveld i.p.v. {{type}}",
-    "invalidFieldProps": "Ongeldige instelling voor {{field}}"
+    "invalidFieldProps": "Ongeldige instelling voor {{field}}",
+    "notFound": "{{entity}} niet gevonden",
+    "fetchFailed": "{{entity}} laden mislukt"
   },
   "visibility": {
     "viewAs": "Weergeven als",
@@ -531,5 +540,31 @@
   },
   "recommendations": {
     "title": "Misschien vind je dit ook leuk"
+  },
+  "addNew": "Toevoegen",
+  "delete": {
+    "title": "Item verwijderen",
+    "confirm": "Weet je zeker dat je dit item wilt verwijderen?",
+    "loading": "Verwijderen...",
+    "titleSelected_one": "{{count}} item verwijderen",
+    "titleSelected_other": "{{count}} items verwijderen",
+    "confirmSelected_one": "Het geselecteerde item verwijderen? Dit kan niet ongedaan worden gemaakt.",
+    "confirmSelected_other": "De {{count}} geselecteerde items verwijderen? Dit kan niet ongedaan worden gemaakt."
+  },
+  "emptyState": {
+    "title": "Niets gevonden",
+    "description": "Er is nog niets om te tonen."
+  },
+  "bulkEdit": {
+    "pending_one": "{{count}} niet-opgeslagen wijziging",
+    "pending_other": "{{count}} niet-opgeslagen wijzigingen",
+    "discard": "Wijzigingen verwerpen",
+    "selected": "{{count}} geselecteerd",
+    "field": "Veld",
+    "value": "Waarde",
+    "apply": "Toepassen op selectie",
+    "deleteSelected": "Selectie verwijderen ({{count}})",
+    "failed_one": "{{count}} rij niet opgeslagen: blijft in de lijst, probeer opnieuw",
+    "failed_other": "{{count}} rijen niet opgeslagen: blijven in de lijst, probeer opnieuw"
   }
 }

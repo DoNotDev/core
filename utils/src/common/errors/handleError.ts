@@ -82,6 +82,7 @@ export interface HandleErrorOptions {
   userMessage?: string;
 
   // Additional context details to include with the error
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   context?: Record<string, any>;
 
   // Whether to automatically log the error (default: true)
@@ -186,8 +187,7 @@ export function handleError(
   // Log the error if specified
   if (log) {
     const isDevelopment =
-      isDev() ||
-      (typeof window !== 'undefined' && (window as any).__DNDEV_DEBUG);
+      isDev() || (typeof window !== 'undefined' && window.__DNDEV_DEBUG);
 
     // Basic info to log in all environments
     const logInfo = {
@@ -270,6 +270,7 @@ export function handleError(
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params required so any function type satisfies the constraint (parameter contravariance)
 export function withErrorHandling<T extends (...args: any[]) => any>(
   fn: T,
   options?: HandleErrorOptions | string

@@ -45,7 +45,7 @@ export function useBreathingTimer({
       navigator.wakeLock
         .request('screen')
         .then((sentinel) => {
-          wakeLockRef.current = sentinel as WakeLockSentinel;
+          wakeLockRef.current = sentinel;
         })
         .catch(() => {});
     }

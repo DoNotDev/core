@@ -1,0 +1,582 @@
+{
+  "addNew": "Dodaj",
+  "actions": {
+    "label": "Akcje",
+    "create": "Utwórz",
+    "update": "Zaktualizuj",
+    "delete": "Usuń",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "confirm": "Potwierdź",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "previous": "Poprzedni",
+    "search": "Szukaj",
+    "searchPlaceholder": "Szukaj...",
+    "filter": "Filtruj",
+    "clear": "Wyczyść",
+    "reset": "Zresetuj",
+    "apply": "Zastosuj",
+    "select": "Wybierz",
+    "selectYear": "Wybierz lub wpisz rok",
+    "upload": "Prześlij",
+    "download": "Pobierz",
+    "close": "Zamknij",
+    "email": "E-mail",
+    "call": "Zadzwoń",
+    "copyEmail": "Kopiuj adres e-mail",
+    "copyPhone": "Kopiuj numer telefonu",
+    "copyIban": "Kopiuj IBAN",
+    "replySubject": "Re: Twoje zapytanie",
+    "markResponded": "Oznacz jako odpowiedziane",
+    "selectOptions": "Wybierz opcje...",
+    "use": "Użyj tego adresu",
+    "edit": "Edytuj",
+    "refresh": "Odśwież",
+    "open": "Otwórz"
+  },
+  "address": {
+    "placeholder": "Wpisz adres...",
+    "noResults": "Nie znaleziono adresów"
+  },
+  "export": "Eksportuj",
+  "noInquiries": "Nie znaleziono zapytań.",
+  "customer": "Klient",
+  "noCustomer": "Brak powiązanego klienta",
+  "status": {
+    "draft": "Wersja robocza",
+    "available": "Dostępny",
+    "deleted": "Usunięty",
+    "sold": "Sprzedany"
+  },
+  "messages": {
+    "createSuccess": "{{entity}} — utworzono pomyślnie",
+    "updateSuccess": "{{entity}} — zaktualizowano pomyślnie",
+    "deleteSuccess": "{{entity}} — usunięto pomyślnie",
+    "createError": "Nie udało się utworzyć: {{entity}}",
+    "updateError": "Nie udało się zaktualizować: {{entity}}",
+    "deleteError": "Nie udało się usunąć: {{entity}}",
+    "error": "Wystąpił błąd",
+    "loading": "Ładowanie...",
+    "noResults": "Nie znaleziono wyników",
+    "confirmDelete": "Czy na pewno chcesz usunąć ten element ({{entity}})?",
+    "unsavedChanges": "Masz niezapisane zmiany",
+    "unsavedChangesDiscard": "Masz niezapisane zmiany. Odrzucić je?",
+    "unsavedChangesLeave": "Masz niezapisane zmiany. Czy na pewno chcesz wyjść?",
+    "sessionExpired": "Twoja sesja wygasła",
+    "networkError": "Wystąpił błąd sieci",
+    "unauthorized": "Brak autoryzacji",
+    "forbidden": "Dostęp zabroniony",
+    "serverError": "Wystąpił błąd serwera",
+    "notFound": {
+      "title": "Nie znaleziono strony",
+      "description": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
+      "suggestions": "Być może szukasz:",
+      "goHome": "Strona główna",
+      "goBack": "Wróć"
+    },
+    "bulkPartialError_one": "Nie udało się zapisać {{count}} wiersza",
+    "bulkPartialError_few": "Nie udało się zapisać {{count}} wierszy",
+    "bulkPartialError_many": "Nie udało się zapisać {{count}} wierszy",
+    "bulkPartialError_other": "Nie udało się zapisać {{count}} wiersza"
+  },
+  "pagination": {
+    "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wpisów",
+    "previous": "Poprzednia",
+    "next": "Następna",
+    "page": "Strona {{page}} z {{total}}",
+    "itemsPerPagePlaceholder": "Elementów na stronę:"
+  },
+  "filters": {
+    "title": "Przeglądaj: {{entity}} — filtry",
+    "apply": "Zastosuj filtry",
+    "clear": "Wyczyść filtry",
+    "noResults": "Żadne wyniki nie pasują do filtrów",
+    "selected": "Wybrano: {{count}}"
+  },
+  "filter": {
+    "placeholder": "Filtruj...",
+    "selectPlaceholder": "Wszystkie",
+    "min": "Min.",
+    "max": "Maks.",
+    "from": "Od",
+    "to": "Do",
+    "today": "Dzisiaj",
+    "yesterday": "Wczoraj",
+    "tomorrow": "Jutro",
+    "last7Days": "Ostatnie 7 dni",
+    "last30Days": "Ostatnie 30 dni",
+    "next7Days": "Następne 7 dni",
+    "next30Days": "Następne 30 dni",
+    "thisMonthStart": "Początek tego miesiąca",
+    "thisMonthEnd": "Koniec tego miesiąca",
+    "thisWeek": "Ten tydzień",
+    "thisMonth": "Ten miesiąc",
+    "clear": "Wyczyść",
+    "pick": "Wybierz",
+    "time": "Godzina"
+  },
+  "duration": {
+    "15m": "15 min",
+    "30m": "30 min",
+    "45m": "45 min",
+    "1h": "1 godz.",
+    "1h30": "1 godz. 30 min",
+    "2h": "2 godz.",
+    "2h30": "2 godz. 30 min",
+    "3h": "3 godz.",
+    "custom": "Własny",
+    "zero": "—",
+    "minutes": "{{count}} min",
+    "hoursMinutes": "{{hours}} godz. {{minutes}} min"
+  },
+  "results": {
+    "title": {
+      "fetching": "Pobieranie...",
+      "count_one": "Znaleziono {{count}} wystąpienie",
+      "count_few": "Znaleziono {{count}} wystąpienia",
+      "count_many": "Znaleziono {{count}} wystąpień",
+      "count_other": "Znaleziono {{count}} wystąpienia"
+    }
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "theme": "Motyw",
+    "language": "Język",
+    "clearCache": {
+      "title": "Wyczyść pamięć podręczną",
+      "localStorage": "Local Storage",
+      "sessionStorage": "Session Storage",
+      "applicationCache": "Pamięć podręczna aplikacji",
+      "serviceWorker": "Service Worker",
+      "cookies": "Pliki cookie",
+      "indexedDB": "IndexedDB",
+      "webSQL": "WebSQL",
+      "memoryCache": "Pamięć podręczna w pamięci",
+      "button": "Wyczyść pamięć podręczną",
+      "clearing": "Czyszczenie...",
+      "error": "Błąd podczas czyszczenia pamięci podręcznej",
+      "success": "Pamięć podręczna wyczyszczona pomyślnie: {{items}}",
+      "noItemsCleared": "Nie wyczyszczono żadnych elementów pamięci podręcznej"
+    }
+  },
+  "common": {
+    "app": {
+      "name": "Aplikacja DoNotDev"
+    },
+    "defaultTitle": "Strona",
+    "defaultDescription": "Opis strony",
+    "locale": "pl_PL",
+    "themeSelector": {
+      "changeTheme": "Zmień motyw",
+      "tooltipWithTransition": "Zmień motyw: {{current}} → {{next}}",
+      "tooltipWithCurrent": "Zmień motyw: {{current}}",
+      "tooltipWithNext": "Zmień motyw: przełącz na {{next}}"
+    },
+    "languageSelector": {
+      "changeLanguage": "Zmień język"
+    }
+  },
+  "footer": {
+    "landing": {
+      "company": {
+        "defaultName": "Firma",
+        "description": "Twórz lepsze produkty szybciej dzięki naszej kompleksowej platformie deweloperskiej."
+      },
+      "social": {
+        "twitter": "Twitter",
+        "github": "GitHub",
+        "discord": "Discord"
+      },
+      "sections": {
+        "product": {
+          "title": "Produkt",
+          "features": "Funkcje",
+          "pricing": "Cennik",
+          "docs": "Dokumentacja",
+          "updates": "Aktualizacje"
+        },
+        "support": {
+          "title": "Wsparcie",
+          "help": "Pomoc",
+          "contact": "Kontakt",
+          "status": "Status",
+          "community": "Społeczność"
+        }
+      }
+    },
+    "legal": {
+      "allRightsReserved": "Wszelkie prawa zastrzeżone.",
+      "cookieSettings": "Ustawienia plików cookie",
+      "legalNotice": "Nota prawna",
+      "privacyPolicy": "Polityka prywatności",
+      "termsOfService": "Regulamin",
+      "builtWith": "Stworzone z ❤️ & DoNotDev ©",
+      "collapse": "Zwiń stopkę",
+      "expand": "Rozwiń stopkę"
+    }
+  },
+  "search": {
+    "ariaLabel": "Szukaj",
+    "label": "Szukaj"
+  },
+  "goTo": {
+    "ariaLabel": "Przejdź do strony",
+    "label": "Przejdź do"
+  },
+  "globalGoTo": {
+    "placeholder": "Filtruj trasy lub przejdź do strony...",
+    "noResults": "Nie znaleziono tras.",
+    "favorites": "Ulubione",
+    "allPages": "Wszystkie strony",
+    "addFavorite": "Dodaj do ulubionych",
+    "removeFavorite": "Usuń z ulubionych"
+  },
+  "favorites": {
+    "title": "Ulubione",
+    "add": "Dodaj do ulubionych",
+    "remove": "Usuń z ulubionych",
+    "saved": "Zapisano",
+    "save": "Zapisz",
+    "showAll": "Pokaż wszystkie",
+    "showFavorites": "Pokaż ulubione",
+    "myFavorites": "Moje ulubione",
+    "noFavorites": "Brak ulubionych"
+  },
+  "copyToClipboard": "Kopiuj do schowka",
+  "copied": "Skopiowano!",
+  "copyPassword": "Kopiuj hasło",
+  "table": {
+    "searchPlaceholder": "Szukaj...",
+    "filters": "Filtry",
+    "selectAllRows": "Zaznacz wszystkie wiersze",
+    "selectRow": "Zaznacz wiersz {{index}}",
+    "showingResults": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
+    "previous": "Poprzednia",
+    "next": "Następna",
+    "page": "Strona {{current}} z {{total}}"
+  },
+  "language": {
+    "selectLanguage": "Wybierz język",
+    "searchLanguages": "Szukaj języków...",
+    "noLanguagesFound": "Nie znaleziono języków",
+    "changeLanguage": "Zmień język"
+  },
+  "form": {
+    "submit": "Wyślij",
+    "cancel": "Anuluj",
+    "submitting": "Wysyłanie...",
+    "loading": "Ładowanie...",
+    "add": "Dodaj",
+    "remove": "Usuń",
+    "typeAndPressAdd": "Wpisz i naciśnij Dodaj...",
+    "enterLocationData": "Wprowadź dane lokalizacji (JSON)",
+    "uploading": "Przesyłanie {{progress}}%...",
+    "processing": "Przetwarzanie...",
+    "validating": "Walidacja...",
+    "saving": "Zapisywanie...",
+    "saved": "Zapisano",
+    "error": "Błąd — spróbuj ponownie"
+  },
+  "navigation": {
+    "more": "Więcej",
+    "home": "Strona główna"
+  },
+  "pwa": {
+    "update": {
+      "title": "Dostępna aktualizacja",
+      "description": "Nowa wersja jest gotowa. Odśwież, aby zaktualizować.",
+      "button": "Zaktualizuj",
+      "altText": "Zaktualizuj aplikację"
+    }
+  },
+  "code": {
+    "copyCode": "Kopiuj kod",
+    "copied": "Skopiowano!",
+    "copyCodeToClipboard": "Kopiuj kod do schowka"
+  },
+  "video": {
+    "clickToWatch": "Kliknij, aby obejrzeć wideo",
+    "watchVideo": "Obejrzyj wideo"
+  },
+  "inspector": {
+    "pageSource": "Źródło strony",
+    "inspectPageSourceCode": "Przeglądaj kod źródłowy strony"
+  },
+  "routeError": {
+    "title": "Coś poszło nie tak",
+    "description": "Podczas ładowania tej strony wystąpił błąd.",
+    "dataSafe": "Spokojnie, Twoje dane są bezpieczne.",
+    "errorId": "Identyfikator błędu",
+    "errorMessage": "Komunikat błędu",
+    "copied": "Skopiowano",
+    "copyDetails": "Kopiuj szczegóły",
+    "tryAgain": "Spróbuj ponownie",
+    "goHome": "Strona główna",
+    "goBack": "Wróć",
+    "contactSupport": "Jeśli problem nie ustąpi, skontaktuj się z pomocą techniczną."
+  },
+  "fields": {
+    "array": "Tablica",
+    "boolean": "Wartość logiczna",
+    "checkbox": "Pole wyboru",
+    "date": "Data",
+    "datetime-local": "Data i godzina",
+    "email": "E-mail",
+    "file": "Plik",
+    "geopoint": "Lokalizacja",
+    "image": "Obraz",
+    "map": "Mapa",
+    "multiselect": "Wybór wielokrotny",
+    "number": "Liczba",
+    "password": "Hasło",
+    "phone": "Numer telefonu",
+    "radio": "Przyciski opcji",
+    "range": "Zakres",
+    "reference": "Odwołanie",
+    "select": "Lista wyboru",
+    "tel": "Numer telefonu",
+    "text": "Tekst",
+    "textarea": "Obszar tekstowy",
+    "timestamp": "Znacznik czasu",
+    "url": "URL",
+    "status": "Status",
+    "id": "ID",
+    "createdAt": "Utworzono",
+    "updatedAt": "Zaktualizowano",
+    "createdById": "Utworzył(a)",
+    "updatedById": "Zaktualizował(a)"
+  },
+  "text": {
+    "required": "Pole {{field}} jest wymagane",
+    "minLength": "Pole {{field}} musi zawierać co najmniej {{min}} znaków",
+    "maxLength": "Pole {{field}} nie może przekraczać {{max}} znaków",
+    "email": "Wprowadź prawidłowy adres e-mail",
+    "url": "Wprowadź prawidłowy adres URL",
+    "matches": "Pole {{field}} musi pasować do wzorca {{pattern}}",
+    "unique": "Wartość pola {{field}} musi być unikalna",
+    "alphanumeric": "Pole {{field}} może zawierać tylko litery i cyfry",
+    "lettersOnly": "Pole {{field}} może zawierać tylko litery"
+  },
+  "number": {
+    "required": "Pole {{field}} jest wymagane",
+    "min": "Wartość pola {{field}} musi wynosić co najmniej {{min}}",
+    "max": "Wartość pola {{field}} nie może przekraczać {{max}}",
+    "integer": "Wartość pola {{field}} musi być liczbą całkowitą",
+    "positive": "Wartość pola {{field}} musi być dodatnia",
+    "negative": "Wartość pola {{field}} musi być ujemna",
+    "between": "Wartość pola {{field}} musi mieścić się między {{min}} a {{max}}",
+    "precision": "Pole {{field}} może mieć co najwyżej {{precision}} miejsc po przecinku"
+  },
+  "date": {
+    "required": "Pole {{field}} jest wymagane",
+    "min": "Data w polu {{field}} musi być późniejsza niż {{min}}",
+    "max": "Data w polu {{field}} musi być wcześniejsza niż {{max}}",
+    "between": "Data w polu {{field}} musi mieścić się między {{min}} a {{max}}",
+    "format": "Wprowadź prawidłową datę",
+    "future": "Data w polu {{field}} musi być w przyszłości",
+    "past": "Data w polu {{field}} musi być w przeszłości",
+    "today": "Data w polu {{field}} musi być dzisiejsza"
+  },
+  "select": {
+    "required": "Wybierz wartość w polu {{field}}",
+    "invalid": "Nieprawidłowy wybór w polu {{field}}",
+    "min": "Wybierz co najmniej {{min}} opcji",
+    "max": "Wybierz nie więcej niż {{max}} opcji"
+  },
+  "boolean": {
+    "required": "Pole {{field}} musi być zaznaczone"
+  },
+  "array": {
+    "required": "Wymagany jest co najmniej jeden element: {{field}}",
+    "minItems": "Wybierz co najmniej {{min}}: {{field}}",
+    "maxItems": "Nie można wybrać więcej niż {{max}}: {{field}}",
+    "uniqueItems": "Wszystkie wartości w polu {{field}} muszą być unikalne"
+  },
+  "file": {
+    "required": "Wybierz plik",
+    "maxSize": "Rozmiar pliku nie może przekraczać {{max}}",
+    "minSize": "Rozmiar pliku musi wynosić co najmniej {{min}}",
+    "type": "Typ pliku musi być: {{types}}",
+    "dimensions": "Wymiary obrazu muszą wynosić {{width}}x{{height}}",
+    "upload": {
+      "ariaLabel": "Prześlij plik",
+      "ariaLabelSingle": "Prześlij plik",
+      "ariaLabelMultiple": "Prześlij pliki",
+      "dragDropSingle": "Przeciągnij i upuść, wklej lub kliknij, aby przesłać plik",
+      "dragDropMultiple": "Przeciągnij i upuść, wklej lub kliknij, aby przesłać pliki"
+    },
+    "delete": {
+      "ariaLabel": "Usuń plik",
+      "failed": "Nie udało się usunąć pliku"
+    },
+    "errors": {
+      "maxFiles": "Maksymalna liczba plików: {{max}}",
+      "exceedsSize": "{{fileName}} przekracza limit {{size}} MB"
+    }
+  },
+  "document": {
+    "upload": {
+      "ariaLabel": "Prześlij dokument",
+      "hint": "Przeciągnij i upuść, wklej lub kliknij, aby przesłać dokumenty"
+    },
+    "delete": {
+      "ariaLabel": "Usuń dokument",
+      "failed": "Nie udało się usunąć dokumentu"
+    },
+    "preview": {
+      "ariaLabel": "Podgląd dokumentu",
+      "title": "Podgląd dokumentu"
+    },
+    "errors": {
+      "maxFiles": "Maksymalna liczba dokumentów: {{max}}",
+      "invalidType": "Nieprawidłowy typ dokumentu: {{fileName}}",
+      "exceedsSize": "{{fileName}} przekracza limit {{size}} MB"
+    }
+  },
+  "image": {
+    "undo": {
+      "ariaLabel": "Cofnij ostatnią akcję",
+      "title": "Cofnij (Ctrl+Z)"
+    },
+    "redo": {
+      "ariaLabel": "Ponów ostatnią akcję",
+      "title": "Ponów (Ctrl+Shift+Z)"
+    },
+    "upload": {
+      "ariaLabel": "Prześlij: {{type}}",
+      "ariaLabelSingle": "Prześlij obraz",
+      "ariaLabelMultiple": "Prześlij obrazy",
+      "selectAriaLabel": "Wybierz do przesłania: {{type}}",
+      "selectAriaLabelSingle": "Wybierz obraz do przesłania",
+      "selectAriaLabelMultiple": "Wybierz obrazy do przesłania",
+      "dropzone": "Przeciągnij i upuść, wklej lub kliknij, aby przesłać: {{type}}",
+      "dropzoneSingle": "Przeciągnij i upuść, wklej lub kliknij, aby przesłać obraz",
+      "dropzoneMultiple": "Przeciągnij i upuść, wklej lub kliknij, aby przesłać obrazy",
+      "maxFiles": "Maks. obrazów: {{max}}, po {{size}} MB każdy",
+      "maxSize": "{{size}} MB każdy",
+      "progress": "Postęp przesyłania: {{progress}}%",
+      "pending": "Oczekuje na przesłanie",
+      "uploaded": "Przesłano: {{type}} ({{count}})",
+      "uploadedSingle": "Przesłano {{count}} obraz",
+      "uploadedMultiple": "Przesłano obrazy: {{count}}",
+      "failed": "Nie udało się przesłać pliku {{fileName}}"
+    },
+    "delete": {
+      "ariaLabel": "Usuń obraz {{index}}",
+      "title": "Usuń (Delete/Backspace)",
+      "failed": "Nie udało się usunąć obrazu"
+    },
+    "reorder": {
+      "ariaLabel": "Przeciągnij, aby zmienić kolejność"
+    },
+    "rotate": {
+      "failed": "Nie udało się obrócić obrazu"
+    },
+    "errors": {
+      "maxFiles": "Maksymalna liczba obrazów: {{max}}",
+      "singleOnly": "Dozwolony jest tylko jeden obraz",
+      "notImage": "{{fileName}} nie jest obrazem",
+      "exceedsSize": "{{fileName}} przekracza limit {{size}} MB"
+    },
+    "warnings": {
+      "duplicates": "Pominięto zduplikowane obrazy: {{files}}"
+    },
+    "alt": {
+      "upload": "Przesłany plik {{index}}",
+      "uploaded": "{{label}} {{index}}{{suffix}} (przesłano)",
+      "pending": "{{label}} {{index}}{{suffix}} (oczekuje na przesłanie)"
+    },
+    "editor": {
+      "title": "Edytuj obraz",
+      "titleWithIndex": "Obraz {{current}} z {{total}}",
+      "description": "Wyświetlaj i edytuj obraz za pomocą narzędzi do kadrowania, obracania i powiększania",
+      "editButton": "Edytuj obraz",
+      "aspectRatio": "Proporcje",
+      "aspectFree": "Dowolne",
+      "zoom": "Powiększenie",
+      "rotation": "Obrót",
+      "rotateLeft": "Obróć w lewo",
+      "rotateRight": "Obróć w prawo",
+      "fitToView": "Dopasuj do widoku",
+      "showGrid": "Pokaż siatkę",
+      "hideGrid": "Ukryj siatkę",
+      "reset": "Zresetuj",
+      "apply": "Zastosuj",
+      "processing": "Przetwarzanie...",
+      "cancel": "Anuluj",
+      "deleteImage": "Usuń obraz",
+      "deleteConfirm": "Trwale usunąć ten obraz?",
+      "previousImage": "Poprzedni obraz",
+      "nextImage": "Następny obraz"
+    }
+  },
+  "gdprConsent": {
+    "consent": "Akceptuję",
+    "privacyPolicy": "politykę prywatności",
+    "terms": "regulamin",
+    "and": "i wyrażam zgodę na przetwarzanie moich danych osobowych.",
+    "required": "Zaakceptuj politykę prywatności, aby kontynuować"
+  },
+  "custom": {
+    "passwordMatch": "Hasła muszą być takie same",
+    "phoneNumber": "Wprowadź prawidłowy numer telefonu",
+    "postalCode": "Wprowadź prawidłowy kod pocztowy",
+    "currency": "Wprowadź prawidłową kwotę",
+    "color": "Wprowadź prawidłowy kod koloru"
+  },
+  "errors": {
+    "fieldUpdate": "Nie udało się zaktualizować pola {{field}}",
+    "hiddenField": "Błąd renderowania ukrytego pola {{field}}",
+    "unsupportedFieldType": "Nieobsługiwany typ pola: {{type}}",
+    "fieldRendering": "Błąd renderowania pola {{field}}",
+    "fallingBackToTextField": "Użyto pola tekstowego dla nieobsługiwanego typu {{type}}",
+    "invalidFieldProps": "Nieprawidłowa konfiguracja pola {{field}}",
+    "notFound": "Nie znaleziono: {{entity}}",
+    "fetchFailed": "Nie udało się wczytać: {{entity}}"
+  },
+  "visibility": {
+    "viewAs": "Wyświetl jako",
+    "preview": "Podgląd"
+  },
+  "price": {
+    "vatIncluded": "z VAT",
+    "discountPercent": "-{{percent}}%"
+  },
+  "recommendations": {
+    "title": "Może Ci się spodobać"
+  },
+  "delete": {
+    "title": "Usuń element",
+    "confirm": "Czy na pewno chcesz usunąć ten element?",
+    "loading": "Usuwanie...",
+    "titleSelected_one": "Usuń {{count}} element",
+    "titleSelected_few": "Usuń {{count}} elementy",
+    "titleSelected_many": "Usuń {{count}} elementów",
+    "titleSelected_other": "Usuń {{count}} elementu",
+    "confirmSelected_one": "Usunąć zaznaczony element ({{count}})? Tej operacji nie można cofnąć.",
+    "confirmSelected_few": "Usunąć zaznaczone elementy ({{count}})? Tej operacji nie można cofnąć.",
+    "confirmSelected_many": "Usunąć zaznaczone elementy ({{count}})? Tej operacji nie można cofnąć.",
+    "confirmSelected_other": "Usunąć zaznaczone elementy ({{count}})? Tej operacji nie można cofnąć."
+  },
+  "emptyState": {
+    "title": "Nic nie znaleziono",
+    "description": "Nie ma jeszcze nic do wyświetlenia."
+  },
+  "bulkEdit": {
+    "pending_one": "{{count}} niezapisana zmiana",
+    "pending_few": "{{count}} niezapisane zmiany",
+    "pending_many": "{{count}} niezapisanych zmian",
+    "pending_other": "{{count}} niezapisanej zmiany",
+    "discard": "Odrzuć zmiany",
+    "selected": "Wybrano: {{count}}",
+    "field": "Pole",
+    "value": "Wartość",
+    "apply": "Zastosuj do zaznaczonych",
+    "deleteSelected": "Usuń zaznaczone ({{count}})",
+    "failed_one": "Nie zapisano {{count}} wiersza: pozostaje na liście, spróbuj ponownie",
+    "failed_few": "Nie zapisano {{count}} wierszy: pozostają na liście, spróbuj ponownie",
+    "failed_many": "Nie zapisano {{count}} wierszy: pozostaje na liście, spróbuj ponownie",
+    "failed_other": "Nie zapisano {{count}} wiersza: pozostaje na liście, spróbuj ponownie"
+  }
+}

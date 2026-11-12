@@ -16,6 +16,7 @@ import { handleError } from './errors';
  *
  * Used internally for type safety while maintaining flexibility for any number of arguments.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params so handlers with concrete parameter types are assignable (parameter contravariance)
 type InternalEventHandler = (...args: any[]) => void;
 
 /**
@@ -33,6 +34,7 @@ type InternalEventHandler = (...args: any[]) => void;
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
 export interface EventListener<T = any> {
   /**
    * Handler function for the event
@@ -64,7 +66,7 @@ interface CachedEvent {
   /**
    * The original event data
    */
-  data: any;
+  data: unknown[];
 
   /**
    * Timestamp when the event was cached (for automatic cleanup)
@@ -178,6 +180,7 @@ export class EventEmitter {
    * @returns Function to unsubscribe from the event
    * @throws TypeError if handler is not a function
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   on<T = any>(
     eventName: string,
     handler: InternalEventHandler,
@@ -234,6 +237,7 @@ export class EventEmitter {
    * @returns Function to unsubscribe from the event (though auto-removes)
    * @throws TypeError if handler is not a function
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   once<T = any>(
     eventName: string,
     handler: InternalEventHandler,
@@ -334,6 +338,7 @@ export class EventEmitter {
    * @param args - Arguments to pass to all handlers and cache
    * @returns True if any handlers were called, false if no handlers exist
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params so functions with concrete parameter types satisfy the constraint (parameter contravariance)
   emit(eventName: string, ...args: any[]): boolean {
     // Cache the event data for race condition handling
     this.cacheEvent(eventName, args);
@@ -523,7 +528,7 @@ export class EventEmitter {
    * @param eventData - Event data to cache (array of arguments)
    * @private
    */
-  private cacheEvent(eventName: string, eventData: any[]): void {
+  private cacheEvent(eventName: string, eventData: unknown[]): void {
     // Get or create the cache array for this event
     let cachedEvents = this.eventCache.get(eventName);
     if (!cachedEvents) {
@@ -569,6 +574,7 @@ export class EventEmitter {
    * @param eventName - Name of the event to retrieve cached data for
    * @returns Array of cached event data (array of arguments for each event)
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   getCachedEvents(eventName: string): any[][] {
     const cachedEvents = this.eventCache.get(eventName);
     if (!cachedEvents || cachedEvents.length === 0) {

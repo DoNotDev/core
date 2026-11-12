@@ -139,6 +139,18 @@ export const ERROR_SOURCE = {
 /** Origin of an error for tracking and reporting. */
 export type ErrorSource = (typeof ERROR_SOURCE)[keyof typeof ERROR_SOURCE];
 
+/** Stack capture API of V8/Node (absent in Hermes, Safari, and in non-Node type environments such as Expo). */
+type StackCapturingErrorConstructor = ErrorConstructor & {
+  captureStackTrace(target: object, constructorOpt?: unknown): void;
+};
+
+/** Whether the runtime's Error constructor can capture stack traces (V8/Node). */
+function hasCaptureStackTrace(
+  ctor: ErrorConstructor
+): ctor is StackCapturingErrorConstructor {
+  return 'captureStackTrace' in ctor && typeof ctor.captureStackTrace === 'function';
+}
+
 /**
  * Standardized error class for the DoNotDev platform
  * Single source of truth with optional fields for all use cases
@@ -192,8 +204,8 @@ export class DoNotDevError extends Error {
     this.userMessageProvided = options?.userMessageProvided;
     this.name = this.constructor.name;
 
-    if ((Error as any).captureStackTrace) {
-      (Error as any).captureStackTrace(this, this.constructor);
+    if (hasCaptureStackTrace(Error)) {
+      Error.captureStackTrace(this, this.constructor);
     }
   }
 

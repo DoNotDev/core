@@ -39,7 +39,11 @@ vi.mock('@donotdev/types', async () => {
 });
 
 // Import after mocks
-import type { ThemeInfo } from '@donotdev/types';
+import type {
+  DndevFrameworkConfig,
+  ThemeInfo,
+  ThemesPluginConfig,
+} from '@donotdev/types';
 import { isClient, setCookie, getDndevConfig } from '@donotdev/utils';
 
 import {
@@ -49,6 +53,7 @@ import {
   getThemeInfo,
   isValidTheme,
   applyTheme,
+  useBreakpoint,
 } from '../themeStore';
 
 // ============================================================================
@@ -77,6 +82,38 @@ const customTheme: ThemeInfo = {
 };
 
 const allThemes: ThemeInfo[] = [lightTheme, darkTheme, customTheme];
+
+/** Typed framework config the build injects (`getDndevConfig()`), optionally with themes. */
+const frameworkConfig = (
+  themes?: ThemeInfo[]
+): DndevFrameworkConfig => ({
+  platform: 'vite',
+  mode: 'test',
+  version: '0.0.0',
+  context: 'client',
+  timestamp: 0,
+  ...(themes && { themes: themesConfig(themes) }),
+});
+
+const themesConfig = (themes: ThemeInfo[]): ThemesPluginConfig => ({
+  mapping: {},
+  discovered: themes.map((theme) => ({
+    name: theme.name,
+    displayName: theme.displayName,
+    isDark: theme.isDark,
+    meta: theme.meta,
+    source: `themes/${theme.name}.css`,
+    essential: theme.name === 'light',
+  })),
+  variables: {},
+  utilities: {},
+  manifest: {
+    totalThemes: themes.length,
+    totalVariables: 0,
+    totalUtilities: 0,
+    generatedAt: '1970-01-01T00:00:00.000Z',
+  },
+});
 
 // ============================================================================
 // HELPERS
@@ -198,9 +235,7 @@ describe('getAvailableThemes', () => {
   });
 
   it('returns discovered themes from config', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
 
     const themes = getAvailableThemes();
 
@@ -209,9 +244,7 @@ describe('getAvailableThemes', () => {
   });
 
   it('returns fallback when config.themes.discovered is empty', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: [] },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig([]));
 
     const themes = getAvailableThemes();
 
@@ -220,7 +253,7 @@ describe('getAvailableThemes', () => {
   });
 
   it('returns fallback when config has no themes property', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({} as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig());
 
     const themes = getAvailableThemes();
 
@@ -231,9 +264,7 @@ describe('getAvailableThemes', () => {
 
 describe('getAvailableThemeNames', () => {
   it('returns array of theme name strings', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
 
     expect(getAvailableThemeNames()).toEqual(['light', 'dark', 'ocean']);
   });
@@ -241,9 +272,7 @@ describe('getAvailableThemeNames', () => {
 
 describe('getThemeInfo', () => {
   it('returns theme info for valid name', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
 
     const info = getThemeInfo('dark');
 
@@ -253,9 +282,7 @@ describe('getThemeInfo', () => {
   });
 
   it('returns null for unknown theme name', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
 
     expect(getThemeInfo('nonexistent')).toBeNull();
   });
@@ -263,17 +290,13 @@ describe('getThemeInfo', () => {
 
 describe('isValidTheme', () => {
   it('returns true for known theme', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
 
     expect(isValidTheme('ocean')).toBe(true);
   });
 
   it('returns false for unknown theme', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
 
     expect(isValidTheme('nope')).toBe(false);
   });
@@ -285,9 +308,7 @@ describe('isValidTheme', () => {
 
 describe('applyTheme', () => {
   it('adds theme class and data-theme attribute', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
 
     applyTheme('dark');
 
@@ -296,9 +317,7 @@ describe('applyTheme', () => {
   });
 
   it('removes previous theme classes before applying new one', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
 
     applyTheme('light');
     applyTheme('dark');
@@ -308,18 +327,14 @@ describe('applyTheme', () => {
   });
 
   it('returns true for dark themes', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
 
     expect(applyTheme('dark')).toBe(true);
     expect(applyTheme('ocean')).toBe(true);
   });
 
   it('returns false for light themes', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
 
     expect(applyTheme('light')).toBe(false);
   });
@@ -368,9 +383,7 @@ describe('useThemeStore - initial state', () => {
 
 describe('setTheme', () => {
   it('sets current theme and persists to localStorage and cookie', async () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
     useThemeStore.setState({ availableThemes: allThemes });
 
     await useThemeStore.getState().setTheme('dark');
@@ -390,9 +403,7 @@ describe('setTheme', () => {
   });
 
   it('sets isDarkMode false for light theme', async () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
     useThemeStore.setState({
       availableThemes: allThemes,
       currentTheme: 'dark',
@@ -475,9 +486,7 @@ describe('setAvailableThemes', () => {
   });
 
   it('applies persisted theme to DOM when currentTheme exists in new themes', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
     useThemeStore.setState({ currentTheme: 'dark' });
 
     useThemeStore.getState().setAvailableThemes(allThemes);
@@ -487,9 +496,7 @@ describe('setAvailableThemes', () => {
   });
 
   it('falls back to first theme when currentTheme is stale', () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
     useThemeStore.setState({ currentTheme: 'deleted-theme' });
 
     useThemeStore.getState().setAvailableThemes(allThemes);
@@ -653,9 +660,7 @@ describe('resetTheme', () => {
 
 describe('switchToNextTheme', () => {
   it('cycles to next theme in the list', async () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
     useThemeStore.setState({
       availableThemes: allThemes,
       currentTheme: 'light',
@@ -671,9 +676,7 @@ describe('switchToNextTheme', () => {
   });
 
   it('wraps around to first theme', async () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
     useThemeStore.setState({
       availableThemes: allThemes,
       currentTheme: 'ocean', // last theme
@@ -704,9 +707,7 @@ describe('switchToNextTheme', () => {
 
 describe('toggleDarkMode', () => {
   it('switches from light to dark theme', async () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
     useThemeStore.setState({
       availableThemes: allThemes,
       currentTheme: 'light',
@@ -720,9 +721,7 @@ describe('toggleDarkMode', () => {
   });
 
   it('switches from dark to light theme', async () => {
-    vi.mocked(getDndevConfig).mockReturnValue({
-      themes: { discovered: allThemes },
-    } as any);
+    vi.mocked(getDndevConfig).mockReturnValue(frameworkConfig(allThemes));
     useThemeStore.setState({
       availableThemes: allThemes,
       currentTheme: 'dark',
@@ -911,6 +910,18 @@ describe('setSidebarWidth', () => {
 // ============================================================================
 // BREAKPOINT MANAGEMENT
 // ============================================================================
+
+describe('useBreakpoint', () => {
+  // Regression: a try/catch used to swallow hook errors and return the
+  // initial breakpoint, hiding invalid hook calls and corrupting hook order.
+  it('fails loud when called outside a component render', () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    expect(() => useBreakpoint('current')).toThrow();
+    consoleError.mockRestore();
+  });
+});
 
 describe('_updateBreakpoint', () => {
   it('sets mobile breakpoint state', () => {

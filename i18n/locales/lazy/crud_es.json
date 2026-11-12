@@ -29,7 +29,10 @@
     "replySubject": "Re: Su consulta",
     "markResponded": "Marcar como respondido",
     "selectOptions": "Seleccionar opciones...",
-    "use": "Usar esta dirección"
+    "use": "Usar esta dirección",
+    "edit": "Editar",
+    "refresh": "Actualizar",
+    "open": "Abrir"
   },
   "address": {
     "placeholder": "Introducir dirección...",
@@ -258,7 +261,9 @@
     "networkError": "Error de red ocurrido",
     "unauthorized": "Acceso no autorizado",
     "forbidden": "Acceso prohibido",
-    "serverError": "Error del servidor ocurrido"
+    "serverError": "Error del servidor ocurrido",
+    "bulkPartialError_one": "No se pudo guardar {{count}} fila",
+    "bulkPartialError_other": "No se pudieron guardar {{count}} filas"
   },
   "form": {
     "submit": "Enviar",
@@ -272,7 +277,9 @@
     "uploading": "Subiendo {{progress}}%...",
     "processing": "Procesando...",
     "validating": "Validando...",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "saved": "Guardado",
+    "error": "Error — inténtalo de nuevo"
   },
   "gdprConsent": {
     "consent": "Acepto la",
@@ -366,5 +373,35 @@
   },
   "recommendations": {
     "title": "También te puede interesar"
+  },
+  "addNew": "Añadir",
+  "delete": {
+    "title": "Eliminar elemento",
+    "confirm": "¿Seguro que quieres eliminar este elemento?",
+    "loading": "Eliminando...",
+    "titleSelected_one": "Eliminar {{count}} elemento",
+    "titleSelected_other": "Eliminar {{count}} elementos",
+    "confirmSelected_one": "¿Eliminar el elemento seleccionado? Esta acción no se puede deshacer.",
+    "confirmSelected_other": "¿Eliminar los {{count}} elementos seleccionados? Esta acción no se puede deshacer."
+  },
+  "errors": {
+    "notFound": "No se encontró {{entity}}",
+    "fetchFailed": "No se pudo cargar {{entity}}"
+  },
+  "emptyState": {
+    "title": "No hay resultados",
+    "description": "Todavía no hay nada que mostrar."
+  },
+  "bulkEdit": {
+    "pending_one": "{{count}} cambio sin guardar",
+    "pending_other": "{{count}} cambios sin guardar",
+    "discard": "Descartar cambios",
+    "selected": "{{count}} seleccionado(s)",
+    "field": "Campo",
+    "value": "Valor",
+    "apply": "Aplicar a la selección",
+    "deleteSelected": "Eliminar selección ({{count}})",
+    "failed_one": "{{count}} fila sin guardar: sigue en la lista, inténtelo de nuevo",
+    "failed_other": "{{count}} filas sin guardar: siguen en la lista, inténtelo de nuevo"
   }
 }

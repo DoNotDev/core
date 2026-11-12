@@ -174,7 +174,7 @@ let cachedIsNextJs: boolean | null = null;
 export function isNextJs(): boolean {
   // Always check __NEXT_DATA__ first (most reliable, available after hydration)
   // Don't rely on cache if __NEXT_DATA__ becomes available later
-  if (typeof globalThis !== 'undefined' && (globalThis as any).__NEXT_DATA__) {
+  if (typeof globalThis !== 'undefined' && globalThis.__NEXT_DATA__) {
     cachedIsNextJs = true;
     return true;
   }
@@ -260,7 +260,9 @@ export function isClient(): boolean {
 export function isTest(): boolean {
   return (
     process.env.NODE_ENV === 'test' ||
-    typeof (globalThis as any).JEST_WORKER_ID !== 'undefined'
+    // why: Jest-only global, not declared on globalThis
+    typeof (globalThis as { JEST_WORKER_ID?: unknown }).JEST_WORKER_ID !==
+      'undefined'
   );
 }
 
@@ -413,7 +415,9 @@ function getViteDetectionStrategies(): DetectionStrategy[] {
     // Check for import.meta.hot (Vite HMR)
     if (
       typeof globalThis !== 'undefined' &&
-      (globalThis as any).import?.meta?.hot !== undefined
+      // why: probes a non-standard `globalThis.import` object, not declared on globalThis
+      (globalThis as { import?: { meta?: { hot?: unknown } } }).import?.meta
+        ?.hot !== undefined
     ) {
       strategies.push({
         platform: PLATFORMS.VITE,

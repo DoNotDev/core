@@ -82,6 +82,11 @@ const ENTITY_ERROR_MAPPING: Record<EntityHookErrors, ErrorCode> = {
   NETWORK_ERROR: 'unavailable',
 };
 
+/** Narrows a string to an `EntityHookErrors` key (same `in` check as before, typed). */
+function isEntityHookErrorType(type: string): type is EntityHookErrors {
+  return type in ENTITY_ERROR_MAPPING;
+}
+
 // -----------------------------------------------------------------------------
 // Error Handler Configurations
 // -----------------------------------------------------------------------------
@@ -310,34 +315,38 @@ const ERROR_HANDLERS: Record<ErrorSource, ErrorHandlerConfig> = {
       // Axios-like error
       if (
         'response' in error &&
-        (error as any).response &&
-        'status' in (error as any).response
+        error.response &&
+        // why: truthy `response` is used with `in` as before (axios-like contract); no extra runtime check added
+        'status' in (error.response as object)
       ) {
-        statusCode = (error as any).response.status;
+        // why: axios-like contract — `response.status` is taken as-is (number) without runtime check
+        statusCode = (error.response as { status: number }).status;
       }
       // Fetch-like error
-      else if ('status' in error && typeof (error as any).status === 'number') {
-        statusCode = (error as any).status;
+      else if ('status' in error && typeof error.status === 'number') {
+        statusCode = error.status;
       }
 
       return statusCode?.toString();
     },
 
-    processMetadata: (error: unknown): Record<string, any> => {
-      const metadata: Record<string, any> = { originalError: error };
+    processMetadata: (error: unknown): Record<string, unknown> => {
+      const metadata: Record<string, unknown> = { originalError: error };
 
       if (typeof error !== 'object' || error === null) return metadata;
 
       // Extract status code and response data if available
-      if ('response' in error && (error as any).response) {
-        if ('status' in (error as any).response) {
-          metadata.statusCode = (error as any).response.status;
+      if ('response' in error && error.response) {
+        // why: truthy `response` is used with `in` as before (axios-like contract); no extra runtime check added
+        const response = error.response as object;
+        if ('status' in response) {
+          metadata.statusCode = response.status;
         }
-        if ('data' in (error as any).response) {
-          metadata.responseData = (error as any).response.data;
+        if ('data' in response) {
+          metadata.responseData = response.data;
         }
       } else if ('status' in error) {
-        metadata.statusCode = (error as any).status;
+        metadata.statusCode = error.status;
       }
 
       return metadata;
@@ -361,15 +370,15 @@ const ERROR_HANDLERS: Record<ErrorSource, ErrorHandlerConfig> = {
     errorCodeMapping: {},
     friendlyMessageMapping: {},
 
-    processMetadata: (error: unknown): Record<string, any> => {
-      const metadata: Record<string, any> = { originalError: error };
+    processMetadata: (error: unknown): Record<string, unknown> => {
+      const metadata: Record<string, unknown> = { originalError: error };
 
       if (
         typeof error === 'object' &&
         error !== null &&
         'componentStack' in error
       ) {
-        metadata.componentStack = (error as any).componentStack;
+        metadata.componentStack = error.componentStack;
       }
 
       return metadata;
@@ -426,7 +435,7 @@ interface ErrorHandlerConfig {
   friendlyMessageMapping: Record<string, string>;
   extractErrorCode?: (error: unknown) => string | undefined;
   extractErrorMessage?: (error: unknown) => string | undefined;
-  processMetadata?: (error: unknown) => Record<string, any>;
+  processMetadata?: (error: unknown) => Record<string, unknown>;
 }
 
 // -----------------------------------------------------------------------------
@@ -472,14 +481,13 @@ const handleEntityError: ErrorHandlerFunction = (
   if (
     error instanceof Error &&
     'type' in error &&
-    typeof (error as any).type === 'string' &&
-    (error as any).type in ENTITY_ERROR_MAPPING
+    typeof error.type === 'string' &&
+    isEntityHookErrorType(error.type)
   ) {
-    const entityError = error as { type: EntityHookErrors; message: string };
-    const errorCode = ENTITY_ERROR_MAPPING[entityError.type] || 'unknown';
+    const errorCode = ENTITY_ERROR_MAPPING[error.type] || 'unknown';
 
     return new DoNotDevError(
-      entityError.message || DEFAULT_ERROR_MESSAGES[errorCode],
+      error.message || DEFAULT_ERROR_MESSAGES[errorCode],
       errorCode,
       {
         details: { originalError: error },
@@ -493,11 +501,10 @@ const handleEntityError: ErrorHandlerFunction = (
     typeof error === 'object' &&
     error !== null &&
     'code' in error &&
-    typeof (error as any).code === 'string' &&
-    FIREBASE_ERROR_MAP[(error as any).code]
+    typeof error.code === 'string' &&
+    FIREBASE_ERROR_MAP[error.code]
   ) {
-    const firebaseError = error as { code: string; message: string };
-    const mappedError = FIREBASE_ERROR_MAP[firebaseError.code];
+    const mappedError = FIREBASE_ERROR_MAP[error.code];
     if (mappedError) {
       const errorCode = ENTITY_ERROR_MAPPING[mappedError.type] || 'unknown';
 
@@ -506,7 +513,7 @@ const handleEntityError: ErrorHandlerFunction = (
         errorCode,
         {
           details: {
-            originalCode: firebaseError.code,
+            originalCode: error.code,
             originalError: error,
           },
           source: 'entity',

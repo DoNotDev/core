@@ -162,6 +162,12 @@ interface ExtendedThemeState extends ThemeState {
    * Set by LayoutRoute wrapper on navigation. false = show breadcrumbs normally.
    */
   routeHideBreadcrumbs: boolean;
+  /**
+   * Display label of the record the current page shows (transient, NOT persisted).
+   * Breadcrumbs show `label` instead of the URL segment equal to `id` (a raw record id).
+   * Set by the record page (EntityFormRenderer / EntityDisplayRenderer), cleared on unmount.
+   */
+  routeRecordLabel: { id: string; label: string } | null;
 }
 
 /**
@@ -215,6 +221,9 @@ interface LayoutActions {
 
   /** Set per-route breadcrumb hide override (transient) */
   setRouteHideBreadcrumbs: (hide: boolean) => void;
+
+  /** Set (or clear with null) the breadcrumb label of the shown record (transient) */
+  setRouteRecordLabel: (record: { id: string; label: string } | null) => void;
 }
 
 /**
@@ -231,7 +240,7 @@ async function resolveAppConfig(app?: AppMetadata): Promise<AppMetadata> {
  */
 function validatePreset(preset?: string): LayoutPreset {
   if (!preset || typeof preset !== 'string') return LAYOUT_PRESET.LANDING;
-  return preset as LayoutPreset; // any string is valid — custom presets are CSS-driven
+  return preset; // any string is valid — custom presets are CSS-driven
 }
 
 /**
@@ -284,6 +293,7 @@ const initialState: ExtendedThemeState = {
   sidebarWidth: 240, // Default width, overridden by layoutPreset defaults
   routePresetOverride: null, // No route override initially
   routeHideBreadcrumbs: false, // No breadcrumb override initially
+  routeRecordLabel: null, // No record shown initially
 };
 
 /**
@@ -534,7 +544,7 @@ export const useThemeStore = createDoNotDevStore<
      */
     setLayoutPreset: (preset: string | LayoutPreset) => {
       if (!preset || typeof preset !== 'string') return;
-      set({ layoutPreset: preset as LayoutPreset }); // any string is valid — custom presets are CSS-driven
+      set({ layoutPreset: preset }); // any string is valid — custom presets are CSS-driven
     },
 
     setLayoutLoading: (loading: boolean) => {
@@ -575,6 +585,13 @@ export const useThemeStore = createDoNotDevStore<
     },
 
     /**
+     * Set (or clear) the breadcrumb label of the shown record (transient)
+     */
+    setRouteRecordLabel: (record: { id: string; label: string } | null) => {
+      set({ routeRecordLabel: record });
+    },
+
+    /**
      * Set per-route preset override (transient)
      * Validates input. null clears the override.
      */
@@ -584,7 +601,7 @@ export const useThemeStore = createDoNotDevStore<
         return;
       }
       if (!preset || typeof preset !== 'string') return;
-      set({ routePresetOverride: preset as LayoutPreset });
+      set({ routePresetOverride: preset });
     },
 
     // ============================================================================
@@ -678,6 +695,7 @@ export const useThemeStore = createDoNotDevStore<
    */
   initialize: async (data?: Record<string, unknown>): Promise<boolean> => {
     try {
+      // why: DoNotDevStore.initialize takes an untyped bag; this store's callers pass this shape
       const themeData = data as { themes: ThemeInfo[]; appConfig?: AppConfig };
       if (themeData?.themes && themeData.themes.length > 0) {
         const state = useThemeStore.getState();
@@ -787,6 +805,8 @@ export type LayoutAPI = Pick<
   | 'setRoutePresetOverride'
   | 'routeHideBreadcrumbs'
   | 'setRouteHideBreadcrumbs'
+  | 'routeRecordLabel'
+  | 'setRouteRecordLabel'
 >;
 
 /**
@@ -859,14 +879,7 @@ export type BreakpointAPI = BreakpointUtils;
 export function useBreakpoint<K extends keyof BreakpointAPI>(
   key: K
 ): BreakpointAPI[K] {
-  // HMR-safe: fallback to initial state if store isn't ready during reload
-  try {
-    return useThemeStore(
-      (state) => state.breakpoint?.[key] ?? initialBreakpointState[key]
-    );
-  } catch {
-    return initialBreakpointState[key];
-  }
+  return useThemeStore((state) => state.breakpoint[key]);
 }
 
 // ============================================================================

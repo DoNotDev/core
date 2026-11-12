@@ -23,21 +23,20 @@ import {
   type Visibility,
   type dndevSchema,
 } from '@donotdev/types';
-import { getListCardFieldNames } from '@donotdev/utils/server';
+import {
+  getListCardFieldNames,
+  i18nFieldName,
+  TRANSLATABLE_FIELD_TYPES,
+} from '@donotdev/utils/server';
 
 import { getSchemaType } from './validation/getSchemaType';
-import { baseFields, BACKEND_GENERATED_FIELD_NAMES } from './visibility';
+import { baseFields, isBackendGeneratedField } from './visibility';
 
 /** Fields excluded from all write schemas (create/draft/update) */
 function isWriteExcluded(name: string, field: EntityField<FieldType>): boolean {
   if (field.visibility === 'hidden') return true;
   if (field.editable === EDITABLE.GENERATED) return true;
-  if (
-    BACKEND_GENERATED_FIELD_NAMES.includes(
-      name as (typeof BACKEND_GENERATED_FIELD_NAMES)[number]
-    )
-  )
-    return true;
+  if (isBackendGeneratedField(name)) return true;
   return false;
 }
 
@@ -91,20 +90,22 @@ function withVisibility<
 
 /**
  * Attaches entity metadata to a Valibot schema
- * Includes uniqueKeys if defined on entity for backend deduplication
+ * Includes uniqueKeys (backend deduplication) and security (PII encryption) when defined on entity
  */
 function withMetadata<T>(
   schema: v.BaseSchema<unknown, T, v.BaseIssue<unknown>>,
   entity: AnyEntity
 ): dndevSchema<T> {
-  const enhanced = schema as dndevSchema<T>;
-  enhanced.metadata = {
-    collection: entity.collection,
-    entity: entity.name,
-    // Propagate uniqueKeys for backend CRUD functions
-    ...(entity.uniqueKeys && { uniqueKeys: entity.uniqueKeys }),
-  };
-  return enhanced;
+  return Object.assign(schema, {
+    metadata: {
+      collection: entity.collection,
+      entity: entity.name,
+      // Propagate uniqueKeys for backend CRUD functions
+      ...(entity.uniqueKeys && { uniqueKeys: entity.uniqueKeys }),
+      // Propagate security so CrudService can encrypt/decrypt piiFields
+      ...(entity.security && { security: entity.security }),
+    },
+  });
 }
 
 /**
@@ -120,6 +121,45 @@ function createFieldSchema(
 /**
  * Creates a schema field that's always optional (for draft/update)
  */
+/**
+ * Companion schema of a translated field (`i18n: true`): one optional value per
+ * language, each validated like the field itself (minus required).
+ */
+function createTranslationsSchema(
+  name: string,
+  field: EntityField<FieldType>
+): SchemaWithVisibility {
+  if (!TRANSLATABLE_FIELD_TYPES.includes(field.type)) {
+    throw new Error(
+      `Field '${name}' has i18n: true but type '${field.type}'. Translatable types: ${TRANSLATABLE_FIELD_TYPES.join(', ')}.`
+    );
+  }
+  const valueSchema = getSchemaType({
+    ...field,
+    validation: { ...field.validation, required: false },
+  });
+  return withVisibility(
+    v.optional(v.nullable(v.record(v.string(), valueSchema))),
+    field.visibility
+  );
+}
+
+/**
+ * Add the companion schema of every translated field present in `shape`.
+ * Mutates and returns `shape`.
+ */
+function withTranslations(
+  shape: Record<string, SchemaWithVisibility>,
+  fields: AnyEntity['fields']
+): Record<string, SchemaWithVisibility> {
+  for (const name of Object.keys(shape)) {
+    const field = fields[name];
+    if (field?.i18n !== true) continue;
+    shape[i18nFieldName(name)] = createTranslationsSchema(name, field);
+  }
+  return shape;
+}
+
 function createOptionalFieldSchema(
   field: EntityField<FieldType>
 ): SchemaWithVisibility {
@@ -168,7 +208,7 @@ export function createSchemas(entity: AnyEntity): OperationSchemas {
     getShape[name] = createOptionalFieldSchema(field);
   }
 
-  const getSchema = withMetadata(v.object(getShape), entity);
+  const getSchema = withMetadata(v.object(withTranslations({ ...getShape }, fields)), entity);
 
   // -------------------------------------------------------------------------
   // CREATE schema: Excludes backend-generated fields, enforces required
@@ -180,7 +220,7 @@ export function createSchemas(entity: AnyEntity): OperationSchemas {
     createShape[name] = createFieldSchema(field);
   }
 
-  const createSchema = withMetadata(v.object(createShape), entity);
+  const createSchema = withMetadata(v.object(withTranslations({ ...createShape }, fields)), entity);
 
   // -------------------------------------------------------------------------
   // DRAFT schema: All optional except status='draft'
@@ -193,17 +233,14 @@ export function createSchemas(entity: AnyEntity): OperationSchemas {
     if (name === 'status') {
       // Status must be literal 'draft'
       const statusSchema = v.literal('draft');
-      draftShape[name] = withVisibility(
-        statusSchema as unknown as SchemaWithVisibility,
-        field.visibility
-      );
+      draftShape[name] = withVisibility(statusSchema, field.visibility);
     } else {
       // All other fields optional
       draftShape[name] = createOptionalFieldSchema(field);
     }
   }
 
-  const draftSchema = withMetadata(v.object(draftShape), entity);
+  const draftSchema = withMetadata(v.object(withTranslations({ ...draftShape }, fields)), entity);
 
   // -------------------------------------------------------------------------
   // UPDATE schema: All optional (partial update)
@@ -216,12 +253,9 @@ export function createSchemas(entity: AnyEntity): OperationSchemas {
   }
 
   // Add required id for updates
-  updateShape['id'] = withVisibility(
-    getSchemaType(baseFields.id as EntityField<'text'>),
-    'technical'
-  );
+  updateShape['id'] = withVisibility(getSchemaType(baseFields.id), 'technical');
 
-  const updateSchema = withMetadata(v.object(updateShape), entity);
+  const updateSchema = withMetadata(v.object(withTranslations({ ...updateShape }, fields)), entity);
 
   // -------------------------------------------------------------------------
   // LIST schema: Uses listFields if defined, otherwise all visible fields
@@ -248,7 +282,7 @@ export function createSchemas(entity: AnyEntity): OperationSchemas {
     listShape = getShape;
   }
 
-  const listSchema = withMetadata(v.object(listShape), entity);
+  const listSchema = withMetadata(v.object(withTranslations({ ...listShape }, fields)), entity);
 
   // -------------------------------------------------------------------------
   // LISTCARD schema: Uses listCardFields if defined, falls back to listFields, then all visible fields
@@ -276,17 +310,14 @@ export function createSchemas(entity: AnyEntity): OperationSchemas {
     listCardShape = getShape;
   }
 
-  const listCardSchema = withMetadata(v.object(listCardShape), entity);
+  const listCardSchema = withMetadata(v.object(withTranslations({ ...listCardShape }, fields)), entity);
 
   // -------------------------------------------------------------------------
   // DELETE schema: Just id
   // -------------------------------------------------------------------------
   const deleteSchema = withMetadata(
     v.object({
-      id: withVisibility(
-        getSchemaType(baseFields.id as EntityField<'text'>),
-        'technical'
-      ),
+      id: withVisibility(getSchemaType(baseFields.id), 'technical'),
     }),
     entity
   );

@@ -87,6 +87,7 @@ export function getValidAuthPartnerIds(): AuthPartnerId[] {
   for (const [partnerId, config] of Object.entries(AUTH_PARTNERS)) {
     const validation = v.safeParse(authPartnerSchema, config);
     if (validation.success) {
+      // why: Object.entries widens keys of AUTH_PARTNERS to string
       validPartnerIds.push(partnerId as AuthPartnerId);
     } else if (typeof window !== 'undefined' && isDev()) {
       console.warn(
@@ -112,6 +113,7 @@ export function getValidOAuthPartnerIds(): OAuthPartnerId[] {
   for (const [partnerId, config] of Object.entries(OAUTH_PARTNERS)) {
     const validation = v.safeParse(oauthPartnerSchema, config);
     if (validation.success) {
+      // why: Object.entries widens keys of OAUTH_PARTNERS to string
       validPartnerIds.push(partnerId as OAuthPartnerId);
     } else if (typeof window !== 'undefined' && isDev()) {
       console.warn(
@@ -178,14 +180,14 @@ export function getEnabledAuthPartners(): AuthPartnerId[] {
   }
 
   // Get valid partner IDs from schema
-  const validPartnerIds = getValidAuthPartnerIds();
+  const validPartnerIds: readonly string[] = getValidAuthPartnerIds();
 
   const result = envPartners
     .split(',')
     .map((partner) => partner.trim().toLowerCase())
-    .filter((partner) =>
-      validPartnerIds.includes(partner as AuthPartnerId)
-    ) as AuthPartnerId[];
+    .filter((partner): partner is AuthPartnerId =>
+      validPartnerIds.includes(partner)
+    );
 
   // Cache permanently (computed once, returned forever)
   cachedEnabledAuthPartners = result;
@@ -214,14 +216,14 @@ export function getEnabledOAuthPartners(): OAuthPartnerId[] {
     return [];
   }
 
-  const validPartnerIds = getValidOAuthPartnerIds();
+  const validPartnerIds: readonly string[] = getValidOAuthPartnerIds();
 
   const result = envPartners
     .split(',')
     .map((partner) => partner.trim().toLowerCase())
-    .filter((partner) =>
-      validPartnerIds.includes(partner as OAuthPartnerId)
-    ) as OAuthPartnerId[];
+    .filter((partner): partner is OAuthPartnerId =>
+      validPartnerIds.includes(partner)
+    );
 
   // Cache the result
   cachedEnabledOAuthPartners = result;
@@ -390,6 +392,7 @@ export function getPartnerCacheStatus() {
 export function getAuthPartnerIdByFirebaseId(
   firebaseProviderId: string
 ): AuthPartnerId | null {
+  // why: Object.keys widens keys of AUTH_PARTNERS to string
   const partnerId = Object.keys(AUTH_PARTNERS).find(
     (id) =>
       AUTH_PARTNERS[id as AuthPartnerId].firebaseProviderId ===

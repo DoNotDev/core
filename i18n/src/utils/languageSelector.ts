@@ -14,10 +14,37 @@
 import { isRTLLanguage } from '@donotdev/components';
 import { useLanguageStore } from '@donotdev/stores';
 import type { LanguageData } from '@donotdev/types';
+import {
+  isMultilingual,
+  LANGUAGE_COOKIE,
+  localizePath,
+  setCookie,
+  splitLanguagePath,
+} from '@donotdev/utils';
 
 import { useTranslation } from '../hooks/useTranslation';
 import { getI18nInstance } from '../instance.vite';
+import { getLanguageRouting } from './initialLanguage';
+import { useLanguageNavigate } from './languageNavigation';
+import type { LanguageNavigate } from './languageNavigation';
 import { getSupportedLanguages } from './languages';
+
+/**
+ * Open the current page in another language: its URL (`/en/…`, the root for the
+ * default language). Records the choice in the language cookie first, so the proxy
+ * (Next) or the first-visit step (Vite) does not send the visitor back. Client-side
+ * through the platform router (LanguageNavigationProvider): the page re-renders in
+ * that language, no document reload.
+ */
+function openInLanguage(lng: string, navigate: LanguageNavigate): void {
+  const routing = getLanguageRouting();
+  const { path } = splitLanguagePath(window.location.pathname, routing);
+  setCookie(LANGUAGE_COOKIE, lng, { sameSite: 'lax' });
+  navigate(
+    `${localizePath(path, lng, routing)}${window.location.search}${window.location.hash}`,
+    lng
+  );
+}
 
 /**
  * Language selector utility hook
@@ -48,7 +75,7 @@ import { getSupportedLanguages } from './languages';
  *
  * @public
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
@@ -73,18 +100,28 @@ export function useLanguageSelector() {
     storeLanguages.length > 0 ? storeLanguages : getSupportedLanguages();
 
   const isLoading = storeReady ? storeLoading : false;
+  const navigateToLanguage = useLanguageNavigate();
 
   /**
    * Change the current language
    *
-   * Uses the language store when initialized (handles i18next sync,
-   * DOM attributes, and persistence). Falls back to direct i18next
-   * access if the store isn't ready yet.
+   * With 2+ languages every language has its own URL: navigates (client-side) to the
+   * current page's URL in `lng`. One language: changes it in place through the language
+   * store (i18next sync, DOM attributes, persistence), or i18next directly while
+   * the store is not ready.
    *
    * @param lng - Language code to switch to
    * @returns Promise that resolves when language change is complete
    */
   const changeLanguage = async (lng: string): Promise<void> => {
+    if (
+      typeof window !== 'undefined' &&
+      isMultilingual(getLanguageRouting().languages)
+    ) {
+      openInLanguage(lng, navigateToLanguage);
+      return;
+    }
+
     const store = useLanguageStore.getState();
 
     if (store.isReady) {

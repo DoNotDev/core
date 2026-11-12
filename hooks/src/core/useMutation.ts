@@ -127,12 +127,13 @@ export function useMutation<
         context: MutationFunctionContext
       ) => {
         // Wrap error with framework error handler
-        const wrappedError = handleError(error as Error, {
+        const wrappedError = handleError(error, {
           userMessage: userMessage || 'Mutation failed',
           showNotification,
         });
 
         // Call user's error handler if provided (with correct signature)
+        // why: the framework replaces TError with its wrapped DoNotDevError; the public TError generic cannot express that
         onError?.(wrappedError as TError, variables, onMutateResult, context);
       },
     };

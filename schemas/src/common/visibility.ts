@@ -210,7 +210,7 @@ export type TechnicalField = (typeof TECHNICAL_FIELD_NAMES)[number];
 export function isFrameworkField(
   fieldName: string
 ): fieldName is TechnicalField {
-  return TECHNICAL_FIELD_NAMES.includes(fieldName as TechnicalField);
+  return TECHNICAL_FIELD_NAMES.some((name) => name === fieldName);
 }
 
 /**
@@ -228,9 +228,7 @@ export function isFrameworkField(
 export function isBackendGeneratedField(
   fieldName: string
 ): fieldName is BackendGeneratedField {
-  return BACKEND_GENERATED_FIELD_NAMES.includes(
-    fieldName as BackendGeneratedField
-  );
+  return BACKEND_GENERATED_FIELD_NAMES.some((name) => name === fieldName);
 }
 
 // Re-export the base technical fields with proper generic types

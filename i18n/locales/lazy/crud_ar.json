@@ -29,7 +29,10 @@
     "replySubject": "Re: استفسارك",
     "markResponded": "وضع علامة كمردود",
     "selectOptions": "اختر خيارات...",
-    "use": "استخدم هذا العنوان"
+    "use": "استخدم هذا العنوان",
+    "edit": "تعديل",
+    "refresh": "تحديث",
+    "open": "فتح"
   },
   "address": {
     "placeholder": "أدخل العنوان...",
@@ -258,7 +261,9 @@
     "networkError": "حدث خطأ في الشبكة",
     "unauthorized": "وصول غير مصرح به",
     "forbidden": "الوصول محظور",
-    "serverError": "حدث خطأ في الخادم"
+    "serverError": "حدث خطأ في الخادم",
+    "bulkPartialError_one": "تعذّر حفظ {{count}} صف",
+    "bulkPartialError_other": "تعذّر حفظ {{count}} صفوف"
   },
   "form": {
     "submit": "إرسال",
@@ -272,7 +277,9 @@
     "uploading": "جاري الرفع {{progress}}%...",
     "processing": "جاري المعالجة...",
     "validating": "جاري التحقق...",
-    "saving": "جاري الحفظ..."
+    "saving": "جاري الحفظ...",
+    "saved": "تم الحفظ",
+    "error": "خطأ — حاول مرة أخرى"
   },
   "gdprConsent": {
     "consent": "أوافق على",
@@ -366,5 +373,35 @@
   },
   "recommendations": {
     "title": "قد يعجبك أيضاً"
+  },
+  "addNew": "إضافة",
+  "delete": {
+    "title": "حذف العنصر",
+    "confirm": "هل تريد بالتأكيد حذف هذا العنصر؟",
+    "loading": "جارٍ الحذف...",
+    "titleSelected_one": "حذف عنصر واحد",
+    "titleSelected_other": "حذف {{count}} عناصر",
+    "confirmSelected_one": "هل تريد حذف العنصر المحدد؟ لا يمكن التراجع عن ذلك.",
+    "confirmSelected_other": "هل تريد حذف العناصر المحددة ({{count}})؟ لا يمكن التراجع عن ذلك."
+  },
+  "errors": {
+    "notFound": "تعذّر العثور على {{entity}}",
+    "fetchFailed": "تعذّر تحميل {{entity}}"
+  },
+  "emptyState": {
+    "title": "لا توجد نتائج",
+    "description": "لا يوجد شيء لعرضه حتى الآن."
+  },
+  "bulkEdit": {
+    "pending_one": "تعديل واحد غير محفوظ",
+    "pending_other": "{{count}} تعديلات غير محفوظة",
+    "discard": "تجاهل التعديلات",
+    "selected": "تم تحديد {{count}}",
+    "field": "الحقل",
+    "value": "القيمة",
+    "apply": "تطبيق على المحدد",
+    "deleteSelected": "حذف المحدد ({{count}})",
+    "failed_one": "لم يُحفظ {{count}} صف: يبقى في القائمة، أعد المحاولة",
+    "failed_other": "لم تُحفظ {{count}} صفوف: تبقى في القائمة، أعد المحاولة"
   }
 }

@@ -449,7 +449,7 @@ export function createDiscoveryPlugin(config) {
           lastDiscoveryData = data;
 
           // Write canonical JSON route manifest to public/ for build-time consumers
-          // (SEOPlugin, PrerenderPlugin, LlmsTxtGenerator all read public/route-manifest.json)
+          // (SEOPlugin and PrerenderPlugin read public/route-manifest.json)
           if (manifestFileName && configKey === 'routes' && data?.routes) {
             try {
               // Expand dynamic blog routes with frontmatter SEO metadata

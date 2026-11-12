@@ -140,7 +140,7 @@ export const useOverlayStore = createDoNotDevStore<
     // Redirect overlay state
     isRedirectOverlayOpen: false,
     redirectOperation: null,
-    redirectPhase: 'connecting' as RedirectOverlayPhase,
+    redirectPhase: 'connecting',
     showCancelButton: false,
     redirectConfig: null,
     redirectStartTime: null,

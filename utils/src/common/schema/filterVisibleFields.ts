@@ -46,8 +46,10 @@ export type FilterVisibleFieldsOptions = GetVisibleFieldsOptions;
  * @param options - Optional: documentData, uid, ownership for owner-level visibility
  * @returns A new object containing only the fields visible to the user
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: interface-typed records have no implicit index signature; Record<string, unknown> would reject them
 export function filterVisibleFields<T extends Record<string, any>>(
   data: T | null | undefined,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: accepts schemas of any output type; v.GenericSchema would make InferOutput unknown for callers (breaking)
   schema: v.BaseSchema<unknown, any, v.BaseIssue<unknown>> | dndevSchema<any>,
   userRole: UserRole,
   options?: FilterVisibleFieldsOptions
@@ -59,8 +61,7 @@ export function filterVisibleFields<T extends Record<string, any>>(
   const visibilityOptions =
     options?.uid != null && options?.ownership != null
       ? {
-          documentData:
-            options.documentData ?? (data as Record<string, unknown>),
+          documentData: options.documentData ?? data,
           uid: options.uid,
           ownership: options.ownership,
         }
@@ -76,6 +77,7 @@ export function filterVisibleFields<T extends Record<string, any>>(
 
   for (const key of visibleFieldNames) {
     if (Object.prototype.hasOwnProperty.call(data, key)) {
+      // why: field names come from the schema at runtime; TS cannot relate a string to keyof T
       result[key as keyof T] = data[key as keyof T];
     }
   }

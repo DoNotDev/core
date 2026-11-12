@@ -185,9 +185,21 @@ export async function runDiscoveries(
     // Every other artifact is overwritten in place and swept after the run.
     cleanFontAssets();
 
+    // App languages first: with 2+ languages pages live under app/[lang] and the
+    // sitemap lists every language URL, and routes run before the i18n handler.
+    const i18nData = await i18nHandler.getDiscoveryData();
+    const languageRouting = {
+      languages: i18nData.supportedLanguages,
+      defaultLanguage: i18nData.fallbackLanguage,
+    };
+    seoHandler.useLanguages(languageRouting);
+    // llms.txt labels pages in the app's language
+    seoHandler.useTranslations(i18nData.content);
+
     // 1. Routes (must be first - Next.js needs app/page.tsx before compilation)
     if (routeHandler) {
       try {
+        routeHandler.useLanguages(languageRouting);
         logger.info('🔍 Starting route discovery...');
         const routeData = await routeHandler.generateFiles();
         const routeCount = routeData?.routes?.length || 0;

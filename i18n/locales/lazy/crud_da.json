@@ -29,7 +29,10 @@
     "replySubject": "Re: Din henvendelse",
     "markResponded": "Markér som besvaret",
     "selectOptions": "Vælg muligheder...",
-    "use": "Brug denne adresse"
+    "use": "Brug denne adresse",
+    "edit": "Rediger",
+    "refresh": "Opdater",
+    "open": "Åbn"
   },
   "address": {
     "placeholder": "Indtast adresse...",
@@ -70,7 +73,9 @@
       "suggestions": "Måske leder du efter:",
       "goHome": "Til forsiden",
       "goBack": "Tilbage"
-    }
+    },
+    "bulkPartialError_one": "{{count}} række kunne ikke gemmes",
+    "bulkPartialError_other": "{{count}} rækker kunne ikke gemmes"
   },
   "pagination": {
     "showing": "{{from}}–{{to}} af {{total}}",
@@ -264,7 +269,9 @@
     "uploading": "Uploader {{progress}}%...",
     "processing": "Behandler...",
     "validating": "Validerer...",
-    "saving": "Gemmer..."
+    "saving": "Gemmer...",
+    "saved": "Gemt",
+    "error": "Fejl — prøv igen"
   },
   "navigation": {
     "more": "Mere",
@@ -519,7 +526,9 @@
     "unsupportedFieldType": "Felttypen {{type}} understøttes ikke",
     "fieldRendering": "Fejl ved felt {{field}}",
     "fallingBackToTextField": "Bruger tekstfelt i stedet for {{type}}",
-    "invalidFieldProps": "Ugyldig indstilling for {{field}}"
+    "invalidFieldProps": "Ugyldig indstilling for {{field}}",
+    "notFound": "{{entity}} blev ikke fundet",
+    "fetchFailed": "Kunne ikke hente {{entity}}"
   },
   "visibility": {
     "viewAs": "Vis som",
@@ -531,5 +540,31 @@
   },
   "recommendations": {
     "title": "Du vil måske også synes om"
+  },
+  "addNew": "Tilføj",
+  "delete": {
+    "title": "Slet element",
+    "confirm": "Er du sikker på, at du vil slette dette element?",
+    "loading": "Sletter...",
+    "titleSelected_one": "Slet {{count}} element",
+    "titleSelected_other": "Slet {{count}} elementer",
+    "confirmSelected_one": "Slette det valgte element? Dette kan ikke fortrydes.",
+    "confirmSelected_other": "Slette de {{count}} valgte elementer? Dette kan ikke fortrydes."
+  },
+  "emptyState": {
+    "title": "Intet fundet",
+    "description": "Der er intet at vise endnu."
+  },
+  "bulkEdit": {
+    "pending_one": "{{count}} ikke-gemt ændring",
+    "pending_other": "{{count}} ikke-gemte ændringer",
+    "discard": "Kassér ændringer",
+    "selected": "{{count}} valgt",
+    "field": "Felt",
+    "value": "Værdi",
+    "apply": "Anvend på valgte",
+    "deleteSelected": "Slet valgte ({{count}})",
+    "failed_one": "{{count}} række ikke gemt: den bliver i listen, prøv igen",
+    "failed_other": "{{count}} rækker ikke gemt: de bliver i listen, prøv igen"
   }
 }

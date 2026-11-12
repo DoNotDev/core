@@ -50,7 +50,16 @@ export interface ClaimsCacheResult<T> {
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
 export type Claims = Record<string, any>;
+
+/**
+ * Empty claims object returned on server / offline-without-trust paths.
+ * why: a generic `T extends Claims` cannot be constructed; `{}` is the documented safe default
+ */
+function emptyClaims<T extends Claims>(): T {
+  return {} as T;
+}
 
 /**
  * ClaimsCache service
@@ -110,7 +119,7 @@ export class ClaimsCache {
     verifyFn: () => Promise<T>
   ): Promise<T> {
     if (!this.isClient()) {
-      return {} as T;
+      return emptyClaims<T>();
     }
 
     const online = this.isOnline();
@@ -134,7 +143,7 @@ export class ClaimsCache {
       }
     } else {
       if (!this.offlineTrustEnabled) {
-        return {} as T;
+        return emptyClaims<T>();
       }
 
       const cachedClaims = await this.getCachedClaims<T>();
@@ -142,7 +151,7 @@ export class ClaimsCache {
         return cachedClaims;
       }
 
-      return {} as T;
+      return emptyClaims<T>();
     }
   }
 

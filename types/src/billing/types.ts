@@ -965,6 +965,13 @@ export interface ResolvedLineItem {
   /** Unit price excl. VAT, in the smallest currency unit (cents) */
   unitAmount: number;
   quantity: number;
+  /**
+   * Automatic tax only: Stripe tax code of this line (`price_data.product_data.tax_code`),
+   * e.g. `txcd_92010001` for a shipping line sent as an order line. Omit to use the
+   * account's default product tax code.
+   * @since 0.2.3
+   */
+  taxCode?: string;
 }
 
 /**
@@ -1002,6 +1009,15 @@ export interface ResolvedOrderSession {
   expiresAt?: number;
   /** Footer printed on the post-payment invoice (e.g. a legal mention). Needs `invoiceCreation`. */
   invoiceFooter?: string;
+  /**
+   * Existing Stripe Customer ID (`cus_...`) the session is created for. Its tax IDs and
+   * address then drive Stripe Tax and the invoice. Replaces `customer_email` and
+   * `customerCreation` (Stripe only applies those when it creates a Customer). Checkout
+   * updates the Customer from the session: address under automatic tax, shipping when
+   * shipping is collected, name when tax ID collection is enabled (Stripe requirement).
+   * @since 0.2.3
+   */
+  customerId?: string;
 }
 
 /**
@@ -1105,6 +1121,50 @@ export interface OrderHookContext {
    * Stripe event ID. Delivery is at-least-once: the same event can reach a hook
    * again (retry after a failed or unrecorded run). Key side effects on
    * `orderId` (or `eventId`) so a replay is a no-op.
+   */
+  eventId: string;
+}
+
+/**
+ * Provider-neutral snapshot of a Stripe customer tax ID (`customer.tax_id.updated`).
+ *
+ * @version 0.2.0
+ * @since 0.2.3
+ * @author AMBROISE PARK Consulting
+ */
+export interface TaxIdSnapshot {
+  /** Stripe TaxId ID (`txi_...`) */
+  id: string;
+  /** Stripe Customer ID (`cus_...`) owning the tax ID, null when not owned by a Customer */
+  customerId: string | null;
+  /** Stripe tax ID type, e.g. `eu_vat` */
+  type: string;
+  /** Tax ID value, e.g. `DE123456789` */
+  value: string;
+  /** ISO 3166-1 alpha-2 country of the tax ID */
+  country: string | null;
+  /** Government verification (null when Stripe does not verify this type) */
+  verification: {
+    /** 'pending' | 'verified' | 'unverified' | 'unavailable' */
+    status: 'pending' | 'verified' | 'unverified' | 'unavailable';
+    verifiedName: string | null;
+    verifiedAddress: string | null;
+  } | null;
+}
+
+/**
+ * Context passed to `onTaxIdUpdated`.
+ *
+ * @version 0.2.0
+ * @since 0.2.3
+ * @author AMBROISE PARK Consulting
+ */
+export interface TaxIdHookContext {
+  /** Back config key of the StripeOrder item whose hook runs */
+  billingConfigKey: string;
+  /**
+   * Stripe event ID. Delivery is at-least-once: key side effects on `taxId.id` +
+   * `verification.status` (or `eventId`) so a replay is a no-op.
    */
   eventId: string;
 }
@@ -1292,6 +1352,19 @@ export type StripeOrderBackItem = Extract<
     onOrderExpired?: (
       session: CheckoutSessionSnapshot,
       ctx: OrderHookContext
+    ) => Promise<void>;
+    /**
+     * Stripe event `customer.tax_id.updated` (e.g. government verification finished:
+     * `taxId.verification.status` became `verified` / `unverified` / `unavailable`).
+     * Not tied to an order: it runs once per event for every StripeOrder item that
+     * defines it (one function shared by several items runs once). Errors propagate:
+     * the webhook answers non-2xx and Stripe retries. Subscribe the webhook endpoint
+     * to `customer.tax_id.updated`.
+     * @since 0.2.3
+     */
+    onTaxIdUpdated?: (
+      taxId: TaxIdSnapshot,
+      ctx: TaxIdHookContext
     ) => Promise<void>;
   };
 

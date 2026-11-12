@@ -47,7 +47,7 @@ export interface EmailTemplate<
  * Registry of named email templates.
  * Each key is a template ID used in send requests.
  */
-export type EmailTemplateRegistry = Record<string, EmailTemplate<any>>;
+export type EmailTemplateRegistry = Record<string, EmailTemplate<any>>; // why: heterogeneous registry; EmailTemplate<unknown> rejects typed templates (TData is contravariant in subject/html)
 
 // =============================================================================
 // Provider Types

@@ -29,6 +29,7 @@ import { useState, useEffect, useRef } from 'react';
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
 export interface UseDebounceOptions<T = any> {
   /**
    * Debounce delay in milliseconds

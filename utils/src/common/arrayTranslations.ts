@@ -140,6 +140,7 @@ export function translateObjectArray<
       return null;
     }
 
+    // why: generic T is built key-by-key from `keys`; TS cannot type incremental construction of T
     const obj = {} as T;
     for (const key of keys) {
       const translationKey = `${keyPrefix}.${index}.${String(key)}`;

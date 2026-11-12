@@ -1,0 +1,55 @@
+{
+  "title": "Informacje prawne",
+  "lastUpdated": "Ostatnia aktualizacja",
+  "publisher": {
+    "title": "1. Informacje o wydawcy",
+    "name": "Nazwa wydawcy",
+    "type": "Rodzaj",
+    "types": {
+      "company": "Spółka",
+      "individual": "Osoba fizyczna"
+    },
+    "legalStatus": "Forma prawna",
+    "shareCapital": "Kapitał zakładowy"
+  },
+  "registration": {
+    "title": "2. Dane rejestrowe",
+    "number": "Numer rejestracyjny / SIRET",
+    "vat": "Numer VAT"
+  },
+  "office": {
+    "title": "3. Siedziba",
+    "address": "Adres"
+  },
+  "contact": {
+    "title": "4. Dane kontaktowe",
+    "email": "E-mail",
+    "phone": "Telefon"
+  },
+  "director": {
+    "title": "5. Redaktor naczelny",
+    "name": "Imię i nazwisko",
+    "role": "Stanowisko"
+  },
+  "hosting": {
+    "title": "6. Dostawca hostingu",
+    "provider": "Dostawca",
+    "address": "Adres",
+    "contact": "Kontakt"
+  },
+  "intellectualProperty": {
+    "title": "7. Własność intelektualna",
+    "content": "Wszelkie treści zamieszczone na tej stronie internetowej, w tym między innymi teksty, grafiki, logotypy, obrazy, nagrania dźwiękowe, materiały do pobrania w formie cyfrowej, zbiory danych i oprogramowanie, stanowią własność {{publisherName}} lub jego dostawców treści i są chronione międzynarodowymi przepisami prawa autorskiego.",
+    "unauthorized": "Nieuprawnione wykorzystanie jakichkolwiek treści z tej strony internetowej może naruszać prawa autorskie, prawa do znaków towarowych i inne przepisy prawa."
+  },
+  "personalData": {
+    "title": "8. Dane osobowe",
+    "content": "Informacje o tym, w jaki sposób gromadzimy, wykorzystujemy i chronimy Państwa dane osobowe, znajdą Państwo w naszej ",
+    "privacyPolicy": "Polityce prywatności"
+  },
+  "cookies": {
+    "title": "9. Pliki cookie",
+    "content": "Ta strona internetowa korzysta z plików cookie. Szczegółowe informacje o plikach cookie i sposobie ich wykorzystania znajdą Państwo w naszej ",
+    "privacyPolicy": "Polityce prywatności"
+  }
+}

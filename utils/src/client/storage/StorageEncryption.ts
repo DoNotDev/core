@@ -91,6 +91,7 @@ async function loadKeyFromIdb(): Promise<CryptoKey | null> {
     return new Promise((resolve, reject) => {
       const tx = db.transaction(KEY_STORE_NAME, 'readonly');
       const req = tx.objectStore(KEY_STORE_NAME).get(KEY_RECORD_ID);
+      // why: IDBRequest.result is untyped (`any`); this store only holds the CryptoKey written by storeKeyInIdb
       req.onsuccess = () => resolve((req.result as CryptoKey) ?? null);
       req.onerror = () => reject(req.error);
     });

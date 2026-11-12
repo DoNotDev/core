@@ -46,6 +46,7 @@
  * maybeTranslate(t, "products.missing.key") // → "products.missing.key" (debug!)
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
 export function maybeTranslate(t: any, value?: string): string {
   if (!value) return '';
 

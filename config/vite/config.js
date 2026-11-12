@@ -89,14 +89,21 @@ export function defineViteConfig(userOptions = {}) {
       // Extract SEO config: merge appConfig.seo with appConfig.app.name for siteName
       // baseUrl comes from VITE_APP_URL env var (discovered later in SEO plugin)
       const extractedSEO =
-        appConfig?.seo && typeof appConfig.seo !== 'boolean'
+        appConfig?.seo === false
+      ? { disabled: true } // private app: no robots.txt, sitemap, llms.txt
+      : appConfig?.seo && typeof appConfig.seo !== 'boolean'
           ? {
               ...appConfig.seo,
               // Use appConfig.app.name as siteName if not explicitly set in seo
               siteName: appConfig.seo.siteName || appConfig.app?.name,
+              // llms.txt summary
+              siteDescription: appConfig.app?.description,
             }
           : appConfig?.app?.name
-            ? { siteName: appConfig.app.name }
+            ? {
+                siteName: appConfig.app.name,
+                siteDescription: appConfig.app.description,
+              }
             : undefined;
 
       // Features and SEO come from appConfig only - cannot be overridden in vite.config.ts

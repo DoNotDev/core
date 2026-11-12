@@ -29,7 +29,10 @@
     "replySubject": "Re: 문의사항",
     "markResponded": "응답 완료로 표시",
     "selectOptions": "옵션 선택...",
-    "use": "이 주소 사용"
+    "use": "이 주소 사용",
+    "edit": "편집",
+    "refresh": "새로고침",
+    "open": "열기"
   },
   "address": {
     "placeholder": "주소 입력...",
@@ -258,7 +261,9 @@
     "networkError": "네트워크 오류가 발생했습니다",
     "unauthorized": "권한이 없는 액세스",
     "forbidden": "액세스가 금지되었습니다",
-    "serverError": "서버 오류가 발생했습니다"
+    "serverError": "서버 오류가 발생했습니다",
+    "bulkPartialError_one": "{{count}}개 행을 저장하지 못했습니다",
+    "bulkPartialError_other": "{{count}}개 행을 저장하지 못했습니다"
   },
   "form": {
     "submit": "제출",
@@ -272,7 +277,9 @@
     "uploading": "업로드 중 {{progress}}%...",
     "processing": "처리 중...",
     "validating": "검증 중...",
-    "saving": "저장 중..."
+    "saving": "저장 중...",
+    "saved": "저장됨",
+    "error": "오류 — 다시 시도하세요"
   },
   "gdprConsent": {
     "consent": "나는",
@@ -366,5 +373,35 @@
   },
   "recommendations": {
     "title": "이런 것도 좋아하실 수 있어요"
+  },
+  "addNew": "추가",
+  "delete": {
+    "title": "항목 삭제",
+    "confirm": "이 항목을 삭제하시겠습니까?",
+    "loading": "삭제 중...",
+    "titleSelected_one": "{{count}}개 항목 삭제",
+    "titleSelected_other": "{{count}}개 항목 삭제",
+    "confirmSelected_one": "선택한 {{count}}개 항목을 삭제할까요? 되돌릴 수 없습니다.",
+    "confirmSelected_other": "선택한 {{count}}개 항목을 삭제할까요? 되돌릴 수 없습니다."
+  },
+  "errors": {
+    "notFound": "{{entity}}을(를) 찾을 수 없습니다",
+    "fetchFailed": "{{entity}}을(를) 불러오지 못했습니다"
+  },
+  "emptyState": {
+    "title": "결과 없음",
+    "description": "아직 표시할 내용이 없습니다."
+  },
+  "bulkEdit": {
+    "pending_one": "저장되지 않은 변경 {{count}}개",
+    "pending_other": "저장되지 않은 변경 {{count}}개",
+    "discard": "변경 취소",
+    "selected": "{{count}}개 선택됨",
+    "field": "필드",
+    "value": "값",
+    "apply": "선택 항목에 적용",
+    "deleteSelected": "선택 항목 삭제 ({{count}})",
+    "failed_one": "{{count}}개 행이 저장되지 않았습니다. 목록에 남아 있으니 다시 시도하세요",
+    "failed_other": "{{count}}개 행이 저장되지 않았습니다. 목록에 남아 있으니 다시 시도하세요"
   }
 }

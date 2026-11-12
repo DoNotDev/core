@@ -22,7 +22,12 @@ export class NextPWAHandler extends BaseNextHandler {
   getHandlerDefaults() {
     return {
       enabled: false,
-      manifestPath: 'public/manifest.json',
+      // Discovery dump (assets found, derived manifest). Must NOT be the web app
+      // manifest path: writing it there replaced /manifest.json with this dump,
+      // which the next discovery then read back in and nested once per build.
+      manifestPath: 'public/pwa-manifest.json',
+      // Web app manifest linked by the root layout (<link rel="manifest">)
+      webManifestPath: 'public/manifest.json',
       serviceWorkerPath: 'public/sw.js',
       workboxPath: 'public/workbox-*.js',
       generateServiceWorker: true,
@@ -92,17 +97,20 @@ export class NextPWAHandler extends BaseNextHandler {
   // === FILE GENERATION ===
 
   async generateSpecificFiles(pwaData) {
+    // The web app manifest is written whether or not PWA is enabled: the root
+    // layout always links /manifest.json, and without this the app ships the
+    // framework placeholder ("DoNotDev App") copied by AssetDiscovery.
+    if (this.options.generateManifest) {
+      await this.generatePWAManifest(pwaData);
+    }
+
     if (!this.options.enabled) {
-      this.logger.debug('PWA disabled, skipping generation');
+      this.logger.debug('PWA disabled, skipping service worker generation');
       return;
     }
 
     // Asset generation now handled by AssetDiscovery._generateMissingAssets()
     // Called automatically during discovery process
-
-    if (this.options.generateManifest) {
-      await this.generatePWAManifest(pwaData);
-    }
 
     if (this.options.generateServiceWorker) {
       await this.generateServiceWorker(pwaData);
@@ -115,9 +123,9 @@ export class NextPWAHandler extends BaseNextHandler {
   async generatePWAManifest(pwaData) {
     const manifestContent = this.discovery.generateManifestContent(pwaData);
     this.writeGeneratedFile(
-      this.options.manifestPath,
+      this.options.webManifestPath,
       manifestContent,
-      'PWA manifest'
+      'web app manifest'
     );
   }
 

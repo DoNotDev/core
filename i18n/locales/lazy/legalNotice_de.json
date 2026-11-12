@@ -1,0 +1,55 @@
+{
+  "title": "Impressum",
+  "lastUpdated": "Zuletzt aktualisiert",
+  "publisher": {
+    "title": "1. Angaben zum Herausgeber",
+    "name": "Name des Herausgebers",
+    "type": "Art",
+    "types": {
+      "company": "Unternehmen",
+      "individual": "Einzelperson"
+    },
+    "legalStatus": "Rechtsform",
+    "shareCapital": "Stammkapital"
+  },
+  "registration": {
+    "title": "2. Registrierungsangaben",
+    "number": "Registrierungsnummer / SIRET",
+    "vat": "Umsatzsteuer-Identifikationsnummer"
+  },
+  "office": {
+    "title": "3. Sitz der Gesellschaft",
+    "address": "Adresse"
+  },
+  "contact": {
+    "title": "4. Kontaktinformationen",
+    "email": "E-Mail",
+    "phone": "Telefon"
+  },
+  "director": {
+    "title": "5. Verantwortlicher für die Veröffentlichung",
+    "name": "Name",
+    "role": "Funktion"
+  },
+  "hosting": {
+    "title": "6. Hosting-Anbieter",
+    "provider": "Anbieter",
+    "address": "Adresse",
+    "contact": "Kontakt"
+  },
+  "intellectualProperty": {
+    "title": "7. Geistiges Eigentum",
+    "content": "Sämtliche Inhalte dieser Website, einschließlich, aber nicht beschränkt auf Texte, Grafiken, Logos, Bilder, Audioclips, digitale Downloads, Datensammlungen und Software, sind Eigentum von {{publisherName}} oder seiner Inhaltslieferanten und durch internationale Urheberrechtsgesetze geschützt.",
+    "unauthorized": "Die unbefugte Nutzung von Inhalten dieser Website kann gegen Urheberrechts-, Markenrechts- und andere Gesetze verstoßen."
+  },
+  "personalData": {
+    "title": "8. Personenbezogene Daten",
+    "content": "Informationen darüber, wie wir Ihre personenbezogenen Daten erheben, verwenden und schützen, finden Sie in unserer ",
+    "privacyPolicy": "Datenschutzerklärung"
+  },
+  "cookies": {
+    "title": "9. Cookies",
+    "content": "Diese Website verwendet Cookies. Ausführliche Informationen zu Cookies und deren Verwendung finden Sie in unserer ",
+    "privacyPolicy": "Datenschutzerklärung"
+  }
+}

@@ -20,7 +20,6 @@ import type {
   FaviconConfig,
   FeaturesConfig,
   Platform,
-  DndevFrameworkConfig,
   ThemeMode,
   LayoutPreset,
 } from '@donotdev/types';
@@ -78,11 +77,12 @@ const DEFAULT_FAVICON_BASE: Omit<FaviconConfig, 'appName'> = {
  * Priority: target < ...sources (later sources override earlier ones)
  * Merges nested plain objects, preserves arrays/primitives
  */
-function simpleMerge<T extends Record<string, any>>(
+function simpleMerge<T extends object>(
   target: T,
   ...sources: Array<Partial<T>>
 ): T {
-  const result = { ...target } as Record<string, any>;
+  // why: index by string key while merging; T (an interface) has no index signature
+  const result = { ...target } as Record<string, unknown>;
 
   for (const source of sources) {
     if (!source) continue;
@@ -109,6 +109,7 @@ function simpleMerge<T extends Record<string, any>>(
     }
   }
 
+  // why: result is built key by key from T and Partial<T> sources; TS cannot track that
   return result as T;
 }
 
@@ -225,7 +226,7 @@ export function AppConfigProvider({
     auth: {
       ...DEFAULT_AUTH,
       ...config.auth,
-    } as AuthConfig,
+    },
 
     // SEO - false to disable, otherwise merge
     seo:
@@ -256,10 +257,9 @@ export function AppConfigProvider({
   };
 
   // Read all configuration sources
-  const frameworkConfig = (globalThis as Record<string, any>)._DNDEV_CONFIG_ as
-    | DndevFrameworkConfig
-    | undefined;
+  const frameworkConfig = globalThis._DNDEV_CONFIG_;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: injects theme/locale keys AppConfig does not declare; keep-or-delete is an open owner decision (any-audit)
   const localStorageOverrides: any = {};
   if (isClient()) {
     // Theme
@@ -372,7 +372,8 @@ export function useAppConfig(
  */
 export function useAuthConfig(): AuthConfig {
   const config = useAppConfig();
-  // Provider guarantees auth is merged with defaults
+  // why: the provider merges defaults when auth is enabled. With AppConfig.auth = false the value is
+  // `false`, so every field reads undefined; route guards throw on that case (useRedirectGuard).
   return config.auth as AuthConfig;
 }
 

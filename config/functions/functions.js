@@ -87,7 +87,9 @@ export function createFunctionsConfig(options = {}) {
 
   // Add main field resolution for better ES module handling
   config.mainFields = ['module', 'main'];
-  config.conditions = ['import', 'module', 'node'];
+  // `react-server`: server code. `@donotdev/core` (".") resolves to its client-free
+  // server entry, as in Next's server layer (docs/architecture/INDEX.md, export conditions).
+  config.conditions = ['react-server', 'import', 'module', 'node'];
 
   // List of Node.js built-ins that must be externalized
   const nodeBuiltins = [

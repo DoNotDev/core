@@ -25,9 +25,10 @@ export function detectErrorSource(error: unknown): ErrorSource {
   if (
     error instanceof Error &&
     'source' in error &&
-    typeof (error as any).source === 'string'
+    typeof error.source === 'string'
   ) {
-    return (error as any).source as ErrorSource;
+    // why: legacy contract — any string `source` on an Error is trusted as an ErrorSource without validation
+    return error.source as ErrorSource;
   }
 
   // Check for Firebase Auth errors
@@ -35,8 +36,8 @@ export function detectErrorSource(error: unknown): ErrorSource {
     typeof error === 'object' &&
     error !== null &&
     'code' in error &&
-    typeof (error as any).code === 'string' &&
-    (error as any).code.startsWith('auth/')
+    typeof error.code === 'string' &&
+    error.code.startsWith('auth/')
   ) {
     return 'auth';
   }
@@ -46,8 +47,8 @@ export function detectErrorSource(error: unknown): ErrorSource {
     typeof error === 'object' &&
     error !== null &&
     'code' in error &&
-    typeof (error as any).code === 'string' &&
-    (error as any).code.startsWith('oauth/')
+    typeof error.code === 'string' &&
+    error.code.startsWith('oauth/')
   ) {
     return 'oauth';
   }
@@ -57,7 +58,7 @@ export function detectErrorSource(error: unknown): ErrorSource {
     typeof error === 'object' &&
     error !== null &&
     'code' in error &&
-    typeof (error as any).code === 'string' &&
+    typeof error.code === 'string' &&
     [
       'permission-denied',
       'unavailable',
@@ -67,7 +68,7 @@ export function detectErrorSource(error: unknown): ErrorSource {
       'invalid-argument',
       'failed-precondition',
       'resource-exhausted',
-    ].includes((error as any).code)
+    ].includes(error.code)
   ) {
     return 'firebase';
   }
@@ -77,9 +78,9 @@ export function detectErrorSource(error: unknown): ErrorSource {
     typeof error === 'object' &&
     error !== null &&
     'issues' in error &&
-    Array.isArray((error as any).issues) &&
+    Array.isArray(error.issues) &&
     'name' in error &&
-    (error as any).name === 'ValiError'
+    error.name === 'ValiError'
   ) {
     return 'validation';
   }

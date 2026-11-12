@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { SEOGenerator } from '../SEOGenerator.js';
+import { assertPublicBaseUrl, SEOGenerator } from '../SEOGenerator.js';
 
 // Mock PathResolver
 const mockPathExists = vi.fn(() => false);
@@ -402,6 +402,56 @@ describe('SEOGenerator', () => {
     });
   });
 
+  // --- Indexable routes (noindex / auth) ---
+
+  describe('getSitemapRoutes', () => {
+    it('excludes auth-only and seo.noindex routes, keeps dynamic routes with their collection', () => {
+      const routes = generator.getSitemapRoutes([
+        { path: '/', auth: false, meta: {} },
+        { path: '/panier', auth: false, meta: { seo: { noindex: true } } },
+        { path: '/dashboard', auth: { required: true }, meta: {} },
+        { path: '/produits/:slug', auth: false, meta: { entity: 'products' } },
+      ]);
+      expect(routes).toEqual([
+        { path: '/' },
+        { path: '/produits/:slug', collection: 'products' },
+      ]);
+    });
+
+    it('lists blog posts instead of the blog routes', () => {
+      const routes = generator.getSitemapRoutes(
+        [
+          { path: '/blog', auth: false, meta: {} },
+          { path: '/blog/:slug', auth: false, meta: { namespace: 'blog' } },
+        ],
+        [{ slug: 'hello', date: '2026-01-02' }]
+      );
+      expect(routes).toEqual([
+        { path: '/blog', priority: 0.7, lastModified: '2026-01-02' },
+        {
+          path: '/blog/hello',
+          priority: 0.6,
+          changeFrequency: 'monthly',
+          lastModified: '2026-01-02',
+        },
+      ]);
+    });
+  });
+
+  it('static sitemap excludes seo.noindex routes', async () => {
+    const write = vi.fn();
+    await generator.generateSitemap(
+      {
+        routes: [
+          { path: '/', auth: false },
+          { path: '/compte', auth: false, meta: { seo: { noindex: true } } },
+        ],
+      },
+      write
+    );
+    expect(write.mock.calls[0][1]).not.toContain('/compte');
+  });
+
   // --- robots.txt generation (full flow) ---
 
   describe('generateRobotsTxt', () => {
@@ -439,6 +489,14 @@ describe('SEOGenerator', () => {
       // /admin from route + /admin from common paths = should appear only once
       const adminCount = (content.match(/Disallow: \/admin\n/g) || []).length;
       expect(adminCount).toBe(1);
+    });
+
+    it('REGRESSION: never disallows /_next (assets Google needs to render)', async () => {
+      await generator.generateRobotsTxt({ routes: [] }, mockWriteFile);
+      const content = mockWriteFile.mock.calls[0][1];
+
+      expect(content).not.toContain('Disallow: /_next');
+      expect(content).not.toContain('Disallow: /static');
     });
   });
 
@@ -581,5 +639,31 @@ describe('SEOGenerator', () => {
       const content = gen.generateRobotsTxtContent({});
       expect(content).toContain('User-agent: GPTBot\nAllow: /');
     });
+  });
+});
+
+describe('assertPublicBaseUrl', () => {
+  it('accepts a public URL', () => {
+    expect(() =>
+      assertPublicBaseUrl('https://shop.example', 'NEXT_PUBLIC_APP_URL')
+    ).not.toThrow();
+  });
+
+  it.each([
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://0.0.0.0',
+    'http://[::1]:3000',
+    'http://shop.localhost',
+  ])('rejects the local URL %s', (url) => {
+    expect(() => assertPublicBaseUrl(url, 'NEXT_PUBLIC_APP_URL')).toThrow(
+      /NEXT_PUBLIC_APP_URL/
+    );
+  });
+
+  it('rejects a relative URL', () => {
+    expect(() => assertPublicBaseUrl('shop.example', 'VITE_APP_URL')).toThrow(
+      /absolute/
+    );
   });
 });

@@ -83,11 +83,12 @@ export interface ICrudAdapter {
   ): Promise<{ id: string; data: Record<string, unknown> }>;
 
   /**
-   * Execute a bulk transactional operation.
-   * - All ops commit atomically. One transaction/writeBatch.
-   * - One round-trip where the transport supports it.
+   * Execute a bulk operation: many rows in as few round-trips as the backend allows.
+   * - Partial success: rows that are written stay written; rows that fail are
+   *   returned in `BulkResult.failed` with the reason (no rollback).
    * - Empty ops returns a zeroed BulkResult without wire contact.
-   * - Throws on partial failure; never leaves store in mixed state.
+   * - Throws only when the batch cannot be attempted at all (invalid input,
+   *   id collision, no session).
    *
    * @example
    * const r = await adapter.bulk('events', { inserts: [{ title: 'A' }], deletes: ['x'] });

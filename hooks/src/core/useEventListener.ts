@@ -109,6 +109,7 @@ export function useEventListener<
   // Stable event handler that uses ref
   // Empty deps intentional: reads from handlerRef which is always current, prevents listener re-registration
   const stableHandler = useCallback((event: Event) => {
+    // why: eventType is a runtime string, so TS cannot map it to the caller's TEvent
     handlerRef.current(event as TEvent);
   }, []);
 
@@ -116,17 +117,10 @@ export function useEventListener<
   useEffect(() => {
     if (!enabled || !target) return;
 
-    target.addEventListener(
-      eventType,
-      stableHandler as EventListenerOrEventListenerObject,
-      eventOptions
-    );
+    target.addEventListener(eventType, stableHandler, eventOptions);
 
     return () => {
-      target.removeEventListener(
-        eventType,
-        stableHandler as EventListenerOrEventListenerObject
-      );
+      target.removeEventListener(eventType, stableHandler);
     };
   }, [eventType, stableHandler, enabled, target, eventOptions]);
 

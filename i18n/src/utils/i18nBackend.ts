@@ -15,10 +15,14 @@
  * @author AMBROISE PARK Consulting
  */
 
-import { getTranslationContent, getTranslationLoaders } from './config';
+import {
+  getTranslationContent,
+  getTranslationLoaders,
+  unwrapTranslationModule,
+} from './config';
 
 interface ReadCallback {
-  (error: Error | null, data: any): void;
+  (error: Error | null, data: unknown): void;
 }
 
 /**
@@ -31,7 +35,7 @@ interface ReadCallback {
 export class I18nBackend {
   type: 'backend' = 'backend';
 
-  private loading = new Map<string, Promise<any>>();
+  private loading = new Map<string, Promise<unknown>>();
   private errors = new Map<string, { error: Error; ts: number }>();
 
   /** Required by i18next backend protocol — called during instance.init() */
@@ -77,8 +81,8 @@ export class I18nBackend {
     if (!loader || typeof loader !== 'function') return callback(null, {});
 
     const promise = loader()
-      .then((m: any) => {
-        const data = m.default || m;
+      .then((m: unknown) => {
+        const data = unwrapTranslationModule(m);
         this.loading.delete(key);
         callback(null, data);
         return data;

@@ -797,7 +797,17 @@ export interface EntityField<T extends string = FieldType> {
   /** Validation rules for this field. For select/multiselect/radio fields, include `options` array here. */
   validation?: ValidationRules<T>;
 
-  /** Whether the field is internationalized */
+  /**
+   * Translated field (types: text, textarea, richtext, field-array).
+   * The field keeps the default language; the other languages live in the companion
+   * field `<name>I18n` (`{ en: '…', de: '…' }`, Supabase column `<name>_i18n jsonb`).
+   * `useCrudDoc`, `useCrudList` and `useCrudCardList` return the current language,
+   * falling back to the default-language value when a translation is missing or empty.
+   * Edit forms read with `translate: false` so they never save a translation as the
+   * default-language value.
+   *
+   * @since 0.2.3
+   */
   i18n?: boolean;
 
   /** Display label for the field */
@@ -922,6 +932,15 @@ export type EntityRowFromFields<F extends Record<string, EntityField>> = {
   [K in keyof F]: F[K] extends EntityField<infer FT>
     ? FT extends keyof FieldTypeToValue
       ? FieldTypeToValue[FT]
+      : unknown
+    : unknown;
+} & {
+  // Companion of each translated field (`i18n: true`): value per language code
+  [K in keyof F as F[K] extends { i18n: true }
+    ? `${K & string}I18n`
+    : never]?: F[K] extends EntityField<infer FT>
+    ? FT extends keyof FieldTypeToValue
+      ? Partial<Record<string, FieldTypeToValue[FT]>> | null
       : unknown
     : unknown;
 } & Record<string, unknown>;
@@ -1080,6 +1099,62 @@ export interface ListCardLayout {
   content?: string[];
   /** Fields rendered in the card footer */
   footer?: string[];
+}
+
+/**
+ * schema.org `ItemAvailability` member (https://schema.org/ItemAvailability).
+ *
+ * @version 0.1.0
+ * @since 0.2.3
+ */
+export type SchemaOrgAvailability =
+  | 'BackOrder'
+  | 'Discontinued'
+  | 'InStock'
+  | 'InStoreOnly'
+  | 'LimitedAvailability'
+  | 'MadeToOrder'
+  | 'OnlineOnly'
+  | 'OutOfStock'
+  | 'PreOrder'
+  | 'PreSale'
+  | 'Reserved'
+  | 'SoldOut';
+
+/**
+ * Entity-level SEO options (`deriveEntitySeo`, `<Seo entity data>`, llms.txt).
+ * By default the title and description come from the card fields (`listCardFields`),
+ * formatted like the card shows them; these options override that.
+ *
+ * @version 0.1.0
+ * @since 0.2.3
+ */
+export interface EntitySeoConfig {
+  /**
+   * Record title (no site name). Return `null` to have no title.
+   * Replaces the `listCardFields.title` text.
+   */
+  title?: (
+    item: Record<string, unknown>,
+    t: (key: string, options?: Record<string, unknown>) => string
+  ) => string | null;
+  /**
+   * Plain-text description (truncated to 160 characters). Return `null` to have none.
+   * Replaces the long-text / card subtitle and content text.
+   */
+  description?: (
+    item: Record<string, unknown>,
+    t: (key: string, options?: Record<string, unknown>) => string
+  ) => string | null;
+  /**
+   * schema.org availability of the Product offer, by record `status`. Merged over the
+   * base mapping `{ available: 'InStock' }`. A status without a mapping emits no
+   * `availability`. Read from the record the page renders: needs a guest-visible `status`
+   * field (the base `status` is `visibility: 'admin'`, so crawlers get none without it).
+   *
+   * @example `{ promoted: 'InStock', reserved: 'SoldOut', signed: 'SoldOut' }`
+   */
+  availability?: Readonly<Record<string, SchemaOrgAvailability>>;
 }
 
 /**
@@ -1260,6 +1335,22 @@ export interface BusinessEntity<
    * ```
    */
   defaultSort?: { field: string; direction?: 'asc' | 'desc' };
+
+  /**
+   * SEO overrides and schema.org availability for this entity's records.
+   * Without it, the title and description are the card's text (`listCardFields`).
+   *
+   * @example
+   * ```typescript
+   * seo: {
+   *   title: (item, t) => t('seo.title', { district: item.district_code }),
+   *   availability: { promoted: 'InStock', reserved: 'SoldOut', signed: 'SoldOut' },
+   * }
+   * ```
+   *
+   * @since 0.2.3
+   */
+  seo?: EntitySeoConfig;
 }
 
 /**
@@ -1347,6 +1438,12 @@ export interface SchemaMetadata {
    * Used by backend CRUD functions for deduplication
    */
   uniqueKeys?: UniqueKeyDefinition[];
+
+  /**
+   * SOC2 security configuration copied from the entity definition.
+   * CrudService reads `security.piiFields` from here to encrypt on write and decrypt on read.
+   */
+  security?: SecurityEntityConfig;
 
   /** Custom validation function (for function validation) */
   customValidate?: (

@@ -587,14 +587,17 @@ export interface VirtualModules {
  */
 export interface GeneratedPaths {
   next: {
-    middleware: string;
+    /** Generated Next 16 proxy (auth redirects): `src/proxy.next.ts` */
+    proxy: string;
     routeManifest: string;
     assetManifest: string;
     utilities: string;
     /** Base directory for generated app/** files (Site template) */
     appPages: string;
-    /** Layout file location - user-owned, never touched by generation */
+    /** Generated root layout with one language (2+: `src/app/[lang]/layout.next.tsx`) */
     appLayout: string;
+    /** The app's HTML document (user-owned): `src/app/AppDocument.tsx` */
+    appDocument: string;
   };
   manifests: {
     route: string;
@@ -881,7 +884,11 @@ export interface NextConfigOptions {
     generateAppPages?: boolean;
     /** Routing mode for Next.js */
     routingMode?: 'pages' | 'app';
-    /** Generate authentication middleware */
+    /**
+     * Generate `src/proxy.next.ts`: server-side redirects for pages whose PageMeta sets
+     * `auth`, when the auth session lives in cookies (Supabase `createBrowserClient`).
+     * @default true
+     */
     generateMiddleware?: boolean;
   };
   /** Internationalization configuration (uses DRY I18nOptions) */

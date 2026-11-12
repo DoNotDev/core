@@ -16,13 +16,20 @@
  */
 
 import i18next from 'i18next';
-import type { i18n } from 'i18next';
+import type { Callback, i18n, Resource } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import { createSingleton, handleError } from '@donotdev/utils';
 
-import { getI18nConfig, getTranslationLoaders } from './utils/config';
-import { getInitialLanguage } from './utils/initialLanguage';
+import {
+  getI18nConfig,
+  getTranslationLoaders,
+  unwrapTranslationModule,
+} from './utils/config';
+import {
+  applyFirstVisitLanguage,
+  getInitialLanguage,
+} from './utils/initialLanguage';
 import { I18nBackend } from './utils/i18nBackend';
 
 // Global declaration moved to global.d.ts to avoid duplicate declaration errors
@@ -36,7 +43,7 @@ import { I18nBackend } from './utils/i18nBackend';
 const getI18nInstance = createSingleton((): i18n => {
   // Check if instance already exists globally (HMR safety)
   if (typeof globalThis !== 'undefined') {
-    const existing = (globalThis as any).__DNDEV_I18N_INSTANCE__;
+    const existing = globalThis.__DNDEV_I18N_INSTANCE__;
     if (existing) {
       return existing;
     }
@@ -50,7 +57,7 @@ const getI18nInstance = createSingleton((): i18n => {
   const backend = new I18nBackend();
 
   // Prepare resources
-  const resources: Record<string, Record<string, any>> = {};
+  const resources: Resource = {};
   config.languages.forEach((lang: string) => {
     resources[lang] = {};
   });
@@ -58,22 +65,24 @@ const getI18nInstance = createSingleton((): i18n => {
   // Add inline content (eager namespaces — all namespaces in dev mode)
   const translationContent = config.content;
   if (translationContent) {
-    Object.entries(translationContent).forEach(
-      ([namespace, langs]: [string, any]) => {
-        Object.entries(langs).forEach(([lang, content]: [string, any]) => {
-          if (!resources[lang]) resources[lang] = {};
-          resources[lang][namespace] = content;
-        });
-      }
-    );
+    Object.entries(translationContent).forEach(([namespace, langs]) => {
+      Object.entries(langs).forEach(([lang, content]) => {
+        if (!resources[lang]) resources[lang] = {};
+        resources[lang][namespace] = content;
+      });
+    });
   }
 
   // Configure plugins — Backend MUST be registered via .use() before init
   instance.use(backend);
   instance.use(initReactI18next);
 
-  // Initialize with all resources synchronously, in the visitor's language from the
-  // first frame (cookie > persisted > browser > fallback; fallback on the server).
+  // First visit to an unprefixed URL: move to the visitor's language (cookie, then
+  // browser languages) before anything reads the URL. Then start in the URL's language.
+  applyFirstVisitLanguage(config.languages, config.fallback);
+
+  // Initialize with all resources synchronously, in the URL's language from the
+  // first frame (fallback on the server).
   instance.init({
     lng: getInitialLanguage(config.languages, config.fallback),
     fallbackLng: config.fallback,
@@ -97,15 +106,21 @@ const getI18nInstance = createSingleton((): i18n => {
   // namespace translations BEFORE changeLanguage, they're in resources when
   // React re-renders — no async gap, instant language switch.
   const originalChangeLanguage = instance.changeLanguage.bind(instance);
-  instance.changeLanguage = async (lng: string, ...args: any[]) => {
+  instance.changeLanguage = async (lng: string, callback?: Callback) => {
     const loaders = getTranslationLoaders();
     await Promise.all(
       Object.entries(loaders).map(([ns, langs]) => {
-        const loader = (langs as Record<string, () => Promise<any>>)?.[lng];
+        const loader = langs[lng];
         if (loader && typeof loader === 'function') {
           return loader()
-            .then((m: any) =>
-              instance.addResourceBundle(lng, ns, m.default || m, true, true)
+            .then((m: unknown) =>
+              instance.addResourceBundle(
+                lng,
+                ns,
+                unwrapTranslationModule(m),
+                true,
+                true
+              )
             )
             .catch((err: unknown) => {
               handleError(err, {
@@ -118,7 +133,7 @@ const getI18nInstance = createSingleton((): i18n => {
         return Promise.resolve();
       })
     );
-    return originalChangeLanguage(lng, ...args);
+    return originalChangeLanguage(lng, callback);
   };
 
   // Language preference restoration is handled by the language zustand store
@@ -134,7 +149,7 @@ const getI18nInstance = createSingleton((): i18n => {
 
   // Store globally for HMR safety
   if (typeof globalThis !== 'undefined') {
-    (globalThis as any).__DNDEV_I18N_INSTANCE__ = instance;
+    globalThis.__DNDEV_I18N_INSTANCE__ = instance;
   }
 
   return instance;

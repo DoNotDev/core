@@ -22,8 +22,18 @@ export * from './components';
 
 // Utils
 export { useLanguageSelector } from './utils/languageSelector';
+export {
+  LanguageNavigationProvider,
+  useLanguageNavigate,
+} from './utils/languageNavigation';
+export type { LanguageNavigate } from './utils/languageNavigation';
 export { getSupportedLanguages } from './utils/languages';
-export { getRequestLanguage } from './utils/initialLanguage';
+export {
+  applyFirstVisitLanguage,
+  getLanguageRouting,
+  getRequestLanguage,
+  getUrlLanguage,
+} from './utils/initialLanguage';
 
 // Flag component and utilities (bundled from assets)
 export { Flag, getFlagCodes, hasFlag } from './flags';

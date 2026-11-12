@@ -45,6 +45,7 @@ export interface ErrorHandlerConfig {
   // Optional customization functions
   extractErrorCode?: (error: unknown) => string | undefined;
   extractErrorMessage?: (error: unknown) => string | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: public config contract — tightening to `unknown` would break consumer implementations reading the result
   processMetadata?: (error: unknown) => Record<string, any>;
 }
 
@@ -84,8 +85,8 @@ export function createErrorHandler(
     let errorCode: string | undefined;
     if (config.extractErrorCode) {
       errorCode = config.extractErrorCode(error);
-    } else if ('code' in error && typeof (error as any).code === 'string') {
-      errorCode = (error as any).code;
+    } else if ('code' in error && typeof error.code === 'string') {
+      errorCode = error.code;
     }
 
     // Map to standard error code
@@ -95,6 +96,7 @@ export function createErrorHandler(
       config.errorCodeMapping &&
       errorCode in config.errorCodeMapping
     ) {
+      // why: `in` above proves the key exists; noUncheckedIndexedAccess cannot see it
       standardErrorCode = config.errorCodeMapping[errorCode] as ErrorCode;
     }
 
@@ -102,11 +104,8 @@ export function createErrorHandler(
     let message: string | undefined;
     if (config.extractErrorMessage) {
       message = config.extractErrorMessage(error);
-    } else if (
-      'message' in error &&
-      typeof (error as any).message === 'string'
-    ) {
-      message = (error as any).message;
+    } else if ('message' in error && typeof error.message === 'string') {
+      message = error.message;
     } else if (error instanceof Error) {
       message = error.message;
     }
@@ -126,7 +125,7 @@ export function createErrorHandler(
     }
 
     // Process metadata if available
-    let metadata: Record<string, any>;
+    let metadata: Record<string, unknown>;
     if (config.processMetadata) {
       metadata = config.processMetadata(error);
     } else {

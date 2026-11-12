@@ -304,6 +304,29 @@ describe('initialize', () => {
     expect(useLanguageStore.getState().currentLanguage).toBe('fr');
   });
 
+  it('keeps the URL language over a persisted earlier choice', async () => {
+    localStorage.setItem(
+      'dndev-language-store',
+      JSON.stringify({ state: { currentLanguage: 'fr' }, version: 0 })
+    );
+    useLanguageStore.setState({ currentLanguage: 'fr' });
+    const mockI18n = {
+      language: 'en',
+      changeLanguage: vi.fn().mockResolvedValue(undefined),
+      on: vi.fn(),
+      off: vi.fn(),
+    };
+
+    await useLanguageStore.getState().initialize({
+      i18n: mockI18n,
+      supportedLanguages: LANGUAGES,
+    });
+
+    expect(useLanguageStore.getState().currentLanguage).toBe('en');
+    expect(mockI18n.changeLanguage).not.toHaveBeenCalled();
+    localStorage.removeItem('dndev-language-store');
+  });
+
   it('subscribes to i18next languageChanged event', async () => {
     const mockI18n = {
       language: 'en',

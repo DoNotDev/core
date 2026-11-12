@@ -15,14 +15,27 @@
  * @author AMBROISE PARK Consulting
  */
 
+import type * as SentryReact from '@sentry/react';
+
 import { getPlatformEnvVar } from '../appConfig';
+
+/** Subset of the `@sentry/react` SDK kept after init. */
+type SentryClient = Pick<
+  typeof SentryReact,
+  'captureException' | 'captureMessage'
+>;
+
+/** Shape of the `globalThis.Sentry` SDK object used for cleanup. */
+interface SentryGlobal {
+  getClient(): { close(): Promise<boolean> } | undefined;
+}
 
 /**
  * Client-side Sentry integration
  * Uses @sentry/react for React error tracking
  */
 let sentryEnabled = false;
-let sentryClient: any = null;
+let sentryClient: SentryClient | null = null;
 
 /**
  * Initialize Sentry if configured
@@ -64,7 +77,7 @@ export async function initSentry(): Promise<boolean> {
           msg.includes('Loading chunk') || // network flake, not app bug
           msg.includes('ChunkLoadError') || // same
           msg.includes('tabs:outgoing') || // cross-tab messaging extension (Honey, etc.)
-          stack.some((f: any) =>
+          stack.some((f) =>
             /^(chrome|moz|safari)-extension:/.test(f.filename || '')
           )
         )
@@ -106,6 +119,7 @@ export async function initSentry(): Promise<boolean> {
  */
 export function captureError(
   error: Error,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   context?: Record<string, any>
 ): void {
   if (sentryEnabled && sentryClient) {
@@ -138,8 +152,8 @@ export function captureMessage(
  */
 export async function cleanupSentry(): Promise<void> {
   try {
-    // Use type assertion to satisfy TypeScript
-    const sentrySdk = (globalThis as any).Sentry;
+    // why: `globalThis.Sentry` is set at runtime by the Sentry SDK and is not declared on globalThis
+    const sentrySdk = (globalThis as { Sentry?: SentryGlobal }).Sentry;
     if (sentrySdk) {
       const client = sentrySdk.getClient();
       if (client) {

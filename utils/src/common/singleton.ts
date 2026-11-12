@@ -50,11 +50,15 @@ const GLOBAL_KEY = '__DNDEV_SINGLETONS__';
  */
 function getSingletonRegistry(): Map<string, unknown> {
   if (typeof globalThis !== 'undefined') {
-    const g = globalThis as Record<string, unknown>;
-    if (!g[GLOBAL_KEY]) {
-      g[GLOBAL_KEY] = new Map<string, unknown>();
+    // why: the registry slot is framework-private and not declared on globalThis
+    const g = globalThis as { [GLOBAL_KEY]?: Map<string, unknown> };
+    const existing = g[GLOBAL_KEY];
+    if (existing) {
+      return existing;
     }
-    return g[GLOBAL_KEY] as Map<string, unknown>;
+    const created = new Map<string, unknown>();
+    g[GLOBAL_KEY] = created;
+    return created;
   }
   // Fallback for environments without globalThis (none in practice)
   return new Map<string, unknown>();
@@ -102,6 +106,7 @@ export function getGlobalSingleton<T>(key: string, factory: () => T): T {
   if (!registry.has(key)) {
     registry.set(key, factory());
   }
+  // why: heterogeneous registry keyed by string; the same key always holds the factory's T
   return registry.get(key) as T;
 }
 
@@ -125,7 +130,9 @@ export function clearGlobalSingleton(key: string): void {
  * @returns Function that returns the singleton instance
  */
 export function createSingleton<T>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params so constructors/factories with concrete parameter types are assignable (parameter contravariance)
   ClassOrFactory: (new (...args: any[]) => T) | (() => T),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params so constructors/factories with concrete parameter types are assignable (parameter contravariance)
   ...args: any[]
 ): () => T {
   let instance: T | null = null;
@@ -147,6 +154,8 @@ export function createSingleton<T>(
     try {
       if (typeof ClassOrFactory === 'function' && ClassOrFactory.prototype) {
         // It's a class constructor
+        // why: TS cannot narrow a constructor|function union via a runtime `prototype` check
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: see the why: comment above
         instance = new (ClassOrFactory as new (...args: any[]) => T)(...args);
       } else {
         // It's a factory function
@@ -172,11 +181,14 @@ export function createSingleton<T>(
  * @author AMBROISE PARK Consulting
  */
 export function createSingletonWithParams<T>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params so constructors/factories with concrete parameter types are assignable (parameter contravariance)
   ClassOrFactory: (new (...args: any[]) => T) | ((...args: any[]) => T)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params so constructors/factories with concrete parameter types are assignable (parameter contravariance)
 ): (...args: any[]) => T {
   let instance: T | null = null;
   let isInitializing = false;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: `any[]` params so constructors/factories with concrete parameter types are assignable (parameter contravariance)
   return function getInstance(...args: any[]): T {
     if (instance !== null) {
       return instance;
@@ -193,9 +205,12 @@ export function createSingletonWithParams<T>(
     try {
       if (typeof ClassOrFactory === 'function' && ClassOrFactory.prototype) {
         // It's a class constructor
+        // why: TS cannot narrow a constructor|function union via a runtime `prototype` check
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: see the why: comment above
         instance = new (ClassOrFactory as new (...args: any[]) => T)(...args);
       } else {
         // It's a factory function
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: see the why: comment above
         instance = (ClassOrFactory as (...args: any[]) => T)(...args);
       }
 
@@ -271,8 +286,10 @@ export function createMethodProxy<T extends object>(
   getInstance: () => T,
   methods: (keyof T)[]
 ): T {
+  // why: Proxy target is an empty placeholder; every read is forwarded to the real instance
   return new Proxy({} as T, {
     get(target, prop) {
+      // why: Proxy traps receive `string | symbol`; membership is checked against `methods` at runtime
       if (methods.includes(prop as keyof T)) {
         const instance = getInstance();
         const method = instance[prop as keyof T];
@@ -300,7 +317,7 @@ export function createMethodProxy<T extends object>(
  * @author AMBROISE PARK Consulting
  */
 export class SingletonManager {
-  private static instances = new Map<string, any>();
+  private static instances = new Map<string, unknown>();
   private static initializing = new Set<string>();
   private static initialized = new Set<string>();
 
@@ -328,12 +345,14 @@ export class SingletonManager {
   ): Promise<T> {
     // Return existing instance if available
     if (this.instances.has(key)) {
-      return this.instances.get(key);
+      // why: heterogeneous registry keyed by string; caller's T is trusted per key
+      return this.instances.get(key) as T;
     }
 
     // Check if already initialized
     if (this.initialized.has(key)) {
-      return this.instances.get(key);
+      // why: heterogeneous registry keyed by string; caller's T is trusted per key
+      return this.instances.get(key) as T;
     }
 
     // Prevent circular dependencies

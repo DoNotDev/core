@@ -108,6 +108,7 @@ export function getActiveCookies(): CookieInfo[] {
   const cookies: CookieInfo[] = [...FRAMEWORK_COOKIES];
 
   // Add feature cookies if features are detected
+  // why: Object.keys widens keys of FEATURE_COOKIES to string
   (Object.keys(FEATURE_COOKIES) as FrameworkFeature[]).forEach((feature) => {
     if (isFeatureAvailable(feature)) {
       cookies.push(...FEATURE_COOKIES[feature]);
@@ -158,13 +159,13 @@ export function getCookieExamples(
   if (cookies.length === 0) return '';
 
   // Show cookie names grouped by provider
-  const byProvider = cookies.reduce(
+  const byProvider = cookies.reduce<Record<string, string[]>>(
     (acc, cookie) => {
       if (!acc[cookie.provider]) acc[cookie.provider] = [];
       acc[cookie.provider]!.push(cookie.name);
       return acc;
     },
-    {} as Record<string, string[]>
+    {}
   );
 
   return Object.entries(byProvider)

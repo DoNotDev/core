@@ -32,6 +32,7 @@ export const appConfig: AppConfig = {
     // loginPath: '/login',   // Optional: undefined = header providers
     profilePath: '/profile',
   },
+  // auth: false disables auth routes; pages must then declare no `auth` (see ui PAGES guideline)
 
   i18n: {
     defaultLanguage: 'en',

@@ -10,7 +10,7 @@
  * @author AMBROISE PARK Consulting
  */
 
-import type { TFunction } from 'i18next';
+import type { TFunction, TOptions } from 'i18next';
 import { createContext, createElement, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { useTranslation as useI18NextTranslation } from 'react-i18next';
@@ -25,11 +25,11 @@ const RequestLanguageContext = createContext<string | null>(null);
 
 /**
  * Provides the request language to `useTranslation` for the server render and the
- * client's hydration pass. Rendered by the Next providers with the language resolved
- * from the request (language cookie, Accept-Language); the same props reach the
- * client, so both passes translate identically.
+ * client's hydration pass. Rendered by the Next providers with the URL's language
+ * (prefix, else the default language); the server and the browser read the same
+ * URL, so both passes translate identically.
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.1.50
  * @author AMBROISE PARK Consulting
  */
@@ -69,6 +69,7 @@ export interface UseTranslationResult {
   /** Translation function with interpolation support */
   t: TFunction;
   /** i18next instance for advanced usage (null during the server render and hydration pass) */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   i18n: any;
   /**
    * Current language, available during the server render too: the request language
@@ -94,7 +95,7 @@ export interface UseTranslationResult {
  * request language (RequestLanguageProvider), from the inline `content` both sides load
  * synchronously. Both passes produce the same text, so the first paint is translated
  * and hydration matches. After hydration the live instance takes over; it starts in the
- * same language (language cookie, see getInitialLanguage).
+ * same language (the URL's, see getInitialLanguage).
  *
  * **Performance**: Stable references, minimal re-renders, efficient memoization.
  *
@@ -166,8 +167,8 @@ export function useTranslation(
   // Supports: t(key), t(key, options), t(key, defaultValue), t(key, defaultValue, options)
   const t = (
     key: string,
-    defaultValueOrOptions?: string | Record<string, any>,
-    options?: Record<string, any>
+    defaultValueOrOptions?: string | TOptions,
+    options?: TOptions
   ) => {
     // Normalize 3-arg signature to options object
     const opts =

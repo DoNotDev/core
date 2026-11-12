@@ -18,6 +18,7 @@ import {
   isBuildComplete,
 } from './discoveryOrchestrator.js';
 import { createHandlers, createHandlerConfigs } from './handlerFactory.js';
+import { migrateNextFiles } from './nextFiles.js';
 import { mergeOptions, normalizeOptions } from './options.js';
 import { discoverAppPackages } from '../utils/discoverAppPackages.js';
 import { createLogger } from '../utils/debugLog.js';
@@ -72,13 +73,20 @@ function defineNextConfig(userOptions = {}) {
     : undefined;
 
   const extractedSEO =
-    appConfig?.seo && typeof appConfig.seo !== 'boolean'
+    appConfig?.seo === false
+      ? { disabled: true } // private app: no robots.txt, sitemap, llms.txt
+      : appConfig?.seo && typeof appConfig.seo !== 'boolean'
       ? {
           ...appConfig.seo,
           siteName: appConfig.seo.siteName || appConfig.app?.name,
+          // llms.txt summary
+          siteDescription: appConfig.app?.description,
         }
       : appConfig?.app?.name
-        ? { siteName: appConfig.app.name }
+        ? {
+            siteName: appConfig.app.name,
+            siteDescription: appConfig.app.description,
+          }
         : undefined;
 
   // Extract app metadata for PWA (URL comes from env, not appConfig)
@@ -131,8 +139,7 @@ function defineNextConfig(userOptions = {}) {
   // CRITICAL: Resolve appRoot BEFORE creating handlers
   const { appRoot, appRootSet } = resolveAppRoot({ logger, debug });
   let assetsCopied = false;
-  // Routing mode resolved once (SSOT) — used both for the build log below and
-  // for the Pages-Router shadow-redirect gate inside the config function.
+  // Routing mode resolved once (SSOT) — build log, Next file marker and pageExtensions.
   const routingMode = routeOptions?.routingMode || 'app';
 
   // Framework-level logging (skip on Turbopack's second worker — marker already set)
@@ -171,12 +178,18 @@ function defineNextConfig(userOptions = {}) {
     // generated *PageClient wrappers render directly (server-rendered content in
     // the initial HTML). An app opts OUT of SSR (legacy client-only render) with
     // appConfig.ssr === false.
-    routeOptions: { ...routeOptions, ssr: appConfig?.ssr !== false },
+    routeOptions: {
+      ...routeOptions,
+      ssr: appConfig?.ssr !== false,
+      // Redirect targets of the generated proxy (same config the client AuthGuard reads)
+      auth: appConfig?.auth,
+    },
     themeOptions,
     i18nOptions,
     assetOptions,
     seoOptions,
-    pwaOptions,
+    // appConfig.app feeds the web app manifest (name, short_name, description)
+    pwaOptions: { ...pwaOptions, app: extractedApp },
     serverShimOptions,
     isDev,
     logger,
@@ -216,6 +229,14 @@ function defineNextConfig(userOptions = {}) {
     // runDiscoveries() handles its own guard via .dndev-build marker file
     // (works across Turbopack's separate worker processes).
     if (appRootSet) {
+      // Next files carry the marker before Next scans them (src/pages is never a route)
+      if (routingMode === 'app') {
+        migrateNextFiles({
+          pathResolver,
+          logger,
+          isCI: Boolean(process.env.CI || process.env.VERCEL),
+        });
+      }
       await runDiscoveries(handlers, logger);
     }
 
@@ -256,15 +277,6 @@ function defineNextConfig(userOptions = {}) {
     // Languages the app uses (already restricted by i18n.only) — drives font subsets
     const i18nLanguages = i18nDiscoveryData?.supportedLanguages || [];
 
-    // Extract discovered routes so redirects can shadow Next's legacy Pages
-    // Router paths (src/pages/<X>Page.tsx → /<X>Page) onto canonical app routes.
-    // Only in app-router mode: in 'pages' mode the framework's own output IS the
-    // pages router, so shadowing would redirect the real routes.
-    const routeDiscoveryData =
-      routingMode === 'app'
-        ? await handlers.routeHandler?.getDiscoveryData?.()
-        : null;
-
     // Build webpack and rewrites configs
     const webpackConfig = createWebpackConfig({
       originalWebpack,
@@ -292,7 +304,6 @@ function defineNextConfig(userOptions = {}) {
     const redirectsConfig = createRedirectsConfig({
       originalRedirects,
       seoRedirects: seoOptions?.redirects || [],
-      routes: routeDiscoveryData?.routes || [],
       logger,
     });
 
@@ -320,6 +331,7 @@ function defineNextConfig(userOptions = {}) {
       restNextConfig,
       discoveredPackages,
       reactCompiler,
+      routingMode,
 
       webpackConfig,
       rewritesConfig,

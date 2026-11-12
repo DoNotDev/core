@@ -37,6 +37,7 @@ export function getLocalStorageItem<T = string>(
     try {
       return JSON.parse(item);
     } catch {
+      // why: non-JSON raw string returned under the caller-chosen T (documented string fallback)
       return item as T;
     }
   } catch (error) {

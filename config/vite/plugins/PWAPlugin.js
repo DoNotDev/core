@@ -66,12 +66,7 @@ export function createVitePWAPlugin(options = {}) {
       const pwaData = await discovery.discoverPWAAssets();
       const icons = pwaData.assets
         .filter((asset) => asset.type === 'icon')
-        .map((icon) => ({
-          src: `/${icon.path}`,
-          sizes: `${icon.size.width}x${icon.size.height}`,
-          type: `image/${icon.format}`,
-          purpose: icon.purpose,
-        }));
+        .map((icon) => discovery.toManifestIcon(icon));
 
       return {
         name: app.name,

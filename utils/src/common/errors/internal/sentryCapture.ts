@@ -15,6 +15,19 @@ import type { ErrorSource } from '@donotdev/types';
 
 import type { DoNotDevError } from '../doNotDevError';
 
+/** Scope API used from `Sentry.withScope` (common to @sentry/react and @sentry/node). */
+interface SentryScopeLike {
+  setTag(key: string, value: string): void;
+  setExtra(key: string, value: unknown): void;
+  setUser(user: { id?: unknown; email?: unknown }): void;
+}
+
+/** Subset of the global Sentry SDK used here (common to @sentry/react and @sentry/node). */
+interface SentryGlobalLike {
+  withScope(callback: (scope: SentryScopeLike) => void): void;
+  captureException(error: unknown): void;
+}
+
 /**
  * Captures an error to Sentry with additional context
  * Works on both client (@sentry/react) and server (@sentry/node)
@@ -29,16 +42,18 @@ import type { DoNotDevError } from '../doNotDevError';
 export function captureErrorToSentry(
   error: DoNotDevError,
   source: ErrorSource,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: exported signature; narrowing it is a breaking change for importers (deferred to a major, any-audit 2026-11-11)
   context: Record<string, any> = {}
 ): void {
   // Check if Sentry is available (works for both browser AND Node Sentry)
-  const Sentry = (globalThis as any).Sentry;
+  // why: `globalThis.Sentry` is set at runtime by the Sentry SDK and is not declared on globalThis
+  const Sentry = (globalThis as { Sentry?: SentryGlobalLike }).Sentry;
   if (!Sentry) {
     return;
   }
 
   // Capture with additional context
-  Sentry.withScope((scope: any) => {
+  Sentry.withScope((scope) => {
     // Set error source as a tag for easy filtering
     scope.setTag('errorSource', source);
 

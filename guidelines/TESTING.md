@@ -174,8 +174,8 @@ service cloud.firestore {
 ## Running Tests
 
 ```bash
-bun test              # Run all tests once
-bun test:watch        # Watch mode
+bun run test          # Run all tests once
+bun run test:watch    # Watch mode
 bunx vitest --ui      # Visual UI
 ```
 

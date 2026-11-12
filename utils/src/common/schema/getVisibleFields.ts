@@ -37,7 +37,7 @@ import { hasRoleAccess } from '../roleHierarchy';
  */
 interface ValibotSchemaWithVisibility extends v.BaseSchema<
   unknown,
-  any,
+  unknown,
   v.BaseIssue<unknown>
 > {
   visibility?: Visibility;
@@ -51,7 +51,7 @@ function hasVisibility(schema: unknown): schema is ValibotSchemaWithVisibility {
     typeof schema === 'object' &&
     schema !== null &&
     'visibility' in schema &&
-    typeof (schema as any).visibility === 'string'
+    typeof schema.visibility === 'string'
   );
 }
 
@@ -62,7 +62,7 @@ function hasVisibility(schema: unknown): schema is ValibotSchemaWithVisibility {
  * @returns The visibility setting if found, otherwise undefined
  */
 function getFieldVisibility(
-  field: v.BaseSchema<unknown, any, v.BaseIssue<unknown>>
+  field: v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>
 ): Visibility | undefined {
   if (hasVisibility(field)) {
     return field.visibility;
@@ -142,21 +142,27 @@ function isOwnerVisible(
  * @returns An array of visible field names
  */
 export function getVisibleFields(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: accepts schemas of any output type; v.GenericSchema would make InferOutput unknown for callers (breaking)
   schema: v.BaseSchema<unknown, any, v.BaseIssue<unknown>> | dndevSchema<any>,
   userRole: UserRole,
   options?: GetVisibleFieldsOptions
 ): string[] {
-  const schemaAny = schema as any;
-  if (!schemaAny || typeof schemaAny !== 'object' || !schemaAny.entries) {
+  if (
+    !schema ||
+    typeof schema !== 'object' ||
+    !('entries' in schema) ||
+    !schema.entries
+  ) {
     console.warn(
       'getVisibleFields expects a Valibot object schema (v.object).'
     );
     return [];
   }
 
-  const entries = schemaAny.entries as Record<
+  // why: BaseSchema does not type object-schema `entries`; presence checked above
+  const entries = schema.entries as Record<
     string,
-    v.BaseSchema<unknown, any, v.BaseIssue<unknown>>
+    v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>
   >;
   const visibleFieldNames: string[] = [];
   const { documentData, uid, ownership } = options ?? {};

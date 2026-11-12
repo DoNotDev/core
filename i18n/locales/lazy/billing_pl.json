@@ -1,0 +1,93 @@
+{
+  "errors": {
+    "unauthenticated": "Zaloguj się, aby przejść do płatności.",
+    "checkout_failed": "Nie udało się rozpocząć płatności. Spróbuj ponownie lub skontaktuj się z pomocą techniczną, jeśli problem się powtarza.",
+    "cancel_failed": "Nie udało się anulować subskrypcji. Spróbuj ponownie lub skontaktuj się z pomocą techniczną.",
+    "change_plan_failed": "Nie udało się zmienić planu. Spróbuj ponownie lub skontaktuj się z pomocą techniczną.",
+    "refresh_failed": "Nie udało się odświeżyć statusu subskrypcji. Spróbuj ponownie.",
+    "portal_failed": "Nie udało się otworzyć panelu klienta. Spróbuj ponownie lub skontaktuj się z pomocą techniczną.",
+    "not_available": "Rozliczenia są niedostępne.",
+    "server_error": "Serwer zwrócił błąd. Spróbuj ponownie.",
+    "no_checkout_url": "Nie otrzymano adresu URL płatności. Spróbuj ponownie."
+  },
+  "security": {
+    "title": "Bezpieczne przetwarzanie płatności",
+    "description": "Dane Twojej płatności są bezpiecznie przetwarzane przez Stripe, operatora płatności z certyfikatem PCI DSS Level 1.",
+    "encrypted": "Szyfrowanie SSL 256-bitowe",
+    "stripe": "Obsługiwane przez Stripe",
+    "dismiss": "Zamknij informację o bezpieczeństwie"
+  },
+  "templates": {
+    "purchase": {
+      "title": "Zacznij już dziś",
+      "subtitle": "Wybierz opcję zakupu jednorazowego"
+    },
+    "subscription": {
+      "title": "Wybierz swój plan",
+      "subtitle": "Wybierz plan idealnie dopasowany do Twoich potrzeb",
+      "billingToggle": {
+        "monthly": "Miesięcznie",
+        "yearly": "Rocznie",
+        "save20": "Oszczędź 20%"
+      }
+    },
+    "checkout": {
+      "title": "Sfinalizuj zakup",
+      "description": "Bezpieczna płatność obsługiwana przez Stripe",
+      "completePurchase": "Sfinalizuj zakup",
+      "startSubscription": "Rozpocznij subskrypcję"
+    }
+  },
+  "components": {
+    "productCard": {
+      "mostPopular": "Najpopularniejszy",
+      "limitedTime": "Oferta ograniczona czasowo",
+      "exclVat": "bez VAT",
+      "purchaseNow": "Kup teraz",
+      "subscribeNow": "Subskrybuj teraz"
+    },
+    "buttons": {
+      "purchase": "Kup",
+      "subscribe": "Subskrybuj",
+      "processing": "Przetwarzanie...",
+      "signInToPurchase": "Zaloguj się, aby kupić",
+      "signInToSubscribe": "Zaloguj się, aby subskrybować"
+    },
+    "redirectOverlay": {
+      "checkout": {
+        "title": "Przekierowanie do Stripe",
+        "message": "Inicjowanie bezpiecznej płatności...",
+        "subtitle": "Przy pierwszym ładowaniu może to chwilę potrwać",
+        "ariaLabel": "Przygotowywanie bezpiecznej płatności, proszę czekać"
+      },
+      "portal": {
+        "title": "Przekierowanie do Stripe",
+        "message": "Otwieranie panelu rozliczeń...",
+        "subtitle": "Zarządzaj subskrypcją i fakturami",
+        "ariaLabel": "Otwieranie panelu rozliczeń, proszę czekać"
+      }
+    },
+    "subscriptionManager": {
+      "title": "Zarządzanie subskrypcją",
+      "signInRequired": "Zaloguj się, aby zarządzać subskrypcją.",
+      "noSubscription": "Nie masz aktywnej subskrypcji.",
+      "currentPlan": "Obecny plan",
+      "ends": "Kończy się",
+      "managePaymentMethod": "Zarządzaj metodą płatności",
+      "cancelSubscription": "Anuluj subskrypcję",
+      "cancelConfirm": "Czy na pewno chcesz anulować? Dostęp zachowasz do {{date}}.",
+      "yesCancel": "Tak, anuluj",
+      "noKeep": "Nie, zachowaj",
+      "changePlan": "Zmień plan",
+      "current": "Obecny",
+      "subscriptionEnds": "Subskrypcja zakończy się {{date}}",
+      "planChanged": "Plan został zmieniony!",
+      "status": {
+        "active": "Aktywna",
+        "cancelled": "Anulowana",
+        "pastDue": "Zaległa",
+        "trialing": "Okres próbny"
+      }
+    }
+  }
+}

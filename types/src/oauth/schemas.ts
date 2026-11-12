@@ -33,9 +33,10 @@ export const githubRepoConfigSchema = v.object({
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
-export const githubPermissionSchema = v.picklist([
+export const githubPermissionSchema = v.picklist<[string, ...string[]]>([
+  // why: explicit type arg keeps the public output type `string` (not the literal union) without a cast
   ...GITHUB_PERMISSION_LEVELS,
-] as [string, ...string[]]);
+]);
 
 /**
  * Schema for granting GitHub repository access
