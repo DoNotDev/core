@@ -15,13 +15,12 @@
 
 import * as v from 'valibot';
 
-import {
-  EDITABLE,
-  type AnyEntity,
-  type EntityField,
-  type FieldType,
-  type Visibility,
-  type dndevSchema,
+import type {
+  AnyEntity,
+  EntityField,
+  FieldType,
+  Visibility,
+  dndevSchema,
 } from '@donotdev/types';
 import {
   getListCardFieldNames,
@@ -29,16 +28,10 @@ import {
   TRANSLATABLE_FIELD_TYPES,
 } from '@donotdev/utils/server';
 
+import { statusesThat } from './crud/status';
+import { describeEntity } from './fieldSemantics';
 import { getSchemaType } from './validation/getSchemaType';
-import { baseFields, isBackendGeneratedField } from './visibility';
-
-/** Fields excluded from all write schemas (create/draft/update) */
-function isWriteExcluded(name: string, field: EntityField<FieldType>): boolean {
-  if (field.visibility === 'hidden') return true;
-  if (field.editable === EDITABLE.GENERATED) return true;
-  if (isBackendGeneratedField(name)) return true;
-  return false;
-}
+import { baseFields } from './visibility';
 
 // ============================================================================
 // Types
@@ -63,7 +56,7 @@ export interface OperationSchemas {
   create: dndevSchema<unknown>;
   /** Draft: excludes technical fields, all optional except status='draft' */
   draft: dndevSchema<unknown>;
-  /** Update: excludes technical fields, all optional */
+  /** Update: excludes technical fields; any field may be left out, a required one sent must be filled in (drafts: `draft`) */
   update: dndevSchema<unknown>;
   /** Get: includes all fields with visibility metadata */
   get: dndevSchema<unknown>;
@@ -119,9 +112,6 @@ function createFieldSchema(
 }
 
 /**
- * Creates a schema field that's always optional (for draft/update)
- */
-/**
  * Companion schema of a translated field (`i18n: true`): one optional value per
  * language, each validated like the field itself (minus required).
  */
@@ -160,6 +150,9 @@ function withTranslations(
   return shape;
 }
 
+/**
+ * Creates a schema field that's always optional (draft, get, optional update fields)
+ */
 function createOptionalFieldSchema(
   field: EntityField<FieldType>
 ): SchemaWithVisibility {
@@ -170,6 +163,18 @@ function createOptionalFieldSchema(
   return withVisibility(baseSchema, field.visibility);
 }
 
+/**
+ * Update schema field: a partial update may leave a field out (`undefined`); a
+ * required field it sends must be filled in (no `null`, no `''`), optional ones as
+ * usual. Same value rules as create.
+ */
+function createUpdateFieldSchema(
+  field: EntityField<FieldType>
+): SchemaWithVisibility {
+  if (!field.validation?.required) return createOptionalFieldSchema(field);
+  return withVisibility(v.optional(getSchemaType(field)), field.visibility);
+}
+
 // ============================================================================
 // Main Export
 // ============================================================================
@@ -178,9 +183,13 @@ function createOptionalFieldSchema(
  * Creates all operation-specific schemas from an entity definition
  *
  * Each schema field has `.visibility` attached for backend filtering.
+ * Fields come from {@link describeEntity}: create/draft/update leave out the `never`
+ * write class (hidden, generated, backend names) and keep `program` (`editable: false`),
+ * `derived` (`computed`) and `user` fields; reads leave out hidden fields.
  *
  * @param entity - Entity definition
  * @returns Operation-specific schemas with visibility metadata
+ * @throws When a field has a custom type and no value shape (`validation.schema` / `validation.reference`)
  *
  * @example
  * ```typescript
@@ -195,6 +204,10 @@ function createOptionalFieldSchema(
  */
 export function createSchemas(entity: AnyEntity): OperationSchemas {
   const fields = entity.fields;
+  const descriptor = describeEntity(entity).fields;
+  /** Write class `never` (hidden, generated, backend names): out of create/draft/update */
+  const isWriteExcluded = (name: string): boolean =>
+    descriptor[name]?.write === 'never';
 
   // -------------------------------------------------------------------------
   // GET schema: All fields with visibility (for response filtering)
@@ -203,7 +216,7 @@ export function createSchemas(entity: AnyEntity): OperationSchemas {
 
   for (const [name, field] of Object.entries(fields)) {
     // Skip hidden fields entirely - they never leave the server
-    if (field.visibility === 'hidden') continue;
+    if (descriptor[name]?.visibleAt === 'hidden') continue;
     // GET is lenient: DB may contain incomplete/draft data, all fields nullable on read
     getShape[name] = createOptionalFieldSchema(field);
   }
@@ -216,7 +229,7 @@ export function createSchemas(entity: AnyEntity): OperationSchemas {
   const createShape: Record<string, SchemaWithVisibility> = {};
 
   for (const [name, field] of Object.entries(fields)) {
-    if (isWriteExcluded(name, field)) continue;
+    if (isWriteExcluded(name)) continue;
     createShape[name] = createFieldSchema(field);
   }
 
@@ -228,11 +241,11 @@ export function createSchemas(entity: AnyEntity): OperationSchemas {
   const draftShape: Record<string, SchemaWithVisibility> = {};
 
   for (const [name, field] of Object.entries(fields)) {
-    if (isWriteExcluded(name, field)) continue;
+    if (isWriteExcluded(name)) continue;
 
     if (name === 'status') {
-      // Status must be literal 'draft'
-      const statusSchema = v.literal('draft');
+      // Status: one that saves incomplete (STATUS_MATRIX `saveIncomplete`, CRUD rule 5)
+      const statusSchema = v.picklist(statusesThat('saveIncomplete'));
       draftShape[name] = withVisibility(statusSchema, field.visibility);
     } else {
       // All other fields optional
@@ -243,13 +256,14 @@ export function createSchemas(entity: AnyEntity): OperationSchemas {
   const draftSchema = withMetadata(v.object(withTranslations({ ...draftShape }, fields)), entity);
 
   // -------------------------------------------------------------------------
-  // UPDATE schema: All optional (partial update)
+  // UPDATE schema: partial update. Any field may be left out; a required field
+  // that is sent must be filled in. A draft is edited with the draft schema.
   // -------------------------------------------------------------------------
   const updateShape: Record<string, SchemaWithVisibility> = {};
 
   for (const [name, field] of Object.entries(fields)) {
-    if (isWriteExcluded(name, field)) continue;
-    updateShape[name] = createOptionalFieldSchema(field);
+    if (isWriteExcluded(name)) continue;
+    updateShape[name] = createUpdateFieldSchema(field);
   }
 
   // Add required id for updates

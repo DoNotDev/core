@@ -40,6 +40,14 @@
     "error": "Verificatiemail kon niet worden verstuurd. Probeer het opnieuw."
   },
   "errors": {
+    "notFound": {
+      "title": "$t(messages.notFound.title)",
+      "description": "$t(messages.notFound.description)",
+      "suggestions": "$t(messages.notFound.suggestions)",
+      "navigateTo": "$t(messages.notFound.navigateTo)",
+      "goHome": "$t(messages.notFound.goHome)",
+      "goBack": "$t(messages.notFound.goBack)"
+    },
     "auth/popup-closed-by-user": "Het inlogvenster is gesloten voordat je klaar was.",
     "auth/cancelled-popup-request": "Inloggen geannuleerd.",
     "auth/popup-blocked": "De browser blokkeert het inlogvenster.",
@@ -147,6 +155,7 @@
     "forbidden": "Toegang geweigerd",
     "serverError": "Serverfout",
     "notFound": {
+      "navigateTo": "Ga naar {{label}}",
       "title": "Pagina niet gevonden",
       "description": "Deze pagina bestaat niet of is verplaatst.",
       "suggestions": "Misschien bedoel je:",

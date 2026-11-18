@@ -2,8 +2,12 @@
 
 import { describe, it, expect } from 'vitest';
 
+import { brandEntity } from '@dndev/test-entities';
+
 import { defineEntity } from '../defineEntity';
 import { getEntityByCollection } from '../entityRegistry';
+
+// The redefinition below is the subject (HMR): it stays a defineEntity call.
 
 const brand = (label: string) =>
   defineEntity({
@@ -16,8 +20,7 @@ const brand = (label: string) =>
 
 describe('entity registry', () => {
   it('defineEntity registers the entity under its collection', () => {
-    const defined = brand('Name');
-    expect(getEntityByCollection('registry-test-brands')).toBe(defined);
+    expect(getEntityByCollection(brandEntity.collection)).toBe(brandEntity);
   });
 
   it('a redefinition (HMR) replaces the previous entity', () => {

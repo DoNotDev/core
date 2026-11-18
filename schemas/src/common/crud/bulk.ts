@@ -142,6 +142,130 @@ export type BulkRequest = v.InferOutput<typeof BulkRequestSchema>;
 export type BulkResponse = v.InferOutput<typeof BulkResponseSchema>;
 
 // ============================================================================
+// Validated service outcomes (additive; the atomic wire schema stays unchanged)
+// ============================================================================
+
+/** Operation-appropriate failure identity for validated bulk acknowledgements. */
+export const BulkOutcomeFailureSchema = v.variant('op', [
+  v.object({
+    op: v.literal('insert'),
+    index: v.pipe(v.number(), v.integer(), v.minValue(0)),
+    id: v.optional(v.string()),
+    error: v.string(),
+  }),
+  v.object({
+    op: v.literal('update'),
+    id: v.string(),
+    index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+    error: v.string(),
+  }),
+  v.object({
+    op: v.literal('delete'),
+    id: v.string(),
+    index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+    error: v.string(),
+  }),
+]);
+
+/** Service result schema preserving per-row failures, unlike the atomic wire schema. */
+export const BulkOutcomeSchema = v.object({
+  ...BulkResponseSchema.entries,
+  // Legacy atomic replies omit failures; request-aware validation still proves completeness.
+  failed: v.optional(v.array(BulkOutcomeFailureSchema), () => []),
+});
+
+/**
+ * Validate a legacy service result against the exact submitted operations.
+ *
+ * Throws before reconciliation unless each operation has exactly one outcome.
+ * Insert successes correspond, in order, to input indexes not listed as failed;
+ * server-generated ID ordering cannot be independently proven without an echo
+ * protocol. Explicit insert IDs are not assumed to be honored by legacy adapters.
+ * Repeated update/delete IDs remain valid when every occurrence has the same
+ * outcome and the response preserves multiplicity. Mixed outcomes for a repeated
+ * ID are ambiguous and rejected. Allowed insert/delete overlap is unchanged.
+ *
+ * Transport callers must preserve `failed` using {@link BulkOutcomeSchema};
+ * {@link BulkResponseSchema} intentionally strips it for legacy atomic consumers.
+ * A rejection means unknown commit outcome: reconcile authoritative state, never
+ * replay writes on the strength of this validation error.
+ *
+ * @param ops - The operations actually sent to the adapter.
+ * @param response - Untrusted adapter acknowledgement, including `failed`.
+ * @returns A structurally and request-validated result compatible with BulkResult.
+ */
+export function validateBulkOutcome(ops: BulkRequest, response: unknown) {
+  const result = v.parse(BulkOutcomeSchema, response);
+  const invalid = (reason: string): never => {
+    throw new Error(`Invalid bulk acknowledgement: ${reason}`);
+  };
+  const inserts = ops.inserts ?? [];
+  const failedInserts = new Set<number>();
+  for (const failure of result.failed) {
+    if (failure.op !== 'insert') continue;
+    if (failure.index >= inserts.length || failedInserts.has(failure.index)) {
+      invalid('unknown or duplicate insert index');
+    }
+    const row = inserts[failure.index]!;
+    if (failure.id !== undefined && failure.id !== row.id) {
+      invalid('contradictory insert identity');
+    }
+    failedInserts.add(failure.index);
+  }
+  if (result.insertedIds.length + failedInserts.size !== inserts.length) {
+    invalid('missing or extra insert outcomes');
+  }
+  if (new Set(result.insertedIds).size !== result.insertedIds.length) {
+    invalid('duplicate inserted ID');
+  }
+  const failedExplicitIds = new Set(
+    [...failedInserts]
+      .map((index) => inserts[index]!.id)
+      .filter((id): id is string => typeof id === 'string')
+  );
+  if (result.insertedIds.some((id) => failedExplicitIds.has(id))) {
+    invalid('insert ID both successful and failed');
+  }
+
+  for (const op of ['update', 'delete'] as const) {
+    const inputIds =
+      op === 'update'
+        ? (ops.updates ?? []).map(({ id }) => id)
+        : (ops.deletes ?? []);
+    const successes = op === 'update' ? result.updatedIds : result.deletedIds;
+    const expected = new Map<string, number>();
+    for (const id of inputIds) expected.set(id, (expected.get(id) ?? 0) + 1);
+    const failures = new Map<string, number>();
+    const failedIndexes = new Set<number>();
+    for (const failure of result.failed) {
+      if (failure.op !== op) continue;
+      if (
+        !expected.has(failure.id) ||
+        (failure.index !== undefined && inputIds[failure.index] !== failure.id)
+      ) {
+        invalid(`unknown or contradictory ${op} identity`);
+      }
+      if (failure.index !== undefined) {
+        if (failedIndexes.has(failure.index)) invalid(`duplicate ${op} failure index`);
+        failedIndexes.add(failure.index);
+      }
+      failures.set(failure.id, (failures.get(failure.id) ?? 0) + 1);
+    }
+    const remaining = inputIds.filter((id) => !failures.has(id));
+    for (const [id, count] of failures) {
+      if (count !== expected.get(id)) invalid(`duplicate or ambiguous ${op} failures`);
+    }
+    if (
+      remaining.length !== successes.length ||
+      remaining.some((id, index) => successes[index] !== id)
+    ) {
+      invalid(`missing, duplicate, unknown or contradictory ${op} outcomes`);
+    }
+  }
+  return result;
+}
+
+// ============================================================================
 // Collision detection
 // ============================================================================
 

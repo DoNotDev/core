@@ -20,7 +20,9 @@ import {
 - `validateDocument.ts` - Document validation against schemas
 - `validateUniqueFields.ts` - Uniqueness validation registry and utilities
 - `enhanceSchema.ts` - Schema enhancement utilities
-- `getSchemaType.ts` - Valibot type utilities
+- `getSchemaType.ts` - Field schema: resolved value + required/optional rule
+- `fieldSemantics.ts` - `describeEntity` (field descriptor: value, required, write class, editability, visibility, i18n companion), `BUILTIN_VALUES`
+- `status.ts` - `writeSchemaFor` (write schema from the resulting status)
 - `createSchema.ts` - Schema creation utilities
 - `defineEntity.ts` - Entity definition utilities
 - `utils.ts` - General utilities
@@ -299,43 +301,30 @@ type FieldType =
 
 ### Field Value Types
 
-The package provides automatic type inference for field values:
+Entity types come from the field descriptor's type twin, `DescribeEntity<typeof entity>`
+(`@donotdev/types`, `crud/fieldSemantics.ts`): same facts, same rules as the runtime
+`describeEntity`, proven equal by `__tests__/fieldSemantics.parity.test.ts`. `defineEntity`
+returns a literal entity (`DefinedEntity`: merged fields with literal `required`, options,
+`editable`, `visibility`, status options, scope field, merged `access`) for them to read.
 
-```typescript
-type FieldTypeToValue = {
-  array: any[];
-  boolean: boolean;
-  checkbox: boolean;
-  color: string;
-  date: string;
-  'datetime-local': string;
-  email: string;
-  file: File | null;
-  geopoint: { lat: number; lng: number };
-  hidden: string;
-  image: File | null;
-  map: Record<string, any>;
-  month: string;
-  multiselect: string[];
-  number: number;
-  password: string;
-  radio: string;
-  reference: string;
-  range: number;
-  reset: never;
-  select: string;
-  submit: never;
-  tel: string;
-  text: string;
-  textarea: string;
-  time: string;
-  timestamp: Date;
-  url: string;
-  week: string;
-};
+Value `V` of a field (`FieldValueOf`, same order as the runtime):
 
-type ValueTypeForField<T extends FieldType> = FieldTypeToValue[T];
-```
+1. `validation.schema` → `InferOutput` (form input: `InferInput`, `FieldInputOf`)
+2. `validation.reference` → id `string`
+3. built-in type → `FieldTypeToValue[type]` (one key per `FIELD_TYPES` entry); static
+   options → union of option values; string switch → its two strings
+4. custom type with none of the above → type error at `defineEntity` naming
+   `entity.field` (`RequireValueShapes`), and a throw at runtime
+
+Types per operation:
+
+| Type | Shape |
+|---|---|
+| `InferEntityRow<E>` (`InferEntityData`) | union on `status`: `draft` / `deleted` → every field `V \| null`; other statuses → required `V`, optional / conditional `V \| null`; hidden fields left out; keys above `access.read` optional |
+| `CreateInput<E>` (`InferEntityCreate`) | write classes `user`, `derived`, `program`: required → key required `V`; others key optional `V \| null` |
+| `DraftInput<E>` | `status: 'draft'`, every other written field key optional `V \| null` |
+| `UpdatePatch<E>` | every written field key optional; required sent → `V`, optional → `V \| null` |
+| `FormValues<E, Op>` | fields the form writes for `Op` (+ `id` on edit, companions), form input type, draft branch nullable |
 
 ### Field Visibility
 
@@ -379,7 +368,7 @@ interface ValidationRules<T extends FieldType = FieldType> {
   options?: T extends 'select' | 'multiselect' | 'radio'
     ? Array<{ value: string; label: string }>
     : never;
-  reference?: T extends 'reference' ? string : never;
+  reference?: string; // any type: the value is an id of that collection
 }
 ```
 

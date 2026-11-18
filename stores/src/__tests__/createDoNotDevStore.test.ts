@@ -1,6 +1,19 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, expectTypeOf, vi, beforeEach, afterEach } from 'vitest';
+import type { StoreApi } from 'zustand';
+import { createJSONStorage } from 'zustand/middleware';
 
 import { createDoNotDevStore, isDoNotDevStore } from '../createDoNotDevStore';
+import type { DoNotDevStore, DoNotDevStoreConfig, DomainStoreConfig } from '../createDoNotDevStore';
+
+vi.mock('@donotdev/utils', () => ({
+  isClient: () => true,
+  isDev: () => true,
+}));
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 // Reset global store registry between tests
 beforeEach(() => {
@@ -156,6 +169,130 @@ describe('createDoNotDevStore', () => {
 
       expect(store1).not.toBe(store2);
     });
+  });
+});
+
+describe('factory lifecycle isolation', () => {
+  it('keeps exported default config and lifecycle overrides compatible', async () => {
+    const domainInit = vi.fn();
+    const domainCleanup = vi.fn();
+    const cleanup = vi.fn();
+    const config: DoNotDevStoreConfig<{ value: number }> = {
+      name: 'default-config',
+      createStore: () => ({ value: 1, initialize: domainInit, cleanup: domainCleanup }),
+      initialize: async () => false,
+      cleanup,
+    };
+    const store = createDoNotDevStore(config);
+    expectTypeOf(store.getState()).toEqualTypeOf<{ value: number } & DoNotDevStore>();
+    expect(await store.getState().initialize()).toBe(false);
+    expect(store.getState().isReady).toBe(false);
+    store.getState().cleanup?.();
+    expect(cleanup).toHaveBeenCalledOnce();
+    expect(domainInit).not.toHaveBeenCalled();
+    expect(domainCleanup).not.toHaveBeenCalled();
+  });
+
+  it('preserves domain state, action signatures, raw creator types and singleton', () => {
+    interface Domain {
+      errors: Record<string, string>;
+      setError: (id: string, message: string) => void;
+      cleanup: (id: string) => void;
+      isLoading: (id: string) => boolean;
+    }
+    const creator = vi.fn<DomainStoreConfig<Domain>['createStore']>((set, get, api) => {
+      expectTypeOf(set).toEqualTypeOf<StoreApi<Domain>['setState']>();
+      expectTypeOf(get).toEqualTypeOf<() => Domain>();
+      expectTypeOf(api).toEqualTypeOf<StoreApi<Domain>>();
+      return {
+        errors: {},
+        setError: (id, message) => set({ errors: { ...get().errors, [id]: message } }),
+        cleanup: (id) => set((state) => {
+          const { [id]: _, ...errors } = state.errors;
+          return { errors };
+        }),
+        isLoading: (id) => id === 'loading',
+      };
+    });
+    const config: DomainStoreConfig<Domain> = {
+      name: 'domain-signatures', lifecycle: false, createStore: creator,
+    };
+    const store = createDoNotDevStore<Domain>(config);
+    expectTypeOf(store.getState()).toEqualTypeOf<Domain>();
+    expectTypeOf<Extract<keyof Domain, 'setLoading'>>().toBeNever();
+    expect(store.getState()).not.toHaveProperty('setLoading');
+    expect(store.getState()).not.toHaveProperty('initialize');
+    store.getState().setError('a', 'message');
+    expect(store.getState().errors).toEqual({ a: 'message' });
+    expect(store.getState().isLoading('loading')).toBe(true);
+    store.getState().cleanup('a');
+    expect(store.getState().errors).toEqual({});
+    expect(createDoNotDevStore(config)).toBe(store);
+    expect(creator).toHaveBeenCalledOnce();
+  });
+
+  it('infers domain state without an explicit generic', () => {
+    const store = createDoNotDevStore({
+      name: 'inferred-domain',
+      lifecycle: false,
+      createStore: () => ({
+        count: 1,
+        isLoading: (id: string) => id === 'busy',
+      }),
+    });
+    expectTypeOf(store.getState()).toEqualTypeOf<{
+      count: number;
+      isLoading: (id: string) => boolean;
+    }>();
+    expect(store.getState().isLoading('busy')).toBe(true);
+    expect(store.getState()).not.toHaveProperty('setLoading');
+  });
+
+  it.each([false, true])('keeps devtools for domain stores, persisted=%s', (persisted) => {
+    const connection = { init: vi.fn(), send: vi.fn(), subscribe: vi.fn() };
+    const connect = vi.fn(() => connection);
+    vi.stubGlobal('__REDUX_DEVTOOLS_EXTENSION__', { connect });
+    const store = createDoNotDevStore<{ count: number }>({
+      name: 'domain-devtools',
+      lifecycle: false,
+      createStore: () => ({ count: 0 }),
+      ...(persisted && {
+        persistOptions: {
+          name: 'domain-devtools-persist',
+          storage: createJSONStorage<Partial<{ count: number }>>(() => localStorage),
+        },
+      }),
+    });
+    expect(connect).toHaveBeenCalledWith(expect.objectContaining({ name: 'domain-devtools' }));
+    expect(connection.init).toHaveBeenCalledWith({ count: 0 });
+    store.setState({ count: 1 });
+    expect(connection.send).toHaveBeenCalledWith(expect.anything(), { count: 1 });
+    localStorage.removeItem('domain-devtools-persist');
+  });
+
+  it.each([true, false] as const)('retains persistence with lifecycle=%s', (lifecycle) => {
+    const data = new Map<string, string>();
+    data.set('persist-key', JSON.stringify({ state: { count: 7 }, version: 0 }));
+    const onHydrated = vi.fn();
+    interface Counter { count: number; transient: string }
+    const options = {
+      name: 'persist-key',
+      storage: createJSONStorage<Partial<Counter>>(() => ({
+        getItem: (key) => data.get(key) ?? null,
+        setItem: (key, value) => { data.set(key, value); },
+        removeItem: (key) => { data.delete(key); },
+      })),
+      partialize: (state: Counter) => ({ count: state.count }),
+      onRehydrateStorage: () => onHydrated,
+    };
+    const store = lifecycle
+      ? createDoNotDevStore<Counter>({ name: 'persist-default', createStore: () => ({ count: 0, transient: 'private' }), persistOptions: options })
+      : createDoNotDevStore<Counter>({ name: 'persist-domain', lifecycle: false, createStore: () => ({ count: 0, transient: 'private' }), persistOptions: options });
+    expect(store.getState().count).toBe(7);
+    expect(onHydrated).toHaveBeenCalledOnce();
+    store.setState({ count: 8 });
+    expect(JSON.parse(data.get('persist-key')!)).toEqual({ state: { count: 8 }, version: 0 });
+    if (!lifecycle) expect(store.getState()).not.toHaveProperty('_hasHydrated');
   });
 });
 

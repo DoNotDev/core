@@ -78,7 +78,8 @@
     "bulkPartialError_one": "Nie udało się zapisać {{count}} wiersza",
     "bulkPartialError_few": "Nie udało się zapisać {{count}} wierszy",
     "bulkPartialError_many": "Nie udało się zapisać {{count}} wierszy",
-    "bulkPartialError_other": "Nie udało się zapisać {{count}} wiersza"
+    "bulkPartialError_other": "Nie udało się zapisać {{count}} wiersza",
+    "unknownFields": "Zapisano, ale te pola nie istnieją i nie zostały zapisane: {{fields}}. Skontaktuj się z pomocą techniczną."
   },
   "pagination": {
     "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wpisów",
@@ -262,6 +263,13 @@
     "noLanguagesFound": "Nie znaleziono języków",
     "changeLanguage": "Zmień język"
   },
+  "draft": {
+    "restored": "Przywrócono wersję roboczą",
+    "restoredDescription": "Niezapisane zmiany zostały odzyskane",
+    "discard": "Odrzuć",
+    "conflict": "Wersja robocza oparta na starszej wersji",
+    "conflictDescription": "Ten rekord zmienił się od czasu Twoich niezapisanych zmian. Zapis może zostać odrzucony: odrzuć, aby edytować bieżącą wersję."
+  },
   "form": {
     "submit": "Wyślij",
     "cancel": "Anuluj",
@@ -274,9 +282,14 @@
     "uploading": "Przesyłanie {{progress}}%...",
     "processing": "Przetwarzanie...",
     "validating": "Walidacja...",
+    "validationFailed": "Niektóre pola wymagają poprawy",
+    "fixFields": "Sprawdź: {{fields}}",
     "saving": "Zapisywanie...",
     "saved": "Zapisano",
-    "error": "Błąd — spróbuj ponownie"
+    "error": "Błąd — spróbuj ponownie",
+    "saveFailed": "Nie udało się zapisać. Spróbuj ponownie.",
+    "uploadFailed": "Nie udało się przesłać pliku. Spróbuj ponownie.",
+    "reuploadFiles": "Niektóre pliki nie zostały przesłane. Prześlij je ponownie, a następnie zapisz."
   },
   "navigation": {
     "more": "Więcej",
@@ -386,6 +399,11 @@
   },
   "boolean": {
     "required": "Pole {{field}} musi być zaznaczone"
+  },
+  "fieldArray": {
+    "addRow": "Dodaj wiersz do {{field}}",
+    "removeRow": "Usuń wiersz {{index}} z {{field}}",
+    "noSubFields": "{{field}}: nie skonfigurowano pól podrzędnych."
   },
   "array": {
     "required": "Wymagany jest co najmniej jeden element: {{field}}",
@@ -541,7 +559,15 @@
   },
   "price": {
     "vatIncluded": "z VAT",
+    "currency": "Waluta",
+    "discountLabel": "Rabat (%)",
     "discountPercent": "-{{percent}}%"
+  },
+  "workflow": {
+    "submit": "Wyślij",
+    "next": "Dalej",
+    "previous": "Wstecz",
+    "skip": "Pomiń ten krok"
   },
   "recommendations": {
     "title": "Może Ci się spodobać"
@@ -578,5 +604,29 @@
     "failed_few": "Nie zapisano {{count}} wierszy: pozostają na liście, spróbuj ponownie",
     "failed_many": "Nie zapisano {{count}} wierszy: pozostaje na liście, spróbuj ponownie",
     "failed_other": "Nie zapisano {{count}} wiersza: pozostaje na liście, spróbuj ponownie"
+  },
+  "childRows": {
+    "createFirst": "Utwórz wersję roboczą przed dodaniem: {{entity}}.",
+    "required": "{{field}} jest wymagane",
+    "invalidValue": "{{field}} jest nieprawidłowe",
+    "invalidRows_one": "{{count}} wiersz do poprawienia przed zapisaniem",
+    "invalidRows_few": "{{count}} wiersze do poprawienia przed zapisaniem",
+    "invalidRows_many": "{{count}} wierszy do poprawienia przed zapisaniem",
+    "invalidRows_other": "{{count}} wiersza do poprawienia przed zapisaniem",
+    "notSaved": "Edytowane wiersze nie zostały zapisane z tym rekordem.",
+    "pickTitle": "Dodaj: {{entity}}",
+    "pickConfirm": "Dodaj zaznaczone ({{count}})",
+    "pickEmpty": "Nie ma już nic do dodania."
+  },
+  "sortable": {
+    "drag": "Przeciągnij, aby przenieść {{name}}",
+    "moveBefore": "Przenieś {{name}} wcześniej",
+    "moveAfter": "Przenieś {{name}} później",
+    "remove": "Usuń {{name}}",
+    "instructions": "Aby chwycić element, naciśnij Spację lub Enter. Przesuń go strzałkami, a następnie ponownie naciśnij Spację lub Enter, aby go upuścić, albo Escape, aby anulować.",
+    "picked": "Chwycono {{name}}, pozycja {{position}} z {{count}}.",
+    "moved": "{{name}} przeniesiono na pozycję {{position}} z {{count}}.",
+    "dropped": "{{name}} upuszczono na pozycji {{position}} z {{count}}.",
+    "cancelled": "Anulowano przenoszenie {{name}}."
   }
 }

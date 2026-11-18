@@ -14,6 +14,10 @@
  * @returns {object|null} - The extracted meta object or null if not found
  */
 export function extractMeta(code, filePath = 'unknown') {
+  // GOTCHA: PageMeta must be a self-contained, plain-text object literal, not DRY variables.
+  // Imports/object constants (e.g. auth: ADMIN_ONLY) are not resolved here; evaluation
+  // fails and discards ALL metadata, losing route overrides and auth guards.
+  // Keep metadata values inline; JSX icons are handled explicitly below.
   try {
     // Enhanced regex to find meta export with JSX support
     const metaRegex = /export\s+const\s+meta\s*[^=]*=\s*(\{[\s\S]*?\});/;

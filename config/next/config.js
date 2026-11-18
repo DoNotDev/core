@@ -183,11 +183,14 @@ function defineNextConfig(userOptions = {}) {
       ssr: appConfig?.ssr !== false,
       // Redirect targets of the generated proxy (same config the client AuthGuard reads)
       auth: appConfig?.auth,
+      // Cache lifetime of the cached pages (BaseNextHandler.revalidate)
+      revalidate: appConfig?.revalidate,
     },
     themeOptions,
     i18nOptions,
     assetOptions,
-    seoOptions,
+    // Same cache lifetime for the sitemap / llms.txt routes as for the pages
+    seoOptions: { ...seoOptions, revalidate: appConfig?.revalidate },
     // appConfig.app feeds the web app manifest (name, short_name, description)
     pwaOptions: { ...pwaOptions, app: extractedApp },
     serverShimOptions,
@@ -274,8 +277,6 @@ function defineNextConfig(userOptions = {}) {
     // Extract flagCodes from i18n discovery for flag chunk filtering
     const i18nDiscoveryData = await handlers.i18nHandler?.getDiscoveryData?.();
     const flagCodes = i18nDiscoveryData?.flagCodes || [];
-    // Languages the app uses (already restricted by i18n.only) — drives font subsets
-    const i18nLanguages = i18nDiscoveryData?.supportedLanguages || [];
 
     // Build webpack and rewrites configs
     const webpackConfig = createWebpackConfig({
@@ -284,7 +285,6 @@ function defineNextConfig(userOptions = {}) {
       usedFeaturePackages,
       missingOptionalDeps,
       flagCodes,
-      languages: i18nLanguages,
       logger,
       debug,
     });

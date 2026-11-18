@@ -10,7 +10,7 @@
  */
 
 import { create } from 'zustand';
-import type { StateCreator, StoreApi, UseBoundStore } from 'zustand';
+import type { Mutate, StateCreator, StoreApi, UseBoundStore } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import type { PersistOptions } from 'zustand/middleware';
 
@@ -39,6 +39,8 @@ export interface DoNotDevStore extends BaseStoreActions, BaseStoreState {
  * @author AMBROISE PARK Consulting
  */
 export interface DoNotDevStoreConfig<T> {
+  /** Inject framework lifecycle state and actions (default). */
+  lifecycle?: true;
   name: string;
   createStore: (
     set: (
@@ -67,6 +69,17 @@ export interface DoNotDevStoreConfig<T> {
 }
 
 /**
+ * Domain-owned store configuration. No framework lifecycle fields or actions are injected.
+ * Singleton registration, devtools and persistence remain enabled.
+ */
+export interface DomainStoreConfig<T> {
+  name: string;
+  lifecycle: false;
+  createStore: StateCreator<T, [], []>;
+  persistOptions?: PersistOptions<T, Partial<T>>;
+}
+
+/**
  * Creates a DoNotDev store with framework conventions
  *
  * ## Usage Rules — READ vs CALL
@@ -74,7 +87,7 @@ export interface DoNotDevStoreConfig<T> {
  * **Reading state (reactive):** Use selector hooks — component re-renders when value changes.
  * ```ts
  * const user = useAuthStore((s) => s.user);          // ✅ Reactive state
- * const isReady = useFormStore((s) => s.isReady);     // ✅ Reactive state
+ * const isReady = useAuthStore((s) => s.isReady);     // ✅ Reactive state
  * ```
  *
  * **Calling actions (imperative):** Use `getState()` — no subscription, stable reference.
@@ -113,7 +126,33 @@ export interface DoNotDevStoreConfig<T> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: interface-typed records have no implicit index signature; Record<string, unknown> would reject them
 export function createDoNotDevStore<T extends Record<string, any>>(
   config: DoNotDevStoreConfig<T>
-) {
+): UseBoundStore<StoreApi<T & DoNotDevStore>>;
+/** Create a singleton domain store without injecting framework lifecycle members. */
+export function createDoNotDevStore<T extends object>(
+  config: DomainStoreConfig<T>
+): UseBoundStore<StoreApi<T>>;
+export function createDoNotDevStore<T extends object>(
+  config: DoNotDevStoreConfig<T> | DomainStoreConfig<T>
+): UseBoundStore<StoreApi<T & DoNotDevStore>> | UseBoundStore<StoreApi<T>> {
+  if (config.lifecycle === false) {
+    const { name, createStore: creator, persistOptions } = config;
+    globalThis._DNDEV_STORES_ ??= {};
+    const cached = globalThis._DNDEV_STORES_[name];
+    // why: registry entries are heterogeneous and identified by their unique name.
+    if (cached) return cached as UseBoundStore<StoreApi<T>>;
+
+    const store = persistOptions
+      ? isDev() && isClient()
+        ? create<T>()(devtools(persist(creator, persistOptions), { name }))
+        : create<T>()(persist(creator, persistOptions))
+      : isDev() && isClient()
+        ? create<T>()(devtools(creator, { name }))
+        : create<T>()(creator);
+
+    globalThis._DNDEV_STORES_[name] = store;
+    return store;
+  }
+
   const {
     name,
     createStore: storeCreator,
@@ -145,6 +184,10 @@ export function createDoNotDevStore<T extends Record<string, any>>(
 
   // ========== SINGLETON PATTERN END ==========
 
+  // Per-instance creator result fills partial constructor writes during hydration.
+  let completedCreatorState: (T & DoNotDevStore) | undefined;
+  let constructing = true;
+
   // Wrap user's store with lifecycle methods
   const wrappedCreator: StateCreator<T & DoNotDevStore, [], []> = (
     set,
@@ -157,12 +200,12 @@ export function createDoNotDevStore<T extends Record<string, any>>(
     const hasCustomReset =
       'reset' in userState && typeof userState.reset === 'function';
 
-    return {
+    completedCreatorState = {
       ...userState,
       isReady: false,
       isLoading: false,
       error: null,
-      // Hydration flag for persisted stores — false until onRehydrateStorage fires
+      // Factory-owned metadata: true only after successful persist completion.
       ...(persistOptions && { _hasHydrated: false }),
 
       initialize: async (data?: Record<string, unknown>): Promise<boolean> => {
@@ -212,6 +255,7 @@ export function createDoNotDevStore<T extends Record<string, any>>(
       }),
       // why: spreading a generic T plus lifecycle fields; TS cannot prove the result is T & DoNotDevStore
     } as T & DoNotDevStore;
+    return completedCreatorState;
   };
 
   /**
@@ -221,28 +265,79 @@ export function createDoNotDevStore<T extends Record<string, any>>(
   let store: UseBoundStore<StoreApi<T & DoNotDevStore>>;
 
   if (persistOptions) {
-    // With persistence: devtools(persist(...))
-    store =
-      isDev() && isClient()
-        ? create<T & DoNotDevStore>()(
-            devtools(persist(wrappedCreator, persistOptions), { name })
-          )
-        : create<T & DoNotDevStore>()(persist(wrappedCreator, persistOptions));
-
-    // Zustand 5 built-in: set _hasHydrated after rehydration + user's onRehydrateStorage.
-    // Guarded because persist middleware short-circuits without attaching `api.persist`
-    // when running in non-browser environments (no window.localStorage) — e.g. SSR,
-    // Bun-driven codegen tools that dynamically import entity modules.
-    // why: zustand types `persist` as always present; it is absent outside the browser (see above)
-    const persistApi = (
-      store as unknown as {
-        persist?: { onFinishHydration: (cb: () => void) => () => void };
+    const persistedCreator = persist(wrappedCreator, {
+      ...persistOptions,
+      // Hydration status belongs to this factory, never to a saved snapshot.
+      merge: (saved, current) => {
+        // A synchronous creator set() can leave get() partial before hydration.
+        // Keep its values, but supply the completed creator's missing members.
+        const completeCurrent = constructing
+          ? { ...completedCreatorState, ...current }
+          : current;
+        return {
+          ...(persistOptions.merge
+            ? persistOptions.merge(saved, completeCurrent)
+            : { ...completeCurrent, ...(saved as Partial<T & DoNotDevStore>) }),
+          _hasHydrated: false,
+        };
+      },
+    });
+    const hydrationCreator: typeof persistedCreator = (set, get, api) => {
+      // Capture the outer setter BEFORE persist mutates api.setState. Metadata
+      // must notify subscribers/devtools, but must never write to storage.
+      let hydrated = false;
+      // Normalize factory metadata in the same write as application updates,
+      // including custom resets through api.setState(initialState, true).
+      // Do not mutate the SSR snapshot or add a second notification/storage write.
+      const metadataSet: typeof set = (partial, replace) => {
+        const update = (state: T & DoNotDevStore) => {
+          const next = typeof partial === 'function' ? partial(state) : partial;
+          if ((replace || '_hasHydrated' in next) && next._hasHydrated !== hydrated) {
+            return { ...next, _hasHydrated: hydrated };
+          }
+          return next;
+        };
+        if (replace) {
+          // why: Zustand's replace overload requires a full state, as does its caller.
+          set((state) => update(state) as T & DoNotDevStore, true);
+        } else {
+          set(update, replace);
+        }
+      };
+      api.setState = metadataSet;
+      const initialState = persistedCreator(metadataSet, get, api);
+      // why: persist attaches this mutator at runtime, except without storage (SSR).
+      const persistApi = (api as Mutate<
+        StoreApi<T & DoNotDevStore>,
+        [['zustand/persist', Partial<T & DoNotDevStore>]]
+      >).persist;
+      if (persistApi) {
+        const markHydrated = (completed: boolean) => {
+          hydrated = completed;
+          if (get()._hasHydrated !== completed) {
+            set(patch({ _hasHydrated: completed }));
+          }
+        };
+        persistApi.onHydrate(() => markHydrated(false));
+        persistApi.onFinishHydration(() => markHydrated(true));
+        // Synchronous storage can finish before listeners can be registered.
+        if (persistApi.hasHydrated()) {
+          hydrated = true;
+          // Only persist's returned state represents completed hydration. get()
+          // can instead contain a partial write made inside the user's creator.
+          return { ...initialState, _hasHydrated: true };
+        }
       }
-    ).persist;
-    if (persistApi) {
-      persistApi.onFinishHydration(() => {
-        store.setState(patch({ _hasHydrated: true }));
-      });
+      return initialState;
+    };
+    try {
+      store =
+        isDev() && isClient()
+          ? create<T & DoNotDevStore>()(devtools(hydrationCreator, { name }))
+          : create<T & DoNotDevStore>()(hydrationCreator);
+    } finally {
+      constructing = false;
+      completedCreatorState = undefined;
     }
   } else {
     // Without persistence: devtools(...)

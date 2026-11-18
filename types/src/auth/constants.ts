@@ -10,6 +10,121 @@
  */
 
 import type { AuthPartnerId } from '../partners';
+import type { SubscriptionClaims } from './schemas';
+
+/** Existing subscription status vocabulary; consumers may declare custom statuses. */
+export const SUBSCRIPTION_STATUS = {
+  ACTIVE: 'active',
+  CANCELED: 'canceled',
+  INCOMPLETE: 'incomplete',
+  INCOMPLETE_EXPIRED: 'incomplete_expired',
+  PAST_DUE: 'past_due',
+  TRIALING: 'trialing',
+  UNPAID: 'unpaid',
+} as const;
+
+/** Override the framework's subscription status vocabulary. */
+export function overrideSubscriptionStatus(
+  customStatus: Partial<typeof SUBSCRIPTION_STATUS>
+) {
+  Object.assign(SUBSCRIPTION_STATUS, customStatus);
+}
+
+/** Framework or consumer-defined subscription status. */
+export type SubscriptionStatus =
+  | (typeof SUBSCRIPTION_STATUS)[keyof typeof SUBSCRIPTION_STATUS]
+  | string;
+
+/** Deterministic free baseline; epoch denotes absence of a persisted update. */
+export const DEFAULT_SUBSCRIPTION: SubscriptionClaims = {
+  tier: 'free',
+  status: 'active',
+  subscriptionEnd: null,
+  updatedAt: '1970-01-01T00:00:00.000Z',
+  isDefault: true,
+  subscriptionId: null,
+  customerId: null,
+  cancelAtPeriodEnd: false,
+};
+
+/**
+ * Create persisted free claims with the actual creation timestamp.
+ * @param _userId - Deprecated, ignored argument retained for source compatibility.
+ * Auth UIDs are not billing customer IDs; payment identifiers remain null.
+ */
+export function createDefaultSubscriptionClaims(_userId: string): SubscriptionClaims {
+  return {
+    ...DEFAULT_SUBSCRIPTION,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+/** Common access features apps can reference or replace with their own. */
+export type CommonSubscriptionFeatures =
+  | 'basic-usage'
+  | 'limited-storage'
+  | 'standard-support'
+  | 'cloud-sync'
+  | 'advanced-analytics'
+  | 'priority-support'
+  | 'custom-branding'
+  | 'team-collaboration'
+  | 'ai-assistant'
+  | 'custom-models'
+  | 'unlimited-generations'
+  | 'advanced-integrations';
+
+/** Generic access-tier features and hierarchy, independent of billing. */
+export interface SubscriptionConfig {
+  /** Subscription tiers with their features and hierarchy. */
+  tiers: Record<
+    string,
+    {
+      /** Features available for this tier. */
+      features: string[];
+      /** Tier level for comparison (higher = more access). */
+      level: number;
+    }
+  >;
+}
+
+/** Common access-tier configurations apps can extend or replace. */
+export const COMMON_TIER_CONFIGS = {
+  free: {
+    features: ['basic-usage', 'limited-storage', 'standard-support'],
+    level: 0,
+  },
+  pro: {
+    features: [
+      'basic-usage',
+      'limited-storage',
+      'standard-support',
+      'cloud-sync',
+      'advanced-analytics',
+      'priority-support',
+      'custom-branding',
+      'team-collaboration',
+    ],
+    level: 1,
+  },
+  ai: {
+    features: [
+      'basic-usage',
+      'limited-storage',
+      'standard-support',
+      'cloud-sync',
+      'advanced-analytics',
+      'priority-support',
+      'custom-branding',
+      'team-collaboration',
+      'ai-assistant',
+      'custom-models',
+      'unlimited-generations',
+      'advanced-integrations',
+    ],
+    level: 2,
+  },
+};
 
 // =============================================================================
 // Token Types

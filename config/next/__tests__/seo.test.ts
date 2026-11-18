@@ -7,6 +7,7 @@ import { deriveEntitySeo } from '../../../utils/src/common/entitySeo';
 import { languageUrls } from '../../../utils/src/common/languagePath';
 import { buildLlmsTxt } from '../seo/llmsTxt.js';
 import { buildSitemap, formatSitemapXml } from '../seo/sitemap.js';
+import { brandEntity } from '@dndev/test-entities';
 
 const BASE = 'https://shop.example';
 const FR = { languages: ['fr'], defaultLanguage: 'fr' };
@@ -170,12 +171,7 @@ describe('formatSitemapXml', () => {
 });
 
 describe('buildLlmsTxt', () => {
-  const BRAND = {
-    name: 'Brand',
-    collection: 'brands',
-    namespace: 'entity-brand',
-    fields: { name: { name: 'name', type: 'text' } },
-  };
+  const BRAND = brandEntity;
 
   function source(
     rows: Record<string, Record<string, unknown>[]>,

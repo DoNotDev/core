@@ -39,6 +39,7 @@
     "noResults": "Keine Adressen gefunden"
   },
   "export": "Exportieren",
+  "copyToClipboard": "In die Zwischenablage kopieren",
   "noInquiries": "Keine Anfragen gefunden.",
   "customer": "Kunde",
   "noCustomer": "Kein Kunde verknüpft",
@@ -118,6 +119,11 @@
   },
   "boolean": {
     "required": "{{field}} muss ausgewählt werden"
+  },
+  "fieldArray": {
+    "addRow": "Zeile zu {{field}} hinzufügen",
+    "removeRow": "Zeile {{index}} aus {{field}} entfernen",
+    "noSubFields": "{{field}}: keine Unterfelder konfiguriert."
   },
   "array": {
     "required": "Mindestens ein {{field}} ist erforderlich",
@@ -263,7 +269,15 @@
     "forbidden": "Zugriff verboten",
     "serverError": "Serverfehler aufgetreten",
     "bulkPartialError_one": "{{count}} Zeile konnte nicht gespeichert werden",
-    "bulkPartialError_other": "{{count}} Zeilen konnten nicht gespeichert werden"
+    "bulkPartialError_other": "{{count}} Zeilen konnten nicht gespeichert werden",
+    "unknownFields": "Gespeichert, aber diese Felder existieren nicht und wurden nicht gespeichert: {{fields}}. Wenden Sie sich an den Support."
+  },
+  "draft": {
+    "restored": "Entwurf wiederhergestellt",
+    "restoredDescription": "Ihre nicht gespeicherten Änderungen wurden wiederhergestellt",
+    "discard": "Verwerfen",
+    "conflict": "Entwurf basiert auf einer älteren Version",
+    "conflictDescription": "Dieser Datensatz hat sich seit Ihren ungespeicherten Änderungen geändert. Das Speichern kann abgelehnt werden: Verwerfen Sie, um die aktuelle Version zu bearbeiten."
   },
   "form": {
     "submit": "Absenden",
@@ -277,9 +291,14 @@
     "uploading": "Hochladen {{progress}}%...",
     "processing": "Verarbeitung...",
     "validating": "Validierung...",
+    "validationFailed": "Einige Felder müssen korrigiert werden",
+    "fixFields": "Bitte prüfen: {{fields}}",
     "saving": "Speichern...",
     "saved": "Gespeichert",
-    "error": "Fehler — bitte erneut versuchen"
+    "error": "Fehler — bitte erneut versuchen",
+    "saveFailed": "Speichern nicht möglich. Bitte erneut versuchen.",
+    "uploadFailed": "Datei-Upload fehlgeschlagen. Bitte erneut versuchen.",
+    "reuploadFiles": "Einige Dateien wurden nicht hochgeladen. Laden Sie sie erneut hoch und speichern Sie dann."
   },
   "gdprConsent": {
     "consent": "Ich stimme der",
@@ -369,7 +388,15 @@
   },
   "price": {
     "vatIncluded": "inkl. MwSt.",
+    "currency": "Währung",
+    "discountLabel": "Rabatt (%)",
     "discountPercent": "-{{percent}}%"
+  },
+  "workflow": {
+    "submit": "Absenden",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "skip": "Diesen Schritt überspringen"
   },
   "recommendations": {
     "title": "Das könnte Ihnen auch gefallen"
@@ -403,5 +430,27 @@
     "deleteSelected": "Auswahl löschen ({{count}})",
     "failed_one": "{{count}} Zeile nicht gespeichert: Sie bleibt in der Liste, bitte erneut versuchen",
     "failed_other": "{{count}} Zeilen nicht gespeichert: Sie bleiben in der Liste, bitte erneut versuchen"
+  },
+  "childRows": {
+    "createFirst": "Erstellen Sie zuerst den Entwurf, bevor Sie {{entity}} hinzufügen.",
+    "required": "{{field}} ist erforderlich",
+    "invalidValue": "{{field}} ist ungültig",
+    "invalidRows_one": "{{count}} Zeile vor dem Speichern korrigieren",
+    "invalidRows_other": "{{count}} Zeilen vor dem Speichern korrigieren",
+    "notSaved": "Die bearbeiteten Zeilen wurden nicht mit diesem Datensatz gespeichert.",
+    "pickTitle": "{{entity}} hinzufügen",
+    "pickConfirm": "Auswahl hinzufügen ({{count}})",
+    "pickEmpty": "Nichts mehr hinzuzufügen."
+  },
+  "sortable": {
+    "drag": "{{name}} ziehen, um die Reihenfolge zu ändern",
+    "moveBefore": "{{name}} nach vorne verschieben",
+    "moveAfter": "{{name}} nach hinten verschieben",
+    "remove": "{{name}} entfernen",
+    "instructions": "Drücken Sie Leertaste oder Eingabe, um ein Element aufzunehmen. Verschieben Sie es mit den Pfeiltasten und drücken Sie erneut Leertaste oder Eingabe, um es abzulegen, oder Escape zum Abbrechen.",
+    "picked": "{{name}} aufgenommen, Position {{position}} von {{count}}.",
+    "moved": "{{name}} auf Position {{position}} von {{count}} verschoben.",
+    "dropped": "{{name}} auf Position {{position}} von {{count}} abgelegt.",
+    "cancelled": "Verschieben von {{name}} abgebrochen."
   }
 }

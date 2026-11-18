@@ -1,5 +1,11 @@
 # @donotdev/core
 
+## Unreleased
+
+### Patch Changes
+
+- App URL (`AppConfigProvider`) resolves from the `APP_URL` env var on server and client alike (dev without it: `http://localhost:3000`). Dev used `window.location.origin` in the browser and `localhost:3000` on the server, so SSR on another port hydrated with a JSON-LD/canonical mismatch.
+
 ## 0.1.48
 
 ### Patch Changes

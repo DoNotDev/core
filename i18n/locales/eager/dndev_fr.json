@@ -48,6 +48,14 @@
     "error": "Échec de l'envoi de l'email de vérification. Veuillez réessayer."
   },
   "errors": {
+    "notFound": {
+      "title": "$t(messages.notFound.title)",
+      "description": "$t(messages.notFound.description)",
+      "suggestions": "$t(messages.notFound.suggestions)",
+      "navigateTo": "$t(messages.notFound.navigateTo)",
+      "goHome": "$t(messages.notFound.goHome)",
+      "goBack": "$t(messages.notFound.goBack)"
+    },
     "auth/popup-closed-by-user": "La fenêtre de connexion a été fermée avant la fin.",
     "auth/cancelled-popup-request": "La demande de fenêtre de connexion a été annulée.",
     "auth/popup-blocked": "La fenêtre de connexion a été bloquée par le navigateur.",
@@ -155,6 +163,7 @@
     "forbidden": "Accès interdit",
     "serverError": "Erreur serveur",
     "notFound": {
+      "navigateTo": "Aller à {{label}}",
       "title": "Page non trouvée",
       "description": "La page que vous recherchez n'existe pas ou a été déplacée.",
       "suggestions": "Vous cherchez peut-être :",

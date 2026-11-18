@@ -69,21 +69,23 @@ class InMemoryAdapter implements ICrudAdapter {
     return { id, data: record };
   }
 
-  async set<T>(collection: string, id: string, data: T): Promise<void> {
+  async set<T>(collection: string, id: string, data: T): Promise<Record<string, unknown>> {
     const col = this._collection(collection);
     col[id] = data as Record<string, unknown>;
+    return { ...col[id], id };
   }
 
   async update<T>(
     collection: string,
     id: string,
     data: Partial<T>
-  ): Promise<void> {
+  ): Promise<Record<string, unknown>> {
     const col = this._collection(collection);
     if (!col[id]) {
       throw new Error(`Document ${id} not found in ${collection}`);
     }
     col[id] = { ...col[id], ...(data as Record<string, unknown>) };
+    return { ...col[id], id };
   }
 
   async delete(collection: string, id: string): Promise<void> {
@@ -212,13 +214,17 @@ class MinimalAdapter implements ICrudAdapter {
     };
   }
 
-  async set(_collection: string, _id: string, _data: unknown): Promise<void> {}
+  async set(_collection: string, id: string, _data: unknown): Promise<Record<string, unknown>> {
+    return { id };
+  }
 
   async update<T>(
     _collection: string,
-    _id: string,
+    id: string,
     _data: Partial<T>
-  ): Promise<void> {}
+  ): Promise<Record<string, unknown>> {
+    return { id };
+  }
 
   async delete(_collection: string, _id: string): Promise<void> {}
 

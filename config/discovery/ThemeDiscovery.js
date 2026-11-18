@@ -9,7 +9,13 @@
 
 import { BaseDiscovery } from './BaseDiscovery.js';
 import { ESSENTIAL_THEMES } from '../constants.js';
+import { resolveThemeFontFamilies } from '../fonts/resolveFontManifest.js';
 import { CSSExtractor } from '../utils/CSSExtractor.js';
+
+/** Package export holding the framework's design tokens (font defaults included). */
+const FRAMEWORK_TOKENS_EXPORT = '@donotdev/components/styles';
+/** Relative `@import './x.css';` (inlined when reading the framework token CSS). */
+const RELATIVE_IMPORT_RE = /@import\s+['"](\.[^'"]+)['"]\s*;/g;
 
 export class ThemeDiscovery extends BaseDiscovery {
   constructor(cssExtractor, pathResolver, options = {}) {
@@ -90,9 +96,16 @@ export class ThemeDiscovery extends BaseDiscovery {
     await this._processFrameworkFiles(frameworkFiles);
 
     // Process consumer files (themes + variables only)
-    await this._processConsumerFiles(consumerFiles);
+    const appCss = await this._processConsumerFiles(consumerFiles);
 
     const themes = this._serializeThemes();
+
+    // Families the themes render text in: decides which framework fonts ship
+    const fontFamilies = resolveThemeFontFamilies({
+      frameworkCss: this._readFrameworkTokenCss(),
+      appCss,
+    });
+    this.logger.debug('Theme font families:', fontFamilies);
 
     // Aggregate summary shown by plugin's logStats, not here
     this.logger.debug(
@@ -112,6 +125,7 @@ export class ThemeDiscovery extends BaseDiscovery {
       },
       classes: Array.from(this.discovered.classes).sort(),
       keyframes: Array.from(this.discovered.keyframes).sort(),
+      fontFamilies,
     };
   }
 
@@ -213,11 +227,17 @@ export class ThemeDiscovery extends BaseDiscovery {
     }
   }
 
+  /**
+   * @param {string[]} consumerFiles
+   * @returns {Promise<string[]>} The CSS text of every file read (font families input)
+   */
   async _processConsumerFiles(consumerFiles) {
+    const contents = [];
     for (const file of consumerFiles) {
       try {
         // Read as text (CSS/TS theme files, not JSON)
         const content = await this.pathResolver.read(file, { format: 'text' });
+        contents.push(content);
         const normalizedFile = this.pathResolver.normalizePath(file);
 
         this.cssExtractor.extractThemes(
@@ -240,6 +260,40 @@ export class ThemeDiscovery extends BaseDiscovery {
         );
       }
     }
+    return contents;
+  }
+
+  /**
+   * The framework's design-token CSS (@donotdev/components styles: src/ in the
+   * monorepo, dist/ when published), relative @imports inlined. Source of the
+   * default font tokens (--font-sans: Inter…). Throws when it cannot be read: font
+   * selection would be wrong without it.
+   * @returns {string}
+   */
+  _readFrameworkTokenCss() {
+    const entry = this.pathResolver.resolvePackage(
+      FRAMEWORK_TOKENS_EXPORT,
+      this.pathResolver.resolveFrameworkPackage('@donotdev/ui')
+    );
+    if (!entry) {
+      throw new Error(
+        `Theme discovery: cannot resolve ${FRAMEWORK_TOKENS_EXPORT} (framework font defaults)`
+      );
+    }
+    const seen = new Set();
+    const inline = (file) => {
+      if (seen.has(file)) return '';
+      seen.add(file);
+      const css = this.pathResolver.readSync(file, { format: 'text' });
+      if (typeof css !== 'string') {
+        throw new Error(`Theme discovery: cannot read ${file}`);
+      }
+      const dir = this.pathResolver.getDirname(file);
+      return css.replace(RELATIVE_IMPORT_RE, (_m, rel) =>
+        inline(this.pathResolver.resolvePath(rel, dir))
+      );
+    };
+    return inline(entry);
   }
 
   _addEssentialThemes() {

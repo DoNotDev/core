@@ -10,12 +10,11 @@
  */
 
 import * as v from 'valibot';
-import {
-  SUBSCRIPTION_STATUS,
-  STRIPE_MODES,
-  type SubscriptionClaims,
-} from './constants';
-import { picklistOptions } from '../common/picklistOptions';
+import { STRIPE_MODES } from './constants';
+import { SubscriptionClaimsSchema } from '../auth/schemas';
+
+/** Compatibility exports; auth owns canonical access claims and validation. */
+export { SubscriptionClaimsSchema, validateSubscriptionClaims } from '../auth/schemas';
 
 // =============================================================================
 // Billing Request Schemas
@@ -127,6 +126,43 @@ export const CreateCheckoutSessionResponseSchema = v.object({
   sessionUrl: v.nullable(v.pipe(v.string(), v.url())),
 });
 
+/** Non-empty checkout identifiers; whitespace-only values are not references. */
+const CheckoutVerificationIdSchema = v.pipe(v.string(), v.minLength(1), v.regex(/\S/));
+
+/** Read-only order verification input. Identity comes only from the authenticated handler. */
+export const VerifyOrderCheckoutRequestSchema = v.object({
+  sessionId: CheckoutVerificationIdSchema,
+  billingConfigKey: CheckoutVerificationIdSchema,
+});
+
+/**
+ * Allowlisted provider payment/session state, not fulfillment confirmation.
+ * A complete session may still be unpaid (delayed payment methods).
+ */
+export const VerifyOrderCheckoutResultSchema = v.object({
+  sessionId: CheckoutVerificationIdSchema,
+  orderId: CheckoutVerificationIdSchema,
+  billingConfigKey: CheckoutVerificationIdSchema,
+  sessionStatus: v.picklist(['open', 'complete', 'expired']),
+  paymentStatus: v.picklist(['paid', 'unpaid', 'no_payment_required']),
+});
+
+/** Validated read-only order verification request. */
+export type VerifyOrderCheckoutRequest = v.InferOutput<typeof VerifyOrderCheckoutRequestSchema>;
+
+/** Verified payment/session state; never an assertion that the order was fulfilled. */
+export type VerifyOrderCheckoutResult = v.InferOutput<typeof VerifyOrderCheckoutResultSchema>;
+
+/** Validate order verification input, dropping fields outside the public contract. */
+export function validateVerifyOrderCheckoutRequest(data: unknown) {
+  return v.safeParse(VerifyOrderCheckoutRequestSchema, data);
+}
+
+/** Validate and allowlist order verification output. */
+export function validateVerifyOrderCheckoutResult(data: unknown) {
+  return v.safeParse(VerifyOrderCheckoutResultSchema, data);
+}
+
 // =============================================================================
 // Subscription Schemas
 // =============================================================================
@@ -140,33 +176,13 @@ export const CreateCheckoutSessionResponseSchema = v.object({
  * @author AMBROISE PARK Consulting
  */
 export const SubscriptionDataSchema = v.object({
+  ...SubscriptionClaimsSchema.entries,
   userId: v.string(),
-  tier: v.string(),
-  status: v.picklist(picklistOptions(SUBSCRIPTION_STATUS)),
   subscriptionId: v.nullable(v.string()),
   customerId: v.string(),
-  subscriptionEnd: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
   cancelAtPeriodEnd: v.boolean(),
-  updatedAt: v.pipe(v.string(), v.isoTimestamp()),
 });
 
-/**
- * Schema for subscription claims stored in Firebase Auth custom claims
- *
- * @version 0.1.0
- * @since 0.0.1
- * @author AMBROISE PARK Consulting
- */
-export const SubscriptionClaimsSchema = v.object({
-  tier: v.string(),
-  subscriptionId: v.nullable(v.string()),
-  customerId: v.string(),
-  status: v.picklist(picklistOptions(SUBSCRIPTION_STATUS)),
-  subscriptionEnd: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
-  cancelAtPeriodEnd: v.boolean(),
-  updatedAt: v.pipe(v.string(), v.isoTimestamp()),
-  isDefault: v.optional(v.boolean()),
-});
 
 // =============================================================================
 // Webhook Schemas
@@ -355,16 +371,6 @@ export function validateSubscriptionData(data: unknown) {
   return v.safeParse(SubscriptionDataSchema, data);
 }
 
-/**
- * Validate subscription claims
- *
- * @version 0.1.0
- * @since 0.0.1
- * @author AMBROISE PARK Consulting
- */
-export function validateSubscriptionClaims(data: unknown) {
-  return v.safeParse(SubscriptionClaimsSchema, data);
-}
 
 /**
  * Validate webhook event

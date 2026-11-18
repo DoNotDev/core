@@ -20,6 +20,7 @@ import {
 } from './constants';
 import type { UserRole } from '../auth/constants';
 import type { ConditionalBehavior } from './conditions';
+import type { EntityRowFromFields } from './fieldSemantics';
 
 // Re-export DEFAULT_ENTITY_ACCESS for consumers (constants.ts not exported directly)
 export { DEFAULT_ENTITY_ACCESS };
@@ -52,16 +53,17 @@ export type Visibility = (typeof VISIBILITY)[keyof typeof VISIBILITY];
  * Editable level for entity fields
  * Controls who can MODIFY a field
  * - true: Anyone who can see the field
- * - false: Nobody (read-only, still shown in form)
+ * - false: Nobody in forms (read-only, shown from the stored record); written by app code (write class `program`)
  * - 'admin': Admin+ can edit (role hierarchy)
  * - 'super': Super only
  * - 'create-only': Editable on create, read-only after
- * - 'generated': DB-generated — hidden from forms, stripped from writes
- * - 'computed': UI-computed (derived from other fields) — hidden from forms, included in writes
+ * - 'generated': DB-generated — hidden from forms, stripped from writes (write class `never`)
+ * - 'computed': UI-computed (derived from other fields) — shown read-only in forms, written by the form (write class `derived`)
  *
- * Custom role strings (e.g. future hierarchy keys) are accepted the same way as
- * {@link FieldType}: `(string & {})` keeps known literals distinguishable for
- * narrowing; plain `| string` would collapse to `boolean | string` and break
+ * Write classes: `describeEntity` (core/schemas/src/common/fieldSemantics.ts).
+ *
+ * Custom role strings (e.g. future hierarchy keys) are accepted:
+ * `(string & {})` keeps known literals distinguishable for narrowing; plain `| string` would collapse to `boolean | string` and break
  * comparisons to `EDITABLE.GENERATED` / `EDITABLE.COMPUTED`.
  *
  * @version 0.1.0
@@ -131,24 +133,28 @@ export interface EntityOwnershipConfig {
 }
 
 /**
- * Supported field types for entities
- * These determine the UI components and validation rules used for each field
+ * Supported field types for entities: the built-ins plus the custom types an app
+ * declares in {@link CustomFieldOptionsMap}. Closed union, so a typo or an
+ * undeclared custom type fails at typecheck instead of rendering a text input.
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
-export type FieldType = (typeof FIELD_TYPES)[number] | (string & {});
+export type FieldType =
+  | (typeof FIELD_TYPES)[number]
+  | Extract<keyof CustomFieldOptionsMap, string>;
 
 /**
- * Built-in field type union (same as FieldType). Used internally to distinguish
- * framework field types from custom types registered via registerFieldType().
+ * Built-in field type union. Used internally to distinguish framework field
+ * types from custom types registered via registerFieldType().
  */
 export type BuiltInFieldType = (typeof FIELD_TYPES)[number];
 
 /**
  * Map of custom field type names to their option shapes for `options.fieldSpecific`.
- * Augment this interface in your app so entity definitions get typed options for custom types.
+ * Augment this interface in your app to declare every custom field type: a type
+ * not declared here is not a valid {@link FieldType}. Use `{}` when it has no options.
  *
  * @example
  * ```ts
@@ -359,10 +365,29 @@ export interface FileAsset {
 }
 
 /**
- * Maps field types to their corresponding TypeScript types
- * Used for type-safe form handling
+ * Stored file value of `file` / `document` fields: a {@link FileAsset} whose
+ * `mimeType` and `uploadedAt` may be `null` in stored data (value schema: nullish).
  *
  * @version 0.1.0
+ * @since 0.2.5
+ * @author AMBROISE PARK Consulting
+ */
+export type StoredFileAsset = Omit<FileAsset, 'mimeType' | 'uploadedAt'> & {
+  /** MIME type (e.g., 'application/pdf') */
+  mimeType?: string | null;
+  /** ISO timestamp when uploaded */
+  uploadedAt?: string | null;
+};
+
+/**
+ * Maps field types to their corresponding TypeScript types: the presence-free value
+ * of a field of that type with no options (null / required are applied per operation,
+ * see `InferEntityRow`, `CreateInput`). One key per built-in type (`FIELD_TYPES`),
+ * same values as the runtime table `BUILTIN_VALUES` (`@donotdev/schemas`), proven by
+ * the value corpus of `fieldSemantics.parity.test.ts`. Static options and string
+ * switches refine it per field (`BuiltinValueOf`).
+ *
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
@@ -378,21 +403,30 @@ export type FieldTypeToValue = {
   badge: string;
   boolean: boolean;
   checkbox: boolean;
-  combobox: string;
+  combobox: string | number;
   color: string;
+  currency: number;
   date: string;
   'datetime-local': string;
-  document: FileAsset | null;
-  documents: FileAsset[];
+  document: StoredFileAsset;
+  documents: StoredFileAsset[];
+  duration: number;
   email: string;
   'field-array': Record<string, unknown>[];
-  file: FileAsset | null;
-  files: FileAsset[];
+  file: StoredFileAsset;
+  files: StoredFileAsset[];
+  gdprConsent:
+    | false
+    | {
+        gdprConsent: true;
+        gdprConsentDate?: string;
+        gdprConsentVersion?: string;
+      };
   geopoint: { lat: number; lng: number };
   hidden: string;
   iban: string;
-  image: Picture | null;
-  images: Picture[];
+  image: string | Picture;
+  images: (string | Picture)[];
   map: Record<string, any>;
   month: string;
   multiselect: string[];
@@ -404,33 +438,40 @@ export type FieldTypeToValue = {
     discountPercent?: number;
   };
   password: string;
-  radio: string;
+  radio: string | number;
   reference: string;
   range: number;
+  rating: number;
   reset: never;
-  select: string;
+  richtext: string;
+  select: string | number;
   submit: never;
   tel: string;
   text: string;
   textarea: string;
   time: string;
   timestamp: string;
-  switch: string | boolean;
+  switch: boolean;
   url: string;
   week: string;
   year: number;
 };
 
 /**
- * Gets the value type for a specific field type
+ * Value a field component receives (`value` / `onChange` props) for a field type:
+ * the stored value ({@link FieldTypeToValue}); action buttons (`submit`, `reset`)
+ * store nothing (`never`) and receive `undefined`; custom types `unknown`.
  * @template T - The field type
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
-export type ValueTypeForField<T extends string> =
-  T extends keyof FieldTypeToValue ? FieldTypeToValue[T] : unknown;
+export type ValueTypeForField<T extends string> = T extends 'submit' | 'reset'
+  ? undefined
+  : T extends keyof FieldTypeToValue
+    ? FieldTypeToValue[T]
+    : unknown;
 
 /**
  * Any valid field value - includes built-in types plus custom registered types
@@ -569,11 +610,12 @@ export interface ValidationRules<T extends string = FieldType> {
           }>)
     : never;
 
-  /** Collection name for reference fields */
-  reference?: T extends 'reference' ? string : never;
-
-  /** Whether the field is nullable */
-  nullable?: boolean;
+  /**
+   * Referenced collection. Any field type, custom ones included: the value is then
+   * the id (non-empty string) of a document of that collection, unless
+   * `validation.schema` says otherwise.
+   */
+  reference?: string;
 
   /**
    * Custom Valibot schema for this field
@@ -791,6 +833,7 @@ export interface EntityField<T extends string = FieldType> {
    * - false: Nobody (read-only display)
    * - 'admin': Only admins can edit
    * - 'create-only': Editable on create, read-only after
+   * - 'generated' / 'computed': see {@link Editable}
    */
   editable?: Editable;
 
@@ -813,7 +856,12 @@ export interface EntityField<T extends string = FieldType> {
   /** Display label for the field */
   label: string;
 
-  /** Hint text to display under the field */
+  /**
+   * Help text (translation key of the entity namespace). Entity forms show an (i) after
+   * the label: hover or focus shows the text, a tap pins it on touch screens. Opt-in:
+   * no `hint`, no (i). Fields with a floating label show it (not yet checkbox, switch,
+   * radio, rating, range and upload fields).
+   */
   hint?: string;
 
   /** Field dependencies for dynamic forms */
@@ -842,7 +890,10 @@ export interface EntityField<T extends string = FieldType> {
 
   /**
    * Dynamic conditions for field behavior based on other field values.
-   * Controls visibility, disabled, required, and readonly states at runtime.
+   * Controls visibility, disabled, required, and readonly states of the rendered
+   * field. Display only: form validation uses the field's static `validation`, so a
+   * conditionally hidden field must not be `required` unless its value is supplied
+   * (e.g. through the form's `defaultValues`).
    *
    * @example
    * ```typescript
@@ -856,6 +907,36 @@ export interface EntityField<T extends string = FieldType> {
 
   /** UI-specific configuration for field rendering */
   options?: UIFieldOptions<T>;
+
+  /**
+   * Filter behaviour of the field (`EntityFilters`, `applyFilters`, `matchesFilter`).
+   *
+   * @example
+   * ```typescript
+   * // skinTypes: ['all'] means "suits every skin type"
+   * skinTypes: { type: 'multiselect', filter: { wildcard: 'all' }, ... }
+   * ```
+   *
+   * @since 0.3.0
+   */
+  filter?: FieldFilterConfig;
+}
+
+/**
+ * Filter behaviour of an entity field ({@link EntityField.filter}).
+ *
+ * @version 0.1.0
+ * @since 0.3.0
+ * @author AMBROISE PARK Consulting
+ */
+export interface FieldFilterConfig {
+  /**
+   * Stored value meaning "matches every option" (e.g. `'all'` in a `skinTypes` array).
+   * `EntityFilters` does not offer it as a choice; a row holding it (as its value, or
+   * in its array) matches any selected option of a select, multiselect or reference
+   * filter and counts as available for every option.
+   */
+  wildcard?: string;
 }
 
 /**
@@ -892,7 +973,9 @@ export interface BaseEntityFields {
 }
 
 /**
- * Consumer `fields` merged with {@link BaseEntityFields} — same keys {@link defineEntity} returns.
+ * Consumer `fields` merged with {@link BaseEntityFields} — same keys {@link defineEntity}
+ * returns, widened base fields. The literal result type of `defineEntity` (literal base
+ * fields, merged status options, scope field) is `DefinedEntityFields` (`@donotdev/schemas`).
  *
  * @version 0.1.0
  * @since 0.2.0
@@ -921,29 +1004,7 @@ export type MutableMergedEntityFieldMap<F extends Record<string, EntityField>> =
 export type EntityFieldMapDefault = Record<string, EntityField> &
   BaseEntityFields;
 
-/**
- * CRUD/cache document row inferred from an entity `fields` map (SSOT with `defineEntity` literals).
- * Intersects {@link Record} so rows satisfy `T extends Record<string, unknown>` (bulk, PII, adapters).
- *
- * @version 0.1.0
- * @since 0.2.0
- */
-export type EntityRowFromFields<F extends Record<string, EntityField>> = {
-  [K in keyof F]: F[K] extends EntityField<infer FT>
-    ? FT extends keyof FieldTypeToValue
-      ? FieldTypeToValue[FT]
-      : unknown
-    : unknown;
-} & {
-  // Companion of each translated field (`i18n: true`): value per language code
-  [K in keyof F as F[K] extends { i18n: true }
-    ? `${K & string}I18n`
-    : never]?: F[K] extends EntityField<infer FT>
-    ? FT extends keyof FieldTypeToValue
-      ? Partial<Record<string, FieldTypeToValue[FT]>> | null
-      : unknown
-    : unknown;
-} & Record<string, unknown>;
+// `EntityRowFromFields` (stored row from the descriptor): `./fieldSemantics.ts`
 
 /**
  * Unique key constraint definition for entity deduplication
@@ -1357,6 +1418,9 @@ export interface BusinessEntity<
  * Complete entity definition including base fields
  * Created by defineEntity() which merges defaults
  *
+ * @template F - Merged field map
+ * @template A - Merged access configuration
+ *
  * Extends BusinessEntity but overrides optional properties to required:
  * - namespace: always computed (defaults to `entity-${name.toLowerCase()}`)
  * - access: always merged with defaults
@@ -1369,12 +1433,17 @@ export interface BusinessEntity<
  */
 export interface Entity<
   out F extends Record<string, EntityField> = EntityFieldMapDefault,
+  out A extends Required<EntityAccessConfig> = Required<EntityAccessConfig>,
 > extends Omit<BusinessEntity<F>, 'access' | 'namespace'> {
   /** Field definitions including base fields */
   fields: F;
 
-  /** Access configuration with defaults applied (always present after defineEntity) */
-  access: Required<EntityAccessConfig>;
+  /**
+   * Access configuration with defaults applied (always present after defineEntity).
+   * Literal for a `defineEntity` result (`access.read` decides which row keys are
+   * optional in `InferEntityRow`).
+   */
+  access: A;
 
   /** i18n namespace for translations (always present after defineEntity, defaults to `entity-${name.toLowerCase()}`) */
   namespace: string;
@@ -1399,12 +1468,33 @@ export interface Entity<
 export type AnyEntity = Entity<Record<string, EntityField>>;
 
 /**
- * Inferred document row for an entity. Always includes `id` so rows are valid for
- * lists, keys, and `Record<string, any>`-shaped component props even when `E` is
- * the widened {@link AnyEntity} (`fields` is only a string index signature).
+ * Stored row of an entity (`InferEntityData` in `@donotdev/crud`), from its descriptor
+ * (`DescribeEntity`, see {@link EntityRowFromFields}): discriminated union on
+ * `status`. Drafts and deleted rows (`HIDDEN_STATUSES`) have every field `V | null`;
+ * other statuses have required fields `V`, optional / conditional ones `V | null`.
+ * Hidden fields are left out; keys above `access.read` are optional. Always includes
+ * `id` so rows are valid for lists, keys, and `Record<string, any>`-shaped component
+ * props even when `E` is the widened {@link AnyEntity} (`fields` is only a string
+ * index signature: the row is then `Record<string, unknown> & { id: string }`).
+ *
+ * @template E - Entity from `defineEntity()`
+ *
+ * @example
+ * ```typescript
+ * type Product = InferEntityRow<typeof productEntity>;
+ * function title(p: Product): string {
+ *   if (p.status === 'available') return p.name; // string (required, published)
+ *   return p.name ?? ''; // string | null | undefined (draft, deleted, or status not read)
+ * }
+ * ```
+ *
+ * @version 0.2.0
+ * @since 0.2.0
+ * @author AMBROISE PARK Consulting
  */
 export type InferEntityRow<E extends AnyEntity> = EntityRowFromFields<
-  E['fields']
+  E['fields'],
+  E['access']['read']
 > & {
   id: string;
 };

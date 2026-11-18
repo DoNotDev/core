@@ -17,14 +17,167 @@ import type {
   EntityAccessConfig,
   FormConfig,
   MutableMergedEntityFieldMap,
-  MergedEntityFieldMap,
+  RequireValueShapes,
   ScopeConfig,
   UniqueKeyDefinition,
 } from '@donotdev/types';
 import { handleError, getListCardFieldNames } from '@donotdev/utils/server';
 
 import { registerEntity } from './entityRegistry';
+import { describeEntity } from './fieldSemantics';
 import { baseFields, DEFAULT_STATUS_OPTIONS } from './visibility';
+
+// ============================================================================
+// Literal result type (what the merge below builds, key by key)
+// ============================================================================
+
+/** Flattens an intersection into one object type (keeps readonly / optional). */
+type Simplify<T> = { [K in keyof T]: T[K] } & unknown;
+
+/** Type of `{ ...A, ...B }` */
+type Spread<A, B> = Simplify<Omit<A, keyof B> & B>;
+
+/** Literal base fields (`baseFields`) */
+type BaseFields = typeof baseFields;
+
+/** Technical fields a consumer may customize (type and visibility stay the base ones) */
+type CustomizableTechnicalName =
+  | 'createdAt'
+  | 'updatedAt'
+  | 'createdById'
+  | 'updatedById';
+
+/** `{ ...base, ...consumer, type: base.type, visibility: base.visibility }` */
+type MergedTechnicalField<B, C> = Simplify<
+  Omit<Spread<B, C>, 'type' | 'visibility'> &
+    Pick<B, Extract<keyof B, 'type' | 'visibility'>>
+>;
+
+/** `validation` of a consumer field, `{}` when it has none */
+type ValidationOf<C> = C extends { validation: infer V } ? V : {};
+
+/** Static option objects of a consumer status field */
+type StatusOptionOf<C> =
+  ValidationOf<C> extends { options: readonly (infer O)[] }
+    ? O extends { value: string; label: string }
+      ? O
+      : never
+    : never;
+
+/** Status field: base + consumer, options always merged (base first) */
+type MergedStatusField<C> = Simplify<
+  Omit<Spread<BaseFields['status'], C>, 'validation'> & {
+    validation: Simplify<
+      Omit<
+        Spread<BaseFields['status']['validation'], ValidationOf<C>>,
+        'options'
+      > & {
+        options: (
+          | (typeof DEFAULT_STATUS_OPTIONS)[number]
+          | StatusOptionOf<C>
+        )[];
+      }
+    >;
+  }
+>;
+
+/** Name of the scope field (`scope.field`), `never` without scope */
+type ScopeFieldName<S> = S extends { field: infer N extends string } ? N : never;
+
+/** `companyId` → `company` */
+type ScopeBaseName<N extends string> = N extends `${infer B}Id` ? B : N;
+
+/** `company` → `companies`, `org` → `orgs` */
+type ScopePlural<B extends string> = B extends `${infer R}y`
+  ? `${R}ies`
+  : `${B}s`;
+
+/** Collection the scope field references: `scope.collection`, else derived from the field name */
+type ScopeCollection<S> = S extends { collection: infer C extends string }
+  ? C
+  : ScopePlural<ScopeBaseName<ScopeFieldName<S>>>;
+
+/** Scope field `createScopeField(scope)` adds */
+type ScopeField<S> = {
+  name: ScopeFieldName<S>;
+  label: `crud:fields.${ScopeFieldName<S>}`;
+  type: 'reference';
+  visibility: 'technical';
+  editable: 'create-only';
+  validation: { required: true; reference: ScopeCollection<S> };
+};
+
+/**
+ * Literal field map `defineEntity` returns: consumer fields, base fields (`baseFields`:
+ * `id` and `status` always, technical fields merged with the consumer's customization,
+ * status options merged), and the scope field (`entity.scope`). Read by `DescribeEntity`
+ * and every entity-derived type.
+ *
+ * @template F - Consumer field map (literal)
+ * @template S - Scope configuration (literal), `undefined` without scope
+ *
+ * @version 0.1.0
+ * @since 0.2.5
+ * @author AMBROISE PARK Consulting
+ */
+export type DefinedEntityFields<F, S = undefined> = Extract<
+  // Extract: lets TS prove the generic result is a field map (Entity's constraint)
+  {
+    -readonly [K in
+      | keyof F
+      | keyof BaseFields
+      | ScopeFieldName<S>]: K extends ScopeFieldName<S>
+      ? ScopeField<S>
+      : K extends 'id'
+        ? BaseFields['id']
+        : K extends 'status'
+          ? K extends keyof F
+            ? MergedStatusField<F[K]>
+            : BaseFields['status']
+          : K extends CustomizableTechnicalName
+            ? K extends keyof F
+              ? MergedTechnicalField<BaseFields[K], F[K]>
+              : BaseFields[K]
+            : K extends keyof F
+              ? F[K]
+              : never;
+  },
+  Record<string, EntityField>
+>;
+
+/**
+ * Literal access configuration `defineEntity` returns: `DEFAULT_ENTITY_ACCESS`
+ * overridden by the consumer's `access`.
+ *
+ * @template A - Consumer access configuration (literal)
+ *
+ * @version 0.1.0
+ * @since 0.2.5
+ * @author AMBROISE PARK Consulting
+ */
+export type DefinedEntityAccess<A> = Extract<
+  {
+    -readonly [K in keyof typeof DEFAULT_ENTITY_ACCESS]: K extends keyof A
+      ?
+          | Exclude<A[K], undefined>
+          | (undefined extends A[K] ? (typeof DEFAULT_ENTITY_ACCESS)[K] : never)
+      : (typeof DEFAULT_ENTITY_ACCESS)[K];
+  },
+  Required<EntityAccessConfig>
+>;
+
+/**
+ * Entity `defineEntity` returns, literal: merged fields ({@link DefinedEntityFields})
+ * and merged access ({@link DefinedEntityAccess}).
+ *
+ * @version 0.1.0
+ * @since 0.2.5
+ * @author AMBROISE PARK Consulting
+ */
+export type DefinedEntity<F, A = {}, S = undefined> = Entity<
+  DefinedEntityFields<F, S>,
+  DefinedEntityAccess<A>
+>;
 
 /** Field names that would cause prototype pollution if used as entity field keys */
 const FORBIDDEN_FIELD_NAMES = new Set([
@@ -372,8 +525,15 @@ function setDefaultFormConfig(entity: BusinessEntity): FormConfig {
  * with `visibility: 'technical'`. User-defined technical fields are merged with defaults, allowing
  * customization (e.g., `editable: 'admin'`, custom `label`, additional `validation`).
  *
- * @param entity - The business entity definition
- * @returns The validated and configured entity
+ * @template F - Consumer field map (literal: `required`, options, `editable`, `visibility` keep their literal types)
+ * @template N - Entity name (literal, named in the value-shape type error)
+ * @template A - Consumer access configuration (literal: `access.read` decides which row keys are optional)
+ * @template S - Scope configuration (literal: the scope field is part of the result type)
+ *
+ * @param input - The business entity definition
+ * @returns The validated and configured entity, typed literally ({@link DefinedEntity}):
+ *   `DescribeEntity`, `InferEntityRow`, `CreateInput`, `FormValues` read it
+ * @throws When a field has a custom type and no value shape (`validation.schema` or `validation.reference`), and on invalid listFields, listCardFields, uniqueKeys or form configuration
  *
  * @example
  * ```typescript
@@ -416,18 +576,39 @@ function setDefaultFormConfig(entity: BusinessEntity): FormConfig {
  * - Extend options: `status: { validation: { options: [{ value: 'sold', label: 'sold' }] } }`
  * - Hide field: `status: { visibility: 'technical' }` if you don't want it in forms
  *
+ * **Field values (fail loud):**
+ * - Every field resolves its value at definition (`describeEntity`): `validation.schema`
+ *   > `validation.reference` > built-in type. A custom type with neither, or with a
+ *   `validation.schema` whose storage kind cannot be read (e.g. `v.unknown()`,
+ *   `v.custom()`) and no `validation.reference`, throws, naming `entity.field`, and is
+ *   a type error (`RequireValueShapes`: the field is missing a property named
+ *   `Entity.field: custom type '…' has no value shape, …` / `… whose storage kind
+ *   cannot be read, …`).
+ *
  * **Dropdown Options Format:**
  * - For `select`, `multiselect`, and `radio` field types, options must be defined in `validation.options`
  * - Options must be an array of objects with `value` (string) and `label` (string)
  * - Labels can use i18n keys (e.g., `'entities.product.status.active'`) for translation
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
-export function defineEntity<const F extends Record<string, EntityField>>(
-  entity: Omit<BusinessEntity<F>, 'fields'> & { fields: F }
-): Entity<MutableMergedEntityFieldMap<F>> {
+export function defineEntity<
+  const F extends Record<string, EntityField>,
+  const N extends string,
+  const A extends EntityAccessConfig = {},
+  const S extends ScopeConfig | undefined = undefined,
+>(
+  input: Omit<BusinessEntity<F>, 'name' | 'fields' | 'access' | 'scope'> & {
+    name: N;
+    // NoInfer: the value-shape check reports, it never drives the inference of F
+    fields: F & NoInfer<RequireValueShapes<F, N>>;
+    access?: A;
+    scope?: S;
+  }
+): DefinedEntity<F, A, S> {
+  const entity: Omit<BusinessEntity<F>, 'fields'> & { fields: F } = input;
   try {
     // Validate field names before any spread (prototype pollution guard)
     validateFieldNames(entity);
@@ -579,10 +760,24 @@ export function defineEntity<const F extends Record<string, EntityField>>(
       ...(entity.defaultSort && { defaultSort: entity.defaultSort }),
     } as Entity<MutableMergedEntityFieldMap<F>>;
 
+    // Every field must say its value: a custom type without validation.schema or
+    // validation.reference throws here, at definition, naming entity.field
+    try {
+      describeEntity(defined);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw handleError(new Error(message), {
+        userMessage: message,
+        context: { entityName: entity.name, operation: 'defineEntity' },
+        severity: 'error',
+      });
+    }
+
     // Reference fields resolve their target entity by collection (no app wiring)
     registerEntity(defined);
 
-    return defined;
+    // why: the literal result type (DefinedEntity: merged fields, access, scope field) spells out the merge above key by key; TS cannot derive it from the spreads of the generics F, A, S
+    return defined as unknown as DefinedEntity<F, A, S>;
   } catch (error) {
     throw handleError(error, {
       userMessage: `Failed to define entity '${entity.name}'`,

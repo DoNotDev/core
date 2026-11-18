@@ -40,6 +40,14 @@
     "error": "Invio email di verifica fallito. Riprova."
   },
   "errors": {
+    "notFound": {
+      "title": "$t(messages.notFound.title)",
+      "description": "$t(messages.notFound.description)",
+      "suggestions": "$t(messages.notFound.suggestions)",
+      "navigateTo": "$t(messages.notFound.navigateTo)",
+      "goHome": "$t(messages.notFound.goHome)",
+      "goBack": "$t(messages.notFound.goBack)"
+    },
     "auth/popup-closed-by-user": "Il popup di accesso è stato chiuso prima del completamento.",
     "auth/cancelled-popup-request": "La richiesta di accesso è stata annullata.",
     "auth/popup-blocked": "Il popup di accesso è stato bloccato dal browser.",
@@ -147,6 +155,7 @@
     "forbidden": "Accesso proibito",
     "serverError": "Errore del server",
     "notFound": {
+      "navigateTo": "Vai a {{label}}",
       "title": "Pagina Non Trovata",
       "description": "La pagina che stai cercando non esiste o è stata spostata.",
       "suggestions": "Potresti cercare:",

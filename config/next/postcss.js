@@ -3,7 +3,7 @@
  * @description PostCSS configuration for Next.js with workspace-aware package resolution.
  * Handles @fontsource CSS alias: Turbopack resolveAlias doesn't work for CSS @import,
  * so we redirect @donotdev/ui/dndev.css → dndev-next.css here instead.
- * Fonts are served from public/dndev-fonts.css (see copyFontsToPublic + FontPreloadLinks).
+ * The theme's framework fonts are served from public/dndev-fonts.css (see copyFontsToPublic + FontPreloadLinks).
  */
 
 import { PathResolver } from '../utils/PathResolver.js';

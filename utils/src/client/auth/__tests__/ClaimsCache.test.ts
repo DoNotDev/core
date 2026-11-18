@@ -34,6 +34,16 @@ function createMockStorage(): IStorageManager {
   } as unknown as IStorageManager;
 }
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  let reject!: (reason: Error) => void;
+  const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+  return { promise, resolve, reject };
+}
+
 describe('ClaimsCache', () => {
   let mockStorage: IStorageManager;
 
@@ -291,6 +301,128 @@ describe('ClaimsCache', () => {
       const result = await cache.getClaims(verifyFn);
 
       expect(result).toEqual({});
+    });
+  });
+
+  describe('identity changes during pending operations', () => {
+    it.each(['user-b', null, 'user-a'])('rejects delayed verification after switching through B to %s', async (nextUserId) => {
+      const verification = deferred<{ role: string }>();
+      const cache = new ClaimsCache({ userId: 'user-a', offlineTrustEnabled: true });
+      const pending = cache.getClaims(() => verification.promise);
+      const rejected = expect(pending).rejects.toThrow('Identity changed');
+
+      cache.setUserId('user-b');
+      cache.setUserId(nextUserId);
+      verification.resolve({ role: 'admin-a' });
+
+      await rejected;
+      expect(mockStorage.set).not.toHaveBeenCalled();
+      expect(mockStorage.get).not.toHaveBeenCalled();
+    });
+
+    it('keeps verification valid when the same identity is set again', async () => {
+      const verification = deferred<{ role: string }>();
+      const cache = new ClaimsCache({ userId: 'user-a' });
+      const pending = cache.getClaims(() => verification.promise);
+      cache.setUserId('user-a');
+      verification.resolve({ role: 'admin-a' });
+
+      await expect(pending).resolves.toEqual({ role: 'admin-a' });
+      expect(mockStorage.set).toHaveBeenCalledWith(
+        'dndev-claims-user-a',
+        expect.objectContaining({ claims: { role: 'admin-a' } })
+      );
+    });
+
+    it('never falls back to B cache when A verification fails after a switch', async () => {
+      const verification = deferred<{ role: string }>();
+      const cache = new ClaimsCache({ userId: 'user-a', offlineTrustEnabled: true });
+      await cache.setClaims({ role: 'admin-a' });
+      cache.setUserId('user-b');
+      await cache.setClaims({ role: 'admin-b' });
+      cache.setUserId('user-a');
+      const pending = cache.getClaims(() => verification.promise);
+      const rejected = expect(pending).rejects.toThrow('Identity changed');
+      cache.setUserId('user-b');
+      verification.reject(new Error('network error'));
+
+      await rejected;
+      expect(mockStorage.get).not.toHaveBeenCalled();
+    });
+
+    it.each([false, true])('rejects a pending cache read after switching (online: %s)', async (online) => {
+      Object.defineProperty(navigator, 'onLine', { value: online, configurable: true });
+      const read = deferred<void>();
+      const started = deferred<void>();
+      vi.mocked(mockStorage.get).mockImplementationOnce(async () => {
+        started.resolve();
+        await read.promise;
+        return { claims: { role: 'admin-a' }, timestamp: Date.now(), source: 'network' };
+      });
+      const cache = new ClaimsCache({ userId: 'user-a', offlineTrustEnabled: true });
+      const pending = cache.getClaims(async () => { throw new Error('network error'); });
+      const rejected = expect(pending).rejects.toThrow('Identity changed');
+      await started.promise;
+      cache.setUserId('user-b');
+      read.resolve();
+
+      await rejected;
+      expect(mockStorage.get).toHaveBeenCalledExactlyOnceWith('dndev-claims-user-a');
+      expect(mockStorage.remove).not.toHaveBeenCalled();
+    });
+
+    it('does not clear B cache when an expired A cache read completes after switching', async () => {
+      Object.defineProperty(navigator, 'onLine', { value: false, configurable: true });
+      const read = deferred<void>();
+      vi.mocked(mockStorage.get).mockImplementationOnce(async () => {
+        await read.promise;
+        return { claims: { role: 'expired-a' }, timestamp: 0, source: 'network' };
+      });
+      const cache = new ClaimsCache({ userId: 'user-a', offlineTrustEnabled: true });
+      const pending = cache.getClaims(vi.fn());
+      const rejected = expect(pending).rejects.toThrow('Identity changed');
+      cache.setUserId('user-b');
+      read.resolve();
+
+      await rejected;
+      expect(mockStorage.remove).not.toHaveBeenCalled();
+    });
+
+    it('rejects verification results if identity changes during the cache write', async () => {
+      const write = deferred<void>();
+      const started = deferred<void>();
+      vi.mocked(mockStorage.set).mockImplementationOnce(async () => {
+        started.resolve();
+        await write.promise;
+      });
+      const cache = new ClaimsCache({ userId: 'user-a', offlineTrustEnabled: true });
+      const pending = cache.getClaims(async () => ({ role: 'admin-a' }));
+      const rejected = expect(pending).rejects.toThrow('Identity changed');
+      await started.promise;
+      cache.setUserId('user-b');
+      write.resolve();
+
+      await rejected;
+      expect(mockStorage.set).toHaveBeenCalledExactlyOnceWith(
+        'dndev-claims-user-a',
+        expect.objectContaining({ claims: { role: 'admin-a' } })
+      );
+      expect(mockStorage.get).not.toHaveBeenCalled();
+    });
+
+    it('keeps direct setClaims bound to its synchronously captured key', async () => {
+      const write = deferred<void>();
+      vi.mocked(mockStorage.set).mockImplementationOnce(async () => { await write.promise; });
+      const cache = new ClaimsCache({ userId: 'user-a' });
+      const pending = cache.setClaims({ role: 'admin-a' });
+      cache.setUserId('user-b');
+      write.resolve();
+      await pending;
+
+      expect(mockStorage.set).toHaveBeenCalledExactlyOnceWith(
+        'dndev-claims-user-a',
+        expect.objectContaining({ claims: { role: 'admin-a' } })
+      );
     });
   });
 

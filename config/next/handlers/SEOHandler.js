@@ -9,7 +9,6 @@
 
 import { BaseNextHandler } from './BaseNextHandler.js';
 import { nextFileName } from '../nextFiles.js';
-import { NEXT_RENDER } from '../../constants.js';
 import { RouteDiscovery } from '../../discovery/RouteDiscovery.js';
 import { createLogger } from '../../utils/debugLog.js';
 import { PathResolver } from '../../utils/PathResolver.js';
@@ -30,6 +29,25 @@ const SITEMAP_ROUTE = `src/app/sitemap.xml/${nextFileName('route', 'ts')}`;
 
 /** Generated llms.txt route (`/llms.txt`). */
 const LLMS_TXT_ROUTE = `src/app/llms.txt/${nextFileName('route', 'ts')}`;
+
+/**
+ * Build log summary of the routes of a generated SEO route: static pages are one URL
+ * each; a dynamic route becomes one URL per published record, read when the route is
+ * served, so the build knows its pattern, not its URL count.
+ *
+ * @param {ReadonlyArray<{ path: string, collection?: string }>} routes
+ * @returns {string} e.g. `4 static + 1 dynamic (/apartments/:id → apartments)`
+ * @since 0.2.4
+ */
+function describeRoutes(routes) {
+  const dynamic = routes.filter((route) => route.path.includes(':'));
+  const summary = `${routes.length - dynamic.length} static + ${dynamic.length} dynamic`;
+  if (dynamic.length === 0) return summary;
+  const patterns = dynamic.map(
+    (route) => `${route.path} → ${route.collection ?? 'no collection'}`
+  );
+  return `${summary} (${patterns.join(', ')})`;
+}
 
 /**
  * SEO Handler for Next.js applications
@@ -316,7 +334,7 @@ export class SEOHandler extends BaseNextHandler {
 
   /**
    * Write the Next sitemap route (src/app/sitemap.xml/route.next.ts). It lists the static public
-   * routes and, at request time (revalidated hourly), one URL per published record of
+   * routes and, at request time (revalidated per `revalidate()`), one URL per published record of
    * each dynamic route's entity, once per language URL with 2+ languages. Removes the
    * static public/sitemap.xml this handler wrote before: Next refuses a public file and
    * a route on the same path.
@@ -343,8 +361,8 @@ import type { LanguageRouting } from '@donotdev/core/server';
 import { buildSitemap, formatSitemapXml } from '@donotdev/core/next';
 import type { SitemapRoute } from '@donotdev/core/next';
 ${reader.imports}
-// Re-read published records at most once per cache lifetime (same as the pages).
-export const revalidate = ${NEXT_RENDER.revalidateSeconds};
+// Published records: ${this.revalidateLabel()} (appConfig.revalidate, same as the pages).
+export const revalidate = ${this.revalidate()};
 
 const BASE_URL = ${JSON.stringify(this._baseUrl)};
 
@@ -371,7 +389,7 @@ export async function GET(): Promise<Response> {
       await this.pathResolver.remove(staleSitemap);
     }
     this.logger.info(
-      `🗺️ sitemap: ${sitemapRoutes.length} routes (${SITEMAP_ROUTE})`
+      `🗺️ sitemap: ${describeRoutes(sitemapRoutes)} (${SITEMAP_ROUTE}); URL count printed by dndev build`
     );
   }
 
@@ -389,7 +407,7 @@ export async function GET(): Promise<Response> {
   /**
    * Write the Next llms.txt route (src/app/llms.txt/route.next.ts). Same routes as the
    * sitemap route, labelled at build in the app's default language; at request time
-   * (revalidated hourly) each entity route lists its published records with the title
+   * (revalidated per `revalidate()`) each entity route lists its published records with the title
    * and description of `deriveEntitySeo`. The app's `entities` package provides the
    * entity definitions.
    *
@@ -425,8 +443,8 @@ import { HIDDEN_STATUSES, deriveEntitySeo } from '@donotdev/core/server';
 import { buildLlmsTxt } from '@donotdev/core/next';
 import type { LlmsTxtSource } from '@donotdev/core/next';
 ${hasEntities ? "import * as entities from 'entities';\n" : ''}${reader.imports}
-// Re-read published records at most once an hour (same as the sitemap).
-export const revalidate = ${NEXT_RENDER.revalidateSeconds};
+// Published records: ${this.revalidateLabel()} (appConfig.revalidate, same as the pages).
+export const revalidate = ${this.revalidate()};
 
 const SOURCE: LlmsTxtSource = ${JSON.stringify(source, null, 2)};
 ${reader.setup}
@@ -444,7 +462,7 @@ export async function GET(): Promise<Response> {
 `;
     this.writeGeneratedFile(LLMS_TXT_ROUTE, content, 'llms.txt route');
     this.logger.info(
-      `📄 llms.txt: ${source.routes.length} routes (${LLMS_TXT_ROUTE})`
+      `📄 llms.txt: ${describeRoutes(source.routes)} (${LLMS_TXT_ROUTE})`
     );
   }
 

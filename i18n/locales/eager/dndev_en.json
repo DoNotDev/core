@@ -48,6 +48,14 @@
     "error": "Failed to send verification email. Please try again."
   },
   "errors": {
+    "notFound": {
+      "title": "$t(messages.notFound.title)",
+      "description": "$t(messages.notFound.description)",
+      "suggestions": "$t(messages.notFound.suggestions)",
+      "navigateTo": "$t(messages.notFound.navigateTo)",
+      "goHome": "$t(messages.notFound.goHome)",
+      "goBack": "$t(messages.notFound.goBack)"
+    },
     "auth/popup-closed-by-user": "The sign in popup was closed before completion.",
     "auth/cancelled-popup-request": "The sign in popup was cancelled.",
     "auth/popup-blocked": "The sign in popup was blocked by the browser.",
@@ -155,6 +163,7 @@
     "forbidden": "Access forbidden",
     "serverError": "Server error occurred",
     "notFound": {
+      "navigateTo": "Navigate to {{label}}",
       "title": "Page Not Found",
       "description": "The page you're looking for doesn't exist or has been moved.",
       "suggestions": "You might be looking for:",

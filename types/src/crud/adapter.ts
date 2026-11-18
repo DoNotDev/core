@@ -15,6 +15,9 @@ import type { dndevSchema } from './schemas';
 import type {
   BulkOperations,
   BulkResult,
+  BulkAcrossResult,
+  PreparedAtomicBatch,
+  AtomicBulkExecutionPlan,
   CollectionSubscriptionCallback,
   CrudOperationOptions,
   DocumentSubscriptionCallback,
@@ -47,6 +50,29 @@ export interface ICrudAdapter {
    * Defaults to false (direct/client-side adapters).
    */
   readonly serverSideOnly?: boolean;
+
+  /**
+   * Optional single-database atomic cross-collection capability. Its presence
+   * advertises support; absence must never trigger a legacy fallback.
+   *
+   * Preflight validates the entire prepared request without writes, native batch
+   * creation or optimistic effects. It may return an operation-owned execution
+   * plan; legacy implementations may return void. Direct execute validates its
+   * input, stages all collections in one native batch, and commits without retries
+   * or chunking.
+   * Empty supported requests resolve with zeroed results without storage contact.
+   * Success contains ordered IDs and empty `failed` arrays for every collection.
+   * Failure rejects with AtomicBulkError: `not-committed` only when known,
+   * otherwise `unknown` (reconcile; never claim rollback or automatically replay).
+   * When preflight returns void, callers must not mutate prepared input between
+   * preflight and direct execution.
+   */
+  readonly atomicBulkAcross?: {
+    /** Reject invalid requests or return a snapshot-bound execution plan without storage contact. */
+    preflight(batches: PreparedAtomicBatch[]): Promise<void | AtomicBulkExecutionPlan>;
+    /** Commit all collections atomically, or reject without partial-success results. */
+    execute(batches: PreparedAtomicBatch[]): Promise<BulkAcrossResult>;
+  };
 
   /**
    * When true, field-level and row-level security is enforced at the database layer
@@ -101,22 +127,38 @@ export interface ICrudAdapter {
     options?: CrudOperationOptions
   ): Promise<BulkResult>;
 
-  /** Set/replace a document by ID (upsert semantics). */
+  /**
+   * Set/replace a document by ID (upsert semantics).
+   *
+   * @returns The written row's stored values: the full row as stored (filtered with
+   * `options.readSchema` like `get`) when the backend returns it, otherwise the payload as stored. The
+   * cache keeps it, so values the backend sets (timestamps, revisions, triggers)
+   * need no refetch.
+   * @since 0.3.0 returns the stored values (was `void`)
+   */
   set<T>(
     collection: string,
     id: string,
     data: T,
     schema?: dndevSchema<T>,
     options?: CrudOperationOptions
-  ): Promise<void>;
+  ): Promise<Record<string, unknown>>;
 
-  /** Partial update a document by ID. */
+  /**
+   * Partial update a document by ID.
+   *
+   * @returns The written row's stored values: the full row as stored (filtered with
+   * `options.readSchema` like `get`) when the backend returns it, otherwise the patch as stored. The
+   * cache merges it onto the cached row, so values the backend sets (timestamps,
+   * revisions, triggers) need no refetch.
+   * @since 0.3.0 returns the stored values (was `void`)
+   */
   update<T>(
     collection: string,
     id: string,
     data: Partial<T>,
     options?: CrudOperationOptions
-  ): Promise<void>;
+  ): Promise<Record<string, unknown>>;
 
   /** Delete a document by ID. */
   delete(

@@ -10,7 +10,7 @@
  * @author AMBROISE PARK Consulting
  */
 
-import { Languages } from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 import { Button, BUTTON_VARIANT, DISPLAY } from '@donotdev/components';
 
@@ -117,7 +117,7 @@ const LanguageSelector = ({
     'aria-label': t('common.languageSelector.changeLanguage', {
       defaultValue: 'Change Language',
     }),
-    icon: Languages,
+    icon: Globe,
     display,
     className,
   };
@@ -145,10 +145,10 @@ const LanguageSelector = ({
           showFlags ? (
             <Flag
               code={otherLanguage.flagCode || otherLanguage.id}
-              title={`Switch to ${otherLanguage.name}`}
+              title={otherLanguage.nativeName}
             />
           ) : (
-            Languages
+            Globe
           )
         }
       >

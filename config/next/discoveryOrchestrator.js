@@ -230,16 +230,9 @@ export async function runDiscoveries(
       { name: 'BlogContent', handler: blogContentHandler },
     ];
 
-    /** @type {string[]|undefined} */
-    let supportedLanguages;
-
     for (const { name, handler } of nonCriticalHandlers) {
       try {
-        const result = await handler.generateFiles();
-        // Capture I18n languages for font subset filtering
-        if (name === 'I18n' && result?.supportedLanguages?.length) {
-          supportedLanguages = result.supportedLanguages;
-        }
+        await handler.generateFiles();
       } catch (error) {
         logger.debug(`${name} generation failed: ${error.message}`);
       }
@@ -254,12 +247,15 @@ export async function runDiscoveries(
       );
     }
 
-    // Copy @fontsource font files to public/ (Turbopack CSS url() workaround)
-    // When languages are known, filter to only needed subsets + woff2 only
-    try {
-      copyFontsToPublic({ languages: supportedLanguages });
-    } catch (error) {
-      logger.debug(`Font copy failed (non-critical): ${error.message}`);
+    // Framework fonts the theme renders text in → public/ (Turbopack CSS url()
+    // workaround), subsets of the app languages. None when the app packs its own.
+    // Fails the build: a wrong font set must not ship silently.
+    if (themeHandler) {
+      const { fontFamilies } = await themeHandler.getDiscoveryData();
+      copyFontsToPublic({
+        families: fontFamilies,
+        languages: i18nData.supportedLanguages,
+      });
     }
   } finally {
     writtenPaths = pathResolver.stopWriteRecording();

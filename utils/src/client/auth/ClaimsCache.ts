@@ -77,6 +77,7 @@ export class ClaimsCache {
   private offlineTrustEnabled: boolean;
   private storageKey: string;
   private userId: string | null;
+  private identityGeneration = 0;
   private storage: IStorageManager;
 
   constructor(options: ClaimsCacheOptions = {}) {
@@ -114,6 +115,7 @@ export class ClaimsCache {
    *
    * @param verifyFn - Function to verify claims with server
    * @returns Claims object
+   * @throws If the user identity changes while resolving claims (without cache fallback)
    */
   async getClaims<T extends Claims = Claims>(
     verifyFn: () => Promise<T>
@@ -122,16 +124,21 @@ export class ClaimsCache {
       return emptyClaims<T>();
     }
 
+    const generation = this.identityGeneration;
     const online = this.isOnline();
 
     if (online) {
       try {
         const claims = await verifyFn();
+        this.assertIdentity(generation);
         await this.setClaims(claims);
+        this.assertIdentity(generation);
         return claims;
       } catch (error) {
+        this.assertIdentity(generation);
         if (this.offlineTrustEnabled) {
-          const cachedClaims = await this.getCachedClaims<T>();
+          const cachedClaims = await this.getCachedClaims<T>(generation);
+          this.assertIdentity(generation);
           if (cachedClaims) {
             console.warn(
               '[ClaimsCache] Network verification failed, using stale cache'
@@ -146,7 +153,8 @@ export class ClaimsCache {
         return emptyClaims<T>();
       }
 
-      const cachedClaims = await this.getCachedClaims<T>();
+      const cachedClaims = await this.getCachedClaims<T>(generation);
+      this.assertIdentity(generation);
       if (cachedClaims) {
         return cachedClaims;
       }
@@ -160,25 +168,35 @@ export class ClaimsCache {
    */
   private async getCachedClaims<
     T extends Claims = Claims,
-  >(): Promise<T | null> {
+  >(generation: number): Promise<T | null> {
     if (!this.isClient()) return null;
 
     try {
       const key = this.getStorageKey();
       const cached = await this.storage.get<ClaimsCacheResult<T>>(key);
+      this.assertIdentity(generation);
 
       if (!cached || !cached.claims) return null;
 
       const maxAge = 7 * 24 * 60 * 60 * 1000;
       if (Date.now() - cached.timestamp > maxAge) {
         await this.clearClaims();
+        this.assertIdentity(generation);
         return null;
       }
 
       return cached.claims;
     } catch (error) {
+      this.assertIdentity(generation);
       console.warn('[ClaimsCache] Failed to read cached claims:', error);
       return null;
+    }
+  }
+
+  /** Reject stale operations, including switches away and back to the same user. */
+  private assertIdentity(generation: number): void {
+    if (generation !== this.identityGeneration) {
+      throw new Error('[ClaimsCache] Identity changed while resolving claims');
     }
   }
 
@@ -229,7 +247,10 @@ export class ClaimsCache {
    * Update user ID (for user-scoped storage)
    */
   setUserId(userId: string | null): void {
-    this.userId = userId;
+    if (this.userId !== userId) {
+      this.identityGeneration += 1;
+      this.userId = userId;
+    }
   }
 
   /**

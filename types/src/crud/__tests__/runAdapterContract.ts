@@ -129,10 +129,10 @@ export function runAdapterContract(
     // -------------------------------------------------------------------------
 
     describe('set()', () => {
-      it('resolves without error', async () => {
+      it('resolves with the stored values of the written row', async () => {
         await expect(
           adapter.set<TestDoc>('users', 'u1', { name: 'Alice', age: 30 })
-        ).resolves.toBeUndefined();
+        ).resolves.toMatchObject({ id: 'u1' });
       });
 
       it('upserts — creates document if it does not exist', async () => {
@@ -153,11 +153,11 @@ export function runAdapterContract(
     });
 
     describe('update()', () => {
-      it('resolves without error on an existing document', async () => {
+      it('resolves with the stored values of the written row', async () => {
         await adapter.set<TestDoc>('users', 'u1', { name: 'Alice', age: 30 });
         await expect(
           adapter.update<TestDoc>('users', 'u1', { age: 31 })
-        ).resolves.toBeUndefined();
+        ).resolves.toMatchObject({ id: 'u1' });
       });
 
       it('merges partial data into the existing document', async () => {

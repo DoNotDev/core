@@ -142,7 +142,7 @@ const LanguageToggleGroup = ({
       gap="tight"
       className={className}
       style={{
-        padding: 'var(--gap-xs)',
+        padding: 'var(--gap-sm)',
         borderRadius: 'var(--radius-lg)',
         backgroundColor: 'var(--muted)',
       }}
@@ -174,18 +174,18 @@ const LanguageToggleGroup = ({
               ...(isLoading && { opacity: 'var(--opacity-muted)' }),
             }}
             aria-pressed={isActive}
-            aria-label={`Select ${language.name}`}
+            aria-label={language.nativeName}
           >
             <Stack direction="row" align="center" gap="tight">
               {showFlags && (
                 <Flag
                   code={language.flagCode || language.id}
-                  title={`${language.name} flag`}
+                  title={language.nativeName}
                 />
               )}
 
               {showNames ? (
-                <span style={getFontSizeStyle()}>{language.name}</span>
+                <span style={getFontSizeStyle()}>{language.nativeName}</span>
               ) : (
                 <span
                   style={{
@@ -198,7 +198,7 @@ const LanguageToggleGroup = ({
               )}
 
               {showLoading && isLoading && isActive && (
-                <div style={{ marginInlineStart: 'var(--gap-xs)' }}>
+                <div style={{ marginInlineStart: 'var(--gap-sm)' }}>
                   <Spinner />
                 </div>
               )}

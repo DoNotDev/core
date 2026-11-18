@@ -277,6 +277,36 @@ function extractEntityFromPath(path: string): string | null {
 }
 
 /**
+ * Filter snapshot-owned navigation routes by auth state and menu visibility.
+ * Preserves discovery order and route references without reading or mutating a store.
+ * Tier and custom validation checks are not part of the navigation auth contract.
+ *
+ * @param routes - Discovered navigation routes
+ * @param authState - Authentication status and role used for role hierarchy checks
+ * @returns A new array containing the visible routes
+ */
+export function filterNavigationRoutes(
+  routes: NavigationRoute[],
+  authState: { authenticated: boolean; role: string }
+): NavigationRoute[] {
+  return routes.filter((route) => {
+    if (route.meta?.hideFromMenu === true) return false;
+
+    if (route.auth === false) return true;
+    if (route.auth === true) return authState.authenticated;
+
+    if (typeof route.auth === 'object') {
+      if (route.auth.required && !authState.authenticated) return false;
+      if (route.auth.role && !hasRoleAccess(authState.role, route.auth.role)) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+}
+
+/**
  * Navigation Store
  *
  * Provides centralized management of navigation routes with intelligent caching
@@ -310,16 +340,15 @@ function extractEntityFromPath(path: string): string | null {
  *
  * @example
  * ```typescript
- * // Get all routes
- * const allRoutes = useNavigationStore((state) => state.getAllRoutes());
+ * // Select snapshot-owned data for rendering, not live imperative getters.
+ * const allRoutes = useNavigationStore((state) => state.cache.allRoutes);
+ * const routes = filterNavigationRoutes(allRoutes, {
+ *   authenticated: true,
+ *   role: 'admin',
+ * });
  *
- * // Get filtered routes by auth
- * const routes = useNavigationStore((state) =>
- *   state.getFilteredRoutes({ authenticated: true, role: 'admin' })
- * );
- *
- * // Get route groups
- * const groups = useNavigationStore((state) => state.getRouteGroups());
+ * const routeGroups = useNavigationStore((state) => state.cache.routeGroups);
+ * const groups = Array.from(routeGroups.values());
  * ```
  */
 export const useNavigationStore = createDoNotDevStore<NavigationState>({
@@ -401,41 +430,7 @@ export const useNavigationStore = createDoNotDevStore<NavigationState>({
         return cache.filteredRoutes.get(cacheKey)!;
       }
 
-      // Filter routes by auth state and hideFromMenu flag
-      const filtered = cache.allRoutes.filter((route) => {
-        // Exclude routes with hideFromMenu: true
-        if (route.meta?.hideFromMenu === true) {
-          return false;
-        }
-
-        // Filter by auth state
-        if (route.auth === false) return true;
-
-        if (route.auth === true) {
-          return authState.authenticated;
-        }
-
-        if (typeof route.auth === 'object') {
-          if (route.auth.required && !authState.authenticated) {
-            return false;
-          }
-
-          // Uses role hierarchy: admin >= user >= guest
-          if (
-            route.auth.role &&
-            !hasRoleAccess(authState.role, route.auth.role)
-          ) {
-            return false;
-          }
-
-          // Note: tier and validate checks require subscription data
-          // Currently not passed in authState, would need enhancement
-          // if (route.auth.tier && authState.tier !== route.auth.tier) return false;
-          // if (route.auth.validate && !route.auth.validate(authState.role, authState.tier)) return false;
-        }
-
-        return true;
-      });
+      const filtered = filterNavigationRoutes(cache.allRoutes, authState);
 
       // Cache in-place without mutating store state (getter should not trigger set())
       cache.filteredRoutes.set(cacheKey, filtered);

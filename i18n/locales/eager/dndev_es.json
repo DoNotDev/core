@@ -40,6 +40,14 @@
     "error": "Error al enviar el correo de verificación. Inténtelo de nuevo."
   },
   "errors": {
+    "notFound": {
+      "title": "$t(messages.notFound.title)",
+      "description": "$t(messages.notFound.description)",
+      "suggestions": "$t(messages.notFound.suggestions)",
+      "navigateTo": "$t(messages.notFound.navigateTo)",
+      "goHome": "$t(messages.notFound.goHome)",
+      "goBack": "$t(messages.notFound.goBack)"
+    },
     "auth/popup-closed-by-user": "La ventana de inicio de sesión se cerró antes de completarse.",
     "auth/cancelled-popup-request": "La solicitud de inicio de sesión fue cancelada.",
     "auth/popup-blocked": "La ventana de inicio de sesión fue bloqueada por el navegador.",
@@ -147,6 +155,7 @@
     "forbidden": "Acceso prohibido",
     "serverError": "Error del servidor",
     "notFound": {
+      "navigateTo": "Ir a {{label}}",
       "title": "Página no encontrada",
       "description": "La página que buscas no existe o ha sido movida.",
       "suggestions": "Podrías estar buscando:",

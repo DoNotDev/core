@@ -35,17 +35,21 @@ export const VISIBILITY = {
 /**
  * Editable levels for entity fields (runtime constants)
  * Controls who can MODIFY this field
- * - true: Anyone who can see the field
- * - false: Nobody (read-only)
+ * - true: Anyone who can see the field (technical fields stay read-only)
+ * - false: Nobody in forms (read-only, shown from the stored record); written by app code (write class `program`)
  * - 'user': Authenticated users+ (role hierarchy)
  * - 'admin': Admins+ (role hierarchy)
  * - 'super': Super admins only
  * - 'create-only': Editable on create, read-only after
- * - 'generated': DB-generated (excluded from forms and write schemas)
- * - 'computed': UI-computed (excluded from forms, included in writes)
+ * - 'generated': DB-generated (excluded from forms and write schemas; write class `never`)
+ * - 'computed': UI-computed by the app (another field's component sets it): shown
+ *   read-only in forms, in form state and the write schemas, written by the form's
+ *   default writer (write class `derived`)
+ *
+ * Write classes: `describeEntity` (core/schemas/src/common/fieldSemantics.ts).
  */
 export const EDITABLE = {
-  /** Anyone who can see the field (follows visibility) */
+  /** Anyone who can see the field (follows visibility; technical fields stay read-only) */
   TRUE: true,
   /** Read-only display in forms */
   FALSE: false,
@@ -59,7 +63,7 @@ export const EDITABLE = {
   CREATE_ONLY: 'create-only',
   /** DB-generated column (PostgreSQL GENERATED ALWAYS) — excluded from forms and write schemas */
   GENERATED: 'generated',
-  /** UI-computed field (derived from other fields) — excluded from forms, included in writes */
+  /** UI-computed field (derived from other fields) — shown read-only in forms, in form state and write schemas, written by the form */
   COMPUTED: 'computed',
 } as const;
 
@@ -75,6 +79,100 @@ export const DEFAULT_ENTITY_ACCESS = {
   update: 'admin',
   delete: 'admin',
 } as const;
+
+/**
+ * The status matrix: the single source of what a row can do in each built-in status.
+ * Every CRUD rule (reads, writes, defaults) and every entity-derived type asks it
+ * (`statusCan`, `statusesThat` in `@donotdev/core`; the `Status*` types below); no code
+ * names a status otherwise. A status an app adds (`status.validation.options`) behaves
+ * like `available` (`CUSTOM_STATUS`).
+ *
+ * - `read`: lowest role that reads rows in this status (`available`: the entity's
+ *   `access.read` still applies on top)
+ * - `saveIncomplete`: a write may leave required fields empty
+ * - `holdIncomplete`: a stored row may have required fields empty (a removed draft)
+ * - `isDefault`: the status of a create that sends none
+ * - `isRemoved`: the status `remove(id)` writes (logical delete)
+ *
+ * @version 0.1.0
+ * @since 0.3.0
+ * @author AMBROISE PARK Consulting
+ */
+export const STATUS_MATRIX = {
+  draft: { read: 'admin', saveIncomplete: true, holdIncomplete: true, isDefault: false, isRemoved: false },
+  available: { read: 'guest', saveIncomplete: false, holdIncomplete: false, isDefault: true, isRemoved: false },
+  deleted: { read: 'admin', saveIncomplete: false, holdIncomplete: true, isDefault: false, isRemoved: true },
+} as const;
+
+/** What a status an app adds can do: the same as `available`. */
+export const CUSTOM_STATUS = STATUS_MATRIX.available;
+
+/** A built-in status (a key of {@link STATUS_MATRIX}). */
+export type BuiltInStatus = keyof typeof STATUS_MATRIX;
+
+/** One capability of the matrix. */
+export type StatusCapability = 'saveIncomplete' | 'holdIncomplete' | 'isDefault' | 'isRemoved';
+
+/** Built-in statuses with capability `C` (type side of `statusesThat`). */
+export type StatusesThat<C extends StatusCapability> = {
+  [S in BuiltInStatus]: (typeof STATUS_MATRIX)[S][C] extends true ? S : never;
+}[BuiltInStatus];
+
+/** Built-in statuses not read below admin (`read` above `guest`). */
+export type HiddenStatus = {
+  [S in BuiltInStatus]: (typeof STATUS_MATRIX)[S]['read'] extends 'guest' ? never : S;
+}[BuiltInStatus];
+
+/** The built-in statuses, in {@link STATUS_MATRIX} order. */
+// why: Object.keys of a const object literal returns exactly its keys
+export const BUILT_IN_STATUSES = Object.keys(STATUS_MATRIX) as BuiltInStatus[];
+
+/** The one built-in status with a capability only one status may have. */
+function onlyStatusThat<C extends 'isDefault' | 'isRemoved'>(capability: C): StatusesThat<C> {
+  const found = BUILT_IN_STATUSES.filter((status) => STATUS_MATRIX[status][capability]);
+  if (found.length !== 1) {
+    throw new Error(`[dndev] STATUS_MATRIX: exactly one status must have ${capability}`);
+  }
+  // why: the filter keeps exactly the statuses whose capability is true, which StatusesThat<C> names
+  return found[0] as StatusesThat<C>;
+}
+
+/** The status of a create that sends none (CRUD rule 7), from {@link STATUS_MATRIX}. */
+export const DEFAULT_STATUS = onlyStatusThat('isDefault');
+
+/** The status `remove(id)` writes (CRUD rule 3), from {@link STATUS_MATRIX}. */
+export const REMOVED_STATUS = onlyStatusThat('isRemoved');
+
+/**
+ * Statuses hidden from non-admin users (CRUD rule 4), from {@link STATUS_MATRIX}.
+ *
+ * @version 0.3.0
+ * @since 0.0.1
+ * @author AMBROISE PARK Consulting
+ */
+export const HIDDEN_STATUSES = BUILT_IN_STATUSES.filter(
+  (status) => STATUS_MATRIX[status].read !== 'guest'
+) as readonly HiddenStatus[];
+
+/**
+ * Fields that are TRULY backend-generated (cannot be set by user)
+ * These are stripped from create operations - backend creates them automatically
+ * (write class `never` in the field semantics).
+ *
+ * @category Field Families
+ * @constant BACKEND_GENERATED_FIELD_NAMES
+ *
+ * @version 0.1.0
+ * @since 0.0.1
+ * @author AMBROISE PARK Consulting
+ */
+export const BACKEND_GENERATED_FIELD_NAMES = [
+  'id', // Firestore auto-generates document ID
+  'createdAt', // Server sets creation timestamp
+  'updatedAt', // Server sets update timestamp
+  'createdById', // Server extracts from auth context
+  'updatedById', // Server extracts from auth context
+] as const;
 
 /**
  * Supported field types for entities (runtime constants)

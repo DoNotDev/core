@@ -9,11 +9,6 @@
 
 import { CSS_PATTERNS } from '../constants.js';
 
-/** Regex: --font-family or --font-headline declaration; captures the full value */
-const FONT_VAR_DECL_REGEX = /--(?:font-family|font-headline)\s*:\s*([^;]+);/g;
-/** Regex: extract quoted font names from a CSS value */
-const QUOTED_FONT_NAME_REGEX = /['"]([^'"]+)['"]/g;
-
 export class CSSExtractor {
   /**
    * @param {Object} pathResolver - PathResolver instance for cross-platform path operations
@@ -226,30 +221,6 @@ export class CSSExtractor {
         this._debug(`Skipping invalid CSS variable: ${match}`);
       }
     });
-  }
-
-  /**
-   * Extract font family names from --font-family and --font-headline declarations.
-   * Only collects literal quoted names (e.g. 'Space Grotesk', "Inter"); ignores var(--font-sans) etc.
-   * @param {string} cssContent - CSS content to analyze
-   * @returns {string[]} Unique list of font family names
-   */
-  extractFontFamilies(cssContent) {
-    if (!cssContent || typeof cssContent !== 'string') return [];
-    const cleanContent = this._stripComments(cssContent);
-    const names = new Set();
-    let declMatch;
-    FONT_VAR_DECL_REGEX.lastIndex = 0;
-    while ((declMatch = FONT_VAR_DECL_REGEX.exec(cleanContent)) !== null) {
-      const value = declMatch[1];
-      let nameMatch;
-      QUOTED_FONT_NAME_REGEX.lastIndex = 0;
-      while ((nameMatch = QUOTED_FONT_NAME_REGEX.exec(value)) !== null) {
-        const name = nameMatch[1].trim();
-        if (name) names.add(name);
-      }
-    }
-    return Array.from(names);
   }
 
   /**

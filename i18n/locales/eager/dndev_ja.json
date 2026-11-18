@@ -40,6 +40,14 @@
     "error": "確認メールの送信に失敗しました。もう一度お試しください。"
   },
   "errors": {
+    "notFound": {
+      "title": "$t(messages.notFound.title)",
+      "description": "$t(messages.notFound.description)",
+      "suggestions": "$t(messages.notFound.suggestions)",
+      "navigateTo": "$t(messages.notFound.navigateTo)",
+      "goHome": "$t(messages.notFound.goHome)",
+      "goBack": "$t(messages.notFound.goBack)"
+    },
     "auth/popup-closed-by-user": "ログインポップアップが完了前に閉じられました。",
     "auth/cancelled-popup-request": "ログインリクエストがキャンセルされました。",
     "auth/popup-blocked": "ログインポップアップがブラウザによってブロックされました。",
@@ -147,6 +155,7 @@
     "forbidden": "アクセスが禁止されています",
     "serverError": "サーバーエラーが発生しました",
     "notFound": {
+      "navigateTo": "{{label}}へ移動",
       "title": "ページが見つかりません",
       "description": "お探しのページは存在しないか、移動されました。",
       "suggestions": "以下をお探しかもしれません:",

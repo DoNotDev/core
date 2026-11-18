@@ -48,6 +48,14 @@
     "error": "Nie udało się wysłać e-maila weryfikacyjnego. Spróbuj ponownie."
   },
   "errors": {
+    "notFound": {
+      "title": "$t(messages.notFound.title)",
+      "description": "$t(messages.notFound.description)",
+      "suggestions": "$t(messages.notFound.suggestions)",
+      "navigateTo": "$t(messages.notFound.navigateTo)",
+      "goHome": "$t(messages.notFound.goHome)",
+      "goBack": "$t(messages.notFound.goBack)"
+    },
     "auth/popup-closed-by-user": "Okno logowania zostało zamknięte przed zakończeniem.",
     "auth/cancelled-popup-request": "Okno logowania zostało anulowane.",
     "auth/popup-blocked": "Okno logowania zostało zablokowane przez przeglądarkę.",
@@ -155,6 +163,7 @@
     "forbidden": "Dostęp zabroniony",
     "serverError": "Wystąpił błąd serwera",
     "notFound": {
+      "navigateTo": "Przejdź do {{label}}",
       "title": "Nie znaleziono strony",
       "description": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
       "suggestions": "Być może szukasz:",

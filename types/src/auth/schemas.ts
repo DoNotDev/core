@@ -12,11 +12,9 @@
 import * as v from 'valibot';
 import {
   USER_ROLES,
-  SUBSCRIPTION_TIERS,
   FEATURES,
   PERMISSIONS,
 } from './constants';
-import { SUBSCRIPTION_STATUS } from '../billing';
 import { picklistOptions } from '../common/picklistOptions';
 
 // =============================================================================
@@ -62,24 +60,36 @@ export const AuthUserSchema = v.object({
 // =============================================================================
 
 /**
- * Schema for user subscription data
- * Uses constants for enum values to ensure consistency
+ * Canonical nested access claims, independent of billing and payment providers.
+ * Consumer-defined tier/status strings are preserved.
  *
  * @version 0.1.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
-export const UserSubscriptionSchema = v.object({
-  userId: v.string(),
-  tier: v.picklist(picklistOptions(SUBSCRIPTION_TIERS)),
-  status: v.picklist(picklistOptions(SUBSCRIPTION_STATUS)),
-  isActive: v.optional(v.boolean()),
-  features: v.optional(v.array(v.string())),
-  subscriptionId: v.nullable(v.string()),
-  customerId: v.string(),
+export const SubscriptionClaimsSchema = v.object({
+  tier: v.string(),
+  status: v.string(),
   subscriptionEnd: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
-  cancelAtPeriodEnd: v.boolean(),
   updatedAt: v.pipe(v.string(), v.isoTimestamp()),
+  isDefault: v.optional(v.boolean()),
+  features: v.optional(v.array(v.string())),
+  /** @deprecated Billing compatibility projection, not required for access. */
+  subscriptionId: v.optional(v.nullable(v.string())),
+  /** @deprecated Billing compatibility projection, not required for access. */
+  customerId: v.optional(v.nullable(v.string())),
+  /** @deprecated Billing compatibility projection, not required for access. */
+  cancelAtPeriodEnd: v.optional(v.boolean()),
+});
+
+/** Canonical persisted access subscription, independent of a payment provider. */
+export type SubscriptionClaims = v.InferOutput<typeof SubscriptionClaimsSchema>;
+
+/** Validated subscription projection; derived fields remain optional for old callers. */
+export const UserSubscriptionSchema = v.object({
+  ...SubscriptionClaimsSchema.entries,
+  userId: v.string(),
+  isActive: v.optional(v.boolean()),
 });
 
 // =============================================================================
@@ -96,7 +106,7 @@ export const UserSubscriptionSchema = v.object({
  */
 export const CustomClaimsSchema = v.object({
   role: v.optional(v.picklist(picklistOptions(USER_ROLES))),
-  subscription: v.optional(UserSubscriptionSchema),
+  subscription: v.optional(SubscriptionClaimsSchema),
   features: v.optional(v.array(v.picklist(picklistOptions(FEATURES)))),
   permissions: v.optional(v.array(v.picklist(picklistOptions(PERMISSIONS)))),
   githubAccess: v.optional(
@@ -183,6 +193,11 @@ export function validateUserSubscription(data: unknown) {
  */
 export function validateCustomClaims(data: unknown) {
   return v.safeParse(CustomClaimsSchema, data);
+}
+
+/** Validate the canonical subscription object itself, not the custom-claims envelope. */
+export function validateSubscriptionClaims(data: unknown) {
+  return v.safeParse(SubscriptionClaimsSchema, data);
 }
 
 // =============================================================================

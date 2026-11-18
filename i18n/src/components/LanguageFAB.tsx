@@ -137,7 +137,7 @@ const LanguageFAB = ({
         {showFlag && currentLang && (
           <Flag
             code={currentLang.flagCode || currentLang.id}
-            title={currentLang.name}
+            title={currentLang.nativeName}
           />
         )}
         <Text as="span" level="small">

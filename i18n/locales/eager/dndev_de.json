@@ -40,6 +40,14 @@
     "error": "Bestätigungs-E-Mail konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
   },
   "errors": {
+    "notFound": {
+      "title": "$t(messages.notFound.title)",
+      "description": "$t(messages.notFound.description)",
+      "suggestions": "$t(messages.notFound.suggestions)",
+      "navigateTo": "$t(messages.notFound.navigateTo)",
+      "goHome": "$t(messages.notFound.goHome)",
+      "goBack": "$t(messages.notFound.goBack)"
+    },
     "auth/popup-closed-by-user": "Das Anmeldefenster wurde vor Abschluss geschlossen.",
     "auth/cancelled-popup-request": "Die Anmeldeanfrage wurde abgebrochen.",
     "auth/popup-blocked": "Das Anmeldefenster wurde vom Browser blockiert.",
@@ -147,6 +155,7 @@
     "forbidden": "Zugriff verboten",
     "serverError": "Serverfehler aufgetreten",
     "notFound": {
+      "navigateTo": "Zu {{label}} navigieren",
       "title": "Seite nicht gefunden",
       "description": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
       "suggestions": "Sie suchen möglicherweise nach:",

@@ -40,6 +40,14 @@
     "error": "Kunne ikke sende bekræftelsesmail. Prøv igen."
   },
   "errors": {
+    "notFound": {
+      "title": "$t(messages.notFound.title)",
+      "description": "$t(messages.notFound.description)",
+      "suggestions": "$t(messages.notFound.suggestions)",
+      "navigateTo": "$t(messages.notFound.navigateTo)",
+      "goHome": "$t(messages.notFound.goHome)",
+      "goBack": "$t(messages.notFound.goBack)"
+    },
     "auth/popup-closed-by-user": "Login-vinduet blev lukket før du var færdig.",
     "auth/cancelled-popup-request": "Login blev annulleret.",
     "auth/popup-blocked": "Browseren blokerede login-vinduet.",
@@ -147,6 +155,7 @@
     "forbidden": "Adgang nægtet",
     "serverError": "Serverfejl",
     "notFound": {
+      "navigateTo": "Gå til {{label}}",
       "title": "Siden findes ikke",
       "description": "Siden du leder efter findes ikke eller er flyttet.",
       "suggestions": "Måske leder du efter:",

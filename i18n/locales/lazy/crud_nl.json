@@ -75,7 +75,8 @@
       "goBack": "Terug"
     },
     "bulkPartialError_one": "{{count}} rij kon niet worden opgeslagen",
-    "bulkPartialError_other": "{{count}} rijen konden niet worden opgeslagen"
+    "bulkPartialError_other": "{{count}} rijen konden niet worden opgeslagen",
+    "unknownFields": "Opgeslagen, maar deze velden bestaan niet en zijn niet opgeslagen: {{fields}}. Neem contact op met support."
   },
   "pagination": {
     "showing": "{{from}} tot {{to}} van {{total}}",
@@ -257,6 +258,13 @@
     "noLanguagesFound": "Geen talen gevonden",
     "changeLanguage": "Taal wijzigen"
   },
+  "draft": {
+    "restored": "Concept hersteld",
+    "restoredDescription": "Je niet-opgeslagen wijzigingen zijn hersteld",
+    "discard": "Verwerpen",
+    "conflict": "Concept gebaseerd op een oudere versie",
+    "conflictDescription": "Dit record is gewijzigd sinds je niet-opgeslagen wijzigingen. Opslaan kan worden geweigerd: verwijder het concept om de huidige versie te bewerken."
+  },
   "form": {
     "submit": "Versturen",
     "cancel": "Annuleren",
@@ -269,9 +277,14 @@
     "uploading": "Uploaden {{progress}}%...",
     "processing": "Bezig...",
     "validating": "Valideren...",
+    "validationFailed": "Sommige velden moeten worden aangepast",
+    "fixFields": "Controleer: {{fields}}",
     "saving": "Opslaan...",
     "saved": "Opgeslagen",
-    "error": "Fout — probeer het opnieuw"
+    "error": "Fout — probeer het opnieuw",
+    "saveFailed": "Opslaan mislukt. Probeer het opnieuw.",
+    "uploadFailed": "Bestand uploaden mislukt. Probeer het opnieuw.",
+    "reuploadFiles": "Sommige bestanden zijn niet geüpload. Upload ze opnieuw en sla daarna op."
   },
   "navigation": {
     "more": "Meer",
@@ -381,6 +394,11 @@
   },
   "boolean": {
     "required": "{{field}} moet worden geselecteerd"
+  },
+  "fieldArray": {
+    "addRow": "Een rij toevoegen aan {{field}}",
+    "removeRow": "Rij {{index}} verwijderen uit {{field}}",
+    "noSubFields": "{{field}}: geen subvelden geconfigureerd."
   },
   "array": {
     "required": "Minstens één {{field}} is verplicht",
@@ -536,7 +554,15 @@
   },
   "price": {
     "vatIncluded": "incl. btw",
+    "currency": "Valuta",
+    "discountLabel": "Korting (%)",
     "discountPercent": "-{{percent}}%"
+  },
+  "workflow": {
+    "submit": "Verzenden",
+    "next": "Volgende",
+    "previous": "Vorige",
+    "skip": "Deze stap overslaan"
   },
   "recommendations": {
     "title": "Misschien vind je dit ook leuk"
@@ -566,5 +592,27 @@
     "deleteSelected": "Selectie verwijderen ({{count}})",
     "failed_one": "{{count}} rij niet opgeslagen: blijft in de lijst, probeer opnieuw",
     "failed_other": "{{count}} rijen niet opgeslagen: blijven in de lijst, probeer opnieuw"
+  },
+  "childRows": {
+    "createFirst": "Maak eerst het concept aan voordat u {{entity}} toevoegt.",
+    "required": "{{field}} is verplicht",
+    "invalidValue": "{{field}} is ongeldig",
+    "invalidRows_one": "{{count}} rij te corrigeren vóór het opslaan",
+    "invalidRows_other": "{{count}} rijen te corrigeren vóór het opslaan",
+    "notSaved": "De bewerkte rijen zijn niet met dit record opgeslagen.",
+    "pickTitle": "{{entity}} toevoegen",
+    "pickConfirm": "Selectie toevoegen ({{count}})",
+    "pickEmpty": "Niets meer om toe te voegen."
+  },
+  "sortable": {
+    "drag": "Sleep om {{name}} te verplaatsen",
+    "moveBefore": "{{name}} naar voren verplaatsen",
+    "moveAfter": "{{name}} naar achteren verplaatsen",
+    "remove": "{{name}} verwijderen",
+    "instructions": "Druk op Spatie of Enter om een item op te pakken. Verplaats het met de pijltjestoetsen en druk opnieuw op Spatie of Enter om het neer te zetten, of op Escape om te annuleren.",
+    "picked": "{{name}} opgepakt, positie {{position}} van {{count}}.",
+    "moved": "{{name}} verplaatst naar positie {{position}} van {{count}}.",
+    "dropped": "{{name}} neergezet op positie {{position}} van {{count}}.",
+    "cancelled": "Verplaatsen van {{name}} geannuleerd."
   }
 }

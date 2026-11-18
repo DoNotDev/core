@@ -11,6 +11,37 @@
  */
 
 /**
+ * Storage outcome of a rejected atomic request. `not-committed` is definitive;
+ * `unknown` includes lost acknowledgments and requires reconciliation, not retry.
+ *
+ * @since 0.3.0
+ */
+export type AtomicBulkOutcome = 'not-committed' | 'unknown';
+
+/**
+ * Rejection of atomic cross-collection execution. Preserves the original cause
+ * without implying that reverting optimistic cache state rolled back storage.
+ * No automatic replay is safe for an unknown outcome.
+ *
+ * @since 0.3.0
+ */
+export class AtomicBulkError extends Error {
+  /** Definitive non-commit or an indeterminate storage outcome. */
+  readonly outcome: AtomicBulkOutcome;
+
+  /**
+   * @param message - Diagnostic reason the atomic request failed.
+   * @param outcome - What is known about the storage commit.
+   * @param cause - Original provider or validation failure, when available.
+   */
+  constructor(message: string, outcome: AtomicBulkOutcome, cause?: unknown) {
+    super(message, { cause });
+    this.name = 'AtomicBulkError';
+    this.outcome = outcome;
+  }
+}
+
+/**
  * Thrown when a {@link BulkOperations} payload contains the same id in two
  * mutually-exclusive buckets. The service rejects these up-front, before any
  * write is attempted, so partial state is impossible.

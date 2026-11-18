@@ -40,6 +40,14 @@
     "error": "فشل في إرسال بريد التحقق. يرجى المحاولة مرة أخرى."
   },
   "errors": {
+    "notFound": {
+      "title": "$t(messages.notFound.title)",
+      "description": "$t(messages.notFound.description)",
+      "suggestions": "$t(messages.notFound.suggestions)",
+      "navigateTo": "$t(messages.notFound.navigateTo)",
+      "goHome": "$t(messages.notFound.goHome)",
+      "goBack": "$t(messages.notFound.goBack)"
+    },
     "auth/popup-closed-by-user": "تم إغلاق نافذة تسجيل الدخول قبل الإكمال.",
     "auth/cancelled-popup-request": "تم إلغاء نافذة تسجيل الدخول.",
     "auth/popup-blocked": "تم حظر نافذة تسجيل الدخول بواسطة المتصفح.",
@@ -147,6 +155,7 @@
     "forbidden": "الوصول محظور",
     "serverError": "حدث خطأ في الخادم",
     "notFound": {
+      "navigateTo": "الانتقال إلى {{label}}",
       "title": "الصفحة غير موجودة",
       "description": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
       "suggestions": "قد تبحث عن:",

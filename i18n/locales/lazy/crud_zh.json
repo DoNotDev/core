@@ -75,7 +75,8 @@
       "goBack": "返回上一页"
     },
     "bulkPartialError_one": "{{count}} 行未能保存",
-    "bulkPartialError_other": "{{count}} 行未能保存"
+    "bulkPartialError_other": "{{count}} 行未能保存",
+    "unknownFields": "已保存，但以下字段不存在，未保存：{{fields}}。请联系支持。"
   },
   "pagination": {
     "showing": "显示第 {{from}} 到 {{to}} 条，共 {{total}} 条",
@@ -257,6 +258,13 @@
     "noLanguagesFound": "未找到语言",
     "changeLanguage": "更改语言"
   },
+  "draft": {
+    "restored": "已恢复草稿",
+    "restoredDescription": "已找回未保存的更改",
+    "discard": "放弃",
+    "conflict": "草稿基于旧版本",
+    "conflictDescription": "自您未保存的修改以来，此记录已更改。保存可能会被拒绝：请放弃草稿以编辑当前版本。"
+  },
   "form": {
     "submit": "提交",
     "cancel": "取消",
@@ -269,9 +277,14 @@
     "uploading": "上传中 {{progress}}%...",
     "processing": "处理中...",
     "validating": "验证中...",
+    "validationFailed": "部分字段需要修改",
+    "fixFields": "请检查：{{fields}}",
     "saving": "保存中...",
     "saved": "已保存",
-    "error": "出错 — 请重试"
+    "error": "出错 — 请重试",
+    "saveFailed": "无法保存，请重试。",
+    "uploadFailed": "文件上传失败，请重试。",
+    "reuploadFiles": "部分文件未上传。请重新上传后再保存。"
   },
   "navigation": {
     "more": "更多",
@@ -381,6 +394,11 @@
   },
   "boolean": {
     "required": "{{field}} 必须被选中"
+  },
+  "fieldArray": {
+    "addRow": "向{{field}}添加一行",
+    "removeRow": "从{{field}}删除第{{index}}行",
+    "noSubFields": "{{field}}：未配置子字段。"
   },
   "array": {
     "required": "至少需要一个 {{field}}",
@@ -536,7 +554,15 @@
   },
   "price": {
     "vatIncluded": "含税",
+    "currency": "货币",
+    "discountLabel": "折扣 (%)",
     "discountPercent": "-{{percent}}%"
+  },
+  "workflow": {
+    "submit": "提交",
+    "next": "下一步",
+    "previous": "上一步",
+    "skip": "跳过此步骤"
   },
   "recommendations": {
     "title": "您可能也喜欢"
@@ -566,5 +592,27 @@
     "deleteSelected": "删除所选 ({{count}})",
     "failed_one": "{{count}} 行未保存：仍保留在列表中，请重试",
     "failed_other": "{{count}} 行未保存：仍保留在列表中，请重试"
+  },
+  "childRows": {
+    "createFirst": "请先创建草稿，再添加{{entity}}。",
+    "required": "{{field}}为必填项",
+    "invalidValue": "{{field}}无效",
+    "invalidRows_one": "保存前需修正 {{count}} 行",
+    "invalidRows_other": "保存前需修正 {{count}} 行",
+    "notSaved": "编辑的行未随此记录一起保存。",
+    "pickTitle": "添加{{entity}}",
+    "pickConfirm": "添加所选项（{{count}}）",
+    "pickEmpty": "没有可添加的项目。"
+  },
+  "sortable": {
+    "drag": "拖动以重新排序{{name}}",
+    "moveBefore": "将{{name}}前移",
+    "moveAfter": "将{{name}}后移",
+    "remove": "移除 {{name}}",
+    "instructions": "按空格键或回车键拿起项目。用方向键移动，再按空格键或回车键放下，或按 Esc 键取消。",
+    "picked": "已拿起 {{name}}，位于第 {{position}} 个，共 {{count}} 个。",
+    "moved": "{{name}} 已移到第 {{position}} 个，共 {{count}} 个。",
+    "dropped": "{{name}} 已放在第 {{position}} 个，共 {{count}} 个。",
+    "cancelled": "已取消移动 {{name}}。"
   }
 }

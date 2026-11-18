@@ -4,7 +4,12 @@
 
 **Default essence = SaaS** (Inter, neutral). Optional essences (Brutalist, Luxury) are available as reference; they do **not** apply until you set the class on `<html>` (e.g. `class="brutalist"`) or use the theme switcher.
 
-**Reference:** See `ESSENCES_REFERENCE.css` for Brutalist/Luxury/Retro essence definitions to copy into your `src/themes.css`. Default-essence fonts (Inter, Space Grotesk, Playfair, Roboto) are bundled via `@donotdev/ui`; no Google Fonts, no `public/fonts/` required.
+**Reference:** See `ESSENCES_REFERENCE.css` for Brutalist/Luxury/Retro essence definitions to copy into your `src/themes.css`.
+
+**Fonts — the theme decides what ships.** `@donotdev/ui` packs a self-hosted catalogue (Inter, Playfair Display, Space Grotesk, Roboto, Press Start 2P; `FONT_FAMILY_TO_STEMS` in `@donotdev/core` config constants). At build, the framework reads the first family of `--font-family`, `--font-headline` and `--font-mono` (after `var()`, framework defaults overridden by your themes) for `:root` and each theme class, and ships only the catalogue families found, for the subsets of your languages (Polish, Czech… add `latin-ext`). Typical result: one sans for body, at most one serif for headlines. Never Google Fonts.
+- Default theme: Inter only (`--font-family`/`--font-headline` → `--font-sans: Inter…`).
+- Your own fonts (e.g. `next/font/local`, a `var(--font-x)` set by a class on `<html>`, or a family outside the catalogue): the framework ships **no** font file for those tokens; with no catalogue family left, no `public/dndev-fonts.css` and no stylesheet link either.
+- Preconnects to third-party origins are never injected by the framework: declare the ones your app needs in its document `<head>`.
 
 ---
 

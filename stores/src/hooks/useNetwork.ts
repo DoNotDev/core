@@ -33,19 +33,22 @@ type NetworkStoreState = NetworkState & DoNotDevStore;
  * @author AMBROISE PARK Consulting
  */
 export function useNetwork() {
-  const state = useNetworkStore((state: NetworkStoreState) => ({
-    // Network status
-    status: state.status,
-    isOnline: state.status.online,
-    isReconnected: state.isReconnected,
-    isConnectionLost: state.isConnectionLost,
-    connectionType: state.status.connectionType,
-    effectiveType: state.status.effectiveType,
-    lastChecked: state.status.lastChecked,
-  }));
+  const status = useNetworkStatus();
+  const isReconnected = useNetworkStore(
+    (state: NetworkStoreState) => state.isReconnected
+  );
+  const isConnectionLost = useNetworkStore(
+    (state: NetworkStoreState) => state.isConnectionLost
+  );
 
   return {
-    ...state,
+    status,
+    isOnline: status.online,
+    isReconnected,
+    isConnectionLost,
+    connectionType: status.connectionType,
+    effectiveType: status.effectiveType,
+    lastChecked: status.lastChecked,
     // Get reset via getState() to avoid reference instability from middleware
     reset: useNetworkStore.getState().reset,
   };

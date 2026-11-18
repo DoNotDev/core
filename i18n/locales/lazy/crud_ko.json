@@ -39,6 +39,7 @@
     "noResults": "주소를 찾을 수 없습니다"
   },
   "export": "내보내기",
+  "copyToClipboard": "클립보드에 복사",
   "noInquiries": "문의사항을 찾을 수 없습니다.",
   "customer": "고객",
   "noCustomer": "연결된 고객 없음",
@@ -118,6 +119,11 @@
   },
   "boolean": {
     "required": "{{field}}을(를) 선택해야 합니다"
+  },
+  "fieldArray": {
+    "addRow": "{{field}}에 행 추가",
+    "removeRow": "{{field}}에서 {{index}}번째 행 삭제",
+    "noSubFields": "{{field}}: 하위 필드가 구성되지 않았습니다."
   },
   "array": {
     "required": "최소 하나의 {{field}}이(가) 필요합니다",
@@ -263,7 +269,15 @@
     "forbidden": "액세스가 금지되었습니다",
     "serverError": "서버 오류가 발생했습니다",
     "bulkPartialError_one": "{{count}}개 행을 저장하지 못했습니다",
-    "bulkPartialError_other": "{{count}}개 행을 저장하지 못했습니다"
+    "bulkPartialError_other": "{{count}}개 행을 저장하지 못했습니다",
+    "unknownFields": "저장되었지만 다음 필드는 존재하지 않아 저장되지 않았습니다: {{fields}}. 지원팀에 문의하세요."
+  },
+  "draft": {
+    "restored": "임시 저장본을 복원했습니다",
+    "restoredDescription": "저장하지 않은 변경 사항을 복구했습니다",
+    "discard": "삭제",
+    "conflict": "이전 버전을 기반으로 한 임시 저장본",
+    "conflictDescription": "저장하지 않은 변경 이후 이 레코드가 변경되었습니다. 저장이 거부될 수 있습니다. 삭제하고 현재 버전을 편집하세요."
   },
   "form": {
     "submit": "제출",
@@ -277,9 +291,14 @@
     "uploading": "업로드 중 {{progress}}%...",
     "processing": "처리 중...",
     "validating": "검증 중...",
+    "validationFailed": "수정이 필요한 항목이 있습니다",
+    "fixFields": "확인하세요: {{fields}}",
     "saving": "저장 중...",
     "saved": "저장됨",
-    "error": "오류 — 다시 시도하세요"
+    "error": "오류 — 다시 시도하세요",
+    "saveFailed": "저장하지 못했습니다. 다시 시도하세요.",
+    "uploadFailed": "파일 업로드에 실패했습니다. 다시 시도하세요.",
+    "reuploadFiles": "일부 파일이 업로드되지 않았습니다. 다시 업로드한 후 저장하세요."
   },
   "gdprConsent": {
     "consent": "나는",
@@ -369,7 +388,15 @@
   },
   "price": {
     "vatIncluded": "부가세 포함",
+    "currency": "통화",
+    "discountLabel": "할인 (%)",
     "discountPercent": "-{{percent}}%"
+  },
+  "workflow": {
+    "submit": "제출",
+    "next": "다음",
+    "previous": "이전",
+    "skip": "이 단계 건너뛰기"
   },
   "recommendations": {
     "title": "이런 것도 좋아하실 수 있어요"
@@ -403,5 +430,27 @@
     "deleteSelected": "선택 항목 삭제 ({{count}})",
     "failed_one": "{{count}}개 행이 저장되지 않았습니다. 목록에 남아 있으니 다시 시도하세요",
     "failed_other": "{{count}}개 행이 저장되지 않았습니다. 목록에 남아 있으니 다시 시도하세요"
+  },
+  "childRows": {
+    "createFirst": "{{entity}}을(를) 추가하기 전에 초안을 먼저 만드세요.",
+    "required": "{{field}}은(는) 필수입니다",
+    "invalidValue": "{{field}}이(가) 올바르지 않습니다",
+    "invalidRows_one": "저장하기 전에 {{count}}개 행을 수정하세요",
+    "invalidRows_other": "저장하기 전에 {{count}}개 행을 수정하세요",
+    "notSaved": "편집한 행이 이 레코드와 함께 저장되지 않았습니다.",
+    "pickTitle": "{{entity}} 추가",
+    "pickConfirm": "선택 항목 추가 ({{count}})",
+    "pickEmpty": "더 추가할 항목이 없습니다."
+  },
+  "sortable": {
+    "drag": "드래그하여 {{name}} 순서 변경",
+    "moveBefore": "{{name}} 앞으로 이동",
+    "moveAfter": "{{name}} 뒤로 이동",
+    "remove": "{{name}} 제거",
+    "instructions": "항목을 잡으려면 스페이스바나 Enter 키를 누르세요. 화살표 키로 옮긴 다음 스페이스바나 Enter 키를 다시 눌러 놓거나 Esc 키를 눌러 취소하세요.",
+    "picked": "{{name}}을(를) 잡았습니다. {{count}}개 중 {{position}}번째입니다.",
+    "moved": "{{name}}을(를) {{count}}개 중 {{position}}번째로 옮겼습니다.",
+    "dropped": "{{name}}을(를) {{count}}개 중 {{position}}번째에 놓았습니다.",
+    "cancelled": "{{name}} 이동을 취소했습니다."
   }
 }

@@ -39,6 +39,7 @@
     "noResults": "住所が見つかりません"
   },
   "export": "エクスポート",
+  "copyToClipboard": "クリップボードにコピー",
   "noInquiries": "お問い合わせが見つかりませんでした。",
   "customer": "顧客",
   "noCustomer": "顧客がリンクされていません",
@@ -118,6 +119,11 @@
   },
   "boolean": {
     "required": "{{field}}を選択する必要があります"
+  },
+  "fieldArray": {
+    "addRow": "{{field}}に行を追加",
+    "removeRow": "{{field}}の{{index}}行目を削除",
+    "noSubFields": "{{field}}：サブフィールドが設定されていません。"
   },
   "array": {
     "required": "少なくとも1つの{{field}}が必要です",
@@ -263,7 +269,15 @@
     "forbidden": "アクセスが禁止されています",
     "serverError": "サーバーエラーが発生しました",
     "bulkPartialError_one": "{{count}} 行を保存できませんでした",
-    "bulkPartialError_other": "{{count}} 行を保存できませんでした"
+    "bulkPartialError_other": "{{count}} 行を保存できませんでした",
+    "unknownFields": "保存しましたが、次のフィールドは存在しないため保存されませんでした: {{fields}}。サポートにお問い合わせください。"
+  },
+  "draft": {
+    "restored": "下書きを復元しました",
+    "restoredDescription": "保存されていない変更を復元しました",
+    "discard": "破棄",
+    "conflict": "古いバージョンに基づく下書き",
+    "conflictDescription": "未保存の変更以降にこのレコードが変更されました。保存が拒否される可能性があります。破棄して現在のバージョンを編集してください。"
   },
   "form": {
     "submit": "送信",
@@ -277,9 +291,14 @@
     "uploading": "アップロード中 {{progress}}%...",
     "processing": "処理中...",
     "validating": "検証中...",
+    "validationFailed": "修正が必要な項目があります",
+    "fixFields": "確認してください: {{fields}}",
     "saving": "保存中...",
     "saved": "保存しました",
-    "error": "エラー — もう一度お試しください"
+    "error": "エラー — もう一度お試しください",
+    "saveFailed": "保存できませんでした。もう一度お試しください。",
+    "uploadFailed": "ファイルのアップロードに失敗しました。もう一度お試しください。",
+    "reuploadFiles": "一部のファイルがアップロードされていません。もう一度アップロードしてから保存してください。"
   },
   "gdprConsent": {
     "consent": "私は",
@@ -369,7 +388,15 @@
   },
   "price": {
     "vatIncluded": "税込",
+    "currency": "通貨",
+    "discountLabel": "割引 (%)",
     "discountPercent": "-{{percent}}%"
+  },
+  "workflow": {
+    "submit": "送信",
+    "next": "次へ",
+    "previous": "前へ",
+    "skip": "このステップをスキップ"
   },
   "recommendations": {
     "title": "こちらもおすすめ"
@@ -403,5 +430,27 @@
     "deleteSelected": "選択した項目を削除 ({{count}})",
     "failed_one": "{{count}} 行が保存されていません。一覧に残っています。もう一度お試しください",
     "failed_other": "{{count}} 行が保存されていません。一覧に残っています。もう一度お試しください"
+  },
+  "childRows": {
+    "createFirst": "{{entity}}を追加する前に下書きを作成してください。",
+    "required": "{{field}}は必須です",
+    "invalidValue": "{{field}}が正しくありません",
+    "invalidRows_one": "保存する前に {{count}} 行を修正してください",
+    "invalidRows_other": "保存する前に {{count}} 行を修正してください",
+    "notSaved": "編集した行はこのレコードと一緒に保存されませんでした。",
+    "pickTitle": "{{entity}}を追加",
+    "pickConfirm": "選択した項目を追加 ({{count}})",
+    "pickEmpty": "追加できる項目はありません。"
+  },
+  "sortable": {
+    "drag": "ドラッグして{{name}}を並べ替え",
+    "moveBefore": "{{name}}を前に移動",
+    "moveAfter": "{{name}}を後ろに移動",
+    "remove": "{{name}} を削除",
+    "instructions": "項目をつかむには Space キーまたは Enter キーを押します。矢印キーで移動し、もう一度 Space キーまたは Enter キーを押して置くか、Escape キーで取り消します。",
+    "picked": "{{name}} をつかみました。{{count}} 件中 {{position}} 番目です。",
+    "moved": "{{name}} を {{count}} 件中 {{position}} 番目に移動しました。",
+    "dropped": "{{name}} を {{count}} 件中 {{position}} 番目に置きました。",
+    "cancelled": "{{name}} の移動を取り消しました。"
   }
 }

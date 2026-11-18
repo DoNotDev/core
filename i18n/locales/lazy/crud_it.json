@@ -39,6 +39,7 @@
     "noResults": "Nessun indirizzo trovato"
   },
   "export": "Esporta",
+  "copyToClipboard": "Copia negli appunti",
   "noInquiries": "Nessuna richiesta trovata.",
   "customer": "Cliente",
   "noCustomer": "Nessun cliente collegato",
@@ -118,6 +119,11 @@
   },
   "boolean": {
     "required": "{{field}} deve essere selezionato"
+  },
+  "fieldArray": {
+    "addRow": "Aggiungi una riga a {{field}}",
+    "removeRow": "Rimuovi la riga {{index}} da {{field}}",
+    "noSubFields": "{{field}}: nessun sottocampo configurato."
   },
   "array": {
     "required": "È richiesto almeno un {{field}}",
@@ -263,7 +269,15 @@
     "forbidden": "Accesso vietato",
     "serverError": "Errore del server verificatosi",
     "bulkPartialError_one": "Impossibile salvare {{count}} riga",
-    "bulkPartialError_other": "Impossibile salvare {{count}} righe"
+    "bulkPartialError_other": "Impossibile salvare {{count}} righe",
+    "unknownFields": "Salvato, ma questi campi non esistono e non sono stati salvati: {{fields}}. Contatta il supporto."
+  },
+  "draft": {
+    "restored": "Bozza ripristinata",
+    "restoredDescription": "Le modifiche non salvate sono state recuperate",
+    "discard": "Scarta",
+    "conflict": "Bozza basata su una versione precedente",
+    "conflictDescription": "Questo record è cambiato dalle tue modifiche non salvate. Il salvataggio potrebbe essere rifiutato: scarta per modificare la versione attuale."
   },
   "form": {
     "submit": "Invia",
@@ -277,9 +291,14 @@
     "uploading": "Caricamento {{progress}}%...",
     "processing": "Elaborazione...",
     "validating": "Validazione...",
+    "validationFailed": "Alcuni campi vanno corretti",
+    "fixFields": "Controlla: {{fields}}",
     "saving": "Salvataggio...",
     "saved": "Salvato",
-    "error": "Errore — riprova"
+    "error": "Errore — riprova",
+    "saveFailed": "Impossibile salvare. Riprova.",
+    "uploadFailed": "Caricamento del file non riuscito. Riprova.",
+    "reuploadFiles": "Alcuni file non sono stati caricati. Caricali di nuovo, poi salva."
   },
   "gdprConsent": {
     "consent": "Accetto la",
@@ -318,7 +337,8 @@
     "apply": "Applica filtri",
     "clear": "Cancella filtri",
     "noResults": "Nessun risultato corrisponde ai tuoi filtri",
-    "selected": "{{count}} selezionato"
+    "selected": "{{count}} selezionato",
+    "selected_other": "{{count}} selezionati"
   },
   "filter": {
     "placeholder": "Filtra...",
@@ -369,7 +389,15 @@
   },
   "price": {
     "vatIncluded": "IVA incl.",
+    "currency": "Valuta",
+    "discountLabel": "Sconto (%)",
     "discountPercent": "-{{percent}}%"
+  },
+  "workflow": {
+    "submit": "Invia",
+    "next": "Avanti",
+    "previous": "Indietro",
+    "skip": "Salta questo passaggio"
   },
   "recommendations": {
     "title": "Potrebbe piacerti anche"
@@ -403,5 +431,27 @@
     "deleteSelected": "Elimina selezione ({{count}})",
     "failed_one": "{{count}} riga non salvata: resta nell’elenco, riprova",
     "failed_other": "{{count}} righe non salvate: restano nell’elenco, riprova"
+  },
+  "childRows": {
+    "createFirst": "Crea la bozza prima di aggiungere {{entity}}.",
+    "required": "{{field}} è obbligatorio",
+    "invalidValue": "{{field}} non è valido",
+    "invalidRows_one": "{{count}} riga da correggere prima di salvare",
+    "invalidRows_other": "{{count}} righe da correggere prima di salvare",
+    "notSaved": "Le righe modificate non sono state salvate con questo record.",
+    "pickTitle": "Aggiungi {{entity}}",
+    "pickConfirm": "Aggiungi selezionati ({{count}})",
+    "pickEmpty": "Non c'è altro da aggiungere."
+  },
+  "sortable": {
+    "drag": "Trascina per riordinare {{name}}",
+    "moveBefore": "Sposta {{name}} prima",
+    "moveAfter": "Sposta {{name}} dopo",
+    "remove": "Rimuovi {{name}}",
+    "instructions": "Per prendere un elemento, premi Spazio o Invio. Spostalo con le frecce, poi premi di nuovo Spazio o Invio per rilasciarlo, oppure Esc per annullare.",
+    "picked": "{{name}} preso, posizione {{position}} di {{count}}.",
+    "moved": "{{name}} spostato in posizione {{position}} di {{count}}.",
+    "dropped": "{{name}} rilasciato in posizione {{position}} di {{count}}.",
+    "cancelled": "Spostamento di {{name}} annullato."
   }
 }

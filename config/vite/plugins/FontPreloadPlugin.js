@@ -1,31 +1,35 @@
 /**
  * @fileoverview Font Plugin - Build-time font filtering + preload injection
- * @description Filters font assets in the output bundle to include only needed subsets
- * (from app locales) and woff2 only. Also injects preload links into index.html.
+ * @description @donotdev/ui/dndev.css declares the whole font catalogue; the build keeps
+ * only the framework fonts the app's theme renders text in (ThemeDiscovery
+ * fontFamilies → resolveFontManifest), for the subsets of its locales, woff2 only.
+ * A theme that uses only its own fonts ships no framework font file.
  *
  * Strategy:
- * - buildStart(): discover needed fonts (from CSS) + locales (from I18n) → compute manifest
- * - generateBundle(): delete unwanted font assets, remove their @font-face blocks from CSS,
- *   strip .woff references from remaining blocks
+ * - buildStart(): theme font families + locales (I18n) → manifest
+ * - generateBundle(): delete the other catalogue font assets, remove their @font-face
+ *   blocks from CSS, strip .woff references from the remaining blocks
  * - writeBundle(): inject <link rel="preload"> into index.html
  *
- * @version 0.0.4
+ * @version 0.0.5
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
 
-import { FONT_WEIGHTS } from '../../constants.js';
 import {
+  catalogueFontStem,
   resolveFontManifest,
   stripWoffFromSrc,
 } from '../../fonts/resolveFontManifest.js';
 import { I18nDiscovery } from '../../discovery/I18nDiscovery.js';
+import { ThemeDiscovery } from '../../discovery/ThemeDiscovery.js';
 import { createLogger } from '../../utils/debugLog.js';
 import { PathResolver } from '../../utils/PathResolver.js';
 
 const MAX_PRELOADS = 3;
 const FONT_PRELOAD_MARKER = '<!-- DNDEV_FONT_PRELOADS -->';
-const KNOWN_STEMS = Object.keys(FONT_WEIGHTS);
+/** Every url(...) of a CSS block */
+const CSS_URL_RE = /url\(\s*['"]?([^'")]+)['"]?\s*\)/g;
 
 /**
  * @param {Object} options - Plugin options
@@ -38,8 +42,8 @@ export function createViteFontPreloadPlugin(options = {}) {
   let pathResolver;
   let buildConfig = {};
   let isBuild = false;
-  /** @type {Set<string>} file stems to keep (e.g. 'inter-latin-400-normal') */
-  let allowedStems = new Set();
+  /** @type {Set<string>|null} font file stems to keep (e.g. 'inter-latin-400-normal'); null until buildStart */
+  let allowedStems = null;
   /** @type {string[]} */
   let preloadHrefs = [];
 
@@ -69,73 +73,58 @@ export function createViteFontPreloadPlugin(options = {}) {
       const appRoot = pathResolver.getAppRoot();
       if (!appRoot) return;
 
+      // 1. Discover locales from I18n (determines which subsets to keep)
+      let locales = [i18nOptions.fallbackLanguage || 'en'];
       try {
-        // 1. Discover locales from I18n (determines which subsets to keep)
-        let locales = [i18nOptions.fallbackLanguage || 'en'];
-        try {
-          const i18n = new I18nDiscovery(pathResolver, {
-            fallbackLanguage: i18nOptions.fallbackLanguage || 'en',
-            only: i18nOptions.only,
-          });
-          const data = await i18n.discoverTranslations();
-          if (data?.supportedLanguages?.length) {
-            locales = data.supportedLanguages;
-          }
-        } catch (err) {
-          logger.debug(
-            `Font preload: i18n discovery failed, using 'en': ${err?.message}`
-          );
+        const i18n = new I18nDiscovery(pathResolver, {
+          fallbackLanguage: i18nOptions.fallbackLanguage || 'en',
+          only: i18nOptions.only,
+        });
+        const data = await i18n.discoverTranslations();
+        if (data?.supportedLanguages?.length) {
+          locales = data.supportedLanguages;
         }
-
-        // 2. Resolve manifest — keeps all installed framework fonts, filtered by locale subsets
-        const manifest = resolveFontManifest(locales);
-        allowedStems = manifest.stems;
-
-        logger.debug(
-          `Font filter: ${manifest.fontStems.size} font(s), ${manifest.subsets.size} subset(s), ${allowedStems.size} allowed stem(s)`
-        );
       } catch (err) {
         logger.debug(
-          `Font preload: discovery failed, using defaults: ${err?.message}`
+          `Font preload: i18n discovery failed, using 'en': ${err?.message}`
         );
-        const manifest = resolveFontManifest([
-          i18nOptions.fallbackLanguage || 'en',
-        ]);
-        allowedStems = manifest.stems;
       }
+
+      // 2. Families the theme renders text in (fails the build when unknown)
+      const themes = new ThemeDiscovery(null, pathResolver, { debug });
+      const { fontFamilies } = await themes.discoverThemes();
+
+      // 3. Manifest: catalogue families used × weights × locale subsets
+      const manifest = resolveFontManifest({ families: fontFamilies, locales });
+      allowedStems = manifest.stems;
+
+      logger.debug(
+        `Font filter: ${manifest.fontStems.size} font(s) [${[...manifest.fontStems].join(', ')}], ${manifest.subsets.size} subset(s), ${allowedStems.size} allowed stem(s)`
+      );
     },
 
     generateBundle(_outputOptions, bundle) {
-      if (allowedStems.size === 0) return;
+      if (!allowedStems) return;
+
+      /** @param {string} name - Asset file name or CSS url() */
+      const isCatalogueFont = (name) => catalogueFontStem(name) !== null;
+      /** @param {string} name - Asset file name or CSS url() */
+      const isAllowedFont = (name) => allowedStems.has(catalogueFontStem(name));
 
       let deletedWoff = 0;
       let deletedWoff2 = 0;
 
-      // 1. Delete unwanted font assets
+      // 1. Delete unwanted catalogue font assets (all .woff, unused .woff2)
       for (const fileName of Object.keys(bundle)) {
         const info = bundle[fileName];
-        if (info.type !== 'asset') continue;
-
-        const lower = fileName.toLowerCase();
+        if (info.type !== 'asset' || !isCatalogueFont(fileName)) continue;
 
         if (fileName.endsWith('.woff')) {
-          // Delete ALL .woff for known framework fonts
-          if (KNOWN_STEMS.some((stem) => lower.includes(stem))) {
-            delete bundle[fileName];
-            deletedWoff++;
-          }
-        } else if (fileName.endsWith('.woff2')) {
-          // Delete .woff2 for known fonts NOT in allowed stems
-          const isKnownFont = KNOWN_STEMS.some((stem) => lower.includes(stem));
-          if (isKnownFont) {
-            const isAllowed = Array.from(allowedStems).some((stem) =>
-              lower.includes(stem)
-            );
-            if (!isAllowed) {
-              delete bundle[fileName];
-              deletedWoff2++;
-            }
-          }
+          delete bundle[fileName];
+          deletedWoff++;
+        } else if (fileName.endsWith('.woff2') && !isAllowedFont(fileName)) {
+          delete bundle[fileName];
+          deletedWoff2++;
         }
       }
 
@@ -156,18 +145,11 @@ export function createViteFontPreloadPlugin(options = {}) {
         const cleaned = original.replace(
           /@font-face\s*\{[\s\S]*?\}/g,
           (block) => {
-            // Check if this block is for a known framework font
-            const isKnownFont = KNOWN_STEMS.some((stem) =>
-              block.includes(stem)
-            );
-            if (!isKnownFont) return block; // Custom font → keep as-is
-
-            // Check if it references an allowed stem
-            const isAllowed = Array.from(allowedStems).some((stem) =>
-              block.includes(stem)
-            );
-            if (!isAllowed) return ''; // Unwanted subset → remove entire block
-
+            const urls = [...block.matchAll(CSS_URL_RE)].map((m) => m[1]);
+            // App's own font → keep as-is
+            if (!urls.some(isCatalogueFont)) return block;
+            // Catalogue font the theme does not use → remove entire block
+            if (!urls.some(isAllowedFont)) return '';
             // Allowed → keep but strip woff
             return stripWoffFromSrc(block);
           }
@@ -183,12 +165,9 @@ export function createViteFontPreloadPlugin(options = {}) {
       const collected = [];
       for (const [fileName, info] of Object.entries(bundle)) {
         if (info.type !== 'asset') continue;
-        if (!fileName.endsWith('.woff2')) continue;
-        const lower = fileName.toLowerCase();
-        if (Array.from(allowedStems).some((stem) => lower.includes(stem))) {
-          const href = base ? `${base}/${fileName}` : `/${fileName}`;
-          collected.push(href);
-        }
+        if (!fileName.endsWith('.woff2') || !isAllowedFont(fileName)) continue;
+        const href = base ? `${base}/${fileName}` : `/${fileName}`;
+        collected.push(href);
       }
       preloadHrefs = collected.slice(0, MAX_PRELOADS);
     },

@@ -52,7 +52,7 @@ const LanguageDropdown = ({
 
   const items: DropdownMenuItemData[] = languages.map((language) => {
     const isActive = language.id === currentLanguage;
-    const label = showNames ? language.name : language.id.toUpperCase();
+    const label = showNames ? language.nativeName : language.id.toUpperCase();
 
     return {
       label,
@@ -65,7 +65,7 @@ const LanguageDropdown = ({
           <Stack direction="row" align="center" gap="tight">
             <Flag
               code={language.flagCode || language.id}
-              title={`${language.name} flag`}
+              title={language.nativeName}
             />
             <span>{label}</span>
           </Stack>

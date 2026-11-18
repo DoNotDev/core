@@ -87,7 +87,7 @@ export const NEXT_RENDER = {
   siteGroup: '(site)',
   sessionSegment: 'dndev-session',
   languageHeader: 'x-dndev-language',
-  /** Cache lifetime of static pages and of the sitemap / llms.txt routes (seconds) */
+  /** Default cache lifetime of static pages and of the sitemap / llms.txt routes (seconds); apps override it with appConfig.revalidate */
   revalidateSeconds: 3600,
 };
 
@@ -455,8 +455,10 @@ export const CSS_PATTERNS = {
 };
 
 /**
- * Font family display name → @fontsource package stem.
- * Used by resolveFontManifest() to map CSS font families to fontsource packages.
+ * Framework font catalogue: CSS family name → @fontsource package stem.
+ * The families @donotdev/ui depends on (packages/ui/package.json). An app ships
+ * only the ones its theme renders text in (resolveThemeFontFamilies →
+ * resolveFontManifest); any other family is the app's own font.
  */
 export const FONT_FAMILY_TO_STEMS = {
   Inter: 'inter',
@@ -467,7 +469,8 @@ export const FONT_FAMILY_TO_STEMS = {
 };
 
 /**
- * Weights imported per font stem (mirrors dndev.css @import declarations).
+ * Weights shipped per catalogue stem. Must match the @fontsource imports of
+ * packages/ui/src/dndev.css (Vite bundles from there): a test guards the parity.
  */
 export const FONT_WEIGHTS = {
   inter: [300, 400, 600, 700],
@@ -480,6 +483,9 @@ export const FONT_WEIGHTS = {
 /**
  * Locale code → fontsource unicode-range subset names.
  * Used to filter font files at build time to only include needed subsets.
+ * 'latin' covers U+0000-00FF (+ a few typographic marks): enough for en, fr, de,
+ * es, it, pt, nl and the Nordic languages. Letters such as Polish ł ą ś ż, Czech
+ * ř ě, Hungarian ő ű, Romanian ș ț, Turkish ğ ş live in 'latin-ext' (U+0100-02BA…).
  * Empty array = system fonts (CJK/RTL), no fontsource subsets needed.
  */
 export const LOCALE_TO_FONT_SUBSETS = {
@@ -495,34 +501,34 @@ export const LOCALE_TO_FONT_SUBSETS = {
   sv: ['latin'],
   nb: ['latin'],
   fi: ['latin'],
-  pl: ['latin'],
-  cs: ['latin'],
-  sk: ['latin'],
-  hr: ['latin'],
-  sl: ['latin'],
-  hu: ['latin'],
-  ro: ['latin'],
-  et: ['latin'],
-  lv: ['latin'],
-  lt: ['latin'],
-  mt: ['latin'],
+  pl: ['latin', 'latin-ext'],
+  cs: ['latin', 'latin-ext'],
+  sk: ['latin', 'latin-ext'],
+  hr: ['latin', 'latin-ext'],
+  sl: ['latin', 'latin-ext'],
+  hu: ['latin', 'latin-ext'],
+  ro: ['latin', 'latin-ext'],
+  et: ['latin', 'latin-ext'],
+  lv: ['latin', 'latin-ext'],
+  lt: ['latin', 'latin-ext'],
+  mt: ['latin', 'latin-ext'],
   ga: ['latin'],
   ca: ['latin'],
   eu: ['latin'],
   gl: ['latin'],
   af: ['latin'],
   sw: ['latin'],
-  tr: ['latin'],
+  tr: ['latin', 'latin-ext'],
   id: ['latin'],
   ms: ['latin'],
   tl: ['latin'],
-  // Latin-ext (diacritics beyond basic latin)
+  // Vietnamese (own subset)
   vi: ['latin', 'vietnamese'],
   // Cyrillic-script languages
   ru: ['latin', 'cyrillic'],
   bg: ['latin', 'cyrillic'],
   uk: ['latin', 'cyrillic'],
-  sr: ['latin', 'cyrillic'],
+  sr: ['latin', 'latin-ext', 'cyrillic'],
   mk: ['latin', 'cyrillic'],
   be: ['latin', 'cyrillic'],
   // Greek

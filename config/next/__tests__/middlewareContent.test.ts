@@ -243,6 +243,30 @@ describe('RouteHandler proxy.ts session refresh', () => {
     expect(guest.applied).toEqual([]);
   });
 
+  it('renders protected pages per request for every visitor not redirected: they have no cached copy', async () => {
+    const noAuthRoute = new NextRouteHandler({ auth: {} });
+    const content = noAuthRoute.generateMiddlewareContent(
+      [compte],
+      [home, compte],
+      [],
+      true
+    );
+    expect(transpile(content).diagnostics ?? []).toEqual([]);
+    const guest = loadProxy(content, { user: null });
+    expect(await guest.proxy(makeRequest('/compte?paiement=ok'))).toEqual({
+      type: 'rewrite',
+      url: '/dndev-session/compte?paiement=ok',
+    });
+    expect(await guest.proxy(makeRequest('/'))).toEqual({ type: 'next' });
+    expect(guest.refreshSupabaseSession).not.toHaveBeenCalled();
+    // Session gone (refresh failed): signed out, still per request
+    expect(await guest.proxy(withCookie('/compte'))).toEqual({
+      type: 'rewrite',
+      url: '/dndev-session/compte',
+    });
+    expect(await guest.proxy(withCookie('/'))).toEqual({ type: 'next' });
+  });
+
   it('renders per request when signed in or unknown, the cached page when the session is gone', async () => {
     const content = handler.generateMiddlewareContent([], [home], [], true);
     expect(transpile(content).diagnostics ?? []).toEqual([]);
@@ -570,7 +594,7 @@ describe('RouteHandler pages with 2+ languages', () => {
     for (const code of [notFound!, global!]) {
       expect(transpile(code).diagnostics ?? []).toEqual([]);
       expect(code).toContain('<ClientLayout serverCookies="" acceptLanguage={null}>');
-      expect(code).toContain('<NotFoundPage />');
+      expect(code).toContain('<NotFoundPage showRequestedPath={false} />');
     }
     expect(notFound).toContain("import { ClientLayout } from '../ClientLayout';");
     expect(global).toContain(
@@ -652,9 +676,26 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
     );
     expect(NEXT_RENDER.revalidateSeconds).toBe(3600);
     expect(layout).toContain('<ClientLayout serverCookies="" acceptLanguage={null}>');
-    expect(layout).toContain('<Suspense fallback={null}>{children}</Suspense>');
+    // No page-wide boundary: React would outline the page and reveal it after the first paint.
+    expect(layout).not.toContain('Suspense');
+    expect(layout).toContain('{children}');
     expect(layout).not.toContain('next/headers');
     expect(layout).not.toContain('export const dynamic');
+  });
+
+  it('writes appConfig.revalidate into the cached tree, false = until the next deploy', () => {
+    const yearly = new NextRouteHandler({ ssr: true, revalidate: 31536000 }).generateSiteLayoutContent();
+    expect(yearly).toContain('export const revalidate = 31536000;');
+    expect(yearly).toContain('re-rendered at most every 31536000s');
+    const deploy = new NextRouteHandler({ ssr: true, revalidate: false }).generateSiteLayoutContent();
+    expect(transpile(deploy).diagnostics ?? []).toEqual([]);
+    expect(deploy).toContain('export const revalidate = false;');
+    expect(deploy).toContain('kept until the next deploy');
+    for (const invalid of [0, -1, 1.5, '3600', true]) {
+      expect(() => new NextRouteHandler({ revalidate: invalid }).generateSiteLayoutContent()).toThrow(
+        'appConfig.revalidate must be'
+      );
+    }
   });
 
   it('renders the per-request tree with the request cookies', () => {
@@ -695,6 +736,47 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
     );
   });
 
+  it('generates auth pages only in the per-request tree, public pages in both', async () => {
+    const generate = async (rendersSessionTree: boolean) => {
+      const app = new NextRouteHandler({ ssr: true });
+      const written: string[] = [];
+      Object.assign(app, {
+        rendersSessionTree,
+        pathResolver: { resolveAppPath: (p: string) => p, pathExists: () => false },
+        cleanGeneratedPageFiles: async () => {},
+        generateRootLayout: () => {},
+        generateNotFoundPages: () => {},
+        generateTreeLayout: async () => {},
+        isClientComponent: () => false,
+        writeGeneratedFile: (path: string, content: string) =>
+          written.push(`${path}\n${content}`),
+      });
+      await app.generateAppPageFiles({
+        routes: [
+          { path: '/catalogue', file: 'src/pages/CataloguePage.tsx' },
+          { path: '/commandes/:id', file: 'src/pages/OrderPage.tsx', auth: { required: true } },
+        ],
+      });
+      return written;
+    };
+    const session = await generate(true);
+    expect(session.map((w) => w.split('\n')[0])).toEqual([
+      'src/app/(site)/catalogue/page.next.tsx',
+      'src/app/dndev-session/catalogue/page.next.tsx',
+      'src/app/dndev-session/commandes/[id]/page.next.tsx',
+    ]);
+    // Per request: renders the page itself (no cached copy to re-export), no static params
+    const order = session[2]!;
+    expect(order).toContain("import OrderPage from '../../../../pages/OrderPage';");
+    expect(order).toContain('<AuthGuard');
+    expect(order).not.toContain('generateStaticParams');
+    // No per-request tree (session the server cannot read): the cached tree only
+    expect((await generate(false)).map((w) => w.split('\n')[0])).toEqual([
+      'src/app/(site)/catalogue/page.next.tsx',
+      'src/app/(site)/commandes/[id]/page.next.tsx',
+    ]);
+  });
+
   it('generates the root layout in the default language with one language', () => {
     const single = new NextRouteHandler({ ssr: true });
     single.useLanguages({ languages: ['fr'], defaultLanguage: 'fr' });
@@ -717,6 +799,11 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
     const global = single.generateGlobalNotFoundContent();
     expect(transpile(global).diagnostics ?? []).toEqual([]);
     expect(global).toContain('const lang = "fr";');
+    for (const code of [global, single.generateNotFoundContent()]) {
+      expect(code).toContain('<NotFoundPage showRequestedPath={false} />');
+      expect(code).toContain('<Suspense fallback={null}>');
+      expect(code).toContain('<ClientLayout serverCookies="" acceptLanguage={null}>');
+    }
     expect(global).not.toContain('next/headers');
     expect(single.generateSiteLayoutContent()).toContain(
       "import { ClientLayout } from '../ClientLayout';"

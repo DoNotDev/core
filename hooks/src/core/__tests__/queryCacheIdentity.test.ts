@@ -77,6 +77,19 @@ describe('syncQueryCacheIdentity', () => {
     expect(cached()).toEqual({ id: 'acc' });
   });
 
+  it('notifies identity listeners on a real change only (Next router refresh after sign-out)', () => {
+    const listener = vi.fn();
+    const unsubscribe = mod.onQueryCacheIdentityChange(listener);
+    mod.syncQueryCacheIdentity('u1', true); // seed: adopted
+    mod.syncQueryCacheIdentity('u1'); // same user
+    expect(listener).not.toHaveBeenCalled();
+    mod.syncQueryCacheIdentity(null); // sign-out
+    expect(listener).toHaveBeenCalledTimes(1);
+    unsubscribe();
+    mod.syncQueryCacheIdentity('u2');
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
+
   it('tracks the identity before the browser QueryClient exists', () => {
     expect(() => mod.syncQueryCacheIdentity('u1')).not.toThrow();
     expect(() => mod.syncQueryCacheIdentity(null)).not.toThrow();

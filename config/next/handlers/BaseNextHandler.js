@@ -7,7 +7,7 @@
  * @author AMBROISE PARK Consulting
  */
 
-import { GENERATED_PATHS, CONFIG_KEYS } from '../../constants.js';
+import { GENERATED_PATHS, CONFIG_KEYS, NEXT_RENDER } from '../../constants.js';
 import { DEFAULT_OPTIONS } from '../../next/options.js';
 import { createLogger } from '../../utils/debugLog.js';
 import { PathResolver } from '../../utils/PathResolver.js';
@@ -39,6 +39,36 @@ export class BaseNextHandler {
 
     // Handler-specific initialization
     this.initialize();
+  }
+
+  /**
+   * Cache lifetime written into generated Next routes (`export const revalidate`):
+   * `appConfig.revalidate` (seconds, or `false` = kept until the next deploy),
+   * default `NEXT_RENDER.revalidateSeconds`.
+   *
+   * @returns {number | false}
+   * @throws When the value is neither a whole number of seconds above 0 nor `false`
+   * @since 0.2.6
+   */
+  revalidate() {
+    const value = this.options.revalidate ?? NEXT_RENDER.revalidateSeconds;
+    if (value === false || (Number.isInteger(value) && value > 0)) return value;
+    throw new Error(
+      `appConfig.revalidate must be a whole number of seconds above 0, or false (kept until the next deploy). Got ${JSON.stringify(value)}.`
+    );
+  }
+
+  /**
+   * Cache lifetime in words, for generated-file comments.
+   *
+   * @returns {string}
+   * @since 0.2.6
+   */
+  revalidateLabel() {
+    const value = this.revalidate();
+    return value === false
+      ? 'kept until the next deploy'
+      : `re-rendered at most every ${value}s`;
   }
 
   /**

@@ -11,7 +11,8 @@
 
 import type { ReactNode } from 'react';
 
-import type { AnyEntity, EntityRecord } from './schemas';
+import type { CreateInput, FieldOperation, FormValues } from './fieldSemantics';
+import type { AnyEntity, EntityRecord, InferEntityRow } from './schemas';
 import type { QueryOptions } from './types';
 
 /**
@@ -87,8 +88,9 @@ export interface EntityListProps extends EntityBrowseBaseProps {
    * for a field at once, blocks paste from Excel / Sheets. Fields the viewer may
    * not edit (`editable`) stay read-only. Save writes every change in one
    * `useCrud().bulk({ updates })`. Rows open from the leading open-link icon
-   * (a row click edits). Opt out with `editable={false}` (read-only cells, row
-   * click opens the record).
+   * (a row click edits). Opt out with `editable={false}`: a read-only list
+   * (read-only cells, no Add, no row selection, no delete; a row click opens
+   * the record).
    * @default true
    * @since 0.2.3
    */
@@ -99,6 +101,18 @@ export interface EntityListProps extends EntityBrowseBaseProps {
    * and filter, and the add button opens the create form with `field` prefilled
    * (`EntityFormRenderer` reads it from the URL). `field` must be a `reference`
    * field of the entity.
+   *
+   * **Joined to the parent's form:** when the list is `editable` (default) and an
+   * edit form (`useEntityForm` / `EntityFormRenderer`) is open on the parent
+   * record, the rows join it
+   * (`useChildRows`): no own Save, deletes wait for the form's Save, pending
+   * counts and Discard are shown, and the form's Save writes the rows with the
+   * record. Add opens a picker for link tables (one reference besides the
+   * parent's), else adds a blank row. Without such a form, or with
+   * `editable={false}`: the behaviour above.
+   *
+   * `value: null` (parent not created yet): the list only shows "Create the
+   * draft before adding …".
    * @example
    * ```tsx
    * <EntityList entity={productEntity} basePath="/produits" parent={{ field: 'brandId', value: brandId }} />
@@ -106,14 +120,76 @@ export interface EntityListProps extends EntityBrowseBaseProps {
    * @since 0.2.3
    */
   parent?: EntityListParent;
+  /**
+   * App columns after the entity's list fields, rendered from the row with its
+   * unsaved edits applied (computed values: totals, prices from another field).
+   * Web only: the Expo `EntityList` throws when given.
+   * @since 0.2.5
+   */
+  extraColumns?: EntityListExtraColumn[];
+  /**
+   * App content of the list's toolbar (e.g. "Add the brand's products"). It can
+   * call `useChildRows` on the same entity and parent to act on the same rows.
+   * Web only: the Expo `EntityList` throws when given.
+   * @since 0.2.5
+   */
+  actions?: ReactNode;
+  /**
+   * 1:1 extensions of the listed records (a record split across two tables, e.g.
+   * products + product_offers): read in one batched query, shown as extra columns
+   * (the extension entity's list fields, prefixed `key.`), edited in their cells
+   * and written with the rows. The list is then a display of `useChildRows`
+   * (joined to the parent's open form, or standalone with its own Save; deletes
+   * wait for that Save). A viewer without read access to an extension entity gets
+   * none of its columns. Web only: the Expo `EntityList` throws when given.
+   * @example
+   * ```tsx
+   * <EntityList entity={productEntity} extend={{ offer: { entity: productOfferEntity, field: 'productId' } }} />
+   * ```
+   * @since 0.2.5
+   */
+  extend?: EntityExtensions;
 }
+
+/**
+ * A 1:1 extension of an entity: another entity whose `field` references the
+ * extended record (one extension row per record, e.g. `productOffers.productId`).
+ */
+export interface EntityExtension {
+  /** The extension entity (from `defineEntity`) */
+  entity: AnyEntity;
+  /** Its reference field pointing at the extended record */
+  field: string;
+}
+
+/**
+ * Extensions keyed by the name their fields are addressed under: `offer` →
+ * `row.offer.priceExclVat`, form / cell / draft field `offer.priceExclVat`.
+ * Keys must not contain `.` nor equal a field of the extended entity.
+ */
+export type EntityExtensions = Record<string, EntityExtension>;
 
 /** Parent of a nested `EntityList`: the reference field and the parent record id. */
 export interface EntityListParent {
   /** Reference field of the listed entity pointing at the parent (e.g. `'brandId'`) */
   field: string;
-  /** Parent record id */
-  value: string;
+  /**
+   * Parent record id, or `null` while the parent is not created yet (create
+   * page): the list then only shows "Create the draft before adding …".
+   */
+  value: string | null;
+}
+
+/** An app column of `EntityList` (`extraColumns`). */
+export interface EntityListExtraColumn {
+  /** Unique column key (not an entity field name) */
+  key: string;
+  /** Column header (translated by the app) */
+  title: string;
+  /** Cell content, from the row with its unsaved edits applied */
+  render: (row: EntityRecord & { id: string }) => ReactNode;
+  /** Logical alignment (`end` for numbers). @default 'start' */
+  align?: 'start' | 'center' | 'end';
 }
 
 /** Props for the entity card grid component with filtering and sorting. */
@@ -196,14 +272,57 @@ export interface CrudCardProps {
   className?: string;
 }
 
-/** Props for the entity form renderer with create/edit modes, validation, and navigation. */
+/**
+ * `defaultValues` of an entity form: the stored row on edit (accepted as-is,
+ * {@link InferEntityRow}), create defaults on create (`Partial<CreateInput<E>>`).
+ * Either when the operation is not known statically.
+ *
+ * @template E - Entity type from defineEntity()
+ * @template Op - Form operation
+ *
+ * @version 0.1.0
+ * @since 0.2.5
+ * @author AMBROISE PARK Consulting
+ */
+export type EntityFormDefaultValues<
+  E extends AnyEntity,
+  Op extends FieldOperation = FieldOperation,
+> = [Op] extends ['edit']
+  ? InferEntityRow<E>
+  : [Op] extends ['create']
+    ? Partial<CreateInput<E>>
+    : InferEntityRow<E> | Partial<CreateInput<E>>;
+
+/**
+ * Props for the entity form renderer with create/edit modes, validation, and navigation.
+ *
+ * @template E - Entity from `defineEntity()` (inferred from `entity`)
+ * @template Op - Form operation (inferred from `operation`; both when omitted)
+ *
+ * @version 0.2.0
+ * @since 0.0.1
+ * @author AMBROISE PARK Consulting
+ */
 export interface EntityFormRendererProps<
-  T extends EntityRecord = EntityRecord,
+  E extends AnyEntity = AnyEntity,
+  Op extends FieldOperation = FieldOperation,
 > {
   /** Entity definition - pass the full entity from defineEntity() */
-  entity: AnyEntity;
-  /** Form submission handler */
-  onSubmit: (data: T) => void | Promise<void>;
+  entity: E;
+  /**
+   * Form submission handler: writes the record. Omit it to use the default
+   * writer: `useEntityForm`'s `handleSubmit()` saves the record (update, or add
+   * on create) with the fields the entity allows, plus the child rows joined to
+   * the form (`useChildRows` / a nested `EntityList`), in one `bulkAcross`.
+   * A handler cannot read the joined rows' writes (no form handle): when joined
+   * rows have edits the submit fails with an explicit error. Omit `onSubmit`
+   * there, or build the page with `useEntityForm` and `form.pendingWrites()`.
+   *
+   * Receives the validated values the form writes ({@link FormValues}: fields
+   * editable for the viewer and operation, computed fields, i18n companions, `id`
+   * on edit), not the whole stored row.
+   */
+  onSubmit?: (data: FormValues<E, Op>) => void | Promise<void>;
   /** Translation function */
   t?: (key: string, options?: Record<string, unknown>) => string;
   /** Additional CSS classes */
@@ -215,8 +334,11 @@ export interface EntityFormRendererProps<
    * Use this when fetching existing entity data for edit mode
    */
   loading?: boolean;
-  /** Initial form values */
-  defaultValues?: Partial<T>;
+  /**
+   * Initial form values ({@link EntityFormDefaultValues}): the stored row on edit
+   * (accepted as-is), create defaults on create
+   */
+  defaultValues?: EntityFormDefaultValues<E, Op>;
   /** Submit button variant */
   submitVariant?: 'primary' | 'destructive' | 'outline' | 'ghost' | 'link';
   /** Secondary button text */
@@ -228,8 +350,11 @@ export interface EntityFormRendererProps<
     | 'outline'
     | 'ghost'
     | 'link';
-  /** Secondary button submission handler */
-  onSecondarySubmit?: (data: T) => void | Promise<void>;
+  /**
+   * Secondary button handler: the current form state, the same shape `onSubmit`
+   * receives ({@link FormValues}), not validated
+   */
+  onSecondarySubmit?: (data: FormValues<E, Op>) => void | Promise<void>;
   /**
    * Current viewer's role for editability checks.
    * Auto-detected from auth when not provided. Pass explicitly to override (e.g. View-As preview).
@@ -240,7 +365,7 @@ export interface EntityFormRendererProps<
    * Form operation type
    * @default 'create' (or 'edit' if defaultValues provided)
    */
-  operation?: 'create' | 'edit';
+  operation?: Op;
   /**
    * Optional form ID for tracking loading state.
    * If not provided, one will be generated automatically.
@@ -253,10 +378,13 @@ export interface EntityFormRendererProps<
    */
   cancelText?: string | null;
   /**
-   * Success path - full path to navigate after successful submit (e.g., `/products`).
-   * If not provided, stays on page (edit) or relies on onSubmit to navigate (create).
+   * Where the page goes on submit (e.g., `/products`). It leaves once validation
+   * and uploads pass, before the server answers, and returns if `onSubmit` rejects
+   * (the draft restores the edits).
+   * - omitted: the previous breadcrumb (nearest existing parent route, else `/`)
+   * - `null`: stay on the page (wizards, dialogs, create flows that open the new record)
    */
-  successPath?: string;
+  successPath?: string | null;
   /**
    * Cancel path - full path (e.g., `/products`). If not provided, navigates back.
    * If onCancel callback is provided, it takes precedence over cancelPath.

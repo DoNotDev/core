@@ -75,7 +75,8 @@
       "goBack": "Tilbage"
     },
     "bulkPartialError_one": "{{count}} række kunne ikke gemmes",
-    "bulkPartialError_other": "{{count}} rækker kunne ikke gemmes"
+    "bulkPartialError_other": "{{count}} rækker kunne ikke gemmes",
+    "unknownFields": "Gemt, men disse felter findes ikke og blev ikke gemt: {{fields}}. Kontakt support."
   },
   "pagination": {
     "showing": "{{from}}–{{to}} af {{total}}",
@@ -257,6 +258,13 @@
     "noLanguagesFound": "Ingen sprog fundet",
     "changeLanguage": "Skift sprog"
   },
+  "draft": {
+    "restored": "Kladde gendannet",
+    "restoredDescription": "Dine ikke-gemte ændringer blev gendannet",
+    "discard": "Kassér",
+    "conflict": "Kladde baseret på en ældre version",
+    "conflictDescription": "Denne post er ændret siden dine ikke-gemte ændringer. Gemning kan blive afvist: kassér for at redigere den aktuelle version."
+  },
   "form": {
     "submit": "Send",
     "cancel": "Annuller",
@@ -269,9 +277,14 @@
     "uploading": "Uploader {{progress}}%...",
     "processing": "Behandler...",
     "validating": "Validerer...",
+    "validationFailed": "Nogle felter skal rettes",
+    "fixFields": "Tjek: {{fields}}",
     "saving": "Gemmer...",
     "saved": "Gemt",
-    "error": "Fejl — prøv igen"
+    "error": "Fejl — prøv igen",
+    "saveFailed": "Kunne ikke gemme. Prøv igen.",
+    "uploadFailed": "Upload af fil mislykkedes. Prøv igen.",
+    "reuploadFiles": "Nogle filer blev ikke uploadet. Upload dem igen, og gem derefter."
   },
   "navigation": {
     "more": "Mere",
@@ -381,6 +394,11 @@
   },
   "boolean": {
     "required": "{{field}} skal vælges"
+  },
+  "fieldArray": {
+    "addRow": "Tilføj en række til {{field}}",
+    "removeRow": "Fjern række {{index}} fra {{field}}",
+    "noSubFields": "{{field}}: ingen underfelter konfigureret."
   },
   "array": {
     "required": "Mindst én {{field}} er påkrævet",
@@ -536,7 +554,15 @@
   },
   "price": {
     "vatIncluded": "inkl. moms",
+    "currency": "Valuta",
+    "discountLabel": "Rabat (%)",
     "discountPercent": "-{{percent}}%"
+  },
+  "workflow": {
+    "submit": "Send",
+    "next": "Næste",
+    "previous": "Forrige",
+    "skip": "Spring dette trin over"
   },
   "recommendations": {
     "title": "Du vil måske også synes om"
@@ -566,5 +592,27 @@
     "deleteSelected": "Slet valgte ({{count}})",
     "failed_one": "{{count}} række ikke gemt: den bliver i listen, prøv igen",
     "failed_other": "{{count}} rækker ikke gemt: de bliver i listen, prøv igen"
+  },
+  "childRows": {
+    "createFirst": "Opret kladden, før du tilføjer {{entity}}.",
+    "required": "{{field}} er påkrævet",
+    "invalidValue": "{{field}} er ugyldig",
+    "invalidRows_one": "{{count}} række skal rettes før gemning",
+    "invalidRows_other": "{{count}} rækker skal rettes før gemning",
+    "notSaved": "De redigerede rækker blev ikke gemt med denne post.",
+    "pickTitle": "Tilføj {{entity}}",
+    "pickConfirm": "Tilføj valgte ({{count}})",
+    "pickEmpty": "Intet tilbage at tilføje."
+  },
+  "sortable": {
+    "drag": "Træk for at flytte {{name}}",
+    "moveBefore": "Flyt {{name}} før",
+    "moveAfter": "Flyt {{name}} efter",
+    "remove": "Fjern {{name}}",
+    "instructions": "Tryk på Mellemrum eller Enter for at tage et element. Flyt det med piletasterne, og tryk på Mellemrum eller Enter igen for at slippe det, eller Escape for at annullere.",
+    "picked": "{{name}} taget, position {{position}} af {{count}}.",
+    "moved": "{{name}} flyttet til position {{position}} af {{count}}.",
+    "dropped": "{{name}} sluppet på position {{position}} af {{count}}.",
+    "cancelled": "Flytning af {{name}} annulleret."
   }
 }

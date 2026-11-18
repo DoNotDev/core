@@ -154,4 +154,62 @@ describe('runDiscoveries build marker', () => {
       'stopWriteRecording() called without startWriteRecording()'
     );
   });
+
+  it('ships the theme fonts only: none (and no stale ones) when the app packs its own', async () => {
+    const pathResolver = PathResolver.getInstance();
+    const routeHandler = {
+      pathResolver,
+      useLanguages: () => {},
+      generateFiles: async () => ({ routes: [{}] }),
+    };
+    const themeHandler = (fontFamilies: string[]) => ({
+      generateFiles: async () => ({}),
+      getDiscoveryData: async () => ({ fontFamilies }),
+    });
+    const fontsCss = join(appRoot, 'public', 'dndev-fonts.css');
+
+    process.env.DNDEV_BUILD_ID = 'fonts-framework';
+    await runDiscoveries(
+      {
+        routeHandler,
+        themeHandler: themeHandler(['Inter']),
+        ...languageHandlers,
+      },
+      logger
+    );
+    expect(readFileSync(fontsCss, 'utf8')).toContain("font-family: 'Inter'");
+
+    process.env.DNDEV_BUILD_ID = 'fonts-own';
+    await runDiscoveries(
+      {
+        routeHandler,
+        themeHandler: themeHandler(['ui-monospace']),
+        ...languageHandlers,
+      },
+      logger
+    );
+    expect(existsSync(fontsCss)).toBe(false);
+    expect(existsSync(join(appRoot, 'public', 'fonts'))).toBe(false);
+  });
+
+  it('fails the run when theme discovery gives no font families', async () => {
+    process.env.DNDEV_BUILD_ID = 'fonts-missing';
+    const pathResolver = PathResolver.getInstance();
+    const routeHandler = {
+      pathResolver,
+      useLanguages: () => {},
+      generateFiles: async () => ({ routes: [{}] }),
+    };
+    const themeHandler = {
+      generateFiles: async () => ({}),
+      getDiscoveryData: async () => ({ themes: [] }),
+    };
+
+    await expect(
+      runDiscoveries(
+        { routeHandler, themeHandler, ...languageHandlers },
+        logger
+      )
+    ).rejects.toThrow(/families/);
+  });
 });

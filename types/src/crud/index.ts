@@ -15,5 +15,6 @@ export * from './conditions';
 export * from './constants';
 export * from './components';
 export * from './errors';
+export * from './fieldSemantics';
 export * from './schemas';
 export * from './types';

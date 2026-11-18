@@ -4,7 +4,6 @@
  */
 
 import fs from 'node:fs';
-import { createFontPreloadWebpackPlugin } from './plugins/FontPreloadWebpackPlugin.js';
 import { createLowerDestructuringWebpackPlugin } from './plugins/LowerDestructuringWebpackPlugin.js';
 import { createPostCSSConfig } from './postcss.js';
 import { NEXT_PAGE_EXTENSIONS } from './nextFiles.js';
@@ -14,8 +13,8 @@ import { GENERATED_PATHS, VIRTUAL_MODULES } from '../constants.js';
 
 /**
  * CSS alias: redirect @donotdev/ui/dndev.css → dndev-next.css in Next.js.
- * The -next variant strips @fontsource imports; fonts are served from
- * public/dndev-fonts.css instead (see copyFontsToPublic + FontPreloadLinks).
+ * The -next variant strips @fontsource imports; the fonts the theme uses are served
+ * from public/dndev-fonts.css instead (see copyFontsToPublic + FontPreloadLinks).
  *
  * NOTE: Turbopack resolveAlias does NOT work for CSS @import (verified Next.js 16).
  * The authoritative CSS alias lives in postcss.js (postcss-import resolver).
@@ -28,7 +27,7 @@ const DNDEV_CSS_ALIAS = {
 /**
  * Build webpack configuration for Next.js
  *
- * Handles: SVG imports, CSS aliasing, Vite-specific ignores, font preloading,
+ * Handles: SVG imports, CSS aliasing, Vite-specific ignores,
  * feature package exclusion, and optional dependency resolution.
  *
  * @param {Object} options - Options
@@ -40,8 +39,6 @@ const DNDEV_CSS_ALIAS = {
  *   Regex matches exact name + subpaths (e.g. 'shiki' and 'shiki/engine/javascript').
  * @param {string[]} [options.flagCodes=[]] - Allowed flag country codes from I18n discovery.
  *   Flag files not in this list are aliased to an empty component.
- * @param {string[]} [options.languages=[]] - Languages the app actually uses, from I18n
- *   discovery (already restricted by i18n.only). Drives font subset filtering.
  * @param {Object} options.logger - Framework logger
  * @param {boolean} options.debug - Enable debug logging
  * @returns {Function} Webpack config function for next.config.js
@@ -52,7 +49,6 @@ export function createWebpackConfig({
   usedFeaturePackages,
   missingOptionalDeps = [],
   flagCodes = [],
-  languages = [],
   logger,
   debug,
 }) {
@@ -131,16 +127,6 @@ export function createWebpackConfig({
           resourceRegExp: /^(vite|@vitejs|vite-tsconfig-paths)$/,
         })
       );
-    }
-
-    // Font preload manifest (Lighthouse): infer fonts from consumer CSS, write public/dndev-font-preloads.json
-    try {
-      const pathResolver = PathResolver.getInstance();
-      config.plugins.push(
-        createFontPreloadWebpackPlugin({ pathResolver, debug, languages })
-      );
-    } catch (e) {
-      logger.debug(`Font preload webpack plugin skipped: ${e?.message}`);
     }
 
     // Safari fix: lower JS destructuring on the production client bundle so it

@@ -13,6 +13,7 @@ import {
 } from '../LlmsTxtGenerator.js';
 import { formatLlmsTxt } from '../llmsTxtFormat.js';
 import { SEOGenerator } from '../SEOGenerator.js';
+import { productEntity } from '@dndev/test-entities';
 
 // Mock PathResolver
 const mockPathResolverPathExists = vi.fn(() => false);
@@ -96,17 +97,8 @@ const TRANSLATIONS = {
   'entity-brand': { fr: { name: 'Marque', namePlural: 'Marques' } },
 };
 
-const PRODUCT_ENTITY = {
-  name: 'Product',
-  collection: 'products',
-  namespace: 'entity-product',
-  listCardFields: { title: ['name'], content: ['shortDescription'] },
-  fields: {
-    name: { name: 'name', type: 'text' },
-    slug: { name: 'slug', type: 'text' },
-    shortDescription: { name: 'shortDescription', type: 'textarea' },
-  },
-};
+// The shared catalogue product (card title `name`, content `shortDescription`).
+const PRODUCT_ENTITY = productEntity;
 
 function shopSource() {
   const seoGenerator = new SEOGenerator({ baseUrl: BASE, siteName: 'Boutique' });

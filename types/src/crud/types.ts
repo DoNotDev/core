@@ -28,11 +28,14 @@ import type { dndevSchema, EntityField } from './schemas';
  * stable `id` (server- or client-generated). Matches runtime: optimistic add
  * mints a temp id; the create schema validates this shape.
  *
- * @version 0.1.0
+ * Plain `Omit` (not a conditional type): generic code over an entity
+ * (`useCrud(entity)` with `E extends AnyEntity`) can pass its rows, which a
+ * conditional type would defer and reject.
+ *
+ * @version 0.2.0
  * @since 0.2.0
  */
-export type CrudCreateInput<T> =
-  T extends Record<string, unknown> ? Omit<T, 'id'> : Record<string, unknown>;
+export type CrudCreateInput<T> = Omit<T, 'id'>;
 
 /**
  * CRUD API type - complete interface for useCrud hook
@@ -56,19 +59,33 @@ export interface CrudAPI<T = unknown> {
   error: Error | null;
   /** Fetch single document by ID */
   get: (id: string) => Promise<T | null>;
-  /** Set/replace document by ID */
+  /**
+   * Set/replace document by ID.
+   * @returns The stored values the backend returned (cached), `undefined` when the CRUD service is not ready
+   * @since 0.3.0 returns the stored values (was `void`)
+   */
   set: (
     id: string,
     data: T,
     options?: { showSuccessToast?: boolean }
-  ) => Promise<void>;
-  /** Partial update document by ID */
+  ) => Promise<Record<string, unknown> | undefined>;
+  /**
+   * Partial update document by ID.
+   * @returns The stored values the backend returned (cached), `undefined` when the CRUD service is not ready
+   * @since 0.3.0 returns the stored values (was `void`)
+   */
   update: (
     id: string,
     data: Partial<T>,
     options?: { showSuccessToast?: boolean }
-  ) => Promise<void>;
-  /** Delete document by ID */
+  ) => Promise<Record<string, unknown> | undefined>;
+  /**
+   * Logical delete (CRUD rule 3): the update `{ status: 'deleted' }`. Required fields left
+   * empty never block it; the row leaves public reads. `delete` is the hard delete.
+   * @since 0.3.0
+   */
+  remove: (id: string) => Promise<void>;
+  /** Hard delete by ID (the row is gone); `remove` is the logical delete */
   delete: (
     id: string,
     options?: { showSuccessToast?: boolean }
@@ -95,13 +112,17 @@ export interface CrudAPI<T = unknown> {
   /** Whether CRUD is available and operational */
   isAvailable: boolean;
   /**
-   * Cross-collection atomic bulk write. One optimistic pass, one toast,
-   * coordinated rollback. Batches with `dependsOn` run after their
-   * dependencies; independent batches run in parallel.
+   * Ordered cross-collection bulk write, NOT a database transaction.
+   * One optimistic pass; independent batches run in parallel waves ordered by
+   * `dependsOn`. A rejection or per-row failure stops subsequent waves after
+   * all started writes settle. Optimistic state is reverted before refetch;
+   * committed rows stay written. Rejects on failure (no partial result return).
+   * This describes the default legacy path. Explicit atomic execution requires
+   * adapter capability support and rejects rather than falling back.
    */
   bulkAcross?: (
     batches: BulkAcrossBatch[],
-    options?: { showSuccessToast?: boolean }
+    options?: BulkAcrossOptions
   ) => Promise<BulkAcrossResult>;
 }
 
@@ -202,6 +223,10 @@ export interface BulkFailure {
   index?: number;
   /** Why the row was not written (backend message, or access denied / not found). */
   error: string;
+  /** Entity field that failed, when the backend names one (e.g. a Postgres CHECK violation). */
+  field?: string;
+  /** i18n key of the client message for that failure (`{{field}}` = field label). */
+  i18nKey?: string;
 }
 
 /**
@@ -236,11 +261,71 @@ export interface BulkResult {
 // =============================================================================
 
 /**
+ * Cross-collection execution policy. Omitted execution preserves the ordered,
+ * partial-success legacy path. Atomic execution requires an adapter capability;
+ * it must reject rather than fall back when unsupported.
+ *
+ * @since 0.3.0
+ */
+export interface BulkAcrossOptions {
+  /** Whether the service should display its success notification. */
+  showSuccessToast?: boolean;
+  /**
+   * Success notification text (translated by the caller). Default:
+   * `crud:messages.updateSuccess` with the entity name of the first batch's
+   * collection (the primary record).
+   * @since 0.2.5
+   */
+  successMessage?: string;
+  /** One native commit (`atomic`), or independent ordered writes (`legacy`). */
+  execution?: 'legacy' | 'atomic';
+}
+
+/**
+ * Validated, access-checked and storage-prepared operations for one collection
+ * in an atomic request. No schemas, dependencies or callbacks cross this boundary.
+ * The service allocates missing insert IDs exactly once before preflight, retains
+ * caller IDs and references verbatim, and supplies unique document targets across
+ * every bucket. Providers revalidate request-specific support before staging.
+ *
+ * Inserts use provider set/upsert semantics, not guaranteed create-if-absent.
+ * Updates/deletes retain native provider semantics. All collections must share
+ * one database and one commit; an adapter must never split or retry this request.
+ *
+ * @since 0.3.0
+ */
+export interface PreparedAtomicBatch {
+  /** Provider collection path; collection entries must be unique per request. */
+  collection: string;
+  /** Prepared rows with stable explicit IDs; technical `id` is not stored. */
+  inserts?: Array<Record<string, unknown> & { id: string }>;
+  /** Prepared partial patches. Technical identity must not change. */
+  updates?: Array<{ id: string; patch: Record<string, unknown> }>;
+  /** Stable explicit document IDs to delete. */
+  deletes?: string[];
+}
+
+/**
+ * An operation-owned snapshot returned by atomic preflight. Execution uses the
+ * validated payload and metadata regardless of subsequent input mutation and
+ * checks that the captured actor remains appropriate before committing. Calling
+ * execute repeatedly or concurrently observes the same execution and outcome;
+ * it never starts another commit, including after an unknown outcome.
+ */
+export interface AtomicBulkExecutionPlan {
+  /** Execute the captured operation at most once; never automatically retry. */
+  readonly execute: () => Promise<BulkAcrossResult>;
+}
+
+/**
  * One collection's worth of operations inside a {@link bulkAcross} call.
  *
  * Inserts may include a caller-provided `id` for cross-collection pre-minting:
  * mint the ID client-side, use it in both collections, and pass `dependsOn` to
- * ensure write order.
+ * ensure write order, not database atomicity. Committed writes survive failure
+ * in another batch; only optimistic state is rolled back before refetch.
+ * This is the default legacy execution policy; explicit atomic mode instead
+ * requires a provider capability and one commit across all prepared batches.
  *
  * @template T - Entity type for this batch's collection.
  *
@@ -271,15 +356,28 @@ export interface BulkAcrossBatch<
   collection: string;
   /** Rows to insert. May include a caller-provided `id` for pre-minting. */
   inserts?: Array<CrudCreateInput<T> & { id?: string }>;
-  /** Rows to update (partial patches). */
-  updates?: Array<{ id: string; patch: Partial<T> }>;
+  /**
+   * Rows to update (partial patches). The CRUD update rules (`prepareUpdate`) run on the
+   * stored row: `stored` (the row the patch was made against, e.g. a form's `record`),
+   * else the cached row, else one read. `storedStatus` (0.2) is no longer read: the
+   * stored row carries its status.
+   */
+  updates?: Array<{
+    id: string;
+    patch: Partial<T>;
+    stored?: Readonly<Record<string, unknown>> | null;
+    storedStatus?: string | null;
+  }>;
   /** Document IDs to delete. */
   deletes?: string[];
-  /** Schemas for insert validation + PII resolution. */
+  /**
+   * Schemas of the collection (0.2 API). The CRUD rules run on the entity's own
+   * schemas (`defineEntity` for `collection`), whatever is passed here.
+   */
   schemas: {
-    create?: dndevSchema<T>;
-    draft?: dndevSchema<T>;
-    update?: dndevSchema<T>;
+    create?: dndevSchema<unknown>;
+    draft?: dndevSchema<unknown>;
+    update?: dndevSchema<unknown>;
   };
   /**
    * Collections that must be written first.
@@ -289,7 +387,11 @@ export interface BulkAcrossBatch<
 }
 
 /**
- * Result of a {@link bulkAcross} call. Per-collection results keyed by collection name.
+ * Result of a successful {@link bulkAcross} call, keyed by collection name.
+ * Any adapter rejection or per-row failure rejects the call instead; committed
+ * rows may remain written despite rejection (no database rollback).
+ * Atomic capability success uses this same result shape with complete ordered
+ * IDs and empty failure lists; atomic rejection never returns partial results.
  *
  * @version 0.1.0
  * @since 0.3.0
@@ -425,4 +527,11 @@ export type CollectionSubscriptionCallback<T> = (
 export interface CrudOperationOptions {
   /** AbortSignal to cancel the operation */
   signal?: AbortSignal;
+  /**
+   * Writes (`add`, `set`, `update`): the collection's read schema (the one `get`
+   * takes). The returned stored row is filtered with it for the requester's role,
+   * so the cache never holds a field the requester cannot read.
+   * @since 0.3.0
+   */
+  readSchema?: dndevSchema<unknown>;
 }

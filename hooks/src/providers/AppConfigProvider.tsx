@@ -176,20 +176,12 @@ export function AppConfigProvider({
   // Logo path is /logo.svg (user must provide, or copy from packages/ui/assets/logo.svg)
   const defaultLogoPath = '/logo.svg';
 
-  // Resolve app URL at runtime from env var (platform-aware)
-  // Development: use window.location.origin (CSR) or fallback to localhost:3000 (SSR)
-  // Production: use VITE_APP_URL/NEXT_PUBLIC_APP_URL from .env files
-  let resolvedAppUrl: string;
-  if (isDev()) {
-    // Development: use actual browser origin if available (CSR), otherwise fallback
-    resolvedAppUrl =
-      isClient() && typeof window !== 'undefined'
-        ? window.location.origin
-        : 'http://localhost:3000';
-  } else {
-    // Production: use env var (single source of truth)
-    resolvedAppUrl = getPlatformEnvVar('APP_URL') || '';
-  }
+  // Resolve app URL from env var (platform-aware), identical on server and client so SSR
+  // output (canonical, JSON-LD, OG) hydrates without mismatch. Never window.location:
+  // the server cannot know it (a dev server on another port, a preview URL, www vs apex).
+  // Development without APP_URL: http://localhost:3000. Production: APP_URL (SSOT).
+  const resolvedAppUrl: string =
+    getPlatformEnvVar('APP_URL') || (isDev() ? 'http://localhost:3000' : '');
 
   // Default SEO (use logo as default OG image)
   const defaultSeo: SEOConfig = {

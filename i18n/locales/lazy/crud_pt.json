@@ -75,7 +75,8 @@
       "goBack": "Voltar"
     },
     "bulkPartialError_one": "Não foi possível guardar {{count}} linha",
-    "bulkPartialError_other": "Não foi possível guardar {{count}} linhas"
+    "bulkPartialError_other": "Não foi possível guardar {{count}} linhas",
+    "unknownFields": "Salvo, mas estes campos não existem e não foram salvos: {{fields}}. Contate o suporte."
   },
   "pagination": {
     "showing": "Mostrando {{from}} a {{to}} de {{total}} itens",
@@ -89,7 +90,8 @@
     "apply": "Aplicar Filtros",
     "clear": "Limpar Filtros",
     "noResults": "Nenhum resultado corresponde aos seus filtros",
-    "selected": "{{count}} selecionado"
+    "selected": "{{count}} selecionado",
+    "selected_other": "{{count}} selecionados"
   },
   "filter": {
     "placeholder": "Filtrar...",
@@ -257,6 +259,13 @@
     "noLanguagesFound": "Nenhum idioma encontrado",
     "changeLanguage": "Alterar Idioma"
   },
+  "draft": {
+    "restored": "Rascunho restaurado",
+    "restoredDescription": "As suas alterações não guardadas foram recuperadas",
+    "discard": "Descartar",
+    "conflict": "Rascunho baseado numa versão anterior",
+    "conflictDescription": "Este registo mudou desde as suas alterações não guardadas. A gravação pode ser recusada: descarte para editar a versão atual."
+  },
   "form": {
     "submit": "Enviar",
     "cancel": "Cancelar",
@@ -269,9 +278,14 @@
     "uploading": "Enviando {{progress}}%...",
     "processing": "Processando...",
     "validating": "Validando...",
+    "validationFailed": "Alguns campos precisam de correção",
+    "fixFields": "Verifique: {{fields}}",
     "saving": "Salvando...",
     "saved": "Salvo",
-    "error": "Erro — tente novamente"
+    "error": "Erro — tente novamente",
+    "saveFailed": "Não foi possível salvar. Tente novamente.",
+    "uploadFailed": "Falha no envio do arquivo. Tente novamente.",
+    "reuploadFiles": "Alguns arquivos não foram enviados. Envie-os novamente e salve."
   },
   "navigation": {
     "more": "Mais",
@@ -381,6 +395,11 @@
   },
   "boolean": {
     "required": "{{field}} deve ser selecionado"
+  },
+  "fieldArray": {
+    "addRow": "Adicionar uma linha a {{field}}",
+    "removeRow": "Remover a linha {{index}} de {{field}}",
+    "noSubFields": "{{field}}: nenhum subcampo configurado."
   },
   "array": {
     "required": "Pelo menos um {{field}} é obrigatório",
@@ -536,7 +555,15 @@
   },
   "price": {
     "vatIncluded": "ICMS Inc.",
+    "currency": "Moeda",
+    "discountLabel": "Desconto (%)",
     "discountPercent": "-{{percent}}%"
+  },
+  "workflow": {
+    "submit": "Enviar",
+    "next": "Seguinte",
+    "previous": "Anterior",
+    "skip": "Ignorar este passo"
   },
   "recommendations": {
     "title": "Você também pode gostar"
@@ -566,5 +593,27 @@
     "deleteSelected": "Excluir seleção ({{count}})",
     "failed_one": "{{count}} linha não guardada: continua na lista, tente novamente",
     "failed_other": "{{count}} linhas não guardadas: continuam na lista, tente novamente"
+  },
+  "childRows": {
+    "createFirst": "Crie o rascunho antes de adicionar {{entity}}.",
+    "required": "{{field}} é obrigatório",
+    "invalidValue": "{{field}} não é válido",
+    "invalidRows_one": "{{count}} linha a corrigir antes de salvar",
+    "invalidRows_other": "{{count}} linhas a corrigir antes de salvar",
+    "notSaved": "As linhas editadas não foram salvas com este registro.",
+    "pickTitle": "Adicionar {{entity}}",
+    "pickConfirm": "Adicionar seleção ({{count}})",
+    "pickEmpty": "Não há mais nada para adicionar."
+  },
+  "sortable": {
+    "drag": "Arraste para reordenar {{name}}",
+    "moveBefore": "Mover {{name}} para antes",
+    "moveAfter": "Mover {{name}} para depois",
+    "remove": "Remover {{name}}",
+    "instructions": "Para pegar um item, pressione Espaço ou Enter. Mova-o com as setas e pressione Espaço ou Enter novamente para soltá-lo, ou Esc para cancelar.",
+    "picked": "{{name}} selecionado, posição {{position}} de {{count}}.",
+    "moved": "{{name}} movido para a posição {{position}} de {{count}}.",
+    "dropped": "{{name}} solto na posição {{position}} de {{count}}.",
+    "cancelled": "Movimento de {{name}} cancelado."
   }
 }

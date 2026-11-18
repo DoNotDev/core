@@ -76,7 +76,8 @@
       "goBack": "Go Back"
     },
     "bulkPartialError_one": "{{count}} row could not be saved",
-    "bulkPartialError_other": "{{count}} rows could not be saved"
+    "bulkPartialError_other": "{{count}} rows could not be saved",
+    "unknownFields": "Saved, but these fields do not exist and were not saved: {{fields}}. Contact support."
   },
   "pagination": {
     "showing": "Showing {{from}} to {{to}} of {{total}} entries",
@@ -258,6 +259,13 @@
     "noLanguagesFound": "No languages found",
     "changeLanguage": "Change Language"
   },
+  "draft": {
+    "restored": "Draft restored",
+    "restoredDescription": "Your unsaved changes were recovered",
+    "discard": "Discard",
+    "conflict": "Draft based on an older version",
+    "conflictDescription": "This record changed since your unsaved edits. Saving may be refused: discard to edit the current version."
+  },
   "form": {
     "submit": "Submit",
     "cancel": "Cancel",
@@ -270,9 +278,14 @@
     "uploading": "Uploading {{progress}}%...",
     "processing": "Processing...",
     "validating": "Validating...",
+    "validationFailed": "Some fields need attention",
+    "fixFields": "Check: {{fields}}",
     "saving": "Saving...",
     "saved": "Saved",
-    "error": "Error — try again"
+    "error": "Error — try again",
+    "saveFailed": "Could not save. Try again.",
+    "uploadFailed": "File upload failed. Try again.",
+    "reuploadFiles": "Some files were not uploaded. Upload them again, then save."
   },
   "navigation": {
     "more": "More",
@@ -382,6 +395,11 @@
   },
   "boolean": {
     "required": "{{field}} must be selected"
+  },
+  "fieldArray": {
+    "addRow": "Add a row to {{field}}",
+    "removeRow": "Remove row {{index}} from {{field}}",
+    "noSubFields": "{{field}}: no sub-fields configured."
   },
   "array": {
     "required": "At least one {{field}} is required",
@@ -537,7 +555,15 @@
   },
   "price": {
     "vatIncluded": "VAT Incl.",
+    "currency": "Currency",
+    "discountLabel": "Discount (%)",
     "discountPercent": "-{{percent}}%"
+  },
+  "workflow": {
+    "submit": "Submit",
+    "next": "Next",
+    "previous": "Previous",
+    "skip": "Skip this step"
   },
   "recommendations": {
     "title": "You may also like"
@@ -566,5 +592,27 @@
     "deleteSelected": "Delete selected ({{count}})",
     "failed_one": "{{count}} row was not saved: it stays in the list, try again",
     "failed_other": "{{count}} rows were not saved: they stay in the list, try again"
+  },
+  "childRows": {
+    "createFirst": "Create the draft before adding {{entity}}.",
+    "required": "{{field}} is required",
+    "invalidValue": "{{field}} is not valid",
+    "invalidRows_one": "{{count}} row to fix before saving",
+    "invalidRows_other": "{{count}} rows to fix before saving",
+    "notSaved": "The edited rows were not saved with this record.",
+    "pickTitle": "Add {{entity}}",
+    "pickConfirm": "Add selected ({{count}})",
+    "pickEmpty": "Nothing left to add."
+  },
+  "sortable": {
+    "drag": "Drag to reorder {{name}}",
+    "moveBefore": "Move {{name}} before",
+    "moveAfter": "Move {{name}} after",
+    "remove": "Remove {{name}}",
+    "instructions": "To pick up an item, press Space or Enter. Use the arrow keys to move it, then press Space or Enter again to drop it, or Escape to cancel.",
+    "picked": "Picked up {{name}}, position {{position}} of {{count}}.",
+    "moved": "{{name}} moved to position {{position}} of {{count}}.",
+    "dropped": "{{name}} dropped at position {{position}} of {{count}}.",
+    "cancelled": "Moving {{name}} cancelled."
   }
 }

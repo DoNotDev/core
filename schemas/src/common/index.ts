@@ -15,6 +15,7 @@ export * from './visibility';
 export * from './defineEntity';
 export { getEntityByCollection } from './entityRegistry';
 export * from './createSchema';
+export * from './fieldSemantics';
 export * from './optionHelpers';
 export * from './scopeProvider';
 export * from './crud';

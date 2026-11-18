@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import { describe, it, expect } from 'vitest';
 
 import type { AnyEntity } from '@donotdev/types';
+import { productEntity, rentalEntity } from '@dndev/test-entities';
 
 import { buildProductJsonLd, deriveEntitySeo } from '../entitySeo';
 import type { EntitySeoOptions } from '../entitySeo';
@@ -24,25 +25,8 @@ function translator(
 
 const NO_TRANSLATIONS = translator('entity-product', {});
 
-const product = {
-  name: 'Product',
-  collection: 'products',
-  listCardFields: {
-    title: ['name'],
-    subtitle: ['size'],
-    content: ['images', 'shortDescription'],
-    footer: ['slug', 'rrpInclVat'],
-  },
-  fields: {
-    name: { name: 'name', type: 'text' },
-    size: { name: 'size', type: 'text' },
-    slug: { name: 'slug', type: 'text' },
-    images: { name: 'images', type: 'images' },
-    shortDescription: { name: 'shortDescription', type: 'textarea' },
-    description: { name: 'description', type: 'richtext' },
-    rrpInclVat: { name: 'rrpInclVat', type: 'currency' },
-  },
-} as unknown as AnyEntity;
+// The shared catalogue product: its card (listCardFields) gives the SEO text.
+const product = productEntity;
 
 describe('deriveEntitySeo', () => {
   it('derives title, description, images and price from entity fields', () => {
@@ -126,66 +110,7 @@ describe('deriveEntitySeo', () => {
 
 // Same shape as a real rental entity: number with displayKey, select status,
 // date with a displayValue resolver, currency subtitle
-const apartment = {
-  name: 'Apartment',
-  collection: 'apartments',
-  namespace: 'entity-apartment',
-  listCardFields: {
-    titleSeparator: ' - ',
-    title: ['kind', 'size'],
-    subtitle: ['rent', 'availableOn'],
-    content: ['pictures', 'notes'],
-  },
-  fields: {
-    status: {
-      name: 'status',
-      type: 'select',
-      validation: {
-        options: [
-          { value: 'available', label: 'status.available' },
-          { value: 'promoted', label: 'status.promoted' },
-          { value: 'reserved', label: 'status.reserved' },
-          { value: 'signed', label: 'status.signed' },
-        ],
-      },
-    },
-    kind: {
-      name: 'kind',
-      type: 'select',
-      validation: {
-        options: [
-          { value: 'studio', label: 'kind.studio' },
-          { value: 't2', label: 'kind.t2' },
-        ],
-      },
-    },
-    size: {
-      name: 'size',
-      type: 'number',
-      options: { displayKey: 'fields.size_display' },
-    },
-    rent: { name: 'rent', type: 'currency' },
-    availableOn: {
-      name: 'availableOn',
-      type: 'date',
-      options: {
-        displayValue: (
-          value: unknown,
-          item: Record<string, unknown>,
-          t: (key: string) => string
-        ) => {
-          if (item.status === 'reserved' || item.status === 'signed') return null;
-          return String(value) <= '2026-01-01'
-            ? t('status.available_now')
-            : String(value);
-        },
-      },
-    },
-    pictures: { name: 'pictures', type: 'images' },
-    notes: { name: 'notes', type: 'text' },
-    description: { name: 'description', type: 'textarea' },
-  },
-} as unknown as AnyEntity;
+const apartment = rentalEntity;
 
 const APARTMENT_FR = translator('entity-apartment', {
   'entity-apartment': {

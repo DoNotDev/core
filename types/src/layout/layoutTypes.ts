@@ -611,6 +611,16 @@ export interface AppConfig {
    * dynamically at request time.
    */
   ssr?: boolean;
+  /**
+   * Cache lifetime of the cached (static) pages and of the sitemap / llms.txt routes
+   * (Next adapter), in seconds. **Defaults to `3600`**: data edited in an admin shows
+   * within the hour. `false` = generated once per build, kept until the next deploy
+   * (sites whose content only changes with a deploy). Any other value fails the build.
+   * Ignored by Vite (no server).
+   *
+   * @since 0.2.6
+   */
+  revalidate?: number | false;
 }
 
 /**

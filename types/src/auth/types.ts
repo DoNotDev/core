@@ -12,9 +12,8 @@
 
 import type { ReactNode } from 'react';
 import type { TokenStatus, UserRole } from './constants';
-import type { AuthUser, UserSubscription } from './schemas';
+import type { AuthUser, SubscriptionClaims, UserSubscription } from './schemas';
 import type { FeatureStatus, PageAuth } from '../common';
-import type { SubscriptionClaims } from '../billing';
 import type { AuthPartnerId } from '../partners/schemas';
 import type { PartnerResult } from '../partners/types';
 
@@ -1068,6 +1067,8 @@ export interface AuthProvider {
 export interface AuthSessionSnapshot {
   /** The signed-in user, or `null` when signed out */
   user: AuthUser | null;
+  /** Display-only access projection; omitted means unknown (legacy providers). */
+  userSubscription?: UserSubscription | null;
   /**
    * The session's access token while it is still valid, else absent. Server render
    * only: lets CRUD reads run as the visitor (ICrudAdapter.forAccessToken), so the
