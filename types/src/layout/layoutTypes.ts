@@ -405,6 +405,69 @@ export interface SEOConfig {
 }
 
 /**
+ * CSP directives an app can extend (`appConfig.headers.csp`).
+ *
+ * @since 0.3.1
+ */
+export type CspDirective =
+  | 'default-src'
+  | 'script-src'
+  | 'style-src'
+  | 'img-src'
+  | 'font-src'
+  | 'connect-src'
+  | 'media-src'
+  | 'worker-src'
+  | 'manifest-src'
+  | 'frame-src'
+  | 'object-src'
+  | 'base-uri'
+  | 'form-action'
+  | 'frame-ancestors';
+
+/**
+ * Per-path Cache-Control override (`appConfig.headers.cache`): sent as
+ * `public, max-age=<maxAge>[, immutable]`, emitted after the framework cache classes so it
+ * wins on the paths it matches.
+ *
+ * @since 0.3.1
+ */
+export interface CacheOverride {
+  /** Path pattern, Next / Vercel `source` syntax (e.g. `/images/:path*`) */
+  source: string;
+  /** Seconds the browser and CDN keep the response */
+  maxAge: number;
+  /** Add `immutable` (only for files whose URL changes with their content) */
+  immutable?: boolean;
+}
+
+/**
+ * App deltas over the framework HTTP response header policy
+ * (`@donotdev/core` config/headerPolicy.js). The framework sends the security headers
+ * (CSP, nosniff, X-Frame-Options DENY, Referrer-Policy, Permissions-Policy, X-XSS-Protection)
+ * and the cache classes (hashed build assets 1 year immutable, public images 1 day, JSON 1 hour);
+ * the backend provider's CSP sources (Supabase, Firebase) are added from the app's
+ * dependencies. `seo: false` adds `X-Robots-Tag: noindex`. Next serves the policy from
+ * next.config `headers()`; Vite apps get it written into vercel.json at dev/build start.
+ *
+ * @example
+ * ```typescript
+ * headers: {
+ *   csp: { 'connect-src': ['https://recherche-entreprises.api.gouv.fr'] },
+ *   cache: [{ source: '/images/:path*', maxAge: 31536000 }],
+ * }
+ * ```
+ *
+ * @since 0.3.1
+ */
+export interface HeadersConfig {
+  /** Extra CSP sources per directive, merged into the framework directives (no `'none'` needed) */
+  csp?: Partial<Record<CspDirective, readonly string[]>>;
+  /** Cache-Control overrides per path (last wins) */
+  cache?: readonly CacheOverride[];
+}
+
+/**
  * Favicon and PWA configuration
  *
  * Configure automatic favicon generation and PWA manifest icons.
@@ -621,6 +684,27 @@ export interface AppConfig {
    * @since 0.2.6
    */
   revalidate?: number | false;
+  /**
+   * Prerender entity pages at build (Next adapter). **Defaults to `true`**: each
+   * single-param page whose records the sitemap lists (`/produits/:slug`, entity from
+   * its `src/pages/<entity>/` folder, not `auth`, not `seo.noindex`) is built once per
+   * published record (public reader, `status` not in `HIDDEN_STATUSES`, same records as
+   * the sitemap), so a first visit is served from the cache. Records published later
+   * render on their first request; all refresh per {@link revalidate}. The build reads
+   * the database: missing env or a failed read fails it. `false` = every URL renders
+   * on its first request. Ignored by Vite.
+   *
+   * @since 0.3.1
+   */
+  prerenderRecords?: boolean;
+  /**
+   * HTTP response header deltas over the framework header policy: extra CSP sources,
+   * per-path cache overrides. Private apps (`seo: false`) get `X-Robots-Tag: noindex`
+   * without any option here. See {@link HeadersConfig}.
+   *
+   * @since 0.3.1
+   */
+  headers?: HeadersConfig;
 }
 
 /**

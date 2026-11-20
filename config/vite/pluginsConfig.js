@@ -15,6 +15,7 @@ import { createViteAssetPlugin } from './plugins/AssetPlugin.js';
 import { createViteBlogPlugin } from './plugins/BlogPlugin.js';
 import { createViteEnvPlugin } from './plugins/EnvPlugin.js';
 import { createViteFontPreloadPlugin } from './plugins/FontPreloadPlugin.js';
+import { createViteHostHeadersPlugin } from './plugins/HostHeadersPlugin.js';
 import { createViteI18nPlugin } from './plugins/I18nPlugin.js';
 import { createOptionalDepResolverPlugin } from './plugins/OptionalDepResolver.js';
 import { createPeerDependencyResolverPlugin } from './plugins/PeerDependencyResolver.js';
@@ -52,6 +53,7 @@ export function createVitePlugins(options = {}) {
       serverShim: serverShimOptions = {},
       pluginFactory: pluginFactoryOptions = {},
       reactCompiler = false,
+      appConfig,
     } = options;
 
     // Enterprise-grade debug cascade: global debug cascades to all plugins unless explicitly overridden
@@ -216,6 +218,16 @@ export function createVitePlugins(options = {}) {
         }
       },
     });
+
+    // Host headers: writes the header policy into the app's vercel.json (configResolved: needs config.root)
+    plugins.push(
+      createViteHostHeadersPlugin({
+        appConfig,
+        pwa: pwaOptions.enabled,
+        debug,
+        verbose,
+      })
+    );
 
     // Peer dependency resolver - ensures peer deps resolve from app's node_modules
     // Must run early (pre) to intercept resolution before other plugins

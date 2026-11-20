@@ -1,6 +1,6 @@
 {
   "name": "@donotdev/core",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": false,
   "type": "module",
   "license": "MIT",
@@ -18,6 +18,10 @@
       "types": "./server.ts",
       "import": "./server.ts",
       "default": "./server.ts"
+    },
+    "./rsc": {
+      "types": "./rsc.ts",
+      "react-server": "./rsc.ts"
     },
     "./vite": {
       "types": "./config/vite/index.d.ts",
@@ -53,7 +57,7 @@
   ],
   "sideEffects": false,
   "peerDependencies": {
-    "@donotdev/components": "^0.3.0",
+    "@donotdev/components": "^0.3.2",
     "@sentry/react": "^10.39.0",
     "i18next": "^26.7.2",
     "i18next-browser-languagedetector": "^8.3.0",

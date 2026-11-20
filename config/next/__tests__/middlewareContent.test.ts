@@ -5,6 +5,7 @@ import { hasSupabaseSessionCookie } from '../../../../providers/supabase/src/ser
 import * as utils from '../../../utils/src/common';
 import { NEXT_RENDER } from '../../constants.js';
 import { NextRouteHandler } from '../handlers/RouteHandler.js';
+import { SEOGenerator } from '../../utils/SEOGenerator.js';
 
 const transpile = (code: string) =>
   ts.transpileModule(code, {
@@ -595,6 +596,11 @@ describe('RouteHandler pages with 2+ languages', () => {
       expect(transpile(code).diagnostics ?? []).toEqual([]);
       expect(code).toContain('<ClientLayout serverCookies="" acceptLanguage={null}>');
       expect(code).toContain('<NotFoundPage showRequestedPath={false} />');
+      // Regression: URL-derived JSON-LD of the static 404 (built at /_not-found) broke hydration (React #418)
+      expect(code).toContain(
+        "import { NotFoundDocument, NotFoundPage } from '@donotdev/ui';"
+      );
+      expect(code).toMatch(/<NotFoundDocument>\s*<ClientLayout /);
     }
     expect(notFound).toContain("import { ClientLayout } from '../ClientLayout';");
     expect(global).toContain(
@@ -666,6 +672,116 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
       );
       expect(transpile(code).diagnostics ?? []).toEqual([]);
     }
+  });
+
+  describe('entity pages prerender their published records', () => {
+    /** Handler of an app whose package.json lists `deps` (appDependsOn stubbed). */
+    const app = (deps: string[], options: Record<string, unknown> = {}) =>
+      Object.assign(new NextRouteHandler({ ssr: true, ...options }), {
+        appDependsOn: (name: string) => deps.includes(name),
+      });
+    const supabase = app(['@donotdev/supabase']);
+    const entityPage = (h: NextRouteHandler, route: Record<string, unknown> = {}, tree?: 'site' | 'session') =>
+      h.generatePageFileContent(
+        {
+          filePath: '/app/src/pages/products/ProductPage.tsx',
+          relativePath: 'src/pages/products/ProductPage.tsx',
+          path: '/produits/:slug',
+          auth: false,
+          meta: { namespace: 'product', entity: 'products' },
+          ...route,
+        },
+        tree
+      );
+
+    it('lists every published record at build with the public reader', () => {
+      const code = entityPage(supabase);
+      expect(transpile(code).diagnostics ?? []).toEqual([]);
+      expect(code).toContain("import { HIDDEN_STATUSES } from '@donotdev/core/server';");
+      expect(code).toContain("import { listStaticParams } from '@donotdev/core/next';");
+      expect(code).toContain(
+        "import { createPublicServerClient, SupabaseCrudAdapter } from '@donotdev/supabase/server';"
+      );
+      expect(code).toContain('createPublicServerClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY)');
+      expect(code).toContain(
+        'export async function generateStaticParams() {\n' +
+          '  return listStaticParams({"path":"/produits/:slug","collection":"products"}, CRUD, HIDDEN_STATUSES);\n}'
+      );
+      // Anonymous key only; dynamicParams default (records published later render on demand)
+      expect(code).not.toMatch(/SERVICE_ROLE|SECRET_KEY|service_role/i);
+      expect(code).not.toContain('dynamicParams');
+      expect(code).not.toContain('return [];');
+      // Imports before code: all import lines precede the first statement
+      const firstStatement = code.search(/^(const|export|if) /m);
+      expect(code.lastIndexOf('\nimport ')).toBeLessThan(firstStatement);
+    });
+
+    it('prerenders exactly the sitemap\'s dynamic routes (one route → collection decision)', () => {
+      const routes = [
+        { path: '/produits/:slug', auth: false, meta: { entity: 'products' } },
+        { path: '/marques/:slug', auth: false, meta: { entity: 'brands' } },
+        { path: '/brouillons/:slug', auth: false, meta: { entity: 'drafts', seo: { noindex: true } } },
+        { path: '/commandes/:id', auth: { required: true }, meta: { entity: 'orders' } },
+        { path: '/recherche/:q', auth: false, meta: {} },
+      ];
+      const sitemap = new SEOGenerator({ baseUrl: 'https://shop.example', siteName: 'Shop' })
+        .getSitemapRoutes(routes)
+        .filter((route: { collection?: string }) => route.collection);
+      const prerendered = routes
+        .map((route) => supabase.prerenderedRecordsRoute(route))
+        .filter(Boolean);
+      expect(prerendered).toEqual(sitemap);
+      expect(prerendered.map((route) => route!.collection)).toEqual(['products', 'brands']);
+    });
+
+    it('keeps on-demand rendering for other dynamic routes and per-request pages', () => {
+      const onDemand = 'export function generateStaticParams() {\n  return [];\n}';
+      expect(entityPage(supabase, { meta: { namespace: 'product', entity: 'products', seo: { noindex: true } } })).toContain(onDemand);
+      expect(entityPage(supabase, { auth: { required: true } })).toContain(onDemand);
+      expect(entityPage(supabase, { meta: { namespace: 'product' } })).toContain(onDemand);
+      expect(entityPage(supabase, { path: '/produits/:brand/:slug' })).toContain(onDemand);
+      expect(entityPage(supabase, {}, 'session')).not.toContain('generateStaticParams');
+    });
+
+    it('opts out with appConfig.prerenderRecords: false; other values fail', () => {
+      const off = entityPage(app(['@donotdev/supabase'], { prerenderRecords: false }));
+      expect(off).toContain('export function generateStaticParams() {\n  return [];\n}');
+      expect(off).not.toContain('@donotdev/supabase');
+      expect(() => entityPage(app(['@donotdev/supabase'], { prerenderRecords: 'yes' }))).toThrow(
+        'appConfig.prerenderRecords must be true or false'
+      );
+    });
+
+    it('lists every published record of a Firebase app with the anonymous Firestore reader', () => {
+      const code = entityPage(app(['@donotdev/firebase']));
+      expect(transpile(code).diagnostics ?? []).toEqual([]);
+      expect(code).toContain(
+        "import { createPublicServerFirestore, FirestorePublicReader } from '@donotdev/firebase/public';"
+      );
+      expect(code).toContain(
+        "'[dndev] Set NEXT_PUBLIC_FIREBASE_API_KEY and NEXT_PUBLIC_FIREBASE_PROJECT_ID: entity pages prerender their published records at build.'"
+      );
+      expect(code).toContain(
+        'const CRUD = new FirestorePublicReader(\n' +
+          '  createPublicServerFirestore({ apiKey: FIREBASE_API_KEY, projectId: FIREBASE_PROJECT_ID })\n);'
+      );
+      expect(code).toContain(
+        'export async function generateStaticParams() {\n' +
+          '  return listStaticParams({"path":"/produits/:slug","collection":"products"}, CRUD, HIDDEN_STATUSES);\n}'
+      );
+      // Public web config only: never the Admin SDK entry or a service account
+      expect(code).not.toContain('@donotdev/firebase/server');
+      expect(code).not.toMatch(/ADMIN|PRIVATE_KEY|CLIENT_EMAIL|SERVICE_ACCOUNT/i);
+      expect(code).not.toContain('@donotdev/supabase');
+      const firstStatement = code.search(/^(const|export|if) /m);
+      expect(code.lastIndexOf('\nimport ')).toBeLessThan(firstStatement);
+    });
+
+    it('fails the build when the provider has no server reader', () => {
+      expect(() => entityPage(app(['@donotdev/graphql']))).toThrow(
+        /no server reader \(supported: @donotdev\/supabase, @donotdev\/firebase\).*appConfig\.prerenderRecords: false/
+      );
+    });
   });
 
   it('renders the cached tree without request data, revalidated per NEXT_RENDER', () => {
@@ -803,6 +919,7 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
       expect(code).toContain('<NotFoundPage showRequestedPath={false} />');
       expect(code).toContain('<Suspense fallback={null}>');
       expect(code).toContain('<ClientLayout serverCookies="" acceptLanguage={null}>');
+      expect(code).toMatch(/<NotFoundDocument>\s*<ClientLayout /);
     }
     expect(global).not.toContain('next/headers');
     expect(single.generateSiteLayoutContent()).toContain(

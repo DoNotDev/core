@@ -131,6 +131,12 @@
         "functionalDesc": "Recuerdan sus preferencias y configuraciones",
         "marketing": "Cookies de Marketing",
         "marketingDesc": "Utilizados para publicidad dirigida y contenido"
+      },
+      "necessaryOnlyIntro": "Este servicio solo utiliza cookies estrictamente necesarias. Son indispensables para el funcionamiento del servicio, no se usan para rastrearle y no requieren su consentimiento.",
+      "necessary": {
+        "preferences": "Preferencias (idioma, visualización clara u oscura): recuerdan las opciones que elige en este servicio.",
+        "session": "Sesión de inicio de sesión: mantiene su sesión iniciada en su cuenta.",
+        "payment": "Pago seguro (Stripe): prevención del fraude y sesión de pago."
       }
     },
     "international": {

@@ -418,6 +418,18 @@ describe('SEOGenerator', () => {
       ]);
     });
 
+    it('excludes 404 / not-found / error routes', () => {
+      const routes = generator.getSitemapRoutes([
+        { path: '/', auth: false, meta: {} },
+        { path: '/404', auth: false, meta: { route: '/404' } },
+        { path: '/not-found', auth: false, meta: {} },
+        { path: '/500', auth: false, meta: {} },
+        { path: '/error', auth: false, meta: {} },
+        { path: '/oops', auth: false, meta: { route: '/404' } },
+      ]);
+      expect(routes).toEqual([{ path: '/' }]);
+    });
+
     it('lists blog posts instead of the blog routes', () => {
       const routes = generator.getSitemapRoutes(
         [

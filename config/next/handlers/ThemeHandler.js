@@ -12,6 +12,11 @@ import { CONFIG_KEYS } from '../../constants.js';
 import { ThemeDiscovery } from '../../discovery/ThemeDiscovery.js';
 import { createMissingResourceError } from '../../utils/buildError.js';
 import { CSSExtractor } from '../../utils/CSSExtractor.js';
+import {
+  getThemeIconNames,
+  renderThemeIconImports,
+  renderThemeIconMap,
+} from '../../utils/themeIcons.js';
 
 export class NextThemeHandler extends BaseNextHandler {
   constructor(options = {}) {
@@ -134,13 +139,16 @@ export class NextThemeHandler extends BaseNextHandler {
 
   generateConfigContent(themeData) {
     const { themes, variables } = themeData;
+    const iconNames = getThemeIconNames(themes, this.logger);
 
     return `// Auto-generated DnDev config by @donotdev/config
 // Generated at: ${new Date().toISOString()}
 // Populates _DNDEV_CONFIG_ with discovery results
-
+${renderThemeIconImports(iconNames)}
 const themeConfig = {
   discovered: ${JSON.stringify(themes, null, 2)},
+  // Theme icons (--theme-icon), imported by name: server-rendered without the lucide namespace
+  icons: ${renderThemeIconMap(iconNames)},
   variables: ${JSON.stringify(variables, null, 2)},
   utilities: {
     framework: ${JSON.stringify(variables.framework, null, 2)},

@@ -20,7 +20,9 @@
  * UI layer (@donotdev/ui, @donotdev/templates, @donotdev/components) are separate packages.
  * Providers (@donotdev/firebase, etc.) are separate packages.
  *
- * Tree-shaking will ensure only used code is bundled in production.
+ * Named exports only (no namespace objects), so consumer bundlers tree-shake unused
+ * code. Types, schemas and common utils come from the shared bundle (`shared.js`);
+ * lazy modules (flags) ship as separate chunks loaded on first use.
  *
  * @packageDocumentation
  */
@@ -32,11 +34,3 @@ export * from '@donotdev/stores';
 export * from '@donotdev/schemas';
 export * from '@donotdev/hooks';
 export * from '@donotdev/i18n';
-
-// Optionally re-export with namespaces for clarity
-export * as Types from '@donotdev/types';
-export * as Utils from '@donotdev/utils';
-export * as Stores from '@donotdev/stores';
-export * as Schemas from '@donotdev/schemas';
-export * as Hooks from '@donotdev/hooks';
-export * as I18n from '@donotdev/i18n';

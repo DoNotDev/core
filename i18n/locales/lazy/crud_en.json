@@ -385,7 +385,8 @@
     "format": "Please enter a valid date",
     "future": "{{field}} must be in the future",
     "past": "{{field}} must be in the past",
-    "today": "{{field}} must be today"
+    "today": "{{field}} must be today",
+    "calendarLoadError": "The calendar could not load. Please type the date in the field."
   },
   "select": {
     "required": "Please select a {{field}}",

@@ -25,6 +25,8 @@ const DISCOVERY_ARTIFACTS = [
   'public/rss.xml',
   'public/llms.txt',
   'public/llms-full.txt',
+  // Revalidation webhook route: removed when the app no longer generates it
+  GENERATED_PATHS.next.revalidateRoute,
 ];
 
 /** Config files pattern prefix */

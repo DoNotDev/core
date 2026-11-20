@@ -13,7 +13,7 @@
  * and ensure DRY principles. All magic strings are replaced with typed constants.
  */
 
-import type { ReactNode } from 'react';
+import type { ComponentType, ReactNode, SVGProps } from 'react';
 
 import type { SubscriptionTier, UserRole } from '../auth/constants';
 import type { LayoutPreset } from '../layout/layoutTypes';
@@ -895,6 +895,8 @@ export interface RoutesPluginConfig {
     publicRoutes: number;
     /** Source of routes (auto-discovery vs manual) */
     source: RouteSource;
+    /** True when the app has blog posts, i.e. an `/rss.xml` feed is generated at build */
+    hasBlogFeed?: boolean;
     /** ISO timestamp when routes were generated */
     generatedAt: string;
   };
@@ -933,6 +935,11 @@ export interface ThemesPluginConfig {
     /** Whether theme is essential (cannot be disabled) */
     essential: boolean;
   }>;
+  /**
+   * Lucide icons named by the themes' `--theme-icon`, keyed by that name (`Sun`, `Gem`).
+   * Imported by name at build time so the theme toggle renders them statically.
+   */
+  icons?: Record<string, ComponentType<SVGProps<SVGSVGElement>>>;
   /** CSS custom property variables */
   variables: Record<string, string>;
   /** Utility class mappings */

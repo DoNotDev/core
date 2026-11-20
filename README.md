@@ -39,13 +39,15 @@ const myStore = createDoNotDevStore({
 });
 ```
 
-### Namespaced Imports
+Named imports only: the namespace re-exports (`Types`, `Utils`, `Stores`, `Schemas`, `Hooks`, `I18n`) were removed because they kept every module of a package in the bundle.
+
+### Server code
 
 ```typescript
-import { Stores, I18n } from '@donotdev/core';
-
-const myStore = Stores.createDoNotDevStore({ ... });
+import { HIDDEN_STATUSES, validateEnvVar } from '@donotdev/core/server';
 ```
+
+Server-only utilities (`validateEnvVar`, `validateUrl`, `parseServerCookie`, date math) are exported from `@donotdev/core/server` only, never from the browser entry.
 
 ## License
 

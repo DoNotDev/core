@@ -131,6 +131,12 @@
         "functionalDesc": "记住您的偏好和设置",
         "marketing": "营销 Cookie",
         "marketingDesc": "用于目标广告和内容"
+      },
+      "necessaryOnlyIntro": "本服务仅使用严格必要的 Cookie。它们是服务运行所必需的，不用于跟踪您，也无需您的同意。",
+      "necessary": {
+        "preferences": "偏好设置（语言、浅色或深色显示）：记住您在本服务中的选择。",
+        "session": "登录会话：保持您的账户登录状态。",
+        "payment": "安全支付（Stripe）：防欺诈和结账会话。"
       }
     },
     "international": {

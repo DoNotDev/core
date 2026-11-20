@@ -9,6 +9,7 @@ import {
   getActiveCookies,
   getCookiesByCategory,
   hasOptionalCookies,
+  isCookieNoticeRequired,
   formatCookieList,
   getCookieExamples,
 } from '../cookieMapping';
@@ -309,4 +310,29 @@ describe('edge cases', () => {
     // All cookies in the system are 'necessary'
     expect(necessary).toHaveLength(9);
   });
+});
+
+describe('isCookieNoticeRequired', () => {
+  beforeEach(() => {
+    mockIsFeatureAvailable.mockReset();
+    mockIsFeatureAvailable.mockReturnValue(false);
+  });
+
+  it('is false when nothing is configured (strictly necessary cookies only)', () => {
+    expect(isCookieNoticeRequired()).toBe(false);
+    expect(isCookieNoticeRequired([])).toBe(false);
+    expect(isCookieNoticeRequired(['necessary'])).toBe(false);
+  });
+
+  it('is false with auth and billing features (their cookies are necessary)', () => {
+    mockIsFeatureAvailable.mockReturnValue(true);
+    expect(isCookieNoticeRequired(['necessary'])).toBe(false);
+  });
+
+  it.each(['functional', 'analytics', 'marketing'])(
+    'is true when %s is configured',
+    (category) => {
+      expect(isCookieNoticeRequired(['necessary', category])).toBe(true);
+    }
+  );
 });

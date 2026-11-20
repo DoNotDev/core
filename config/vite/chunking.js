@@ -23,7 +23,9 @@ const REACT_CORE_PATTERNS = [
   '/react-router',
   // Side-effect heavy UI (uses useLayoutEffect)
   '/@radix-ui/',
-  '/react-day-picker/',
+  // react-day-picker is not here: only the Calendar module (Calendar/index.tsx,
+  // CalendarPrimitive.tsx) imports it, and DatePicker/DateTimePicker load that
+  // module lazily (LazyCalendar), so it ships in the calendar chunk, after React
   // State managers (synchronous subscriptions)
   '/react-hook-form/',
   // i18n - uses React context, must load with React

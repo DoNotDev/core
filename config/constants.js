@@ -98,6 +98,8 @@ export const GENERATED_PATHS = {
     // Next 16 proxy (was middleware.ts): inside src/, next to src/app.
     // Next files carry the `.next.` marker (next/nextFiles.js).
     proxy: 'src/proxy.next.ts',
+    // On-demand revalidation webhook (URL: REVALIDATE_ROUTE_PATH in next/revalidation.js)
+    revalidateRoute: 'src/app/api/dndev/revalidate/route.next.ts',
     routeManifest: 'public/route-manifest.json',
     assetManifest: 'public/asset-manifest.json',
     utilities: 'src/styles/utilities.generated.css',
@@ -478,6 +480,19 @@ export const FONT_WEIGHTS = {
   roboto: [400, 700],
   'space-grotesk': [300, 400, 500, 600, 700],
   'press-start-2p': [400],
+};
+
+/**
+ * System font category per catalogue stem: picks the local font of its size-matched
+ * fallback face (serif → Times New Roman, otherwise Arial; see fonts/fontFallback.js).
+ * Same keys as FONT_WEIGHTS: a test guards the parity.
+ */
+export const FONT_FALLBACK_CATEGORY = {
+  inter: 'sans-serif',
+  'playfair-display': 'serif',
+  roboto: 'sans-serif',
+  'space-grotesk': 'sans-serif',
+  'press-start-2p': 'sans-serif',
 };
 
 /**

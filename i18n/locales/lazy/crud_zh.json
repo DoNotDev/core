@@ -384,7 +384,8 @@
     "format": "请输入有效的日期",
     "future": "{{field}} 必须是未来日期",
     "past": "{{field}} 必须是过去日期",
-    "today": "{{field}} 必须是今天"
+    "today": "{{field}} 必须是今天",
+    "calendarLoadError": "无法加载日历。请在输入框中输入日期。"
   },
   "select": {
     "required": "请选择一个 {{field}}",

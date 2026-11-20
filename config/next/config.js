@@ -10,6 +10,7 @@ import {
   createWebpackConfig,
   createRewritesConfig,
   createRedirectsConfig,
+  createHeadersConfig,
   buildFinalConfig,
 } from './configBuilder.js';
 import {
@@ -20,6 +21,12 @@ import {
 import { createHandlers, createHandlerConfigs } from './handlerFactory.js';
 import { migrateNextFiles } from './nextFiles.js';
 import { mergeOptions, normalizeOptions } from './options.js';
+import {
+  assertNoVercelHeaders,
+  detectHeaderProviders,
+  resolveHeaderRules,
+  syncVercelHeaders,
+} from '../headerPolicy.js';
 import { discoverAppPackages } from '../utils/discoverAppPackages.js';
 import { createLogger } from '../utils/debugLog.js';
 import { detectMissingOptionalDeps } from '../utils/detectOptionalDeps.js';
@@ -185,6 +192,8 @@ function defineNextConfig(userOptions = {}) {
       auth: appConfig?.auth,
       // Cache lifetime of the cached pages (BaseNextHandler.revalidate)
       revalidate: appConfig?.revalidate,
+      // Entity pages prerender their published records at build (RouteHandler.prerendersRecords)
+      prerenderRecords: appConfig?.prerenderRecords,
     },
     themeOptions,
     i18nOptions,
@@ -202,8 +211,9 @@ function defineNextConfig(userOptions = {}) {
   // Create handler configs
   const handlerConfigs = createHandlerConfigs(handlers, logger);
 
-  // Build Next.js configuration function
-  const nextConfigFn = async function nextConfig(nextConfigOptions = {}) {
+  // Build Next.js configuration function. Next calls it with (phase, { defaultConfig }):
+  // the app's own Next options are the passthrough keys of defineNextConfig (nextConfigOptions).
+  const nextConfigFn = async function nextConfig() {
     // Discover packages for transpilation
     const pathResolver = PathResolver.getInstance();
     const discoveredPackages = appRootSet ? discoverAppPackages() : [];
@@ -243,16 +253,15 @@ function defineNextConfig(userOptions = {}) {
       await runDiscoveries(handlers, logger);
     }
 
-    // Parse nextConfigOptions
-    const safeNextConfigOptions =
-      typeof nextConfigOptions === 'object' && nextConfigOptions !== null
-        ? nextConfigOptions
-        : {};
+    // The app's own Next options (every defineNextConfig key the framework does not own),
+    // composed with the framework's below: webpack, rewrites, redirects and headers are merged.
+    const safeNextConfigOptions = nextConfigOptions;
 
     const {
       webpack: originalWebpack,
       rewrites: originalRewrites,
       redirects: originalRedirects,
+      headers: originalHeaders,
       ...restNextConfig
     } = safeNextConfigOptions;
 
@@ -307,6 +316,36 @@ function defineNextConfig(userOptions = {}) {
       logger,
     });
 
+    // HTTP response headers: framework header policy (headerPolicy.js) + the app's own
+    // next.config headers (after it: last wins). Served in production builds only, as the
+    // host would (the CSP blocks Next dev tooling). A static export cannot serve headers():
+    // the host does, from the vercel.json the policy is written into.
+    const isStaticExport = restNextConfig.output === 'export';
+    const policyRules = appRootSet
+      ? resolveHeaderRules({
+          appConfig,
+          target: isStaticExport ? 'next-export' : 'next',
+          providers: detectHeaderProviders(pathResolver.getAppRoot()),
+          pwa: pwaOptions?.enabled === true,
+        })
+      : [];
+    if (appRootSet && isStaticExport) {
+      syncVercelHeaders({
+        appRoot: pathResolver.getAppRoot(),
+        rules: policyRules,
+        ci: Boolean(process.env.CI || process.env.VERCEL),
+        logger,
+      });
+    } else if (appRootSet) {
+      assertNoVercelHeaders(pathResolver.getAppRoot());
+    }
+    const headersConfig = isStaticExport
+      ? null
+      : createHeadersConfig({
+          policyRules: isDev ? [] : policyRules,
+          originalHeaders,
+        });
+
     // Build env config
     // NEXT_PUBLIC_* vars are now injected via generated dndev-config-env.js
     // (dynamic process.env[name] access doesn't work client-side in Next.js)
@@ -336,6 +375,7 @@ function defineNextConfig(userOptions = {}) {
       webpackConfig,
       rewritesConfig,
       redirectsConfig,
+      headersConfig,
       missingOptionalDeps,
       flagCodes,
       pathResolver,

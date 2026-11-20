@@ -131,6 +131,12 @@
         "functionalDesc": "Husker præferencer",
         "marketing": "Markedsføringscookies",
         "marketingDesc": "Til målrettet reklame"
+      },
+      "necessaryOnlyIntro": "Denne tjeneste bruger kun strengt nødvendige cookies. De er nødvendige for, at tjenesten fungerer, bruges ikke til at spore dig og kræver ikke dit samtykke.",
+      "necessary": {
+        "preferences": "Præferencer (sprog, lys eller mørk visning): husker de valg, du træffer i tjenesten.",
+        "session": "Login-session: holder dig logget ind på din konto.",
+        "payment": "Sikker betaling (Stripe): forebyggelse af svindel og betalingssession."
       }
     },
     "international": {

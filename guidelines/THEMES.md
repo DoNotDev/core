@@ -8,6 +8,7 @@
 
 **Fonts — the theme decides what ships.** `@donotdev/ui` packs a self-hosted catalogue (Inter, Playfair Display, Space Grotesk, Roboto, Press Start 2P; `FONT_FAMILY_TO_STEMS` in `@donotdev/core` config constants). At build, the framework reads the first family of `--font-family`, `--font-headline` and `--font-mono` (after `var()`, framework defaults overridden by your themes) for `:root` and each theme class, and ships only the catalogue families found, for the subsets of your languages (Polish, Czech… add `latin-ext`). Typical result: one sans for body, at most one serif for headlines. Never Google Fonts.
 - Default theme: Inter only (`--font-family`/`--font-headline` → `--font-sans: Inter…`).
+- No layout shift on font swap (Next): `public/dndev-fonts.css` also defines `'<Family> Fallback'` per shipped family, a local Arial (Times New Roman for Playfair Display) scaled to the web font's metrics. List it right after the family in your own stacks: `--font-headline: 'Space Grotesk', 'Space Grotesk Fallback', var(--font-sans);` (the default `--font-sans` / `--font-serif` already do).
 - Your own fonts (e.g. `next/font/local`, a `var(--font-x)` set by a class on `<html>`, or a family outside the catalogue): the framework ships **no** font file for those tokens; with no catalogue family left, no `public/dndev-fonts.css` and no stylesheet link either.
 - Preconnects to third-party origins are never injected by the framework: declare the ones your app needs in its document `<head>`.
 
@@ -75,7 +76,7 @@
 
 **Theme metadata:**
 ```css
---theme-icon: 'Sun';      /* Lucide icon name */
+--theme-icon: 'Sun';      /* Lucide icon name: imported by name at build time (static, server-rendered toggle) */
 --theme-label: 'Light';    /* Display name */
 --theme-is-dark: 0;        /* 0 = light, 1 = dark */
 ```

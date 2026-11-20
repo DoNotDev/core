@@ -7,7 +7,7 @@
     "skipDefaultLibCheck": true,
     "isolatedModules": false
   },
-  "include": ["index.ts", "server.ts", "config/**/*.d.ts"],
+  "include": ["index.ts", "server.ts", "rsc.ts", "shared.ts", "config/**/*.d.ts"],
   "exclude": [
     "components/**",
     "crud/**",

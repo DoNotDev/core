@@ -384,7 +384,8 @@
     "format": "Indtast en gyldig dato",
     "future": "{{field}} skal være i fremtiden",
     "past": "{{field}} skal være i fortiden",
-    "today": "{{field}} skal være i dag"
+    "today": "{{field}} skal være i dag",
+    "calendarLoadError": "Kalenderen kunne ikke indlæses. Indtast datoen i feltet."
   },
   "select": {
     "required": "Vælg en {{field}}",

@@ -68,15 +68,39 @@ export function assertPublicBaseUrl(baseUrl, envVar) {
   }
 }
 
+/** Error / not-found routes: never listed in sitemap.xml or llms.txt. */
+const ERROR_ROUTE_PATHS = new Set(['/404', '/not-found', '/500', '/error']);
+
 /**
- * Whether a route may be indexed: not auth-only and not marked `seo: { noindex: true }`
- * in its PageMeta. Private pages that gate client-side (`auth: false`) use noindex.
+ * Whether a route may be indexed: not auth-only, not an error route (404 / not-found /
+ * 500 / error) and not marked `seo: { noindex: true }` in its PageMeta. Private pages
+ * that gate client-side (`auth: false`) use noindex.
  * @param {Object} route - Route from discovery
  * @returns {boolean}
  */
 export function isIndexableRoute(route) {
   if (route.auth && route.auth !== false) return false;
+  if (
+    ERROR_ROUTE_PATHS.has(route.path) ||
+    ERROR_ROUTE_PATHS.has(route.meta?.route)
+  )
+    return false;
   return route.meta?.seo?.noindex !== true;
+}
+
+/**
+ * Collection whose public records fill an indexable dynamic route's `:param`: the
+ * route's entity (`meta.entity`, from its `src/pages/<entity>/` folder). One decision for
+ * the sitemap, llms.txt and the pages Next prerenders at build, so all three list the
+ * same records.
+ * @param {Object} route - Route from discovery
+ * @returns {string | undefined} The collection, or `undefined` (static, not indexable or no entity)
+ * @since 0.3.1
+ */
+export function publicCollection(route) {
+  if (typeof route.path !== 'string' || !route.path.includes(':')) return undefined;
+  if (!isIndexableRoute(route)) return undefined;
+  return route.meta?.entity || undefined;
 }
 
 /**
@@ -305,9 +329,10 @@ export class SEOGenerator {
       if (blogPosts.length > 0 && isBlogRoute) continue;
       if (route.path.includes(':')) {
         if (isBlogRoute) continue;
+        const collection = publicCollection(route);
         sitemapRoutes.push({
           path: route.path,
-          ...(route.meta?.entity && { collection: route.meta.entity }),
+          ...(collection && { collection }),
         });
       } else {
         sitemapRoutes.push({ path: route.path });

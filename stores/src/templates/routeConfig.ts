@@ -112,15 +112,16 @@ export function resolveAuthConfig(
 /**
  * Get route data from globals (following i18n pattern)
  *
+ * Reads the build-generated route mapping from `globalThis._DNDEV_CONFIG_` on the server
+ * and the client alike: it is static build data (Next: set by the app's ClientLayout
+ * config imports during SSR), so server and client renders built from it (breadcrumb
+ * links, navigation) hydrate identically. Returns `[]` when no route config is loaded.
+ *
  * @version 0.1.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
 export function getRoutes(): RouteData[] {
-  if (!isClient()) {
-    return [];
-  }
-
   const config = getDndevConfig();
   if (!config) {
     return [];

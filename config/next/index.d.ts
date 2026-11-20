@@ -155,6 +155,16 @@ export function buildSitemap(
   context: SitemapContext
 ): Promise<SitemapEntry[]>;
 
+/**
+ * Base URL of the generated sitemap / llms.txt routes, resolved at request time:
+ * `appBaseUrl(process.env.NEXT_PUBLIC_APP_URL)`. Trimmed, no trailing slash, `https://`
+ * added when the value has no scheme.
+ *
+ * @throws When the URL is unset
+ * @since 0.3.1
+ */
+export function appBaseUrl(raw: string | undefined): string;
+
 /** Serialize sitemap entries to sitemap.xml (with hreflang alternates). */
 export function formatSitemapXml(entries: readonly SitemapEntry[]): string;
 
@@ -214,3 +224,87 @@ export interface LlmsTxtContext {
 export function buildLlmsTxt(
   source: LlmsTxtSource & LlmsTxtContext
 ): Promise<string>;
+
+/**
+ * `generateStaticParams` of a generated entity page (`/produits/:slug`): one params object
+ * per public record of the route's collection (`status` not in `hiddenStatuses`), the same
+ * records as the route's sitemap and llms.txt URLs. Values are raw (Next encodes them).
+ *
+ * @throws When the route has no collection or several params, or the read fails
+ * @since 0.3.1
+ */
+export function listStaticParams(
+  route: PublicRoute,
+  crud: ICrudAdapter,
+  hiddenStatuses: readonly string[]
+): Promise<Array<Record<string, string>>>;
+
+// ---------------------------------------------------------------------------
+// On-demand revalidation (server runtime of the generated revalidate route handler)
+// ---------------------------------------------------------------------------
+
+/**
+ * A changed database record, as a webhook reader returns it: table name and rows with
+ * app field names (`readDatabaseWebhook` from @donotdev/supabase/server).
+ *
+ * @since 0.3.2
+ */
+export interface RecordChange {
+  /** Postgres schema of the table: only `public` is revalidated (400 otherwise) */
+  schema: string;
+  /** Table (collection) of the record */
+  table: string;
+  /** Row after the change (`null` on delete) */
+  record: Readonly<Record<string, unknown>> | null;
+  /** Row before the change (`null` on insert) */
+  oldRecord: Readonly<Record<string, unknown>> | null;
+}
+
+/** What the generated revalidation route passes to {@link handleRevalidationWebhook}. */
+export interface RevalidationContext {
+  /** Shared secret (`process.env.DNDEV_REVALIDATE_SECRET`, 32+ characters); unset or shorter throws */
+  secret: string | undefined;
+  /** Cached routes: static ones, and entity routes with their `collection` */
+  routes: readonly PublicRoute[];
+  /** App languages */
+  routing: LanguageRouting;
+  /** Webhook body → change; throws on a body it does not accept (answered 400) */
+  readChange: (body: unknown) => RecordChange;
+  /** `revalidatePath` from `next/cache` */
+  revalidatePath: (path: string) => void;
+}
+
+/** Env variable of the revalidation webhook's shared secret: `DNDEV_REVALIDATE_SECRET`. */
+export const REVALIDATE_SECRET_ENV: 'DNDEV_REVALIDATE_SECRET';
+
+/** URL of the generated revalidation route handler: `/api/dndev/revalidate`. */
+export const REVALIDATE_ROUTE_PATH: '/api/dndev/revalidate';
+
+/**
+ * Cached paths a record change makes stale: the entity pages of the new and old row (every
+ * language, internal `/<lang>/…` paths with 2+ languages), every static route (any may
+ * list the table), and `/sitemap.xml` + `/llms.txt` when an entity route uses the table.
+ * Other dynamic routes and cross-entity pages refresh on their `revalidate` timer. Param
+ * values are written in Next's cache-tag form: raw, except `/ # ? \` percent-encoded.
+ *
+ * @since 0.3.2
+ */
+export function revalidationPaths(
+  routes: readonly PublicRoute[],
+  change: RecordChange,
+  routing: LanguageRouting
+): string[];
+
+/**
+ * Handle a database webhook call: `Authorization: Bearer <secret>` checked in constant
+ * time (401 otherwise), body read by `readChange` (400 when refused or the table is not in
+ * the `public` schema), then `revalidatePath` on every {@link revalidationPaths} path;
+ * answers `{ revalidated: string[] }`.
+ *
+ * @throws When the secret is unset or shorter than 32 characters (no default secret)
+ * @since 0.3.2
+ */
+export function handleRevalidationWebhook(
+  request: Request,
+  context: RevalidationContext
+): Promise<Response>;

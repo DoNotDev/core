@@ -234,6 +234,8 @@ export function defineViteConfig(userOptions = {}) {
       // No manual injection needed - EnvPlugin loads and exposes via globalThis._DNDEV_CONFIG_.env
 
       const plugins = createVitePlugins({
+        // Header policy deltas (headers) and private-app noindex (seo: false)
+        appConfig,
         mode,
         debug,
         verbose,

@@ -104,6 +104,7 @@ declare module 'virtual:routes' {
     totalRoutes: number;
     authRequired: number;
     publicRoutes: number;
+    hasBlogFeed?: boolean;
     generatedAt: string;
   };
   export const source: string;
@@ -118,6 +119,7 @@ declare module 'virtual:routes' {
       totalRoutes: number;
       authRequired: number;
       publicRoutes: number;
+      hasBlogFeed?: boolean;
       generatedAt: string;
     };
     source: string;

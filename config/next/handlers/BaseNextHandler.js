@@ -72,6 +72,92 @@ export class BaseNextHandler {
   }
 
   /**
+   * Whether the app's package.json lists a dependency.
+   * @param {string} name
+   * @returns {boolean}
+   */
+  appDependsOn(name) {
+    const pkg = this.pathResolver.readSync(
+      this.pathResolver.resolveAppPath('package.json'),
+      { format: 'json' }
+    );
+    return Boolean(pkg?.dependencies?.[name] || pkg?.devDependencies?.[name]);
+  }
+
+  /**
+   * Server-side public reader for a generated file that reads published records (sitemap
+   * and llms.txt routes, prerendered entity pages): built from the app's provider package
+   * and its public env variables, never from the app's client bootstrap
+   * (src/config/providers.ts loads client code), never from a privileged key. Only when
+   * a route lists records.
+   *
+   * - `@donotdev/supabase`: anonymous client (`NEXT_PUBLIC_SUPABASE_URL`,
+   *   `NEXT_PUBLIC_SUPABASE_PUBLIC_KEY`), RLS decides what it reads.
+   * - `@donotdev/firebase` (since 0.3.1): Firestore Web SDK without a signed-in user
+   *   (`NEXT_PUBLIC_FIREBASE_API_KEY`, `NEXT_PUBLIC_FIREBASE_PROJECT_ID`,
+   *   `@donotdev/firebase/public`), Security Rules decide what it reads.
+   *
+   * @param {Array<{ path: string, collection?: string }>} routes - Routes of the generated file
+   * @param {string} [purpose] - What the file reads records for, in the missing-env error
+   * @param {string} [optOut] - How to keep these routes from reading records, in the no-reader error
+   * @returns {{ imports: string, setup: string, expr: string | null }} Code to insert
+   * @throws {Error} When a route lists records and the app depends on neither provider
+   * @since 0.2.3
+   */
+  serverCrudReader(
+    routes,
+    purpose = 'the sitemap and llms.txt list published records',
+    optOut = 'Mark these pages `seo: { noindex: true }`.'
+  ) {
+    const listing = routes.filter((route) => route.collection);
+    if (listing.length === 0) return { imports: '', setup: '', expr: null };
+    if (this.appDependsOn('@donotdev/supabase')) {
+      return {
+        imports:
+          "import { createPublicServerClient, SupabaseCrudAdapter } from '@donotdev/supabase/server';\n",
+        setup: `
+// Public (anonymous) reader: RLS returns what a signed-out visitor can read.
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_PUBLIC_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY;
+if (!SUPABASE_URL || !SUPABASE_PUBLIC_KEY) {
+  throw new Error(
+    '[dndev] Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: ${purpose}.'
+  );
+}
+const CRUD = new SupabaseCrudAdapter(
+  createPublicServerClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY)
+);
+`,
+        expr: 'CRUD',
+      };
+    }
+    if (this.appDependsOn('@donotdev/firebase')) {
+      return {
+        imports:
+          "import { createPublicServerFirestore, FirestorePublicReader } from '@donotdev/firebase/public';\n",
+        setup: `
+// Public (anonymous) reader: Security Rules return what a signed-out visitor can read.
+const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+const FIREBASE_PROJECT_ID = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+if (!FIREBASE_API_KEY || !FIREBASE_PROJECT_ID) {
+  throw new Error(
+    '[dndev] Set NEXT_PUBLIC_FIREBASE_API_KEY and NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${purpose}.'
+  );
+}
+const CRUD = new FirestorePublicReader(
+  createPublicServerFirestore({ apiKey: FIREBASE_API_KEY, projectId: FIREBASE_PROJECT_ID })
+);
+`,
+        expr: 'CRUD',
+      };
+    }
+    throw new Error(
+      `[dndev] ${listing.map((route) => route.path).join(', ')} list published records, but the app's ` +
+        `backend provider has no server reader (supported: @donotdev/supabase, @donotdev/firebase). ${optOut}`
+    );
+  }
+
+  /**
    * Override in subclass to provide handler-specific defaults
    */
   getHandlerDefaults() {

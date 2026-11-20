@@ -103,6 +103,8 @@ export const FONT_FAMILY_TO_STEMS: Record<string, string>;
 
 export const FONT_WEIGHTS: Record<string, readonly number[]>;
 
+export const FONT_FALLBACK_CATEGORY: Record<string, 'sans-serif' | 'serif'>;
+
 export const LOCALE_TO_FONT_SUBSETS: Record<string, readonly string[]>;
 
 export function getPatternsFor(

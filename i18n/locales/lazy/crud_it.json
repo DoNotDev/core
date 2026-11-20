@@ -109,7 +109,8 @@
     "format": "Inserisci una data valida",
     "future": "{{field}} deve essere nel futuro",
     "past": "{{field}} deve essere nel passato",
-    "today": "{{field}} deve essere oggi"
+    "today": "{{field}} deve essere oggi",
+    "calendarLoadError": "Impossibile caricare il calendario. Inserisci la data nel campo."
   },
   "select": {
     "required": "Seleziona un {{field}}",

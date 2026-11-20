@@ -589,6 +589,8 @@ export interface GeneratedPaths {
   next: {
     /** Generated Next 16 proxy (auth redirects): `src/proxy.next.ts` */
     proxy: string;
+    /** Generated on-demand revalidation webhook route: `src/app/api/dndev/revalidate/route.next.ts` */
+    revalidateRoute: string;
     routeManifest: string;
     assetManifest: string;
     utilities: string;
@@ -903,7 +905,12 @@ export interface NextConfigOptions {
   pwa?: PWAOptions;
   /** Server shim options */
   serverShim?: ServerShimOptions;
-  /** Standard Next.js config options (webpack, rewrites, headers, etc.) - passed through as-is */
+  /**
+   * Standard Next.js config options, passed through to Next (which validates them).
+   * `webpack`, `rewrites`, `redirects` and `headers` are composed with the framework's:
+   * `headers` rules come after the framework header policy (last wins). Prefer
+   * `appConfig.headers` for CSP sources and cache overrides (same option on Vite).
+   */
   [key: string]: any;
 }
 

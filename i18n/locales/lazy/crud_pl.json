@@ -389,7 +389,8 @@
     "format": "Wprowadź prawidłową datę",
     "future": "Data w polu {{field}} musi być w przyszłości",
     "past": "Data w polu {{field}} musi być w przeszłości",
-    "today": "Data w polu {{field}} musi być dzisiejsza"
+    "today": "Data w polu {{field}} musi być dzisiejsza",
+    "calendarLoadError": "Nie udało się załadować kalendarza. Wpisz datę w polu."
   },
   "select": {
     "required": "Wybierz wartość w polu {{field}}",

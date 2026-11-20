@@ -384,7 +384,8 @@
     "format": "Voer een geldige datum in",
     "future": "{{field}} moet in de toekomst liggen",
     "past": "{{field}} moet in het verleden liggen",
-    "today": "{{field}} moet vandaag zijn"
+    "today": "{{field}} moet vandaag zijn",
+    "calendarLoadError": "De kalender kon niet worden geladen. Voer de datum in het veld in."
   },
   "select": {
     "required": "Selecteer een {{field}}",

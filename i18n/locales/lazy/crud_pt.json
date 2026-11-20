@@ -385,7 +385,8 @@
     "format": "Digite uma data válida",
     "future": "{{field}} deve ser no futuro",
     "past": "{{field}} deve ser no passado",
-    "today": "{{field}} deve ser hoje"
+    "today": "{{field}} deve ser hoje",
+    "calendarLoadError": "Não foi possível carregar o calendário. Digite a data no campo."
   },
   "select": {
     "required": "Selecione um {{field}}",

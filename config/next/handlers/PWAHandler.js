@@ -169,15 +169,8 @@ export class NextPWAHandler extends BaseNextHandler {
       return {
         ...nextConfig,
 
-        // Add PWA headers
-        async headers() {
-          const baseHeaders = nextConfig.headers
-            ? await nextConfig.headers()
-            : [];
-          const pwaHeaders = this.discovery.getPWAHeaders();
-
-          return [...baseHeaders, ...pwaHeaders];
-        },
+        // PWA file headers (manifest, service worker) come from the header policy
+        // (headerPolicy.js, `pwa` option), served by defineNextConfig's headers().
 
         // Add PWA to webpack
         webpack: (config, context) => {

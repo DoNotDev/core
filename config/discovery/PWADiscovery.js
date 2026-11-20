@@ -513,41 +513,6 @@ registerRoute(
   }
 
   /**
-   * Get PWA headers for different platforms
-   * @returns {Array} Array of header configurations
-   */
-  getPWAHeaders() {
-    return [
-      {
-        source: '/manifest.json',
-        headers: [
-          {
-            key: 'Content-Type',
-            value: 'application/manifest+json',
-          },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=3600',
-          },
-        ],
-      },
-      {
-        source: '/sw.js',
-        headers: [
-          {
-            key: 'Content-Type',
-            value: 'application/javascript',
-          },
-          {
-            key: 'Cache-Control',
-            value: 'no-cache',
-          },
-        ],
-      },
-    ];
-  }
-
-  /**
    * Get PWA rewrites for different platforms
    * @returns {Object} Rewrites configuration
    */

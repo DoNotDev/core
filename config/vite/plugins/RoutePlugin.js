@@ -14,7 +14,9 @@ import {
   CONFIG_KEYS,
 } from '../../constants.js';
 import { RouteDiscovery } from '../../discovery/RouteDiscovery.js';
+import { hasBlogFeed } from '../../utils/blogFeed.js';
 import { createMissingResourceError } from '../../utils/buildError.js';
+import { PathResolver } from '../../utils/PathResolver.js';
 
 // Route-specific templates
 const routeTemplates = {
@@ -36,6 +38,7 @@ const routeTemplates = {
       source: routeData.source,
       generatedAt: new Date().toISOString(),
       errors: routeData.errors.length,
+      hasBlogFeed: hasBlogFeed(PathResolver.getInstance().getAppRoot()),
     };
 
     /**
@@ -84,6 +87,7 @@ if (typeof globalThis !== 'undefined') {
       totalRoutes: ${routeData.routes.length},
       authRequired: ${routeData.routes.filter((r) => r.auth && r.auth.required).length},
       publicRoutes: ${routeData.routes.filter((r) => !r.auth || r.auth === false).length},
+      hasBlogFeed: ${manifest.hasBlogFeed},
       generatedAt: new Date().toISOString(),
     },
   };

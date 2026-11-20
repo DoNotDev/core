@@ -131,6 +131,12 @@
         "functionalDesc": "Onthouden je voorkeuren",
         "marketing": "Marketingcookies",
         "marketingDesc": "Voor gerichte advertenties"
+      },
+      "necessaryOnlyIntro": "Deze dienst gebruikt alleen strikt noodzakelijke cookies. Ze zijn nodig om de dienst te laten werken, worden niet gebruikt om u te volgen en vereisen geen toestemming.",
+      "necessary": {
+        "preferences": "Voorkeuren (taal, lichte of donkere weergave): onthouden de keuzes die u in deze dienst maakt.",
+        "session": "Inlogsessie: houdt u ingelogd op uw account.",
+        "payment": "Veilige betaling (Stripe): fraudepreventie en betaalsessie."
       }
     },
     "international": {

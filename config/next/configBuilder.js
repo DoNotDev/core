@@ -343,10 +343,38 @@ export function createRedirectsConfig({
 }
 
 /**
+ * Build the headers() function: framework header policy rules first, then the app's own
+ * next.config `headers` (Next: when two rules set the same header on a path, the last wins).
+ * Fails loud: a broken app `headers` must not ship a site without its security headers.
+ *
+ * @param {Object} options
+ * @param {Array<{ source: string, headers: Array<{ key: string, value: string }> }>} options.policyRules - From resolveHeaderRules (headerPolicy.js)
+ * @param {Function} [options.originalHeaders] - The app's next.config `headers`
+ * @returns {Function} headers config function
+ * @since 0.3.1
+ */
+export function createHeadersConfig({ policyRules, originalHeaders }) {
+  if (originalHeaders !== undefined && typeof originalHeaders !== 'function') {
+    throw new Error(
+      '[dndev] next.config headers must be a function returning an array (Next headers() contract).'
+    );
+  }
+  return async function headers() {
+    const appRules = originalHeaders ? await originalHeaders() : [];
+    if (!Array.isArray(appRules)) {
+      throw new Error(
+        `[dndev] next.config headers() must return an array (got ${typeof appRules}).`
+      );
+    }
+    return [...policyRules, ...appRules];
+  };
+}
+
+/**
  * Merge all handler configs into final Next.js config
  *
  * Assembles transpilePackages, Turbopack resolveAlias (CSS + optional deps),
- * webpack/rewrites, handler results, and environment variables.
+ * webpack/rewrites/redirects/headers, handler results, and environment variables.
  *
  * @param {Object} options - Options
  * @param {string[]} [options.missingOptionalDeps] - Optional deps to alias in Turbopack
@@ -370,10 +398,11 @@ export function buildFinalConfig({
   reactCompiler = false,
   routingMode,
 
-  // Webpack/rewrites/redirects
+  // Webpack/rewrites/redirects/headers
   webpackConfig,
   rewritesConfig,
   redirectsConfig,
+  headersConfig,
 
   // Optional deps (for Turbopack aliasing)
   missingOptionalDeps,
@@ -567,6 +596,8 @@ export function buildFinalConfig({
       : {
           rewrites: rewritesConfig,
           ...(redirectsConfig ? { redirects: redirectsConfig } : {}),
+          // Header policy + app headers (null for static export: the host serves them)
+          ...(headersConfig ? { headers: headersConfig } : {}),
         }),
 
     // Environment variables

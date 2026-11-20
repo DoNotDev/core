@@ -38,7 +38,7 @@ const TRANSLATIONS = {
 };
 
 /** Value import of a client-containing root (type imports are erased). */
-const CLIENT_ROOT_IMPORT = /^import\s+(?!type\b)[^;]*from\s+'@donotdev\/(core|supabase|ui|crud|components)'/m;
+const CLIENT_ROOT_IMPORT = /^import\s+(?!type\b)[^;]*from\s+'@donotdev\/(core|supabase|firebase|ui|crud|components)'/m;
 
 describe('generated SEO routes', () => {
   let appRoot: string;
@@ -96,6 +96,33 @@ describe('generated SEO routes', () => {
     expect(read('src/app/sitemap.xml/route.next.ts')).not.toContain('/panier');
   });
 
+  it('read Firestore as a signed-out visitor on a Firebase app (public entry, no Admin SDK)', async () => {
+    const seo = handler({ '@donotdev/firebase': '^0.3.2', entities: 'workspace:*' });
+    await seo.generateSitemapRoute(ROUTES);
+    await seo.generateLlmsTxtRoute(ROUTES, []);
+
+    for (const rel of ['src/app/sitemap.xml/route.next.ts', 'src/app/llms.txt/route.next.ts']) {
+      const code = read(rel);
+      expect(code).not.toMatch(CLIENT_ROOT_IMPORT);
+      expect(code).not.toContain('config/providers');
+      expect(code).toContain(
+        "import { createPublicServerFirestore, FirestorePublicReader } from '@donotdev/firebase/public';"
+      );
+      expect(code).toContain(
+        'createPublicServerFirestore({ apiKey: FIREBASE_API_KEY, projectId: FIREBASE_PROJECT_ID })'
+      );
+      expect(code).toContain('const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;');
+      expect(code).toContain('const FIREBASE_PROJECT_ID = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;');
+      expect(code).toContain(
+        "'[dndev] Set NEXT_PUBLIC_FIREBASE_API_KEY and NEXT_PUBLIC_FIREBASE_PROJECT_ID: the sitemap and llms.txt list published records.'"
+      );
+      expect(code).toContain('crud: CRUD,');
+      expect(code).not.toContain('@donotdev/firebase/server');
+      expect(code).not.toContain('@donotdev/supabase');
+      expect(code).not.toMatch(/ADMIN|PRIVATE_KEY|CLIENT_EMAIL|SERVICE_ACCOUNT/i);
+    }
+  });
+
   it('needs no reader when no route lists records', async () => {
     const seo = handler({});
     await seo.generateSitemapRoute([ROUTES[0]]);
@@ -105,8 +132,10 @@ describe('generated SEO routes', () => {
   });
 
   it('fails when a route lists records and the provider has no server reader', async () => {
-    const seo = handler({ '@donotdev/firebase': '^0.2.3' });
-    await expect(seo.generateSitemapRoute(ROUTES)).rejects.toThrow(/no server reader/);
+    const seo = handler({ '@donotdev/graphql': '^0.3.0' });
+    await expect(seo.generateSitemapRoute(ROUTES)).rejects.toThrow(
+      /no server reader \(supported: @donotdev\/supabase, @donotdev\/firebase\)/
+    );
   });
 
   it('generates nothing when SEO is disabled (appConfig.seo: false)', async () => {
@@ -122,5 +151,47 @@ describe('generated SEO routes', () => {
     expect(existsSync(join(appRoot, 'src/app/sitemap.xml/route.next.ts'))).toBe(false);
     expect(existsSync(join(appRoot, 'src/app/llms.txt/route.next.ts'))).toBe(false);
     expect(existsSync(join(appRoot, 'public/robots.txt'))).toBe(false);
+  });
+});
+
+describe('generated SEO routes: base URL', () => {
+  let appRoot: string;
+  const envUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+  beforeEach(() => {
+    appRoot = mkdtempSync(join(tmpdir(), 'dndev-seo-url-'));
+    PathResolver._reset();
+    PathResolver.getInstance().setAppRoot(appRoot);
+    writeFileSync(join(appRoot, 'package.json'), JSON.stringify({ name: 'app', dependencies: {} }));
+  });
+
+  afterEach(() => {
+    rmSync(appRoot, { recursive: true, force: true });
+    PathResolver._reset();
+    if (envUrl === undefined) delete process.env.NEXT_PUBLIC_APP_URL;
+    else process.env.NEXT_PUBLIC_APP_URL = envUrl;
+  });
+
+  async function generate(url: string, isDev: boolean) {
+    process.env.NEXT_PUBLIC_APP_URL = url;
+    const seo = createNextSEOHandler({ siteName: 'Boutique', isDev });
+    seo.useLanguages({ languages: ['fr'], defaultLanguage: 'fr' });
+    seo.useTranslations(TRANSLATIONS);
+    await seo.generateSitemapRoute([ROUTES[0]]);
+    await seo.generateLlmsTxtRoute([ROUTES[0]], []);
+    return ['src/app/sitemap.xml/route.next.ts', 'src/app/llms.txt/route.next.ts'].map((rel) =>
+      readFileSync(join(appRoot, rel), 'utf8')
+    );
+  }
+
+  it('reads NEXT_PUBLIC_APP_URL at request time: same source after dev and build', async () => {
+    const dev = await generate('http://localhost:3000', true);
+    const build = await generate('https://shop.example', false);
+    expect(build).toEqual(dev);
+    for (const code of build) {
+      expect(code).toContain('const BASE_URL = appBaseUrl(process.env.NEXT_PUBLIC_APP_URL);');
+      expect(code).not.toContain('localhost');
+      expect(code).not.toContain('shop.example');
+    }
   });
 });

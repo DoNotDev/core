@@ -923,6 +923,10 @@ export interface AuthProvider {
 
   /**
    * Refresh the authentication token
+   *
+   * Throws on provider error (the failure reason must stay visible to callers).
+   * Returns `null` only when there is no session or the auth state changed
+   * during the refresh (result superseded), never to signal a provider error.
    */
   refreshToken(): Promise<string | null>;
 

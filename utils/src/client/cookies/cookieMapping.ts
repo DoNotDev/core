@@ -136,6 +136,27 @@ export function hasOptionalCookies(): boolean {
 }
 
 /**
+ * Whether the app needs a cookie notice (banner and cookie-settings link).
+ *
+ * Strictly necessary cookies need no consent and no notice (CNIL; French loi
+ * Informatique et Libertés art. 82; ePrivacy 5(3)). A notice is needed as soon as the
+ * app declares a non-necessary category in `features.requiredCookies`
+ * (`functional`, `analytics`, `marketing`), or a detected feature sets a
+ * non-necessary cookie ({@link hasOptionalCookies}).
+ *
+ * @param requiredCookies - `appConfig.features.requiredCookies`
+ * @returns `false` when only strictly necessary cookies are set: render no banner
+ */
+export function isCookieNoticeRequired(
+  requiredCookies?: readonly string[]
+): boolean {
+  if (requiredCookies?.some((category) => category !== 'necessary')) {
+    return true;
+  }
+  return hasOptionalCookies();
+}
+
+/**
  * Get human-readable cookie list for a category
  */
 export function formatCookieList(

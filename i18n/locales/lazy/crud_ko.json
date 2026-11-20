@@ -109,7 +109,8 @@
     "format": "유효한 날짜를 입력해 주세요",
     "future": "{{field}}은(는) 미래여야 합니다",
     "past": "{{field}}은(는) 과거여야 합니다",
-    "today": "{{field}}은(는) 오늘이어야 합니다"
+    "today": "{{field}}은(는) 오늘이어야 합니다",
+    "calendarLoadError": "달력을 불러오지 못했습니다. 입력란에 날짜를 입력해 주세요."
   },
   "select": {
     "required": "{{field}}을(를) 선택해 주세요",

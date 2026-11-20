@@ -5,7 +5,9 @@ import type { ICrudAdapter, QueryOptions } from '@donotdev/types';
 import { HIDDEN_STATUSES } from '../../../schemas/src/common/visibility';
 import { deriveEntitySeo } from '../../../utils/src/common/entitySeo';
 import { languageUrls } from '../../../utils/src/common/languagePath';
+import { appBaseUrl } from '../seo/baseUrl.js';
 import { buildLlmsTxt } from '../seo/llmsTxt.js';
+import { listStaticParams } from '../seo/publicPages.js';
 import { buildSitemap, formatSitemapXml } from '../seo/sitemap.js';
 import { brandEntity } from '@dndev/test-entities';
 
@@ -24,6 +26,19 @@ function mockCrud(rows: Record<string, Record<string, unknown>[]>) {
   }));
   return { crud: { query } as unknown as ICrudAdapter, query };
 }
+
+describe('appBaseUrl', () => {
+  it('trims, drops trailing slashes and adds https:// when the scheme is missing', () => {
+    expect(appBaseUrl(' https://shop.example/ ')).toBe('https://shop.example');
+    expect(appBaseUrl('shop.example//')).toBe('https://shop.example');
+    expect(appBaseUrl('http://localhost:3000')).toBe('http://localhost:3000');
+  });
+
+  it('fails when the URL is unset', () => {
+    expect(() => appBaseUrl(undefined)).toThrow(/NEXT_PUBLIC_APP_URL/);
+    expect(() => appBaseUrl('  ')).toThrow(/NEXT_PUBLIC_APP_URL/);
+  });
+});
 
 describe('buildSitemap', () => {
   it('lists static routes with root priority 1', async () => {
@@ -133,6 +148,76 @@ describe('buildSitemap', () => {
         hiddenStatuses: HIDDEN_STATUSES,
       })
     ).rejects.toThrow(/single-param/);
+  });
+});
+
+describe('listStaticParams', () => {
+  const PRODUCTS = [
+    { id: '1', slug: 'creme a', status: 'available' },
+    { id: '2', slug: 'serum', status: 'reserved' },
+    { id: '3', slug: 'brouillon', status: 'draft' },
+    { id: '4', slug: 'supprime', status: 'deleted' },
+    { id: '5', slug: null },
+  ];
+  const ROUTE = { path: '/produits/:slug', collection: 'products' };
+
+  it('returns raw params of the same records as the sitemap URLs', async () => {
+    const { crud, query } = mockCrud({ products: PRODUCTS });
+    const params = await listStaticParams(ROUTE, crud, HIDDEN_STATUSES);
+    // Raw values: Next encodes them into the URL
+    expect(params).toEqual([{ slug: 'creme a' }, { slug: 'serum' }]);
+
+    const entries = await buildSitemap([ROUTE], {
+      baseUrl: BASE,
+      routing: FR,
+      crud,
+      languageUrls,
+      hiddenStatuses: HIDDEN_STATUSES,
+    });
+    expect(entries.map((e) => e.url)).toEqual(
+      params.map(({ slug }) => `${BASE}/produits/${encodeURIComponent(slug!)}`)
+    );
+    // One query shape for both (status filter, limit)
+    expect(query.mock.calls[0]).toEqual(query.mock.calls[1]);
+  });
+
+  it('fills the route param name from the record field of that name', async () => {
+    const { crud } = mockCrud({ apartments: [{ id: 42 }, { id: 'b-7' }] });
+    expect(
+      await listStaticParams({ path: '/apartments/:id', collection: 'apartments' }, crud, HIDDEN_STATUSES)
+    ).toEqual([{ id: '42' }, { id: 'b-7' }]);
+  });
+
+  it('fails loud without a reader, a collection, or when the read fails', async () => {
+    await expect(
+      listStaticParams(ROUTE, undefined as unknown as ICrudAdapter, HIDDEN_STATUSES)
+    ).rejects.toThrow(/no server CRUD reader/);
+    const { crud } = mockCrud({});
+    await expect(
+      listStaticParams({ path: '/produits/:slug' }, crud, HIDDEN_STATUSES)
+    ).rejects.toThrow(/Cannot list the public URLs/);
+    await expect(
+      listStaticParams({ path: '/a/:x/:y', collection: 'products' }, crud, HIDDEN_STATUSES)
+    ).rejects.toThrow(/Cannot list the public URLs/);
+    const failing = {
+      query: vi.fn(async () => {
+        throw new Error('fetch failed');
+      }),
+    } as unknown as ICrudAdapter;
+    await expect(listStaticParams(ROUTE, failing, HIDDEN_STATUSES)).rejects.toThrow(
+      /Route "\/produits\/:slug" could not read its public "products" records.*fetch failed/
+    );
+    // A CRUD error's generic message gives way to the provider's own (details.originalMessage).
+    const wrapped = {
+      query: vi.fn(async () => {
+        throw Object.assign(new Error('Request failed.'), {
+          details: { originalMessage: 'Missing or insufficient permissions.' },
+        });
+      }),
+    } as unknown as ICrudAdapter;
+    await expect(listStaticParams(ROUTE, wrapped, HIDDEN_STATUSES)).rejects.toThrow(
+      /records \(signed-out visitor: RLS \/ Security Rules must allow it\): Missing or insufficient permissions\./
+    );
   });
 });
 

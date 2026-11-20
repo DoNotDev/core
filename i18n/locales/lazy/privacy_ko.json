@@ -131,6 +131,12 @@
         "functionalDesc": "선호 설정 및 설정 기억",
         "marketing": "마케팅 쿠키",
         "marketingDesc": "타겟팅 광고 및 콘텐츠에 사용"
+      },
+      "necessaryOnlyIntro": "이 서비스는 반드시 필요한 쿠키만 사용합니다. 서비스 작동에 필수적이며, 사용자를 추적하는 데 사용되지 않고, 동의가 필요하지 않습니다.",
+      "necessary": {
+        "preferences": "환경설정(언어, 라이트 또는 다크 화면): 이 서비스에서 선택한 사항을 기억합니다.",
+        "session": "로그인 세션: 계정에 로그인된 상태를 유지합니다.",
+        "payment": "안전한 결제(Stripe): 사기 방지 및 결제 세션."
       }
     },
     "international": {

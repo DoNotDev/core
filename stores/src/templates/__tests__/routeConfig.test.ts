@@ -147,9 +147,15 @@ describe('resolveAuthConfig', () => {
 // ============================================================================
 
 describe('getRoutes', () => {
-  it('returns empty array when not client', () => {
+  // Regression: [] on the server made Breadcrumbs render a span in the SSR HTML and a
+  // Link on the client (React #418 on landing /blog/<slug>)
+  it('returns routes mapping on the server too', () => {
     vi.mocked(isClient).mockReturnValue(false);
-    expect(getRoutes()).toEqual([]);
+    const mapping = [{ path: '/blog', meta: { title: 'Blog' } }];
+    vi.mocked(getDndevConfig).mockReturnValue({
+      routes: { mapping },
+    } as any);
+    expect(getRoutes()).toEqual(mapping);
   });
 
   it('returns empty array when no config', () => {

@@ -15,7 +15,11 @@ import { fileURLToPath } from 'node:url';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { FONT_FAMILY_TO_STEMS, FONT_WEIGHTS } from '../../constants.js';
+import {
+  FONT_FALLBACK_CATEGORY,
+  FONT_FAMILY_TO_STEMS,
+  FONT_WEIGHTS,
+} from '../../constants.js';
 import { copyFontsToPublic } from '../../next/fonts/copyFontsToPublic.js';
 import { PathResolver } from '../../utils/PathResolver.js';
 import {
@@ -155,6 +159,12 @@ describe('font catalogue parity', () => {
     );
   });
 
+  it('FONT_FALLBACK_CATEGORY covers exactly the FONT_WEIGHTS packages', () => {
+    expect(Object.keys(FONT_FALLBACK_CATEGORY).sort()).toEqual(
+      Object.keys(FONT_WEIGHTS).sort()
+    );
+  });
+
   it('packages/ui/src/dndev.css imports exactly FONT_WEIGHTS', () => {
     const imports = [
       ...read('packages/ui/src/dndev.css').matchAll(
@@ -205,8 +215,36 @@ describe('copyFontsToPublic (Next)', () => {
       'utf8'
     );
     const faces = css.match(/@font-face/g) ?? [];
-    expect(faces).toHaveLength(expected.length);
+    // One face per file, plus the family's size-matched fallback face
+    expect(faces).toHaveLength(expected.length + 1);
     expect(css.match(/unicode-range/g) ?? []).toHaveLength(expected.length);
     expect(css).not.toMatch(/\.woff\)|data:|googleapis|gstatic/);
+  });
+
+  // Regression: Inter swapped in over an unmatched system font (CLS 0.26 on landing /blog)
+  it('writes a size-matched fallback face per family, computed from its font file', () => {
+    copyFontsToPublic({
+      families: ['Inter', 'Playfair Display'],
+      languages: ['en'],
+    });
+    const css = readFileSync(
+      join(appRoot, 'public', 'dndev-fonts.css'),
+      'utf8'
+    );
+    const fallback = (name: string) =>
+      new RegExp(
+        `@font-face \\{\\n  font-family: '${name}';\\n  src: ([^;]+);\\n  ascent-override: ([\\d.]+)%;\\n  descent-override: ([\\d.]+)%;\\n  line-gap-override: ([\\d.]+)%;\\n  size-adjust: ([\\d.]+)%;\\n\\}`
+      ).exec(css);
+
+    const inter = fallback('Inter Fallback');
+    expect(inter?.[1]).toBe("local('Arial'), local('Liberation Sans')");
+    // Inter 4 (2048 upm, hhea 1984/-494/0, a-z average 1008.21) over Arial (934.51)
+    expect(inter?.slice(2)).toEqual(['89.79', '22.36', '0.00', '107.89']);
+
+    const playfair = fallback('Playfair Display Fallback');
+    expect(playfair?.[1]).toBe(
+      "local('Times New Roman'), local('Liberation Serif')"
+    );
+    expect(css.match(/Fallback';/g)).toHaveLength(2);
   });
 });

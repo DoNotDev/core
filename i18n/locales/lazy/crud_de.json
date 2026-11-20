@@ -109,7 +109,8 @@
     "format": "Bitte geben Sie ein gültiges Datum ein",
     "future": "{{field}} muss in der Zukunft liegen",
     "past": "{{field}} muss in der Vergangenheit liegen",
-    "today": "{{field}} muss heute sein"
+    "today": "{{field}} muss heute sein",
+    "calendarLoadError": "Der Kalender konnte nicht geladen werden. Bitte geben Sie das Datum im Feld ein."
   },
   "select": {
     "required": "Bitte wählen Sie ein {{field}} aus",
