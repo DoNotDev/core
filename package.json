@@ -1,6 +1,6 @@
 {
   "name": "@donotdev/core",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": false,
   "type": "module",
   "license": "MIT",
@@ -48,6 +48,7 @@
     "dist",
     "guidelines",
     "i18n/locales",
+    "i18n/flags",
     "config/**/*.js",
     "config/**/*.cjs",
     "config/**/*.d.ts",
@@ -57,7 +58,7 @@
   ],
   "sideEffects": false,
   "peerDependencies": {
-    "@donotdev/components": "^0.3.2",
+    "@donotdev/components": "^0.3.3",
     "@sentry/react": "^10.39.0",
     "i18next": "^26.7.2",
     "i18next-browser-languagedetector": "^8.3.0",

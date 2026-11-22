@@ -675,12 +675,16 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
   });
 
   describe('entity pages prerender their published records', () => {
-    /** Handler of an app whose package.json lists `deps` (appDependsOn stubbed). */
-    const app = (deps: string[], options: Record<string, unknown> = {}) =>
-      Object.assign(new NextRouteHandler({ ssr: true, ...options }), {
-        appDependsOn: (name: string) => deps.includes(name),
-      });
-    const supabase = app(['@donotdev/supabase']);
+    /** Handler of an app (one language, fr) whose package.json lists `deps` (appDependsOn stubbed). */
+    const app = (deps: string[], options: Record<string, unknown> = {}) => {
+      const handler = Object.assign(
+        new NextRouteHandler({ ssr: true, siteName: 'Shop', ...options }),
+        { appDependsOn: (name: string) => deps.includes(name) }
+      );
+      handler.useLanguages({ languages: ['fr'], defaultLanguage: 'fr' });
+      return handler;
+    };
+    const supabase = app(['@donotdev/supabase', 'entities']);
     const entityPage = (h: NextRouteHandler, route: Record<string, unknown> = {}, tree?: 'site' | 'session') =>
       h.generatePageFileContent(
         {
@@ -697,16 +701,26 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
     it('lists every published record at build with the public reader', () => {
       const code = entityPage(supabase);
       expect(transpile(code).diagnostics ?? []).toEqual([]);
-      expect(code).toContain("import { HIDDEN_STATUSES } from '@donotdev/core/server';");
-      expect(code).toContain("import { listStaticParams } from '@donotdev/core/next';");
+      expect(code).toMatch(/^import \{ HIDDEN_STATUSES\b[^}]*\} from '@donotdev\/core\/server';$/m);
+      expect(code).toMatch(/^import \{ listStaticParams\b[^}]*\} from '@donotdev\/core\/next';$/m);
       expect(code).toContain(
-        "import { createPublicServerClient, SupabaseCrudAdapter } from '@donotdev/supabase/server';"
+        "import { createPublicServerClient, SupabasePublicReader } from '@donotdev/supabase/server';"
       );
-      expect(code).toContain('createPublicServerClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY)');
+      expect(code).toContain(
+        'new SupabasePublicReader(\n  createPublicServerClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY)\n)'
+      );
       expect(code).toContain(
         'export async function generateStaticParams() {\n' +
-          '  return listStaticParams({"path":"/produits/:slug","collection":"products"}, CRUD, HIDDEN_STATUSES);\n}'
+          '  return listStaticParams({"path":"/produits/:slug","collection":"products"}, CRUD, HIDDEN_STATUSES, READ_SCHEMAS);\n}'
       );
+      // REGRESSION: records read with the entity's read schema (rows keyed by the entity's
+      // field names); without it Supabase camelCased snake_case fields
+      expect(code).toContain("import * as entities from 'entities';");
+      expect(code).toContain(
+        'const READ_SCHEMAS = entityReadSchemas(entities, [{"path":"/produits/:slug","collection":"products"}], createSchemas);'
+      );
+      expect(code).toMatch(/^import \{ HIDDEN_STATUSES\b[^}]*\bcreateSchemas \} from '@donotdev\/core\/server';$/m);
+      expect(code).toMatch(/^import \{ listStaticParams\b[^}]*\bentityReadSchemas \} from '@donotdev\/core\/next';$/m);
       // Anonymous key only; dynamicParams default (records published later render on demand)
       expect(code).not.toMatch(/SERVICE_ROLE|SECRET_KEY|service_role/i);
       expect(code).not.toContain('dynamicParams');
@@ -744,22 +758,25 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
     });
 
     it('opts out with appConfig.prerenderRecords: false; other values fail', () => {
-      const off = entityPage(app(['@donotdev/supabase'], { prerenderRecords: false }));
+      const off = entityPage(app(['@donotdev/supabase', 'entities'], { prerenderRecords: false }));
       expect(off).toContain('export function generateStaticParams() {\n  return [];\n}');
-      expect(off).not.toContain('@donotdev/supabase');
-      expect(() => entityPage(app(['@donotdev/supabase'], { prerenderRecords: 'yes' }))).toThrow(
+      expect(off).not.toContain('listStaticParams');
+      // The page still reads its record per request (metadata, 404): same public reader
+      expect(off).toContain('readEntityPageRecord(ROUTE, value, CRUD, HIDDEN_STATUSES, READ_SCHEMAS)');
+      expect(transpile(off).diagnostics ?? []).toEqual([]);
+      expect(() => entityPage(app(['@donotdev/supabase', 'entities'], { prerenderRecords: 'yes' }))).toThrow(
         'appConfig.prerenderRecords must be true or false'
       );
     });
 
     it('lists every published record of a Firebase app with the anonymous Firestore reader', () => {
-      const code = entityPage(app(['@donotdev/firebase']));
+      const code = entityPage(app(['@donotdev/firebase', 'entities']));
       expect(transpile(code).diagnostics ?? []).toEqual([]);
       expect(code).toContain(
         "import { createPublicServerFirestore, FirestorePublicReader } from '@donotdev/firebase/public';"
       );
       expect(code).toContain(
-        "'[dndev] Set NEXT_PUBLIC_FIREBASE_API_KEY and NEXT_PUBLIC_FIREBASE_PROJECT_ID: entity pages prerender their published records at build.'"
+        "'[dndev] Set NEXT_PUBLIC_FIREBASE_API_KEY and NEXT_PUBLIC_FIREBASE_PROJECT_ID: entity pages read their record on the server (metadata, JSON-LD, 404); entity pages prerender their published records at build.'"
       );
       expect(code).toContain(
         'const CRUD = new FirestorePublicReader(\n' +
@@ -767,7 +784,7 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
       );
       expect(code).toContain(
         'export async function generateStaticParams() {\n' +
-          '  return listStaticParams({"path":"/produits/:slug","collection":"products"}, CRUD, HIDDEN_STATUSES);\n}'
+          '  return listStaticParams({"path":"/produits/:slug","collection":"products"}, CRUD, HIDDEN_STATUSES, READ_SCHEMAS);\n}'
       );
       // Public web config only: never the Admin SDK entry or a service account
       expect(code).not.toContain('@donotdev/firebase/server');
@@ -778,8 +795,8 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
     });
 
     it('fails the build when the provider has no server reader', () => {
-      expect(() => entityPage(app(['@donotdev/graphql']))).toThrow(
-        /no server reader \(supported: @donotdev\/supabase, @donotdev\/firebase\).*appConfig\.prerenderRecords: false/
+      expect(() => entityPage(app(['@donotdev/graphql', 'entities']))).toThrow(
+        /no server reader \(supported: @donotdev\/supabase, @donotdev\/firebase\)\. Mark the page `seo: \{ noindex: true \}`, or export `generateMetadata` from a server page module and set `appConfig\.prerenderRecords: false`\./
       );
     });
   });
@@ -1150,5 +1167,174 @@ describe('RouteHandler generated page signedInRedirect', () => {
       "import { AuthGuard, SignedInRedirect } from '@donotdev/ui';"
     );
     expect(both).toMatch(/<AuthGuard [^>]*><SignedInRedirect /);
+  });
+});
+
+describe('RouteHandler entity pages: server identity (generateMetadata, JSON-LD, 404)', () => {
+  /** Handler of a Supabase app with an `entities` package, in `languages` (first = default). */
+  const app = (languages: string[] = ['fr'], options: Record<string, unknown> = {}) => {
+    const handler = Object.assign(
+      new NextRouteHandler({ ssr: true, siteName: 'Shop', ...options }),
+      {
+        appDependsOn: (name: string) => ['@donotdev/supabase', 'entities'].includes(name),
+        isClientComponent: () => true,
+      }
+    );
+    handler.useLanguages({ languages, defaultLanguage: languages[0]! });
+    return handler;
+  };
+  const productRoute = (route: Record<string, unknown> = {}) => ({
+    filePath: '/app/src/pages/products/ProductPage.tsx',
+    relativePath: 'src/pages/products/ProductPage.tsx',
+    file: 'src/pages/products/ProductPage.tsx',
+    path: '/produits/:slug',
+    auth: false,
+    meta: { namespace: 'product', entity: 'products', seo: { type: 'product' } },
+    ...route,
+  });
+
+  it('reads the record once per request, sets generateMetadata, renders JSON-LD, 404s without a record', () => {
+    const code = app().generatePageFileContent(productRoute());
+    expect(transpile(code).diagnostics ?? []).toEqual([]);
+    expect(code).toContain("import { notFound } from 'next/navigation';");
+    expect(code).toContain("import { cache } from 'react';");
+    expect(code).toContain("import { useTranslation } from '@donotdev/core/rsc';");
+    expect(code).toContain("import * as entities from 'entities';");
+    // The server graph loads the translations (one language: app/(site)/produits/[slug])
+    expect(code).toContain("import '../../../../config/dndev-config-i18n.js';");
+    // Same public reader as generateStaticParams, HIDDEN_STATUSES imported once
+    expect(code).toContain('const pageSeo = cache(async (language: string, value: string) => {');
+    expect(code).toContain('readEntityPageRecord(ROUTE, value, CRUD, HIDDEN_STATUSES, READ_SCHEMAS)');
+    expect(code.match(/import \{[^}]*HIDDEN_STATUSES/g)).toHaveLength(1);
+    // One `entities` import (read schemas and the identity), one READ_SCHEMAS
+    expect(code.match(/from 'entities'/g)).toHaveLength(1);
+    expect(code.match(/const READ_SCHEMAS = /g)).toHaveLength(1);
+    expect(code).toContain('const ROUTE = {"path":"/produits/:slug","collection":"products"};');
+    expect(code).toContain('type Params = Promise<{ slug: string }>;');
+    expect(code).toContain('const seo = await pageSeo("fr", slug);\n  if (!seo) notFound();');
+    expect(code).toContain(
+      'export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {'
+    );
+    expect(code).toContain('siteName: "Shop",');
+    expect(code).toContain('type: "product",');
+    expect(code).toContain('translate: (namespaces) => useTranslation(namespaces, { language }).t,');
+    expect(code).toContain('dangerouslySetInnerHTML={{ __html: jsonLdScript(seo.jsonLd) }}');
+    expect(code).toContain('{seo.ogType && <meta property="og:type" content={seo.ogType} />}');
+    expect(code).toContain(
+      'export default async function ProductPageRoute(props: { params: Params }) {\n  const seo = await requireSeo(props.params);'
+    );
+    expect(code).toContain('      <ProductPageClient />\n');
+    // The page is the fragment's first element: the layout's `main > :first-child` rule
+    // (flex: 1 0 auto) must hit the page, not a JSON-LD script (page shrank under the footer)
+    expect(code).toContain('    <>\n      <ProductPageClient />\n');
+    expect(code.indexOf('<ProductPageClient />')).toBeLessThan(code.indexOf('application/ld+json'));
+    // No build tooling in the server bundle, no URL in the source
+    expect(code).not.toContain('getMetadataForPath');
+    expect(code).toContain('appBaseUrl(process.env.NEXT_PUBLIC_APP_URL)');
+    const firstStatement = code.search(/^(const|export|if|type|async) /m);
+    expect(code.lastIndexOf('\nimport ')).toBeLessThan(firstStatement);
+  });
+
+  it("reads the URL's language with 2+ languages", () => {
+    const code = app(['fr', 'en']).generatePageFileContent(productRoute());
+    expect(transpile(code).diagnostics ?? []).toEqual([]);
+    expect(code).toContain('type Params = Promise<{ lang: string; slug: string }>;');
+    expect(code).toContain('const { lang, slug } = await params;\n  const seo = await pageSeo(lang, slug);');
+    expect(code).toContain(
+      'const LANGUAGE_ROUTING: LanguageRouting = {"languages":["fr","en"],"defaultLanguage":"fr"};'
+    );
+    expect(code).toContain("import '../../../../../config/dndev-config-i18n.js';");
+  });
+
+  it("takes og:type from the PageMeta seo.type (default website), the app's trailingSlash", () => {
+    const code = app(['fr'], { trailingSlash: true }).generatePageFileContent(
+      productRoute({ meta: { namespace: 'product', entity: 'products' } })
+    );
+    expect(code).toContain('type: "website",');
+    expect(code).toContain('const TRAILING_SLASH = true;');
+  });
+
+  it('wraps a server page module, guards included, and keeps its props', () => {
+    const handler = Object.assign(app(), { isClientComponent: () => false });
+    const code = handler.generatePageFileContent(
+      productRoute({ meta: { namespace: 'product', entity: 'products', signedInRedirect: '/compte' } })
+    );
+    expect(transpile(code).diagnostics ?? []).toEqual([]);
+    expect(code).toContain("import ProductPage from '../../../../pages/products/ProductPage';");
+    expect(code).toContain('<SignedInRedirect to={"/compte"}><ProductPage {...props} /></SignedInRedirect>');
+  });
+
+  it('re-exports the generated metadata in the per-request tree', () => {
+    const handler = app();
+    const written: Array<{ path: string; content: string }> = [];
+    Object.assign(handler, {
+      writeGeneratedFile: (path: string, content: string) => written.push({ path, content }),
+    });
+    handler.generateSessionPage(productRoute());
+    expect(written[0]!.content).toContain(
+      "export { default, generateMetadata } from '../../../(site)/produits/[slug]/page.next';"
+    );
+  });
+
+  it('leaves non-entity dynamic pages and static pages to AutoMetaTags', () => {
+    const handler = app();
+    for (const route of [
+      productRoute({ meta: { namespace: 'search' }, path: '/recherche/:q' }),
+      productRoute({ meta: { namespace: 'product', entity: 'products', seo: { noindex: true } } }),
+      productRoute({ path: '/docs/*' }),
+      productRoute({ path: '/catalogue', meta: { namespace: 'catalogue' } }),
+    ]) {
+      const code = handler.generatePageFileContent(route);
+      expect(transpile(code).diagnostics ?? []).toEqual([]);
+      expect(code).not.toContain('generateMetadata');
+      expect(code).not.toContain('notFound');
+      expect(code).not.toContain('ld+json');
+      expect(handler.serverMetadataSource(route)).toBeNull();
+    }
+  });
+
+  it("re-exports a server page module's own generateMetadata, which wins over the entity one", () => {
+    const handler = Object.assign(app(), { isClientComponent: () => false });
+    const route = productRoute({ exportsGenerateMetadata: true });
+    const code = handler.generatePageFileContent(route);
+    expect(transpile(code).diagnostics ?? []).toEqual([]);
+    expect(handler.serverMetadataSource(route)).toBe('page');
+    expect(code).toContain(
+      "export { generateMetadata } from '../../../../pages/products/ProductPage';"
+    );
+    expect(code).not.toContain('readEntityPageRecord');
+    expect(code).not.toContain('notFound');
+    // Still prerendered with the public reader
+    expect(code).toContain('listStaticParams(');
+    // Non-entity dynamic page too
+    const search = handler.generatePageFileContent(
+      productRoute({ path: '/recherche/:q', meta: {}, exportsGenerateMetadata: true })
+    );
+    expect(search).toContain("export { generateMetadata } from '../../../../pages/products/ProductPage';");
+  });
+
+  it('fails the build on metadata the generated pages cannot serve', () => {
+    const client = app();
+    expect(() => client.assertServerMetadata([productRoute({ exportsGenerateMetadata: true })])).toThrow(
+      /src\/pages\/products\/ProductPage\.tsx exports `generateMetadata` but is a client module \('use client'\)/
+    );
+    const server = Object.assign(app(), { isClientComponent: () => false });
+    expect(() =>
+      server.assertServerMetadata([
+        productRoute({ path: '/blog/:slug', metaExport: { namespace: 'blog' }, exportsGenerateMetadata: true }),
+      ])
+    ).toThrow(/blog post pages get theirs generated/);
+    expect(() => server.assertServerMetadata([productRoute({ exportsGenerateMetadata: true })])).not.toThrow();
+
+    const noEntities = Object.assign(app(), { appDependsOn: (name: string) => name === '@donotdev/supabase' });
+    expect(() => noEntities.assertServerMetadata([productRoute()])).toThrow(
+      /\/produits\/:slug is an entity page \("products" records\).*`entities` package/
+    );
+    const noReader = Object.assign(app(), { appDependsOn: (name: string) => name === 'entities' });
+    expect(() => noReader.assertServerMetadata([productRoute()])).toThrow(/no server reader/);
+    expect(() => app(['fr'], { siteName: null }).assertServerMetadata([productRoute()])).toThrow(
+      /Set appConfig\.app\.name/
+    );
+    expect(() => app().assertServerMetadata([productRoute()])).not.toThrow();
   });
 });

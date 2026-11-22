@@ -8,6 +8,7 @@
  * @author AMBROISE PARK Consulting
  */
 
+import { isBuildError } from '../utils/buildError.js';
 import { createLogger } from '../utils/debugLog.js';
 
 export class BaseDiscovery {
@@ -57,7 +58,8 @@ export class BaseDiscovery {
   /**
    * Main discovery method with caching - Template Method Pattern
    * @param {boolean} force - Force re-discovery ignoring cache
-   * @returns {Promise<Object>} Discovery results
+   * @returns {Promise<Object>} Discovery results (empty result on a scan failure)
+   * @throws {Error} A build error ({@link isBuildError}): the app is misconfigured, the build fails
    */
   async discover(force = false) {
     if (!force && this._isCacheValid()) {
@@ -90,8 +92,11 @@ export class BaseDiscovery {
         }
       }
 
+      // Files the discovery provides itself first, so the scan lists them: a clean build
+      // discovers what a rebuild does
+      const prepared = await this._prepareFiles();
       const files = await this._scanFiles(patterns);
-      const results = await this._processFiles(files);
+      const results = await this._processFiles(files, prepared);
 
       this.cache = {
         ...results,
@@ -111,6 +116,8 @@ export class BaseDiscovery {
 
       return this.cache;
     } catch (error) {
+      // A misconfigured app (createBuildError) fails the build with its message
+      if (isBuildError(error)) throw error;
       this.logger.error(
         `${this._getDiscoveryType()} discovery failed during file scanning: ${error.message}`
       );
@@ -170,13 +177,24 @@ export class BaseDiscovery {
   }
 
   /**
+   * Write the files the discovery provides itself (framework defaults, generated files)
+   * before the scan ({@link discover}), so the scanned files include them. Default: none.
+   * @protected
+   * @returns {Promise<Object>} What was written, handed to {@link _processFiles}
+   */
+  async _prepareFiles() {
+    return {};
+  }
+
+  /**
    * Process discovered files into results
    * @protected
    * @abstract
-   * @param {Object} files - Discovered files
+   * @param {Object} files - Discovered files (scanned after {@link _prepareFiles})
+   * @param {Object} prepared - What {@link _prepareFiles} wrote
    * @returns {Promise<Object>} Processing results
    */
-  async _processFiles(files) {
+  async _processFiles(files, prepared) {
     throw new Error('_processFiles must be implemented by subclass');
   }
 
@@ -239,6 +257,7 @@ export class BaseDiscovery {
    * @param {string} filePath - Path to process
    * @param {Function} processor - Processing function
    * @returns {*} Processing result or null if error
+   * @throws {Error} A build error ({@link isBuildError}): it fails the build, never skips the file
    */
   async _processSingleFile(filePath, processor) {
     try {
@@ -250,6 +269,7 @@ export class BaseDiscovery {
 
       return await processor(fileInfo);
     } catch (error) {
+      if (isBuildError(error)) throw error;
       this.logger.debug(`Error processing file ${filePath}: ${error.message}`);
       return null;
     }

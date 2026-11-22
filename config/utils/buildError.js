@@ -43,6 +43,22 @@ export function createBuildError(
 }
 
 /**
+ * Whether an error is a build-time configuration error ({@link createBuildError}). Discovery
+ * rethrows these instead of logging them and returning an empty result: the app is
+ * misconfigured and the build must fail with the error's message.
+ *
+ * @param {unknown} error - Caught value
+ * @returns {boolean}
+ * @since 0.3.2
+ *
+ * @example
+ * catch (error) { if (isBuildError(error)) throw error; }
+ */
+export function isBuildError(error) {
+  return error instanceof Error && typeof error.pluginName === 'string';
+}
+
+/**
  * Creates an error for missing required resources
  *
  * @param {string} pluginName - Plugin name

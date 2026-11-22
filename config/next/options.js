@@ -93,7 +93,8 @@ export function normalizeOptions(options) {
     assets: assetOptions = {}, // Nested object safety - already merged
     pwa: pwaOptions = {}, // Nested object safety - already merged
     seo: seoOptions = {}, // Nested object safety - already merged (includes generateRobotsTxt, generateSitemap)
-    serverShim: serverShimOptions = {}, // Nested object safety - already merged
+    // Vite only (ServerShimPlugin); kept out of the options passed through to Next
+    serverShim: _serverShim,
     discovery: discoveryOptions = {}, // Nested object safety - already merged
     generateManifest,
     debug,
@@ -124,7 +125,6 @@ export function normalizeOptions(options) {
     featureOptions, // Already merged from DEFAULT_OPTIONS (defaults to {})
     pwaOptions,
     seoOptions, // Includes generateRobotsTxt, generateSitemap
-    serverShimOptions,
     discoveryOptions,
 
     // Rest options

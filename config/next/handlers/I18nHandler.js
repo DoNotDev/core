@@ -78,17 +78,6 @@ export class NextI18nHandler extends BaseNextHandler {
     };
   }
 
-  formatAPIResponse(i18nData) {
-    return {
-      mapping: i18nData.mapping,
-      languages: i18nData.supportedLanguages,
-      namespaces: i18nData.allNamespaces,
-      eagerNamespaces: i18nData.eagerNamespaces,
-      fallbackLanguage: i18nData.fallbackLanguage,
-      stats: i18nData.stats,
-      timestamp: i18nData.timestamp,
-    };
-  }
 
   createManifestContent(i18nData) {
     return {
@@ -111,14 +100,8 @@ export class NextI18nHandler extends BaseNextHandler {
   // === FILE GENERATION ===
   // Remove provider generation - only generate manifest and API routes
 
-  async generateSpecificFiles(i18nData) {
-    // Generate manifest
-    if (this.options.generateManifest) {
-      await this.generateManifest(i18nData);
-    }
-
-    // Generate API route
-    await this.generateAPIHandler(i18nData);
+  async generateSpecificFiles() {
+    // Nothing beyond the config file and the manifest (BaseNextHandler.generateFiles)
   }
 
   // I18n provider generation handled by framework

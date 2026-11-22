@@ -1,28 +1,35 @@
 /**
  * @fileoverview SEO Plugin - Build-time File Generation
- * @description Generates robots.txt and sitemap.xml during build process based on discovered routes.
+ * @description Generates robots.txt, rss.xml, seo-manifest.json, llms-full.txt and _redirects
+ * during the build from the discovered routes. sitemap.xml and llms.txt list records too, so
+ * the prerender plugin writes them after the bundle (`../buildPages.js`), from the same URL
+ * set as the prerendered pages.
  *
- * @version 0.0.1
+ * @version 0.1.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
 
 import { loadEnv } from 'vite';
 
+import { SPA_SHELL_FILE } from '../../constants.js';
 import { createLogger } from '../../utils/debugLog.js';
 import { PathResolver } from '../../utils/PathResolver.js';
+import { generateLlmsFullTxt } from '../../utils/LlmsTxtGenerator.js';
 import {
-  generateLlmsFullTxt,
-  generateStaticLlmsTxt,
-  getLlmsTxtSource,
-} from '../../utils/LlmsTxtGenerator.js';
-import { parseRouteManifest } from '../../utils/routeParser.js';
-import { assertPublicBaseUrl, SEOGenerator } from '../../utils/SEOGenerator.js';
-import { createI18nDiscovery } from './I18nPlugin.js';
+  publishedBaseUrl,
+  seoBaseUrl,
+  SEOGenerator,
+  seoStep,
+} from '../../utils/SEOGenerator.js';
+
+/** Public URL of the SPA shell (`/_shell`; robots.txt `Disallow: /_shell` also covers `/_shell.html`). */
+const SPA_SHELL_PATH = `/${SPA_SHELL_FILE.replace(/\.html$/, '')}`;
 
 /**
  * Create Vite SEO plugin
- * @param {Object} options - Plugin options
+ * @param {Object} options - Plugin options (`routeManifest`: the build's route manifest,
+ *   `createRouteManifestStore`, set by the route plugin)
  * @returns {Object} Vite plugin
  */
 export function createViteSEOPlugin(options = {}) {
@@ -41,12 +48,17 @@ export function createViteSEOPlugin(options = {}) {
     llmsTxt = true, // Already merged from DEFAULT_OPTIONS.seo
     redirects: seoRedirects, // From appConfig.seo.redirects
     isDev,
-    i18n: i18nOptions = {}, // i18n plugin options (llms.txt labels)
+    routeManifest, // The build's route manifest (createRouteManifestStore), set by the route plugin
     ...pluginOptions
   } = options;
 
   if (disabled) {
     return { name: 'seo-disabled' };
+  }
+  if (!routeManifest) {
+    throw new Error(
+      '[dndev] createViteSEOPlugin: options.routeManifest is required (createVitePlugins passes the route plugin\'s, createRouteManifestStore).'
+    );
   }
 
   // Initialize utilities
@@ -64,6 +76,12 @@ export function createViteSEOPlugin(options = {}) {
   return {
     name: 'vite-seo-plugin',
     enforce: 'pre',
+
+    // The client environment only: robots.txt, rss.xml and the manifests belong to dist/
+    // (another Vite environment, ssr or custom, has its own outDir)
+    applyToEnvironment(environment) {
+      return environment.name === 'client';
+    },
 
     configResolved(config) {
       // appRoot already set in pluginsConfig.js via sharedPathResolver.setAppRoot()
@@ -83,10 +101,16 @@ export function createViteSEOPlugin(options = {}) {
 
       // siteName comes from appConfig.app.name (already extracted in config.js)
       resolvedSiteName = siteName || null;
-      const rawBaseUrl = baseUrl || resolvedAppUrl || null;
-      resolvedBaseUrl = rawBaseUrl
-        ? rawBaseUrl.trim().replace(/\/+$/, '')
-        : null;
+      // A build publishes it: a deploy build fails without a public URL, a local build
+      // never fails (one warning line; no URL-dependent files without a usable URL)
+      const rawBaseUrl = seoBaseUrl(baseUrl, resolvedAppUrl) || null;
+      resolvedBaseUrl = isDev
+        ? rawBaseUrl
+        : publishedBaseUrl(rawBaseUrl, 'VITE_APP_URL', logger);
+      if (!isDev && !resolvedBaseUrl) {
+        isDisabled = true;
+        return;
+      }
 
       // Log configuration values (like PathResolver values)
       logger.verbose(`Name: ${resolvedSiteName || 'Not found'}`);
@@ -138,43 +162,43 @@ export function createViteSEOPlugin(options = {}) {
       if (isDisabled) {
         return;
       }
-      // A build publishes absolute URLs (sitemap, llms.txt, robots): never localhost.
-      // Outside the try: a wrong production URL fails the build instead of being logged.
-      if (!isDev) assertPublicBaseUrl(resolvedBaseUrl, 'VITE_APP_URL');
-      try {
-        // Create SEO generator with resolved values
-        const seoGenerator = new SEOGenerator({
-          debug,
-          generateRobotsTxt,
-          generateSitemap,
-          baseUrl: resolvedBaseUrl,
-          siteName: resolvedSiteName,
-          crawlDelay,
-          aiCrawlers,
-          routes: routeOptions,
-          appRoot: pathResolver.getAppRoot(),
-          ...pluginOptions,
+      // Create SEO generator with resolved values
+      const seoGenerator = new SEOGenerator({
+        debug,
+        generateRobotsTxt,
+        // robots.txt: Disallow the shell's public URL (/_shell, /_shell.html); the pages
+        // rewritten to it keep their own URL. sitemap.xml: buildPages.js (with the records)
+        shellPath: SPA_SHELL_PATH,
+        baseUrl: resolvedBaseUrl,
+        siteName: resolvedSiteName,
+        crawlDelay,
+        aiCrawlers,
+        routes: routeOptions,
+        appRoot: pathResolver.getAppRoot(),
+        ...pluginOptions,
+      });
+
+      // The route plugin's routes and blog posts (in memory, read once), instead of
+      // re-running discovery: rss.xml and llms-full.txt
+      const routeData = routeManifest.get();
+      const { blogPosts } = routeData;
+
+      // Create Vite-specific writeFile function
+      const writeFile = async (fileName, content) => {
+        this.emitFile({
+          type: 'asset',
+          fileName,
+          source: content,
         });
+      };
 
-        // Parse already-generated routes instead of re-running discovery
-        const routeData = parseRouteManifest({
-          appRoot: pathResolver.getAppRoot(),
-          logger,
-        });
-
-        // Create Vite-specific writeFile function
-        const writeFile = async (fileName, content) => {
-          this.emitFile({
-            type: 'asset',
-            fileName,
-            source: content,
-          });
-        };
-
+      // Each group fails loud (seoStep): a deploy build fails, a local build warns once
+      await seoStep(['robots.txt', 'rss.xml', 'seo-manifest.json'], async () => {
         // Generate all SEO files using shared generator
         const results = await seoGenerator.generateSEOFiles(
           routeData,
-          writeFile
+          writeFile,
+          blogPosts
         );
 
         // Log generation results
@@ -183,61 +207,36 @@ export function createViteSEOPlugin(options = {}) {
             `🤖 robots.txt: ${results.robotsTxt.disallowedPaths || 0} disallowed paths`
           );
         }
-        if (results.sitemap && !results.sitemap.skipped) {
-          logger.info(
-            `🗺️ sitemap.xml: ${results.sitemap.publicRoutes || 0} routes`
-          );
-        }
         if (results.rss && !results.rss.skipped) {
           logger.info(`📡 rss.xml: ${results.rss.postCount || 0} blog posts`);
         }
         if (results.manifest && !results.manifest.skipped) {
           logger.info(`📄 seo-manifest.json`);
         }
+      }, logger);
 
-        // Generate llms.txt + llms-full.txt
-        if (llmsTxt) {
-          const appRoot = pathResolver.getAppRoot();
-          const blogPosts = seoGenerator.discoverBlogPosts();
-          // Same routes as the sitemap (static: Vite has no runtime to expand records)
-          const i18nData =
-            await createI18nDiscovery(i18nOptions).discoverTranslations();
-          const llmsSource = getLlmsTxtSource({
+      // llms-full.txt — full blog content for direct AI consumption (llms.txt: written after
+      // the bundle with the records, buildPages.js)
+      if (llmsTxt && blogPosts.length > 0) {
+        await seoStep(['llms-full.txt'], async () => {
+          const llmsFullContent = generateLlmsFullTxt({
             siteName: resolvedSiteName,
-            description: siteDescription,
             baseUrl: resolvedBaseUrl,
-            sitemapRoutes: seoGenerator.getSitemapRoutes(
-              routeData.routes || [],
-              blogPosts
-            ),
-            routes: routeData.routes || [],
+            description: siteDescription,
+            appRoot: pathResolver.getAppRoot(),
             blogPosts,
-            blogPath: seoGenerator.options.blogPath,
-            translations: i18nData.content,
-            language: i18nData.fallbackLanguage,
+            logger,
           });
-          await writeFile('llms.txt', generateStaticLlmsTxt(llmsSource));
-          logger.info('📄 llms.txt');
-
-          // llms-full.txt — full blog content for direct AI consumption
-          if (blogPosts.length > 0) {
-            const llmsFullContent = generateLlmsFullTxt({
-              siteName: resolvedSiteName,
-              baseUrl: resolvedBaseUrl,
-              description: siteDescription,
-              appRoot,
-              blogPosts,
-              logger,
-            });
-            if (llmsFullContent) {
-              await writeFile('llms-full.txt', llmsFullContent);
-              logger.info('📄 llms-full.txt');
-            }
+          if (llmsFullContent) {
+            await writeFile('llms-full.txt', llmsFullContent);
+            logger.info('📄 llms-full.txt');
           }
-        }
+        }, logger);
+      }
 
-        // Generate _redirects file for static hosting (Netlify/Vercel/CF Pages)
-        if (seoRedirects?.length > 0) {
+      // Generate _redirects file for static hosting (Netlify/Vercel/CF Pages)
+      if (seoRedirects?.length > 0) {
+        await seoStep(['_redirects'], async () => {
           const seenSources = new Set();
           const validRedirects = [];
           for (const { from, to, permanent } of seoRedirects) {
@@ -269,13 +268,7 @@ export function createViteSEOPlugin(options = {}) {
               `📎 _redirects: ${validRedirects.length} redirect${validRedirects.length > 1 ? 's' : ''}`
             );
           }
-        }
-      } catch (error) {
-        logger.error(
-          `SEO plugin failed to generate files (robots.txt/sitemap.xml): ${error.message}`
-        );
-        logger.error(`Stack: ${error.stack || 'No stack trace available'}`);
-        // Log error but continue - SEO files are optional, build can proceed without them
+        }, logger);
       }
     },
   };

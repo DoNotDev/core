@@ -12,7 +12,6 @@ import {
   basename,
   extname,
 } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import fastGlob from 'fast-glob';
 import * as constantsModule from '../constants.js';
 const constants = {
@@ -842,15 +841,20 @@ class PathResolver {
     return resolvedPath;
   }
   /**
-   * Execute fast-glob with normalized results
+   * Execute fast-glob with normalized results, sorted. fast-glob returns files in
+   * filesystem completion order, which varies between runs: every discovery (routes,
+   * themes, i18n, assets) and what it generates (route manifest, sitemap, llms.txt,
+   * proxy) must list the same sources in the same order on every build.
    * @private
    */
   async _globWithNormalization(patterns, options) {
     const results = await fastGlob(patterns, options);
-    return results.map((path) => {
-      const pathStr = typeof path === 'string' ? path : path.path;
-      return this.normalizePath(pathStr);
-    });
+    return results
+      .map((path) => {
+        const pathStr = typeof path === 'string' ? path : path.path;
+        return this.normalizePath(pathStr);
+      })
+      .sort();
   }
   /**
    * Resolve files using patterns with cross-platform support
@@ -946,6 +950,7 @@ class PathResolver {
    * @param patternType - Type of patterns (css, routes, i18n, assets, pwa)
    * @returns Resolved patterns with absolute paths
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- why: mirrors the public PathResolver.d.ts signature; tightening it is a breaking change (any-audit)
   async resolvePatterns(patternType) {
     if (!constants.getPatternsFor) {
       return { framework: [], consumer: [], all: [] };
@@ -1028,15 +1033,6 @@ class PathResolver {
   getEmptyModulePath() {
     const cjsPath = this.getEmptyCjsModulePath();
     return cjsPath.replace(/\.cjs$/, '.js');
-  }
-  /**
-   * Get absolute path to empty flag component module.
-   * Returns `export default () => null;` — used by flag filtering plugins
-   * to replace unused flag files at build time.
-   */
-  getEmptyFlagModulePath() {
-    const __dirname = dirname(fileURLToPath(import.meta.url));
-    return this.normalizePath(resolve(__dirname, 'emptyFlag.js'));
   }
   /**
    * Get absolute path to empty CJS module for esbuild pre-bundling.

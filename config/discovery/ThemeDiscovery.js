@@ -10,6 +10,7 @@
 import { BaseDiscovery } from './BaseDiscovery.js';
 import { ESSENTIAL_THEMES } from '../constants.js';
 import { resolveThemeFontFamilies } from '../fonts/resolveFontManifest.js';
+import { createBuildError } from '../utils/buildError.js';
 import { CSSExtractor } from '../utils/CSSExtractor.js';
 
 /** Package export holding the framework's design tokens (font defaults included). */
@@ -269,6 +270,7 @@ export class ThemeDiscovery extends BaseDiscovery {
    * default font tokens (--font-sans: Inter…). Throws when it cannot be read: font
    * selection would be wrong without it.
    * @returns {string}
+   * @throws {Error} Build error ({@link createBuildError}): it fails the build, never an empty theme result
    */
   _readFrameworkTokenCss() {
     const entry = this.pathResolver.resolvePackage(
@@ -276,8 +278,10 @@ export class ThemeDiscovery extends BaseDiscovery {
       this.pathResolver.resolveFrameworkPackage('@donotdev/ui')
     );
     if (!entry) {
-      throw new Error(
-        `Theme discovery: cannot resolve ${FRAMEWORK_TOKENS_EXPORT} (framework font defaults)`
+      throw createBuildError(
+        'dndev-theme',
+        `cannot resolve ${FRAMEWORK_TOKENS_EXPORT} (framework font defaults), resolved from @donotdev/ui: check that @donotdev/ui and @donotdev/components are installed`,
+        'missing-required-resource'
       );
     }
     const seen = new Set();
@@ -286,7 +290,11 @@ export class ThemeDiscovery extends BaseDiscovery {
       seen.add(file);
       const css = this.pathResolver.readSync(file, { format: 'text' });
       if (typeof css !== 'string') {
-        throw new Error(`Theme discovery: cannot read ${file}`);
+        throw createBuildError(
+          'dndev-theme',
+          `cannot read ${file} (framework font defaults)`,
+          'missing-required-resource'
+        );
       }
       const dir = this.pathResolver.getDirname(file);
       return css.replace(RELATIVE_IMPORT_RE, (_m, rel) =>

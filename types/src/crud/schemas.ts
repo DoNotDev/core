@@ -1183,7 +1183,7 @@ export type SchemaOrgAvailability =
   | 'SoldOut';
 
 /**
- * Entity-level SEO options (`deriveEntitySeo`, `<Seo entity data>`, llms.txt).
+ * Entity-level SEO options (`deriveEntitySeo`: Next entity page metadata, llms.txt).
  * By default the title and description come from the card fields (`listCardFields`),
  * formatted like the card shows them; these options override that.
  *

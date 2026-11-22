@@ -1,6 +1,8 @@
 /**
  * @fileoverview SEO Handler - Next.js Implementation
- * @description Generates robots.txt and sitemap.xml based on route discovery.
+ * @description From the route handler's discovered routes: robots.txt, rss.xml,
+ * seo-manifest.json and llms-full.txt in `public/`, and the generated sitemap.xml and
+ * llms.txt route handlers (records listed at request time).
  *
  * @version 0.0.1
  * @since 0.0.1
@@ -13,8 +15,9 @@ import { RouteDiscovery } from '../../discovery/RouteDiscovery.js';
 import { createLogger } from '../../utils/debugLog.js';
 import { PathResolver } from '../../utils/PathResolver.js';
 import {
-  assertPublicBaseUrl,
+  publishedBaseUrl,
   SEOGenerator,
+  seoStep,
 } from '../../utils/SEOGenerator.js';
 import {
   generateLlmsFullTxt,
@@ -48,6 +51,19 @@ function describeRoutes(routes) {
     (route) => `${route.path} → ${route.collection ?? 'no collection'}`
   );
   return `${summary} (${patterns.join(', ')})`;
+}
+
+/**
+ * Import line of a framework module in a generated SEO route: the file's own names, then
+ * those its public reader's setup uses (`serverCrudReader` `named`).
+ *
+ * @param {string} module - Framework module (`@donotdev/core/server`)
+ * @param {string[]} names - Names the file itself uses
+ * @param {{ named: Record<string, string[]> }} reader - The file's reader (`serverCrudReader`)
+ * @returns {string} e.g. `import { HIDDEN_STATUSES, createSchemas } from '@donotdev/core/server';`
+ */
+function importLine(module, names, reader) {
+  return `import { ${[...names, ...(reader.named[module] ?? [])].join(', ')} } from '${module}';`;
 }
 
 /**
@@ -108,6 +124,16 @@ export class SEOHandler extends BaseNextHandler {
       return;
     }
 
+    // A build publishes it: a deploy build fails without a public URL, a local build
+    // never fails (one warning line; no SEO files without a usable URL)
+    if (!this.options.isDev) {
+      baseUrl = publishedBaseUrl(baseUrl || null, 'NEXT_PUBLIC_APP_URL', logger);
+      if (!baseUrl) {
+        this.disabled = true;
+        return;
+      }
+    }
+
     // Validate required configuration
     const missingConfig = [];
     if (!baseUrl) {
@@ -140,9 +166,6 @@ export class SEOHandler extends BaseNextHandler {
       return;
     }
 
-    // A production build publishes absolute URLs (sitemap, llms.txt, robots): never localhost
-    if (!this.options.isDev) assertPublicBaseUrl(baseUrl, 'NEXT_PUBLIC_APP_URL');
-
     // Store for llms.txt generation
     this._baseUrl = baseUrl;
     this._siteName = siteName;
@@ -161,7 +184,6 @@ export class SEOHandler extends BaseNextHandler {
       aiCrawlers: this.options.aiCrawlers,
       appRoot: pathResolver.getAppRoot(),
       ...options,
-      generateSitemap: false,
     });
   }
 
@@ -171,41 +193,49 @@ export class SEOHandler extends BaseNextHandler {
   getHandlerDefaults() {
     return {
       manifestPath: 'public/seo-manifest.json',
+      // The app's Next `trailingSlash`: sitemap and llms.txt URLs end with `/` when true
+      trailingSlash: false,
     };
   }
 
   /**
-   * Create Next.js config - returns empty object if disabled
+   * The routes the route handler discovered this build (runDiscoveries calls this after
+   * route generation): the SEO files list the same routes without a second discovery.
+   *
+   * @param {Object} routeData - Route discovery results
+   * @since 0.3.2
    */
-  createNextConfig() {
-    if (this.disabled) {
-      return () => ({});
-    }
-    return super.createNextConfig();
+  useRoutes(routeData) {
+    this._routeData = routeData;
   }
 
   /**
-   * Get discovery data - returns empty if disabled
+   * Get discovery data - returns empty if disabled. The route handler's routes
+   * ({@link useRoutes}); its own route discovery in a process where runDiscoveries did
+   * not run (the Next config's webpack hook, after another worker's discovery).
    */
   async getDiscoveryData() {
     if (this.disabled) {
       return { routes: [], errors: [], source: 'disabled' };
     }
-    return await this.discovery.discoverRoutes();
+    return this._routeData ?? (await this.discovery.discoverRoutes());
   }
 
   /**
-   * Get API rewrites - returns empty if disabled
+   * Get API rewrites: none
    */
   getAPIRewrites() {
-    if (this.disabled) {
-      return { beforeFiles: [], afterFiles: [], fallback: [] };
-    }
-    return {
-      beforeFiles: [],
-      afterFiles: [],
-      fallback: [],
-    };
+    return { beforeFiles: [], afterFiles: [], fallback: [] };
+  }
+
+  /**
+   * `public/seo-manifest.json` is written with the SEO files (`generateSEOFiles`); only a
+   * disabled handler writes the base (empty) manifest.
+   *
+   * @param {Object} discoveryData - Route discovery results
+   */
+  async generateManifest(discoveryData) {
+    if (this.disabled) await super.generateManifest(discoveryData);
   }
 
   /**
@@ -216,7 +246,9 @@ export class SEOHandler extends BaseNextHandler {
   }
 
   /**
-   * Generate specific SEO files
+   * Generate the SEO files: robots.txt, rss.xml, seo-manifest.json, the sitemap.xml and
+   * llms.txt routes, llms-full.txt. Each group fails loud (`seoStep` of `SEOGenerator.js`): never a
+   * silently dropped file.
    */
   async generateSpecificFiles(routeData) {
     // Skip if disabled
@@ -224,61 +256,39 @@ export class SEOHandler extends BaseNextHandler {
       return;
     }
 
-    // SEO needs route data - try to load from route manifest if not provided
-    if (!routeData || !routeData.routes) {
-      try {
-        const routeManifestPath = this.pathResolver.resolveAppPath(
-          'public/route-manifest.json'
-        );
-        if (this.pathResolver.pathExists(routeManifestPath)) {
-          const manifestContent = await this.pathResolver.read(
-            routeManifestPath,
-            { format: 'json' }
-          );
-          routeData = manifestContent;
-        } else {
-          this.logger.debug(
-            'Route manifest not found, skipping SEO file generation'
-          );
-          return;
-        }
-      } catch (error) {
-        this.logger.debug(
-          `Could not load route manifest for SEO: ${error.message}`
-        );
+    // Create Next.js-specific writeFile function
+    const writeFile = async (fileName, content) => {
+      if (!fileName) {
+        this.logger.debug('Skipping SEO file write - fileName is undefined');
         return;
       }
-    }
+      this.writeGeneratedFile(`public/${fileName}`, content, fileName);
+    };
 
-    try {
-      // Create Next.js-specific writeFile function
-      const writeFile = async (fileName, content) => {
-        if (!fileName) {
-          this.logger.debug('Skipping SEO file write - fileName is undefined');
-          return;
-        }
-        this.writeGeneratedFile(`public/${fileName}`, content, fileName);
-      };
+    // Blog posts and sitemap routes, listed once: robots/rss/manifest, sitemap, llms.txt
+    const routes = routeData.routes;
+    let blogPosts;
+    let sitemapRoutes;
+    const listed = await seoStep(
+      ['robots.txt', 'rss.xml', 'seo-manifest.json', 'sitemap.xml', 'llms.txt', 'llms-full.txt'],
+      () => {
+        blogPosts = this.seoGenerator.discoverBlogPosts();
+        sitemapRoutes = this.seoGenerator.getSitemapRoutes(routes, blogPosts);
+      },
+      this.logger
+    );
+    if (!listed) return;
 
+    await seoStep(['robots.txt', 'rss.xml', 'seo-manifest.json'], async () => {
       // Generate all SEO files using shared generator
       const results = await this.seoGenerator.generateSEOFiles(
         routeData,
-        writeFile
+        writeFile,
+        blogPosts
       );
-
-      if (this._sitemapEnabled) {
-        await this.generateSitemapRoute(routeData.routes || []);
-      }
-
-      // Log generation results
       if (results.robotsTxt && !results.robotsTxt.skipped) {
         this.logger.info(
           `🤖 robots.txt: ${results.robotsTxt.disallowedPaths || 0} disallowed paths`
-        );
-      }
-      if (results.sitemap && !results.sitemap.skipped) {
-        this.logger.info(
-          `🗺️ sitemap.xml: ${results.sitemap.publicRoutes || 0} routes`
         );
       }
       if (results.rss && !results.rss.skipped) {
@@ -289,20 +299,28 @@ export class SEOHandler extends BaseNextHandler {
       if (results.manifest && !results.manifest.skipped) {
         this.logger.info(`📄 seo-manifest.json`);
       }
+    }, this.logger);
 
-      // Generate llms.txt (runtime route, same URLs as the sitemap) + llms-full.txt
-      if (this._llmsTxtEnabled) {
-        const blogPosts = this.seoGenerator.discoverBlogPosts();
-        const appRoot = this.pathResolver.getAppRoot();
-        await this.generateLlmsTxtRoute(routeData.routes || [], blogPosts);
+    if (this._sitemapEnabled) {
+      await seoStep(['sitemap.xml'], () => this.generateSitemapRoute(sitemapRoutes), this.logger);
+    }
 
-        // llms-full.txt — full blog content for direct AI consumption
-        if (blogPosts.length > 0) {
+    // llms.txt (runtime route, same URLs as the sitemap) + llms-full.txt
+    if (this._llmsTxtEnabled) {
+      await seoStep(
+        ['llms.txt'],
+        () => this.generateLlmsTxtRoute(routes, blogPosts, sitemapRoutes),
+        this.logger
+      );
+
+      // llms-full.txt — full blog content for direct AI consumption
+      if (blogPosts.length > 0) {
+        await seoStep(['llms-full.txt'], () => {
           const llmsFullContent = generateLlmsFullTxt({
             siteName: this._siteName,
             baseUrl: this._baseUrl,
             description: this._siteDescription,
-            appRoot,
+            appRoot: this.pathResolver.getAppRoot(),
             blogPosts,
             logger: this.logger,
           });
@@ -314,14 +332,8 @@ export class SEOHandler extends BaseNextHandler {
             );
             this.logger.info('📄 llms-full.txt');
           }
-        }
+        }, this.logger);
       }
-    } catch (error) {
-      this.logger.error(
-        `SEO handler failed to generate files (robots.txt/sitemap.xml): ${error.message}`
-      );
-      this.logger.error(`Stack: ${error.stack || 'No stack trace available'}`);
-      // Log error but continue - SEO files are optional, build can proceed without them
     }
   }
 
@@ -339,30 +351,28 @@ export class SEOHandler extends BaseNextHandler {
   /**
    * Write the Next sitemap route (src/app/sitemap.xml/route.next.ts). It lists the static public
    * routes and, at request time (revalidated per `revalidate()`), one URL per published record of
-   * each dynamic route's entity, once per language URL with 2+ languages. Removes the
-   * static public/sitemap.xml this handler wrote before: Next refuses a public file and
-   * a route on the same path.
-   * @param {Array} routes - Routes from discovery
+   * each dynamic route's entity, once per language URL with 2+ languages; records are read
+   * with their entity's read schema (the app's `entities` package, `serverCrudReader`).
+   * Removes the static public/sitemap.xml this handler wrote before: Next refuses a public
+   * file and a route on the same path.
+   * @param {Array} sitemapRoutes - The sitemap's routes (`SEOGenerator.getSitemapRoutes`)
+   * @throws {Error} When a dynamic route lists records and the app has no server reader or no `entities` package
    */
-  async generateSitemapRoute(routes) {
+  async generateSitemapRoute(sitemapRoutes) {
     if (!this._languageRouting) {
       throw new Error(
         'SEO handler: languages not set before sitemap generation (runDiscoveries calls useLanguages)'
       );
     }
-    const sitemapRoutes = this.seoGenerator.getSitemapRoutes(
-      routes,
-      this.seoGenerator.discoverBlogPosts()
-    );
     const reader = this.serverCrudReader(sitemapRoutes);
     const content = `// Generated by @donotdev/config - DO NOT EDIT
 // Regenerated on every build from src/pages (PageMeta) and appConfig.
 // Public routes + one URL per published record of each dynamic route's entity
 // (read with the public role). Keep a page out with \`seo: { noindex: true }\`.
 
-import { HIDDEN_STATUSES, languageUrls } from '@donotdev/core/server';
+${importLine('@donotdev/core/server', ['HIDDEN_STATUSES', 'languageUrls'], reader)}
 import type { LanguageRouting } from '@donotdev/core/server';
-import { appBaseUrl, buildSitemap, formatSitemapXml } from '@donotdev/core/next';
+${importLine('@donotdev/core/next', ['appBaseUrl', 'buildSitemap', 'formatSitemapXml'], reader)}
 import type { SitemapRoute } from '@donotdev/core/next';
 ${reader.imports}
 // Published records: ${this.revalidateLabel()} (appConfig.revalidate, same as the pages).
@@ -372,14 +382,18 @@ const BASE_URL = ${this._baseUrlExpr};
 
 const LANGUAGE_ROUTING: LanguageRouting = ${JSON.stringify(this._languageRouting)};
 
+// next.config trailingSlash: page URLs end with \`/\` when true
+const TRAILING_SLASH = ${JSON.stringify(this.options.trailingSlash)};
+
 const ROUTES: SitemapRoute[] = ${JSON.stringify(sitemapRoutes, null, 2)};
 ${reader.setup}
 export async function GET(): Promise<Response> {
   const entries = await buildSitemap(ROUTES, {
     baseUrl: BASE_URL,
     routing: LANGUAGE_ROUTING,
+    trailingSlash: TRAILING_SLASH,
     languageUrls,
-    hiddenStatuses: HIDDEN_STATUSES,${reader.expr ? `\n    crud: ${reader.expr},` : ''}
+    hiddenStatuses: HIDDEN_STATUSES,${reader.expr ? `\n    crud: ${reader.expr},\n    readSchemas: ${reader.schemas},` : ''}
   });
   return new Response(formatSitemapXml(entries), {
     headers: { 'Content-Type': 'application/xml; charset=utf-8' },
@@ -413,13 +427,15 @@ export async function GET(): Promise<Response> {
    * sitemap route, labelled at build in the app's default language; at request time
    * (revalidated per `revalidate()`) each entity route lists its published records with the title
    * and description of `deriveEntitySeo`. The app's `entities` package provides the
-   * entity definitions.
+   * entity definitions and their read schemas (`serverCrudReader`).
    *
    * @param {Array} routes - Routes from discovery
    * @param {Array} blogPosts - Discovered blog posts
+   * @param {Array} sitemapRoutes - The sitemap's routes (`SEOGenerator.getSitemapRoutes`)
+   * @throws {Error} When an entity route lists records and the app has no server reader or no `entities` package
    * @since 0.2.3
    */
-  async generateLlmsTxtRoute(routes, blogPosts) {
+  async generateLlmsTxtRoute(routes, blogPosts, sitemapRoutes) {
     if (!this._languageRouting || !this._translations) {
       throw new Error(
         'SEO handler: languages/translations not set before llms.txt generation (runDiscoveries calls useLanguages and useTranslations)'
@@ -429,40 +445,49 @@ export async function GET(): Promise<Response> {
       siteName: this._siteName,
       description: this._siteDescription,
       baseUrl: this._baseUrl,
-      sitemapRoutes: this.seoGenerator.getSitemapRoutes(routes, blogPosts),
+      sitemapRoutes,
       routes,
       blogPosts,
       blogPath: this.seoGenerator.options.blogPath,
       translations: this._translations,
       language: this._languageRouting.defaultLanguage,
+      // appConfig.seo.defaultNamespace, as the metadata manifest (RouteHandler.defaultNamespace)
+      defaultNamespace: this.options.defaultNamespace || 'home',
     });
     // The URL is resolved at request time (BASE_URL), never written into the source
     const { baseUrl: _buildUrl, ...sourceWithoutUrl } = source;
+    // The reader imports the app's `entities` package (read schemas, record titles) only
+    // for entity routes, and fails the build without one: no entity route, no import (an
+    // app's `entities` package without exports, e.g. comments only, is no module)
     const reader = this.serverCrudReader(source.routes);
-    const hasEntities = this.appDependsOn('entities');
     const content = `// Generated by @donotdev/config - DO NOT EDIT
 // Regenerated on every build from src/pages (PageMeta), translations and appConfig.
 // Same URLs as app/sitemap.xml: public pages + one link per published record of each
 // dynamic route's entity. Keep a page out with \`seo: { noindex: true }\`.
 
-import { HIDDEN_STATUSES, deriveEntitySeo } from '@donotdev/core/server';
-import { appBaseUrl, buildLlmsTxt } from '@donotdev/core/next';
+${importLine('@donotdev/core/server', ['HIDDEN_STATUSES', 'deriveEntitySeo', 'formatTrailingSlash'], reader)}
+${importLine('@donotdev/core/next', ['appBaseUrl', 'buildLlmsTxt'], reader)}
 import type { LlmsTxtSource } from '@donotdev/core/next';
-${hasEntities ? "import * as entities from 'entities';\n" : ''}${reader.imports}
+${reader.imports}
 // Published records: ${this.revalidateLabel()} (appConfig.revalidate, same as the pages).
 export const revalidate = ${this.revalidate()};
 
 const BASE_URL = ${this._baseUrlExpr};
 
 const SOURCE: Omit<LlmsTxtSource, 'baseUrl'> = ${JSON.stringify(sourceWithoutUrl, null, 2)};
+
+// next.config trailingSlash: page URLs end with \`/\` when true
+const TRAILING_SLASH = ${JSON.stringify(this.options.trailingSlash)};
 ${reader.setup}
 export async function GET(): Promise<Response> {
   const body = await buildLlmsTxt({
     ...SOURCE,
     baseUrl: BASE_URL,
-    entities: ${hasEntities ? 'entities' : '{}'},
+    trailingSlash: TRAILING_SLASH,
+    formatTrailingSlash,
+    entities: ${reader.expr ? 'entities' : '{}'},
     deriveEntitySeo,
-    hiddenStatuses: HIDDEN_STATUSES,${reader.expr ? `\n    crud: ${reader.expr},` : ''}
+    hiddenStatuses: HIDDEN_STATUSES,${reader.expr ? `\n    crud: ${reader.expr},\n    readSchemas: ${reader.schemas},` : ''}
   });
   return new Response(body, {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
@@ -476,23 +501,10 @@ export async function GET(): Promise<Response> {
   }
 
   /**
-   * Create manifest content
+   * Base manifest content: written by a disabled handler only ({@link generateManifest})
    */
-  createManifestContent(seoData) {
-    if (this.disabled) {
-      return {};
-    }
-    return this.seoGenerator.formatAPIResponse(seoData);
-  }
-
-  /**
-   * Format API response
-   */
-  formatAPIResponse(seoData) {
-    if (this.disabled) {
-      return {};
-    }
-    return this.seoGenerator.formatAPIResponse(seoData);
+  createManifestContent() {
+    return {};
   }
 
   /**

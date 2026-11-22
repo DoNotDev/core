@@ -214,8 +214,9 @@ function generateLabelFromPath(path: string): string {
 /**
  * Group navigation routes by entity/domain
  *
- * Organizes routes into logical groups based on entity names for better
- * navigation structure and UX.
+ * Organizes routes into logical groups for better navigation structure and UX:
+ * the route's `meta.entity` (collection of the entity its page declares in PageMeta),
+ * else the URL's first path segment. The root route (`/`, no segment) is in no group.
  *
  * @param {NavigationRoute[]} routes - Routes to group
  * @returns {Array<{ label: string; routes: NavigationRoute[] }>} Grouped routes

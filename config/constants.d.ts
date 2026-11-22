@@ -57,6 +57,8 @@ export const GENERATED_PATHS: {
 
 /** Site-wide link-preview image, generated from public/logo.svg unless the app provides it. */
 export const DEFAULT_OG_IMAGE: string;
+/** The Vite SPA shell file (`dist/_shell.html`): the hosting rewrite's fallback. */
+export const SPA_SHELL_FILE: string;
 
 export const FRAMEWORK_CONFIG: Record<string, any>;
 
@@ -97,6 +99,8 @@ export const I18N_PATHS: {
   readonly PUBLISHED_LOCALES: string;
   readonly PUBLISHED_EAGER: string;
   readonly PUBLISHED_LAZY: string;
+  /** Flag artwork folder in `@donotdev/core` (one `<code>.svg` per flag code) */
+  readonly PUBLISHED_FLAGS: string;
 };
 
 export const FONT_FAMILY_TO_STEMS: Record<string, string>;

@@ -172,9 +172,6 @@ export default blogContent;
     return { beforeFiles: [], afterFiles: [], fallback: [] };
   }
 
-  formatAPIResponse(data) {
-    return data;
-  }
 
   createManifestContent(data) {
     return { files: data.files, generatedAt: new Date().toISOString() };

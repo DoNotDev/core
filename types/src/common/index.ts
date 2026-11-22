@@ -16,6 +16,7 @@
 import type { ComponentType, ReactNode, SVGProps } from 'react';
 
 import type { SubscriptionTier, UserRole } from '../auth/constants';
+import type { AnyEntity } from '../crud/schemas';
 import type { LayoutPreset } from '../layout/layoutTypes';
 
 // =============================================================================
@@ -445,7 +446,16 @@ export interface SeoMeta {
   /** Page type for Open Graph */
   type?: 'website' | 'article' | 'product';
 
-  /** Exclude from search engine indexing */
+  /**
+   * Search engine indexing
+   * @description
+   * - `undefined` → indexable, except auth-only pages (PageMeta `auth`): `noindex` by default
+   * - `true` → `<meta name="robots" content="noindex, nofollow">`, out of the sitemap and llms.txt
+   * - `false` → indexable even when auth-only (explicit opt-in; auth-only pages stay out of
+   *   the sitemap)
+   *
+   * robots.txt never blocks a page: crawlers must fetch it to read the tag.
+   */
   noindex?: boolean;
 }
 
@@ -572,9 +582,34 @@ export interface PageMeta {
   seo?: SeoMeta;
 
   /**
+   * Entity this page shows one record of, by its URL param: the `defineEntity`
+   * definition itself, imported from the app's `entities` package. Folders never set it
+   * (they only shape the URL and breadcrumbs).
+   * @description Read statically at build and resolved to the entity's `collection`
+   * (`RouteMeta.entity`): a public single-`:param` page declaring it is an entity page
+   * (sitemap and llms.txt records, Next prerender and revalidation, Next server
+   * metadata, JSON-LD and 404). The build fails when the value is not an identifier
+   * imported from `'entities'` that resolves to a `defineEntity` with a literal `collection`.
+   * Omit it on every other page, dynamic ones included.
+   *
+   * @example
+   * ```tsx
+   * import { productEntity } from 'entities';
+   *
+   * export const meta: PageMeta = {
+   *   namespace: 'product',
+   *   route: '/produits/:slug',
+   *   entity: productEntity,
+   * };
+   * ```
+   * @since 0.3.2
+   */
+  entity?: AnyEntity;
+
+  /**
    * User-facing category for sidebar/menu grouping
    * @description Groups routes into collapsible sections in navigation. Unlike
-   * auto-discovered `entity` (parent-dir name), `category` is author-declared
+   * `entity` (the record a page shows), `category` is a navigation label
    * and typically maps to a higher-level folder (e.g., `Analyzers`, `Tools`).
    * Routes without `category` render ungrouped at the top of the menu.
    *
@@ -592,20 +627,22 @@ export interface PageMeta {
 
 /**
  * Route metadata (discovery-generated)
- * @description Complete route metadata including auto-discovered fields from RouteDiscovery
+ * @description Complete route metadata as RouteDiscovery writes it to the route manifest:
  *
- * This extends PageMeta with fields that are automatically discovered from file paths:
- * - `entity`: Auto-extracted from path (pages/showcase/ → "showcase")
- * - `action`: Auto-extracted from filename patterns (ListPage → "list", FormPage → "form")
+ * - `entity`: the collection of the page's declared PageMeta `entity` (absent when the
+ *   page declares none; never inferred from the folder)
+ * - `action`: auto-extracted from filename patterns (ListPage → "list", FormPage → "form"),
+ *   not settable in PageMeta
  *
- * These fields are always present in discovered routes but cannot be set in PageMeta.
- *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
-export interface RouteMeta extends PageMeta {
-  /** Entity/domain grouping - auto-discovered from file path (not user-configurable) */
+export interface RouteMeta extends Omit<PageMeta, 'entity'> {
+  /**
+   * Collection of the entity the page declares (PageMeta `entity: productEntity` →
+   * `'products'`), resolved at build. Absent when the page declares none.
+   */
   entity?: string;
   /** Action type for route categorization - auto-discovered from filename patterns (not user-configurable) */
   action?: string | null;
@@ -897,6 +934,30 @@ export interface RoutesPluginConfig {
     source: RouteSource;
     /** True when the app has blog posts, i.e. an `/rss.xml` feed is generated at build */
     hasBlogFeed?: boolean;
+    /**
+     * True when the app's page URLs end with `/` (Next `trailingSlash: true`): the SEO
+     * head builds canonical, hreflang and JSON-LD URLs in that form. Next only (written
+     * by the route generator); absent on Vite.
+     */
+    trailingSlash?: boolean;
+    /**
+     * Route paths whose page sets its identity (title, description, Open Graph, JSON-LD)
+     * on the server: entity pages (generated metadata), blog posts, and page modules
+     * exporting Next's `generateMetadata`. `AutoMetaTags` emits no identity on them (React
+     * 19 does not dedupe `<title>`). Next only (written by the route generator); absent on Vite.
+     *
+     * @since 0.3.2
+     */
+    serverMetadataPaths?: string[];
+    /**
+     * Entity page route paths (Next): the generated page renders their BreadcrumbList
+     * JSON-LD with the record title last, so `AutoMetaTags` emits none there. Next only
+     * (written by the route generator); absent on Vite (a prerendered record page says so
+     * in its embedded head).
+     *
+     * @since 0.3.2
+     */
+    recordBreadcrumbPaths?: string[];
     /** ISO timestamp when routes were generated */
     generatedAt: string;
   };

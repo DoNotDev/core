@@ -89,14 +89,6 @@ export class NextThemeHandler extends BaseNextHandler {
     };
   }
 
-  formatAPIResponse(themeData) {
-    return {
-      themes: themeData.themes,
-      variables: themeData.variables,
-      stats: themeData.stats,
-      timestamp: themeData.timestamp,
-    };
-  }
 
   createManifestContent(themeData) {
     return {
@@ -118,9 +110,8 @@ export class NextThemeHandler extends BaseNextHandler {
   // === FILE GENERATION ===
   // Remove provider generation - only generate utilities and manifest
 
-  async generateSpecificFiles(themeData) {
-    // Generate API route
-    await this.generateAPIHandler(themeData);
+  async generateSpecificFiles() {
+    // Nothing beyond the config file and the manifest (BaseNextHandler.generateFiles)
   }
 
   // Theme provider generation handled by framework

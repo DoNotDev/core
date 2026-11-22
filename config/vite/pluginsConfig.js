@@ -14,9 +14,10 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { createViteAssetPlugin } from './plugins/AssetPlugin.js';
 import { createViteBlogPlugin } from './plugins/BlogPlugin.js';
 import { createViteEnvPlugin } from './plugins/EnvPlugin.js';
+import { createViteFaviconPlugin } from './plugins/FaviconPlugin.js';
 import { createViteFontPreloadPlugin } from './plugins/FontPreloadPlugin.js';
 import { createViteHostHeadersPlugin } from './plugins/HostHeadersPlugin.js';
-import { createViteI18nPlugin } from './plugins/I18nPlugin.js';
+import { createI18nStore, createViteI18nPlugin } from './plugins/I18nPlugin.js';
 import { createOptionalDepResolverPlugin } from './plugins/OptionalDepResolver.js';
 import { createPeerDependencyResolverPlugin } from './plugins/PeerDependencyResolver.js';
 import { createVitePrerenderPlugin } from './plugins/PrerenderPlugin.js';
@@ -31,6 +32,7 @@ import {
 } from '../utils/discoverAppPackages.js';
 import { createLogger } from '../utils/debugLog.js';
 import { PathResolver } from '../utils/PathResolver.js';
+import { createRouteManifestStore } from '../utils/routeParser.js';
 
 export function createVitePlugins(options = {}) {
   const logger = createLogger('vite-plugins', options.debug, options.verbose);
@@ -275,11 +277,18 @@ export function createVitePlugins(options = {}) {
       plugins.push(basicSsl());
     }
 
+    // The build's route manifest: set by the route plugin, read by the SEO and prerender plugins
+    const routeManifest = createRouteManifestStore();
+    // The build's i18n discovery, run once: set by the i18n plugin, read by its lazy-loader
+    // plugin, the asset (flags of the app's languages), font preload and prerender plugins
+    const i18nStore = createI18nStore();
+
     plugins.push(
       createViteRoutePlugin({
         ...pluginFactoryOptions,
         ...routeOptions,
         debug: routeDebug,
+        routeManifest,
       })
     );
 
@@ -296,6 +305,7 @@ export function createVitePlugins(options = {}) {
         ...pluginFactoryOptions,
         ...i18nOptions,
         debug: i18nDebug,
+        i18nStore,
       })
     );
 
@@ -304,8 +314,15 @@ export function createVitePlugins(options = {}) {
         ...pluginFactoryOptions,
         ...assetOptions,
         debug: assetDebug,
+        i18nStore,
+        // The route discovery's entities resolver: tel-field flags
+        routeManifest,
       })
     );
+
+    // Favicon tags in index.html (and so in every prerendered page): the files the asset
+    // discovery above leaves in public/, appConfig.favicon
+    plugins.push(createViteFaviconPlugin({ appConfig }));
 
     plugins.push(
       createViteEnvPlugin({
@@ -319,10 +336,9 @@ export function createVitePlugins(options = {}) {
     plugins.push(
       createViteSEOPlugin({
         ...seoOptions,
+        routeManifest,
         debug: debug,
         isDev: isDev,
-        // Same discovery as the i18n plugin: llms.txt labels in the app's language
-        i18n: { ...pluginFactoryOptions, ...i18nOptions, debug: i18nDebug },
         // Note: appUrl removed - plugin reads process.env.VITE_APP_URL directly
       })
     );
@@ -340,7 +356,7 @@ export function createVitePlugins(options = {}) {
       createViteFontPreloadPlugin({
         debug,
         // Font subsets follow the languages the app actually uses (i18n.only)
-        i18nOptions,
+        i18nStore,
       })
     );
 
@@ -385,6 +401,12 @@ export function createVitePlugins(options = {}) {
     plugins.push(
       createVitePrerenderPlugin({
         ...prerenderOptions,
+        routeManifest,
+        // Pages (static, blog, entity records), sitemap.xml and llms.txt: same record opt-out
+        // as Next, SEO options as AutoMetaTags reads them, the i18n plugin's discovery
+        prerenderRecords: appConfig?.prerenderRecords,
+        seo: seoOptions,
+        i18nStore,
         debug,
         verbose,
       })

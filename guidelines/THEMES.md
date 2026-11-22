@@ -74,6 +74,11 @@
 --border, --input, --ring
 ```
 
+**Floating surfaces (optional):** popovers, dropdowns, menus, tooltips and navigation panels (`.dndev-floating`) paint a subtle glow gradient. A theme sets `--floating-background` to flatten all of them at once. Unset = gradient (default look).
+```css
+.my-theme { --floating-background: var(--popover); }
+```
+
 **Theme metadata:**
 ```css
 --theme-icon: 'Sun';      /* Lucide icon name: imported by name at build time (static, server-rendered toggle) */

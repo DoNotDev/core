@@ -1,54 +1,26 @@
 /**
  * @fileoverview Route Parser - Shared Route Manifest Parsing
- * @description Parses route data from public/route-manifest.json (written by both Vite and Next.js).
- * Single source of truth for route manifest parsing — used by SEOPlugin and PrerenderPlugin.
+ * @description The route manifest of a Vite build (`createRouteManifestStore`: the route
+ * plugin's routes, shared in memory with the SEO and prerender plugins), blog post routes
+ * expanded from their frontmatter and the public static route filter.
  *
  * @version 0.0.1
  * @since 0.1.0
  * @author AMBROISE PARK Consulting
  */
 
-import { PathResolver } from './PathResolver.js';
-
 /**
- * Parse YAML frontmatter from a markdown string.
- * @param {string} raw - Raw markdown content
- * @returns {Object} Parsed key-value pairs
- */
-function parseFrontmatter(raw) {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!match) return {};
-  const meta = {};
-  for (const line of match[1].split('\n')) {
-    const colonIdx = line.indexOf(':');
-    if (colonIdx === -1) continue;
-    const key = line.slice(0, colonIdx).trim();
-    let value = line.slice(colonIdx + 1).trim();
-    // Strip surrounding quotes
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
-      value = value.slice(1, -1);
-    }
-    meta[key] = value;
-  }
-  return meta;
-}
-
-/**
- * Expand dynamic blog routes (/blog/:slug) into concrete route objects
- * with SEO metadata from markdown frontmatter.
+ * Expand dynamic blog routes (/blog/:slug) into concrete route objects with SEO metadata
+ * from the posts' frontmatter: the blog index, then one route per post.
  * @param {Array} routes - Parsed route objects
+ * @param {ReturnType<typeof import('./blogFeed.js').readBlogPosts>} blogPosts - The build's blog posts (read once)
  * @param {Object} [options]
- * @param {string} [options.appRoot] - App root directory
  * @param {string} [options.blogPath='/blog'] - Blog URL prefix
  * @returns {Array<{path: string, auth: false, meta: Object}>} Expanded route objects with frontmatter SEO
+ *   (none without a dynamic blog route or posts)
  */
-export function expandBlogRoutes(routes, options = {}) {
+export function expandBlogRoutes(routes, blogPosts, options = {}) {
   const { blogPath = '/blog' } = options;
-  const pathResolver = PathResolver.getInstance();
-  const appRoot = options.appRoot || pathResolver.getAppRoot();
 
   // Find if there's a dynamic blog route pattern
   const hasBlogRoute = routes.some((r) => {
@@ -60,96 +32,71 @@ export function expandBlogRoutes(routes, options = {}) {
     );
   });
 
-  if (!hasBlogRoute) return [];
+  if (!hasBlogRoute || blogPosts.length === 0) return [];
 
-  // Discover blog posts from src/content/blog/
-  try {
-    const blogDir = pathResolver.resolvePath('src/content/blog', appRoot);
-    if (!pathResolver.pathExists(blogDir)) return [];
-
-    const files = pathResolver
-      .readdirSync(blogDir)
-      .filter((f) => f.endsWith('_en.md'));
-    if (files.length === 0) return [];
-
-    const expanded = [
-      { path: blogPath, auth: false, meta: { namespace: 'blog' } },
-    ];
-
-    for (const file of files) {
-      const slug = file.replace(/_en\.md$/, '');
-      const filePath = pathResolver.resolvePath(file, blogDir);
-      const raw = pathResolver.readSync(filePath, { format: 'text' });
-      const fm = raw ? parseFrontmatter(raw) : {};
-
-      expanded.push({
-        path: `${blogPath}/${slug}`,
-        auth: false,
-        meta: {
-          namespace: 'blog',
-          seo: {
-            title: fm.title || slug,
-            description: fm.description || null,
-            image: fm.image || null,
-            type: 'article',
-          },
+  return [
+    { path: blogPath, auth: false, meta: { namespace: 'blog' } },
+    ...blogPosts.map((post) => ({
+      path: `${blogPath}/${post.slug}`,
+      auth: false,
+      meta: {
+        namespace: 'blog',
+        seo: {
+          title: post.title,
+          description: post.description || null,
+          image: post.image,
+          type: 'article',
         },
-      });
-    }
-
-    return expanded;
-  } catch {
-    return [];
-  }
+      },
+    })),
+  ];
 }
 
 /**
- * Parse routes from the canonical JSON route manifest (public/route-manifest.json).
- * Both Vite and Next.js write this file during build — single source of truth.
- * @param {Object} [options]
- * @param {string} [options.appRoot] - App root directory (defaults to PathResolver)
- * @param {Object} [options.logger] - Logger instance
- * @returns {{ routes: Array, errors: string[], source: string }}
+ * The route manifest of a Vite build, in memory: the route plugin sets it at `buildStart`
+ * (its discovered routes, blog posts expanded, and the blog posts, read once:
+ * `readBlogPosts`; no file is written), the SEO and prerender plugins read it
+ * (`createVitePlugins` hands one store to all three), so no plugin parses a file back or
+ * reads the posts again. It also carries the route discovery's entities resolver to the
+ * asset plugin (`useEntityResolver`, `entityResolver()`).
+ * @returns {{ set: (manifest: { routes: Array, source: string, blogPosts: Array }) => void, get: () => { routes: Array, errors: string[], source: string, blogPosts: Array }, useEntityResolver: (resolver: Object) => void, entityResolver: () => Promise<Object> }}
+ * @since 0.3.2
  */
-export function parseRouteManifest(options = {}) {
-  const { logger } = options;
-  const pathResolver = PathResolver.getInstance();
-  const appRoot = options.appRoot || pathResolver.getAppRoot();
-
-  try {
-    const manifestPath = pathResolver.resolvePath(
-      'public/route-manifest.json',
-      appRoot
-    );
-    const manifestContent = pathResolver.readSync(manifestPath, {
-      format: 'json',
-    });
-
-    if (!manifestContent) {
-      logger?.error?.(
-        `Route manifest not found at ${manifestPath}. Routes will be empty.`
-      );
-      return {
-        routes: [],
-        errors: [`Route manifest missing: ${manifestPath}`],
-        source: 'fallback',
-      };
-    }
-
-    const routes = manifestContent.routes || [];
-
-    return {
-      routes,
-      errors: [],
-      source: manifestContent.source || 'generated',
-      totalFiles: routes.length,
-    };
-  } catch (error) {
-    logger?.warn?.(
-      `Error parsing route manifest: ${error.message}, falling back to empty routes`
-    );
-    return { routes: [], errors: [error.message], source: 'fallback' };
-  }
+export function createRouteManifestStore() {
+  let manifest = null;
+  let resolveEntityResolver;
+  const entityResolver = new Promise((resolve) => {
+    resolveEntityResolver = resolve;
+  });
+  return {
+    set({ routes, source, blogPosts }) {
+      if (!Array.isArray(blogPosts)) {
+        throw new Error('[dndev] Route manifest: set() needs the build\'s blogPosts (readBlogPosts).');
+      }
+      manifest = { routes, errors: [], source, blogPosts };
+    },
+    /**
+     * Set by the route plugin after its discovery (whatever its outcome but a build error).
+     * @param {{ usesFieldType: (type: string) => Promise<boolean> }} resolver - `createEntityResolver` of the route discovery
+     */
+    useEntityResolver(resolver) {
+      resolveEntityResolver(resolver);
+    },
+    /**
+     * The route discovery's entities resolver: the asset plugin reads the entities' field
+     * types from it (tel-field flags) without parsing the entities package again.
+     * @returns {Promise<{ usesFieldType: (type: string) => Promise<boolean> }>}
+     */
+    entityResolver: () => entityResolver,
+    get() {
+      if (!manifest) {
+        throw new Error(
+          '[dndev] Route manifest unavailable: route discovery did not run or failed (see the error above).'
+        );
+      }
+      return manifest;
+    },
+  };
 }
 
 /**

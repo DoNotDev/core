@@ -101,7 +101,7 @@ The AI reads `AGENTS.md` and follows the WAI-WAY protocol:
 dndev deploy
 ```
 
-Deploys hosting + functions + rules. Syncs runtime secrets automatically before deploying functions.
+Deploys hosting + functions + rules. Before deploying functions, pushes to Firebase Secret Manager the secrets they bind in the generated `functions/functions.yaml` (changed values only; values from `process.env`, then `.dndev.secrets`, then `functions/.env` with a legacy warning; a bound secret with no value stops the deploy). `--force` deletes deployed functions missing locally; without it the deploy aborts and names them.
 
 ---
 
@@ -133,6 +133,8 @@ All secret keys go in **`.dndev.secrets`** at project root (gitignored). One fil
 | `STRIPE_WEBHOOK_SECRET` | Stripe Dashboard -> Webhooks |
 
 Resolution order: `process.env` (CI) -> `.dndev.secrets` (local) -> legacy paths (with warning).
+
+**Which secrets a Firebase function gets is declared in code**, never inferred from `.env`: `defineSecret('X')` plus `secrets: [x]` in the function's options. The functions build reads those declarations from the built bundle (the firebase-functions SDK manifest) and writes them per function into `functions/functions.yaml` (`secretEnvironmentVariables`); a function that declares none binds none. `config.functions[name].secrets` in `functions.config.js` replaces a function's declarations. The build moves only declared keys from `functions/.env` to `functions/.env.local` (emulator); every other `functions/.env` key stays plain config. Framework functions declare their own: billing `STRIPE_SECRET_KEY` (+ `STRIPE_WEBHOOK_SECRET` for the webhook and `billingHealth`), `createExchangeToken` / `createRefreshToken` `{PROVIDER}_CLIENT_SECRET` for the providers listed (`{PROVIDER}_CLIENT_ID` stays in `functions/.env`).
 
 Then sync to your runtime:
 
@@ -186,6 +188,8 @@ my-project/
 | `dndev setup` | Validate .env, automate provider config, health check |
 | `dndev doctor` | Check project health (providers, .env) |
 | `dndev deploy` | **Firebase:** hosting + functions + rules. **Supabase:** deploys frontend to Vercel (via scaffolded vercel.json) and Edge Functions to Supabase. Vercel apps get their public `.env` vars (`VITE_*` / `NEXT_PUBLIC_*`) pushed to the Vercel project automatically. |
+| `dndev deploy <app> --scope <target> --yes` | Unattended deploy (CI, agents): never prompts; a missing value exits 1 naming its flag. Targets: `frontend`, `functions`, `rules`, `both`, `all`. `--skip-build` reuses builds, `--no-sync-secrets` skips the secrets sync, `--force` deletes deployed functions missing locally. |
+| `dndev deploy --dry-run` | Rehearse a deploy: validates everything and prints each command / HTTP request; builds, writes and deploys nothing. |
 | `dndev staging` | Deploy to staging environment |
 | `dndev sync-secrets` | **Firebase:** push function secrets to Secret Manager. **Vercel** (`--platform vercel --app <app>`): push only the public vars of `apps/<app>/.env`; `.dndev.secrets` never goes to Vercel. |
 | `dndev sync-secrets --target github` | Push secrets to GitHub Secrets (CI/CD) |

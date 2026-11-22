@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { assertPublicBaseUrl, SEOGenerator } from '../SEOGenerator.js';
+import {
+  assertPublicBaseUrl,
+  isDeployBuild,
+  publishedBaseUrl,
+  SEOGenerator,
+} from '../SEOGenerator.js';
 
 // Mock PathResolver
 const mockPathExists = vi.fn(() => false);
@@ -101,94 +106,6 @@ describe('SEOGenerator', () => {
       expect(content).toContain('# AI Crawler Management');
       expect(content).toContain('User-agent: GPTBot');
       expect(content).toContain('User-agent: OAI-SearchBot');
-    });
-  });
-
-  // --- sitemap.xml ---
-
-  describe('generateSitemapContent', () => {
-    it('generates valid XML structure', () => {
-      const content = generator.generateSitemapContent([
-        {
-          url: '/',
-          lastmod: '2026-01-01',
-          changefreq: 'weekly',
-          priority: '1.0',
-        },
-        {
-          url: '/about',
-          lastmod: '2026-01-01',
-          changefreq: 'monthly',
-          priority: '0.8',
-        },
-      ]);
-
-      expect(content).toContain('<?xml version="1.0" encoding="UTF-8"?>');
-      expect(content).toContain(
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-      );
-      expect(content).toContain('<loc>https://example.com/</loc>');
-      expect(content).toContain('<loc>https://example.com/about</loc>');
-      expect(content).toContain('<lastmod>2026-01-01</lastmod>');
-      expect(content).toContain('<changefreq>weekly</changefreq>');
-      expect(content).toContain('<priority>1.0</priority>');
-      expect(content).toContain('</urlset>');
-    });
-
-    it('handles empty urls array', () => {
-      const content = generator.generateSitemapContent([]);
-      expect(content).toContain('<?xml version="1.0" encoding="UTF-8"?>');
-      expect(content).toContain('<urlset');
-      expect(content).toContain('</urlset>');
-    });
-
-    // GRILL FINDING #3: XML escaping in <loc>
-    it('SECURITY: baseUrl with ampersand is properly escaped in XML', () => {
-      const gen = new SEOGenerator({
-        ...BASE_OPTIONS,
-        baseUrl: 'https://example.com?a=1&b=2',
-      });
-      const content = gen.generateSitemapContent([
-        {
-          url: '/page',
-          lastmod: '2026-01-01',
-          changefreq: 'weekly',
-          priority: '0.8',
-        },
-      ]);
-      expect(content).toContain('https://example.com?a=1&amp;b=2/page');
-      expect(content).not.toContain('&b=2'); // raw & must not appear
-    });
-
-    it('includes image:image extension for blog posts with images', () => {
-      const content = generator.generateSitemapContent([
-        {
-          url: '/blog/post-1',
-          lastmod: '2026-01-01',
-          changefreq: 'monthly',
-          priority: '0.6',
-          image: '/images/post1.jpg',
-        },
-      ]);
-      expect(content).toContain(
-        'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'
-      );
-      expect(content).toContain('<image:image>');
-      expect(content).toContain(
-        '<image:loc>https://example.com/images/post1.jpg</image:loc>'
-      );
-    });
-
-    it('omits image namespace when no images present', () => {
-      const content = generator.generateSitemapContent([
-        {
-          url: '/',
-          lastmod: '2026-01-01',
-          changefreq: 'weekly',
-          priority: '1.0',
-        },
-      ]);
-      expect(content).not.toContain('xmlns:image');
     });
   });
 
@@ -337,71 +254,6 @@ describe('SEOGenerator', () => {
     });
   });
 
-  // --- Sitemap generation (full flow) ---
-
-  describe('generateSitemap', () => {
-    const mockWriteFile = vi.fn();
-
-    beforeEach(() => {
-      mockWriteFile.mockReset();
-    });
-
-    it('generates sitemap with public routes only', async () => {
-      const seoData = {
-        routes: [
-          { path: '/', auth: false },
-          { path: '/about', auth: false },
-          { path: '/dashboard', auth: { required: true } },
-        ],
-      };
-
-      const result = await generator.generateSitemap(seoData, mockWriteFile);
-      const content = mockWriteFile.mock.calls[0][1];
-
-      expect(content).toContain('<loc>https://example.com/</loc>');
-      expect(content).toContain('<loc>https://example.com/about</loc>');
-      expect(content).not.toContain('/dashboard');
-      expect(result.publicRoutes).toBe(2);
-    });
-
-    it('includes blog posts in sitemap', async () => {
-      const seoData = { routes: [{ path: '/', auth: false }] };
-      const blogPosts = [
-        {
-          slug: 'post-1',
-          title: 'Post 1',
-          description: '',
-          date: '2026-03-01',
-          tags: [],
-          image: null,
-        },
-      ];
-
-      await generator.generateSitemap(seoData, mockWriteFile, blogPosts);
-      const content = mockWriteFile.mock.calls[0][1];
-
-      expect(content).toContain('<loc>https://example.com/blog</loc>');
-      expect(content).toContain('<loc>https://example.com/blog/post-1</loc>');
-    });
-
-    it('assigns correct priorities', async () => {
-      const seoData = {
-        routes: [
-          { path: '/', auth: false },
-          { path: '/about', auth: false },
-        ],
-      };
-
-      await generator.generateSitemap(seoData, mockWriteFile);
-      const content = mockWriteFile.mock.calls[0][1];
-
-      // Root gets priority 1.0
-      expect(content).toMatch(
-        /<loc>https:\/\/example\.com\/<\/loc>[\s\S]*?<priority>1\.0<\/priority>/
-      );
-    });
-  });
-
   // --- Indexable routes (noindex / auth) ---
 
   describe('getSitemapRoutes', () => {
@@ -430,6 +282,15 @@ describe('SEOGenerator', () => {
       expect(routes).toEqual([{ path: '/' }]);
     });
 
+    it('leaves catch-all routes out instead of listing the pattern', () => {
+      const routes = generator.getSitemapRoutes([
+        { path: '/', auth: false, meta: {} },
+        { path: '/docs/*', auth: false, meta: {} },
+        { path: '*', auth: false, meta: {} },
+      ]);
+      expect(routes).toEqual([{ path: '/' }]);
+    });
+
     it('lists blog posts instead of the blog routes', () => {
       const routes = generator.getSitemapRoutes(
         [
@@ -450,20 +311,6 @@ describe('SEOGenerator', () => {
     });
   });
 
-  it('static sitemap excludes seo.noindex routes', async () => {
-    const write = vi.fn();
-    await generator.generateSitemap(
-      {
-        routes: [
-          { path: '/', auth: false },
-          { path: '/compte', auth: false, meta: { seo: { noindex: true } } },
-        ],
-      },
-      write
-    );
-    expect(write.mock.calls[0][1]).not.toContain('/compte');
-  });
-
   // --- robots.txt generation (full flow) ---
 
   describe('generateRobotsTxt', () => {
@@ -473,34 +320,40 @@ describe('SEOGenerator', () => {
       mockWriteFile.mockReset();
     });
 
-    it('disallows auth-protected routes', async () => {
+    it('REGRESSION: never disallows a page, auth-only or sign-in (crawlers must read its noindex)', async () => {
       const seoData = {
         routes: [
           { path: '/', auth: false },
           { path: '/admin', auth: { required: true } },
           { path: '/settings', auth: { required: true } },
+          { path: '/signin', auth: false },
         ],
       };
 
       await generator.generateRobotsTxt(seoData, mockWriteFile);
       const content = mockWriteFile.mock.calls[0][1];
+      const disallowed = content
+        .split('\n\n')[0]
+        .split('\n')
+        .filter((line: string) => line.startsWith('Disallow:'));
 
-      expect(content).toContain('Disallow: /admin');
-      expect(content).toContain('Disallow: /settings');
-      expect(content).toContain('Disallow: /api');
+      // Non-page paths only
+      expect(disallowed).toEqual(['Disallow: /api']);
     });
 
-    it('deduplicates disallowed paths', async () => {
-      const seoData = {
-        routes: [{ path: '/admin', auth: { required: true } }],
-      };
-
-      await generator.generateRobotsTxt(seoData, mockWriteFile);
+    it('Vite: also disallows the SPA shell URL (shellPath), never a page rewritten to it', async () => {
+      const vite = new SEOGenerator({
+        baseUrl: 'https://example.com',
+        siteName: 'Test',
+        shellPath: '/_shell',
+      });
+      await vite.generateRobotsTxt({ routes: [{ path: '/compte', auth: true }] }, mockWriteFile);
       const content = mockWriteFile.mock.calls[0][1];
-
-      // /admin from route + /admin from common paths = should appear only once
-      const adminCount = (content.match(/Disallow: \/admin\n/g) || []).length;
-      expect(adminCount).toBe(1);
+      const disallowed = content
+        .split('\n\n')[0]
+        .split('\n')
+        .filter((line: string) => line.startsWith('Disallow:'));
+      expect(disallowed).toEqual(['Disallow: /api', 'Disallow: /_shell']);
     });
 
     it('REGRESSION: never disallows /_next (assets Google needs to render)', async () => {
@@ -509,58 +362,6 @@ describe('SEOGenerator', () => {
 
       expect(content).not.toContain('Disallow: /_next');
       expect(content).not.toContain('Disallow: /static');
-    });
-  });
-
-  // --- Meta tags generation ---
-
-  describe('generateRouteMetaTags', () => {
-    it('generates title from route meta', () => {
-      const routes = [
-        {
-          path: '/about',
-          meta: { title: 'About Us', description: 'About page' },
-        },
-      ];
-      const tags = generator.generateRouteMetaTags(routes);
-
-      expect(tags[0].meta.title).toBe('About Us - Test App');
-      expect(tags[0].meta.description).toBe('About page');
-    });
-
-    it('generates title from path when no meta', () => {
-      const routes = [{ path: '/contact-us' }];
-      const tags = generator.generateRouteMetaTags(routes);
-
-      expect(tags[0].meta.title).toBe('Contact Us - Test App');
-    });
-
-    it('uses siteName for root path', () => {
-      const routes = [{ path: '/' }];
-      const tags = generator.generateRouteMetaTags(routes);
-
-      expect(tags[0].meta.title).toBe('Test App');
-    });
-
-    it('marks auth routes as noindex', () => {
-      const routes = [{ path: '/admin', auth: { required: true } }];
-      const tags = generator.generateRouteMetaTags(routes);
-
-      expect(tags[0].meta.robots).toBe('noindex, nofollow');
-    });
-
-    it('marks public routes as index', () => {
-      const routes = [{ path: '/about' }];
-      const tags = generator.generateRouteMetaTags(routes);
-
-      expect(tags[0].meta.robots).toBe('index, follow');
-    });
-
-    it('generates canonical URLs', () => {
-      const routes = [{ path: '/about' }];
-      const tags = generator.generateRouteMetaTags(routes);
-
-      expect(tags[0].meta.canonical).toBe('https://example.com/about');
     });
   });
 
@@ -605,15 +406,23 @@ describe('SEOGenerator', () => {
 
       const results = await generator.generateSEOFiles(
         routeData,
-        mockWriteFile
+        mockWriteFile,
+        []
       );
 
-      expect(results.totalRoutes).toBe(2);
-      expect(results.publicRoutes).toBe(2);
-      expect(results.protectedRoutes).toBe(0);
+      expect(results.manifest.manifest).toMatchObject({
+        totalRoutes: 2,
+        publicRoutes: 2,
+        protectedRoutes: 0,
+      });
       expect(results.robotsTxt).toBeDefined();
-      expect(results.sitemap).toBeDefined();
       expect(results.manifest).toBeDefined();
+      // REGRESSION: no routeMetaTags (unread, its own title / robots rules); siteName is read
+      expect(results.manifest.manifest).not.toHaveProperty('routeMetaTags');
+      expect(results.manifest.manifest.siteName).toBe('Test App');
+      // sitemap.xml: the shared builder (Vite buildPages, Next sitemap route), never here
+      expect(results).not.toHaveProperty('sitemap');
+      expect(mockWriteFile.mock.calls.map(([file]) => file)).not.toContain('sitemap.xml');
     });
   });
 
@@ -678,4 +487,59 @@ describe('assertPublicBaseUrl', () => {
       /absolute/
     );
   });
+});
+
+describe('isDeployBuild', () => {
+  it('is a deploy build on dndev deploy, Vercel and CI only', () => {
+    expect(isDeployBuild({ DNDEV_DEPLOY: '1' })).toBe(true);
+    expect(isDeployBuild({ VERCEL: '1' })).toBe(true);
+    expect(isDeployBuild({ CI: 'true' })).toBe(true);
+    expect(isDeployBuild({ CI: '1' })).toBe(true);
+    expect(isDeployBuild({})).toBe(false);
+    expect(isDeployBuild({ CI: 'false' })).toBe(false);
+    expect(isDeployBuild({ CI: '0' })).toBe(false);
+    expect(isDeployBuild({ NODE_ENV: 'production' })).toBe(false);
+  });
+});
+
+describe('publishedBaseUrl', () => {
+  // REGRESSION: every local production build failed on a localhost URL
+  it('a local build publishes the URL it has, localhost included, with one warning line', () => {
+    const logger = { warn: vi.fn() };
+    expect(publishedBaseUrl('http://localhost:4321', 'VITE_APP_URL', logger, {})).toBe(
+      'http://localhost:4321'
+    );
+    expect(publishedBaseUrl('http://localhost:4321', 'VITE_APP_URL', logger, {})).toBe(
+      'http://localhost:4321'
+    );
+    expect(logger.warn).toHaveBeenCalledTimes(1);
+    expect(logger.warn.mock.calls[0][0]).toMatch(/Local build: .* carry http:\/\/localhost:4321 \(VITE_APP_URL\)/);
+  });
+
+  it('a local build without a usable URL publishes none, with one warning line', () => {
+    const logger = { warn: vi.fn() };
+    expect(publishedBaseUrl(null, 'NEXT_PUBLIC_APP_URL', logger, {})).toBeNull();
+    expect(publishedBaseUrl('shop.example', 'NEXT_PUBLIC_APP_URL', logger, {})).toBeNull();
+    expect(logger.warn).toHaveBeenCalledTimes(2);
+    expect(publishedBaseUrl('https://shop.example', 'NEXT_PUBLIC_APP_URL', logger, {})).toBe(
+      'https://shop.example'
+    );
+    expect(logger.warn).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([{ DNDEV_DEPLOY: '1' }, { VERCEL: '1' }, { CI: 'true' }])(
+    'a deploy build (%o) fails on a missing or local URL',
+    (env) => {
+      const logger = { warn: vi.fn() };
+      expect(() => publishedBaseUrl(null, 'VITE_APP_URL', logger, env)).toThrow(
+        /deploy build without VITE_APP_URL/
+      );
+      expect(() => publishedBaseUrl('http://localhost:3000', 'VITE_APP_URL', logger, env)).toThrow(
+        /local URLs/
+      );
+      expect(publishedBaseUrl('https://shop.example', 'VITE_APP_URL', logger, env)).toBe(
+        'https://shop.example'
+      );
+    }
+  );
 });

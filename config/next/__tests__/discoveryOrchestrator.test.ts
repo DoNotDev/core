@@ -12,6 +12,7 @@ import { join } from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { createBuildError } from '../../utils/buildError.js';
 import { PathResolver } from '../../utils/PathResolver.js';
 import { isBuildComplete, runDiscoveries } from '../discoveryOrchestrator.js';
 
@@ -22,18 +23,27 @@ const logger = {
   debug: () => {},
 };
 
-/** i18n + SEO handlers: runDiscoveries reads the app languages before routes. */
+/** The route discovery's entities resolver: an app without a tel field. */
+const entityResolver = { usesFieldType: async () => false };
+
+/** i18n, SEO and asset handlers: runDiscoveries reads the app languages before routes, then hands the routes to SEO and the flag codes to assets. */
 const languageHandlers = {
   i18nHandler: {
     getDiscoveryData: async () => ({
       supportedLanguages: ['en'],
       fallbackLanguage: 'en',
+      flagCodes: ['gb'],
     }),
     generateFiles: async () => ({}),
   },
   seoHandler: {
     useLanguages: () => {},
     useTranslations: () => {},
+    useRoutes: () => {},
+    generateFiles: async () => ({}),
+  },
+  assetHandler: {
+    useFlagCodes: () => {},
     generateFiles: async () => ({}),
   },
 };
@@ -62,6 +72,8 @@ describe('runDiscoveries build marker', () => {
     const routeHandler = {
       pathResolver,
       useLanguages: () => {},
+      useI18n: () => {},
+      getEntityResolver: () => entityResolver,
       generateFiles: async () => {
         routeRuns += 1;
         return { routes: [{}] };
@@ -95,6 +107,8 @@ describe('runDiscoveries build marker', () => {
     const routeHandler = {
       pathResolver,
       useLanguages: () => {},
+      useI18n: () => {},
+      getEntityResolver: () => entityResolver,
       generateFiles: async () => {
         routeConfigPresentDuringRun = existsSync(routeConfig);
         pathResolver.writeSync(routeConfig, 'new route config', {
@@ -122,6 +136,8 @@ describe('runDiscoveries build marker', () => {
     const routeHandler = {
       pathResolver,
       useLanguages: () => {},
+      useI18n: () => {},
+      getEntityResolver: () => entityResolver,
       generateFiles: async () => {
         pathResolver.writeSync(routeConfig, 'route config', {
           overwrite: true,
@@ -142,6 +158,8 @@ describe('runDiscoveries build marker', () => {
     const routeHandler = {
       pathResolver,
       useLanguages: () => {},
+      useI18n: () => {},
+      getEntityResolver: () => entityResolver,
       generateFiles: async () => {
         throw new Error('route discovery failed');
       },
@@ -160,6 +178,8 @@ describe('runDiscoveries build marker', () => {
     const routeHandler = {
       pathResolver,
       useLanguages: () => {},
+      useI18n: () => {},
+      getEntityResolver: () => entityResolver,
       generateFiles: async () => ({ routes: [{}] }),
     };
     const themeHandler = (fontFamilies: string[]) => ({
@@ -198,6 +218,8 @@ describe('runDiscoveries build marker', () => {
     const routeHandler = {
       pathResolver,
       useLanguages: () => {},
+      useI18n: () => {},
+      getEntityResolver: () => entityResolver,
       generateFiles: async () => ({ routes: [{}] }),
     };
     const themeHandler = {
@@ -211,5 +233,67 @@ describe('runDiscoveries build marker', () => {
         logger
       )
     ).rejects.toThrow(/families/);
+  });
+
+  it('fails the run on a build error from a non-critical handler; other errors are logged', async () => {
+    const pathResolver = PathResolver.getInstance();
+    const routeHandler = {
+      pathResolver,
+      useLanguages: () => {},
+      useI18n: () => {},
+      getEntityResolver: () => entityResolver,
+      generateFiles: async () => ({ routes: [{}] }),
+    };
+    const failingAssets = (error: Error) => ({
+      useFlagCodes: () => {},
+      generateFiles: async () => {
+        throw error;
+      },
+    });
+
+    process.env.DNDEV_BUILD_ID = 'asset-build-error';
+    await expect(
+      runDiscoveries(
+        {
+          routeHandler,
+          ...languageHandlers,
+          assetHandler: failingAssets(createBuildError('dndev-assets', 'misconfigured')),
+        },
+        logger
+      )
+    ).rejects.toThrow('[dndev-assets] misconfigured');
+
+    process.env.DNDEV_BUILD_ID = 'asset-plain-error';
+    await expect(
+      runDiscoveries(
+        { routeHandler, ...languageHandlers, assetHandler: failingAssets(new Error('scan failed')) },
+        logger
+      )
+    ).resolves.toBeUndefined();
+  });
+
+  it('hands the i18n flag codes and the route entities resolver to the asset handler before its generation', async () => {
+    const pathResolver = PathResolver.getInstance();
+    const routeHandler = {
+      pathResolver,
+      useLanguages: () => {},
+      useI18n: () => {},
+      getEntityResolver: () => entityResolver,
+      generateFiles: async () => ({ routes: [{}] }),
+    };
+    const calls: string[] = [];
+    const assetHandler = {
+      useFlagCodes: (codes: string[], resolver: unknown) =>
+        calls.push(`flags:${codes.join(',')}:${resolver === entityResolver}`),
+      generateFiles: async () => {
+        calls.push('generate');
+        return {};
+      },
+    };
+
+    process.env.DNDEV_BUILD_ID = 'asset-flag-codes';
+    await runDiscoveries({ routeHandler, ...languageHandlers, assetHandler }, logger);
+
+    expect(calls).toEqual(['flags:gb:true', 'generate']);
   });
 });

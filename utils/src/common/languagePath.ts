@@ -6,7 +6,9 @@
  * every other language under its prefix (`/en/produits`). An app with one language has
  * no prefix at all. Shared by the Next proxy (generated `src/proxy.next.ts`), the Next and
  * Vite routing hooks (Link, navigate, useLocation), the SEO head (canonical, hreflang)
- * and the sitemap, so every place reads and writes the same URL.
+ * and the sitemap, so every place reads and writes the same URL. Public URLs (canonical,
+ * hreflang, sitemap, llms.txt, JSON-LD) also follow the app's trailing-slash form
+ * ({@link formatTrailingSlash}).
  *
  * @version 0.1.0
  * @since 0.2.3
@@ -73,26 +75,78 @@ export function isMultilingual(languages: readonly string[]): boolean {
  */
 export const SESSION_RENDER_SEGMENT = 'dndev-session';
 
+/** Pathname Next gives the root page's prerender output (`next/dist/server/route-modules/route-module.js`). */
+const ROOT_PRERENDER_PATH = '/index';
+
 /**
  * Public pathname of a pathname read during a Next server render: drops the internal
  * per-request tree segment, first or after the language (`/dndev-session/produits` →
  * `/produits`, `/en/dndev-session/produits` → `/en/produits`), so the server HTML and
  * the browser's hydration pass compute the same paths, links, canonical and hreflang
- * URLs. Any other pathname is returned unchanged.
+ * URLs. Also maps exactly `/index` (`/dndev-session/index` included) to `/`: Next
+ * names the root page's prerender output `index` and normalizes only that exact path
+ * itself; when Vercel re-renders the cached root, `usePathname()` returns `/index`,
+ * which would leak into canonical, hreflang and links (and a hydration mismatch).
+ * Deeper paths ending in `index` (`/en/index`, `/apartments/index`) are real routes
+ * or slugs and stay unchanged. Any other pathname is returned unchanged.
  *
  * @param pathname - URL pathname
  * @returns The pathname as the browser shows it
  *
- * @version 0.1.0
+ * @version 0.1.1
  * @since 0.2.3
  * @author AMBROISE PARK Consulting
  */
 export function publicPathname(pathname: string): string {
   const segments = pathname.split('/');
   const at = segments.indexOf(SESSION_RENDER_SEGMENT);
-  if (at !== 1 && at !== 2) return pathname;
-  segments.splice(at, 1);
-  return segments.join('/') || '/';
+  if (at === 1 || at === 2) segments.splice(at, 1);
+  const path = segments.join('/') || '/';
+  return path === ROOT_PRERENDER_PATH ? '/' : path;
+}
+
+/**
+ * Route path of a URL pathname: without its trailing slash (`/produits/` → `/produits`,
+ * the form of the routes), the root unchanged. Under Next `trailingSlash: true` every page
+ * URL ends with `/`, which no route path does.
+ *
+ * @param pathname - URL pathname
+ * @returns The pathname without a trailing slash, `/` for the root
+ *
+ * @version 0.1.0
+ * @since 0.3.2
+ * @author AMBROISE PARK Consulting
+ */
+export function stripTrailingSlash(pathname: string): string {
+  return pathname.replace(/\/+$/, '') || '/';
+}
+
+/**
+ * A page path in the app's public URL form. With `trailingSlash` (Next
+ * `trailingSlash: true`) a page path ends with `/` (`/produits` → `/produits/`,
+ * `/en` → `/en/`), the URL Next serves: it answers the bare form with a permanent
+ * redirect. As Next does, a path whose last segment holds a dot (a file: `/rss.xml`)
+ * and the root keep their form. Query and hash are kept (`/search?q=x` →
+ * `/search/?q=x`). Without `trailingSlash` the path is returned unchanged.
+ * The one place that applies the setting: canonical, hreflang, sitemap, llms.txt and
+ * JSON-LD URLs go through it.
+ *
+ * @param path - App path starting with `/`, optionally with query and hash
+ * @param trailingSlash - The app's Next `trailingSlash` setting (false on Vite)
+ * @returns The path as the app serves it
+ *
+ * @version 0.1.0
+ * @since 0.3.2
+ * @author AMBROISE PARK Consulting
+ */
+export function formatTrailingSlash(path: string, trailingSlash: boolean): string {
+  if (!trailingSlash) return path;
+  const queryStart = path.search(/[?#]/);
+  const pathname = queryStart === -1 ? path : path.slice(0, queryStart);
+  const suffix = queryStart === -1 ? '' : path.slice(queryStart);
+  if (pathname.endsWith('/')) return path;
+  if (pathname.slice(pathname.lastIndexOf('/') + 1).includes('.')) return path;
+  return `${pathname}/${suffix}`;
 }
 
 /**
@@ -163,26 +217,55 @@ export function localizePath(
 }
 
 /**
- * Absolute URL of an app path in every language (hreflang alternates, sitemap).
+ * Absolute public URL of an app path in a language (canonical, `og:url`, JSON-LD):
+ * {@link localizePath}, in the app's trailing-slash form ({@link formatTrailingSlash}).
+ *
+ * @param path - App path (`/produits`)
+ * @param language - Language of the URL
+ * @param baseUrl - Absolute site URL, no trailing slash
+ * @param routing - App languages
+ * @param trailingSlash - The app's Next `trailingSlash` setting (false on Vite)
+ * @returns `/` in `en` → `https://x/en` (`https://x/en/` with `trailingSlash`)
+ *
+ * @version 0.1.0
+ * @since 0.3.2
+ * @author AMBROISE PARK Consulting
+ */
+export function languageUrl(
+  path: string,
+  language: string,
+  baseUrl: string,
+  routing: LanguageRouting,
+  trailingSlash: boolean
+): string {
+  return `${baseUrl}${formatTrailingSlash(localizePath(path, language, routing), trailingSlash)}`;
+}
+
+/**
+ * Absolute public URL of an app path in every language (hreflang alternates, sitemap),
+ * each from {@link languageUrl}.
  *
  * @param path - App path without language prefix (`/produits`)
  * @param baseUrl - Absolute site URL, no trailing slash
  * @param routing - App languages
+ * @param trailingSlash - The app's Next `trailingSlash` setting (false on Vite)
  * @returns `{ fr: 'https://x/produits', en: 'https://x/en/produits' }`
+ *   (`https://x/produits/`… with `trailingSlash`)
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.2.3
  * @author AMBROISE PARK Consulting
  */
 export function languageUrls(
   path: string,
   baseUrl: string,
-  routing: LanguageRouting
+  routing: LanguageRouting,
+  trailingSlash: boolean
 ): Record<string, string> {
   return Object.fromEntries(
     routing.languages.map((language) => [
       language,
-      `${baseUrl}${localizePath(path, language, routing)}`,
+      languageUrl(path, language, baseUrl, routing, trailingSlash),
     ])
   );
 }

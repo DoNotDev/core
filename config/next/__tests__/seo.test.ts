@@ -4,15 +4,36 @@ import type { ICrudAdapter, QueryOptions } from '@donotdev/types';
 
 import { HIDDEN_STATUSES } from '../../../schemas/src/common/visibility';
 import { deriveEntitySeo } from '../../../utils/src/common/entitySeo';
-import { languageUrls } from '../../../utils/src/common/languagePath';
+import {
+  formatTrailingSlash,
+  languageUrls,
+} from '../../../utils/src/common/languagePath';
+import { createSchemas } from '../../../schemas/src/common/createSchema';
 import { appBaseUrl } from '../seo/baseUrl.js';
-import { buildLlmsTxt } from '../seo/llmsTxt.js';
-import { listStaticParams } from '../seo/publicPages.js';
-import { buildSitemap, formatSitemapXml } from '../seo/sitemap.js';
-import { brandEntity } from '@dndev/test-entities';
+import { entityReadSchemas } from '../../utils/entityRecordSeo.js';
+import { buildLlmsTxt } from '../../utils/llmsTxt.js';
+import { listStaticParams } from '../../utils/publicPages.js';
+import { buildSitemap, formatSitemapXml } from '../../utils/sitemap.js';
+import {
+  apartmentEntity,
+  brandEntity,
+  productEntity,
+  prototypeNamedEntity,
+} from '@dndev/test-entities';
 
 const BASE = 'https://shop.example';
 const FR = { languages: ['fr'], defaultLanguage: 'fr' };
+
+/** Read schemas of the collections these tests list, as the generated routes build them. */
+const READ_SCHEMAS = entityReadSchemas(
+  { apartmentEntity, brandEntity, productEntity },
+  [
+    { path: '/apartments/:id', collection: 'apartments' },
+    { path: '/marques/:slug', collection: 'brands' },
+    { path: '/produits/:slug', collection: 'products' },
+  ],
+  createSchemas
+);
 
 function mockCrud(rows: Record<string, Record<string, unknown>[]>) {
   // Applies `not-in` clauses like a real adapter, so tests see what the query keeps.
@@ -47,6 +68,7 @@ describe('buildSitemap', () => {
       baseUrl: BASE,
       routing: FR,
       crud,
+      trailingSlash: false,
       languageUrls,
       hiddenStatuses: HIDDEN_STATUSES,
     });
@@ -67,15 +89,21 @@ describe('buildSitemap', () => {
 
     const entries = await buildSitemap(
       [{ path: '/produits/:slug', collection: 'products' }],
-      { baseUrl: BASE, routing: FR, crud, languageUrls, hiddenStatuses: HIDDEN_STATUSES }
+      { baseUrl: BASE, routing: FR, crud, trailingSlash: false, languageUrls, hiddenStatuses: HIDDEN_STATUSES, readSchemas: READ_SCHEMAS }
     );
 
-    expect(query).toHaveBeenCalledWith('products', {
-      where: [
-        { field: 'status', operator: 'not-in', value: [...HIDDEN_STATUSES] },
-      ],
-      limit: 1000,
-    });
+    // REGRESSION: queried with the entity's read schema (rows keyed by the entity's field
+    // names), as the client lists; without it Supabase camelCased snake_case fields
+    expect(query).toHaveBeenCalledWith(
+      'products',
+      {
+        where: [
+          { field: 'status', operator: 'not-in', value: [...HIDDEN_STATUSES] },
+        ],
+        limit: 1000,
+      },
+      READ_SCHEMAS.products
+    );
     expect(entries.map((e) => e.url)).toEqual([
       `${BASE}/produits/creme%20a`,
       `${BASE}/produits/serum`,
@@ -95,7 +123,7 @@ describe('buildSitemap', () => {
 
     const entries = await buildSitemap(
       [{ path: '/produits/:slug', collection: 'products' }],
-      { baseUrl: BASE, routing: FR, crud, languageUrls, hiddenStatuses: HIDDEN_STATUSES }
+      { baseUrl: BASE, routing: FR, crud, trailingSlash: false, languageUrls, hiddenStatuses: HIDDEN_STATUSES, readSchemas: READ_SCHEMAS }
     );
 
     expect(entries.map((e) => e.url)).toEqual([
@@ -110,7 +138,7 @@ describe('buildSitemap', () => {
 
     const entries = await buildSitemap(
       [{ path: '/' }, { path: '/produits/:slug', collection: 'products' }],
-      { baseUrl: BASE, routing, crud, languageUrls, hiddenStatuses: HIDDEN_STATUSES }
+      { baseUrl: BASE, routing, crud, trailingSlash: false, languageUrls, hiddenStatuses: HIDDEN_STATUSES, readSchemas: READ_SCHEMAS }
     );
 
     expect(entries.map((e) => e.url)).toEqual([
@@ -130,10 +158,30 @@ describe('buildSitemap', () => {
     expect(entries[1]?.priority).toBe(1);
   });
 
+  it('ends every page URL and alternate with `/` under trailingSlash', async () => {
+    const { crud } = mockCrud({ products: [{ id: '1', slug: 'serum' }] });
+    const routing = { languages: ['fr', 'en'], defaultLanguage: 'fr' };
+
+    const entries = await buildSitemap(
+      [{ path: '/' }, { path: '/produits/:slug', collection: 'products' }],
+      { baseUrl: BASE, routing, crud, trailingSlash: true, languageUrls, hiddenStatuses: HIDDEN_STATUSES, readSchemas: READ_SCHEMAS }
+    );
+
+    expect(entries.map((e) => e.url)).toEqual([
+      `${BASE}/`,
+      `${BASE}/en/`,
+      `${BASE}/produits/serum/`,
+      `${BASE}/en/produits/serum/`,
+    ]);
+    expect(entries[1]?.alternates).toEqual({
+      languages: { fr: `${BASE}/`, en: `${BASE}/en/` },
+    });
+  });
+
   it('fails loud on a dynamic route without a collection', async () => {
     const { crud } = mockCrud({});
     await expect(
-      buildSitemap([{ path: '/x/:id' }], { baseUrl: BASE, routing: FR, crud, languageUrls, hiddenStatuses: HIDDEN_STATUSES })
+      buildSitemap([{ path: '/x/:id' }], { baseUrl: BASE, routing: FR, crud, trailingSlash: false, languageUrls, hiddenStatuses: HIDDEN_STATUSES, readSchemas: READ_SCHEMAS })
     ).rejects.toThrow(/noindex/);
   });
 
@@ -144,7 +192,8 @@ describe('buildSitemap', () => {
         baseUrl: BASE,
         routing: FR,
         crud,
-        languageUrls,
+        trailingSlash: false,
+      languageUrls,
         hiddenStatuses: HIDDEN_STATUSES,
       })
     ).rejects.toThrow(/single-param/);
@@ -163,7 +212,7 @@ describe('listStaticParams', () => {
 
   it('returns raw params of the same records as the sitemap URLs', async () => {
     const { crud, query } = mockCrud({ products: PRODUCTS });
-    const params = await listStaticParams(ROUTE, crud, HIDDEN_STATUSES);
+    const params = await listStaticParams(ROUTE, crud, HIDDEN_STATUSES, READ_SCHEMAS);
     // Raw values: Next encodes them into the URL
     expect(params).toEqual([{ slug: 'creme a' }, { slug: 'serum' }]);
 
@@ -171,40 +220,48 @@ describe('listStaticParams', () => {
       baseUrl: BASE,
       routing: FR,
       crud,
+      trailingSlash: false,
       languageUrls,
       hiddenStatuses: HIDDEN_STATUSES,
+      readSchemas: READ_SCHEMAS,
     });
     expect(entries.map((e) => e.url)).toEqual(
       params.map(({ slug }) => `${BASE}/produits/${encodeURIComponent(slug!)}`)
     );
-    // One query shape for both (status filter, limit)
+    // One query for both (status filter, limit, the entity's read schema)
     expect(query.mock.calls[0]).toEqual(query.mock.calls[1]);
+    expect(query.mock.calls[0]?.[2]).toBe(READ_SCHEMAS.products);
   });
 
   it('fills the route param name from the record field of that name', async () => {
     const { crud } = mockCrud({ apartments: [{ id: 42 }, { id: 'b-7' }] });
     expect(
-      await listStaticParams({ path: '/apartments/:id', collection: 'apartments' }, crud, HIDDEN_STATUSES)
+      await listStaticParams({ path: '/apartments/:id', collection: 'apartments' }, crud, HIDDEN_STATUSES, READ_SCHEMAS)
     ).toEqual([{ id: '42' }, { id: 'b-7' }]);
   });
 
-  it('fails loud without a reader, a collection, or when the read fails', async () => {
+  it('fails loud without a reader, a collection, a read schema, or when the read fails', async () => {
     await expect(
-      listStaticParams(ROUTE, undefined as unknown as ICrudAdapter, HIDDEN_STATUSES)
+      listStaticParams(ROUTE, undefined as unknown as ICrudAdapter, HIDDEN_STATUSES, READ_SCHEMAS)
     ).rejects.toThrow(/no server CRUD reader/);
-    const { crud } = mockCrud({});
+    const { crud, query } = mockCrud({});
     await expect(
-      listStaticParams({ path: '/produits/:slug' }, crud, HIDDEN_STATUSES)
+      listStaticParams({ path: '/produits/:slug' }, crud, HIDDEN_STATUSES, READ_SCHEMAS)
     ).rejects.toThrow(/Cannot list the public URLs/);
     await expect(
-      listStaticParams({ path: '/a/:x/:y', collection: 'products' }, crud, HIDDEN_STATUSES)
+      listStaticParams({ path: '/a/:x/:y', collection: 'products' }, crud, HIDDEN_STATUSES, READ_SCHEMAS)
     ).rejects.toThrow(/Cannot list the public URLs/);
+    // No read schema for the collection: never an unmapped read (Supabase camelCases columns)
+    await expect(
+      listStaticParams({ path: '/commandes/:id', collection: 'orders' }, crud, HIDDEN_STATUSES, READ_SCHEMAS)
+    ).rejects.toThrow(/Route "\/commandes\/:id" reads "orders" records but no read schema was given/);
+    expect(query).not.toHaveBeenCalled();
     const failing = {
       query: vi.fn(async () => {
         throw new Error('fetch failed');
       }),
     } as unknown as ICrudAdapter;
-    await expect(listStaticParams(ROUTE, failing, HIDDEN_STATUSES)).rejects.toThrow(
+    await expect(listStaticParams(ROUTE, failing, HIDDEN_STATUSES, READ_SCHEMAS)).rejects.toThrow(
       /Route "\/produits\/:slug" could not read its public "products" records.*fetch failed/
     );
     // A CRUD error's generic message gives way to the provider's own (details.originalMessage).
@@ -215,9 +272,43 @@ describe('listStaticParams', () => {
         });
       }),
     } as unknown as ICrudAdapter;
-    await expect(listStaticParams(ROUTE, wrapped, HIDDEN_STATUSES)).rejects.toThrow(
+    await expect(listStaticParams(ROUTE, wrapped, HIDDEN_STATUSES, READ_SCHEMAS)).rejects.toThrow(
       /records \(signed-out visitor: RLS \/ Security Rules must allow it\): Missing or insufficient permissions\./
     );
+  });
+});
+
+describe('entityReadSchemas', () => {
+  it("maps each listed collection to its entity's read schema (createSchemas(entity).get)", () => {
+    const schemas = entityReadSchemas(
+      { productEntity, brandEntity, notAnEntity: 'x' },
+      [
+        { path: '/' },
+        { path: '/produits/:slug', collection: 'products' },
+        { path: '/en-promo/:slug', collection: 'products' },
+      ],
+      createSchemas
+    );
+    expect(Object.keys(schemas)).toEqual(['products']);
+    expect(Object.keys(schemas.products!.entries)).toEqual(
+      Object.keys(createSchemas(productEntity).get.entries)
+    );
+  });
+
+  it('keys any collection name as its own (no prototype)', () => {
+    const schemas = entityReadSchemas(
+      { prototypeNamedEntity },
+      [{ path: '/x/:id', collection: '__proto__' }],
+      createSchemas
+    );
+    expect(Object.hasOwn(schemas, '__proto__')).toBe(true);
+    expect(Object.hasOwn(schemas, 'toString')).toBe(false);
+  });
+
+  it('fails on a collection without an entity definition', () => {
+    expect(() =>
+      entityReadSchemas({ brandEntity }, [{ path: '/produits/:slug', collection: 'products' }], createSchemas)
+    ).toThrow(/no entity definition for collection "products"/);
   });
 });
 
@@ -270,8 +361,11 @@ describe('buildLlmsTxt', () => {
       entityHeadings: { 'entity-brand': 'Marques' },
       entities: { brandEntity: BRAND },
       crud: mockCrud(rows).crud,
+      readSchemas: READ_SCHEMAS,
       deriveEntitySeo,
       hiddenStatuses: HIDDEN_STATUSES,
+      trailingSlash: false,
+      formatTrailingSlash,
       language: 'fr',
       translations: { 'entity-brand': {}, crud: {} },
       ...overrides,
@@ -281,6 +375,13 @@ describe('buildLlmsTxt', () => {
   it('titles records with the first text field when the entity has no card title', async () => {
     const text = await buildLlmsTxt(source({ brands: [{ slug: 'cosrx', name: 'COSRX' }] }));
     expect(text).toBe(`# Boutique\n\n## Marques\n\n- [COSRX](${BASE}/marques/cosrx)\n`);
+  });
+
+  it('ends page URLs with `/` under trailingSlash', async () => {
+    const text = await buildLlmsTxt(
+      source({ brands: [{ slug: 'cosrx', name: 'COSRX' }] }, { trailingSlash: true })
+    );
+    expect(text).toContain(`- [COSRX](${BASE}/marques/cosrx/)`);
   });
 
   it('uses the route section over the entity heading', async () => {
@@ -305,15 +406,16 @@ describe('buildLlmsTxt', () => {
     ).rejects.toThrow(/namePlural.*entity-brand/);
   });
 
-  it('fails on a published record without a title', async () => {
-    await expect(buildLlmsTxt(source({ brands: [{ slug: 'cosrx', name: '' }] }))).rejects.toThrow(
-      /has no title/
-    );
+  // REGRESSION: a published record without a title failed the Vite build and dropped the
+  // Next llms.txt; it gets the site name, the title its page carries
+  it('titles a published record without a title with the site name', async () => {
+    const text = await buildLlmsTxt(source({ brands: [{ slug: 'cosrx', name: '' }] }));
+    expect(text).toBe(`# Boutique\n\n## Marques\n\n- [Boutique](${BASE}/marques/cosrx)\n`);
   });
 
-  it('fails on a static route without a label', async () => {
+  it('fails on a source static route without a title (not from getLlmsTxtSource)', async () => {
     await expect(
       buildLlmsTxt(source({}, { routes: [{ path: '/a-propos' }] }))
-    ).rejects.toThrow(/"\/a-propos" has no label/);
+    ).rejects.toThrow(/"\/a-propos" has no title/);
   });
 });

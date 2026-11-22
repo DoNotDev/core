@@ -7,18 +7,13 @@
 
 import { resolveAppRoot } from './appRoot.js';
 import {
-  createWebpackConfig,
   createRewritesConfig,
   createRedirectsConfig,
   createHeadersConfig,
   buildFinalConfig,
 } from './configBuilder.js';
-import {
-  runDiscoveries,
-  copyFrameworkAssets,
-  isBuildComplete,
-} from './discoveryOrchestrator.js';
-import { createHandlers, createHandlerConfigs } from './handlerFactory.js';
+import { runDiscoveries, isBuildComplete } from './discoveryOrchestrator.js';
+import { createHandlers } from './handlerFactory.js';
 import { migrateNextFiles } from './nextFiles.js';
 import { mergeOptions, normalizeOptions } from './options.js';
 import {
@@ -31,6 +26,7 @@ import { discoverAppPackages } from '../utils/discoverAppPackages.js';
 import { createLogger } from '../utils/debugLog.js';
 import { detectMissingOptionalDeps } from '../utils/detectOptionalDeps.js';
 import { PathResolver } from '../utils/PathResolver.js';
+import { isDeployBuild } from '../utils/SEOGenerator.js';
 
 /**
  * Module-level cache for Next.js config.
@@ -136,7 +132,6 @@ function defineNextConfig(userOptions = {}) {
     assetOptions,
     pwaOptions,
     seoOptions,
-    serverShimOptions,
     nextConfigOptions,
     reactCompiler,
   } = normalized;
@@ -145,7 +140,6 @@ function defineNextConfig(userOptions = {}) {
 
   // CRITICAL: Resolve appRoot BEFORE creating handlers
   const { appRoot, appRootSet } = resolveAppRoot({ logger, debug });
-  let assetsCopied = false;
   // Routing mode resolved once (SSOT) — build log, Next file marker and pageExtensions.
   const routingMode = routeOptions?.routingMode || 'app';
 
@@ -170,11 +164,16 @@ function defineNextConfig(userOptions = {}) {
         logger.debug(`Port configured: ${port} (set PORT env var)`);
       }
     }
-  } else if (!process.env.NEXT_PUBLIC_APP_URL) {
-    logger.warn(
-      'NEXT_PUBLIC_APP_URL not found in environment. Set it in .env.production'
-    );
+  } else if (!process.env.NEXT_PUBLIC_APP_URL && !isDeployBuild()) {
+    // A local production build without a URL: the one it is served at (`next start`,
+    // port 3000 by default), as in dev. The SEO handler warns that the build carries it;
+    // a deploy build fails instead (publishedBaseUrl)
+    process.env.NEXT_PUBLIC_APP_URL = `http://localhost:${process.env.PORT || 3000}`;
   }
+
+  // Next `trailingSlash` (a passthrough Next option): page URLs end with `/`. The route
+  // manifest carries it to the SEO head, the generated sitemap / llms.txt routes to their URLs.
+  const trailingSlash = nextConfigOptions.trailingSlash === true;
 
   // Create all handlers
   const handlers = createHandlers({
@@ -194,22 +193,24 @@ function defineNextConfig(userOptions = {}) {
       revalidate: appConfig?.revalidate,
       // Entity pages prerender their published records at build (RouteHandler.prerendersRecords)
       prerenderRecords: appConfig?.prerenderRecords,
+      trailingSlash,
+      // Title suffix of the generated entity page metadata (same site name as AutoMetaTags)
+      siteName: appConfig?.seo?.siteName || appConfig?.app?.name,
+      // Link-preview image of pages without one (same default as AutoMetaTags)
+      defaultImage: appConfig?.seo?.defaultImage,
+      defaultNamespace: appConfig?.seo?.defaultNamespace,
     },
     themeOptions,
     i18nOptions,
     assetOptions,
     // Same cache lifetime for the sitemap / llms.txt routes as for the pages
-    seoOptions: { ...seoOptions, revalidate: appConfig?.revalidate },
+    seoOptions: { ...seoOptions, revalidate: appConfig?.revalidate, trailingSlash },
     // appConfig.app feeds the web app manifest (name, short_name, description)
     pwaOptions: { ...pwaOptions, app: extractedApp },
-    serverShimOptions,
     isDev,
     logger,
     // Note: appUrl removed - handlers read from process.env.NEXT_PUBLIC_APP_URL directly
   });
-
-  // Create handler configs
-  const handlerConfigs = createHandlerConfigs(handlers, logger);
 
   // Build Next.js configuration function. Next calls it with (phase, { defaultConfig }):
   // the app's own Next options are the passthrough keys of defineNextConfig (nextConfigOptions).
@@ -223,14 +224,9 @@ function defineNextConfig(userOptions = {}) {
       );
     }
 
-    // Single detection call — used for webpack externals, Turbopack aliasing, and chunk filtering
-    const { missing: missingOptionalDeps, installed: installedOptionalDeps } =
-      detectMissingOptionalDeps(pathResolver.getAppRoot());
-    const unusedFeaturePackages = missingOptionalDeps.filter((pkg) =>
-      pkg.startsWith('@donotdev/')
-    );
-    const usedFeaturePackages = installedOptionalDeps.filter((pkg) =>
-      pkg.startsWith('@donotdev/')
+    // Single detection call: Turbopack aliases the missing ones to the empty module
+    const { missing: missingOptionalDeps } = detectMissingOptionalDeps(
+      pathResolver.getAppRoot()
     );
     if (debug && missingOptionalDeps.length > 0) {
       logger.debug(
@@ -254,49 +250,17 @@ function defineNextConfig(userOptions = {}) {
     }
 
     // The app's own Next options (every defineNextConfig key the framework does not own),
-    // composed with the framework's below: webpack, rewrites, redirects and headers are merged.
+    // composed with the framework's below: rewrites, redirects, headers and
+    // compiler.runAfterProductionCompile are merged; the rest (an own `webpack` included)
+    // passes through.
     const safeNextConfigOptions = nextConfigOptions;
 
     const {
-      webpack: originalWebpack,
       rewrites: originalRewrites,
       redirects: originalRedirects,
       headers: originalHeaders,
       ...restNextConfig
     } = safeNextConfigOptions;
-
-    // Copy framework assets
-    if (appRootSet && !assetsCopied) {
-      assetsCopied = await copyFrameworkAssets(
-        handlers.assetHandler,
-        logger,
-        assetsCopied
-      );
-    }
-
-    // Get config results from handlers
-    const routeResult = handlerConfigs.routeConfig(safeNextConfigOptions);
-    const themeResult = handlerConfigs.themeConfig(safeNextConfigOptions);
-    const i18nResult = handlerConfigs.i18nConfig(safeNextConfigOptions);
-    const assetResult = handlerConfigs.assetConfig(safeNextConfigOptions);
-    const seoResult = handlerConfigs.seoConfig(safeNextConfigOptions);
-    const pwaResult = handlerConfigs.pwaConfig(safeNextConfigOptions);
-    const serverShimResult = handlerConfigs.serverShimConfig();
-
-    // Extract flagCodes from i18n discovery for flag chunk filtering
-    const i18nDiscoveryData = await handlers.i18nHandler?.getDiscoveryData?.();
-    const flagCodes = i18nDiscoveryData?.flagCodes || [];
-
-    // Build webpack and rewrites configs
-    const webpackConfig = createWebpackConfig({
-      originalWebpack,
-      unusedFeaturePackages,
-      usedFeaturePackages,
-      missingOptionalDeps,
-      flagCodes,
-      logger,
-      debug,
-    });
 
     const rewritesConfig = createRewritesConfig({
       originalRewrites,
@@ -360,24 +324,15 @@ function defineNextConfig(userOptions = {}) {
 
     // Build final merged config
     const mergedConfig = buildFinalConfig({
-      routeResult,
-      themeResult,
-      i18nResult,
-      assetResult,
-      seoResult,
-      pwaResult,
-      serverShimResult,
       restNextConfig,
       discoveredPackages,
       reactCompiler,
       routingMode,
 
-      webpackConfig,
       rewritesConfig,
       redirectsConfig,
       headersConfig,
       missingOptionalDeps,
-      flagCodes,
       pathResolver,
       env,
       logger,

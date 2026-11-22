@@ -450,10 +450,6 @@ export declare class PathResolver {
    * Get absolute path to empty CJS module for esbuild pre-bundling.
    * CJS because esbuild statically analyzes ESM exports — CJS has dynamic exports.
    */
-  /**
-   * Get absolute path to empty flag component module.
-   */
-  getEmptyFlagModulePath(): string;
   getEmptyCjsModulePath(): string;
   /**
    * Find repo root by looking for DnDev monorepo markers or apps/ directory

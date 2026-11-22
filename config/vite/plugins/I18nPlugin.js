@@ -19,7 +19,6 @@ import {
   CONFIG_KEYS,
 } from '../../constants.js';
 import { I18nDiscovery } from '../../discovery/I18nDiscovery.js';
-import { PathResolver } from '../../utils/PathResolver.js';
 import { DEFAULT_OPTIONS } from '../options.js';
 
 // ============================================================================
@@ -492,17 +491,35 @@ const i18nFilePatterns = [
 // ============================================================================
 
 /**
- * The app's i18n discovery, configured as the i18n plugin configures it (also used by
- * the SEO plugin to label llms.txt in the app's language).
+ * The i18n discovery of a Vite build, run once by the main i18n plugin (`buildStart`) and
+ * read by the others: the lazy-loader plugin (`ready()`: its `buildStart` runs in
+ * parallel with the main one), the asset (flag codes), font preload and prerender
+ * plugins (`createVitePlugins` hands one store to all of them).
  *
- * @param {Object} [options] - i18n plugin options (fallbackLanguage, additionalPaths, only, ...)
- * @returns {I18nDiscovery}
+ * @returns {{ set: (data: Object) => void, ready: () => Promise<Object>, get: () => Object }}
+ * @since 0.3.2
  */
-export function createI18nDiscovery(options = {}) {
-  return new I18nDiscovery(
-    PathResolver.getInstance(),
-    i18nDiscoveryOptions(options)
-  );
+export function createI18nStore() {
+  let data = null;
+  let resolveReady;
+  const ready = new Promise((resolve) => {
+    resolveReady = resolve;
+  });
+  return {
+    set(value) {
+      data = value;
+      resolveReady(value);
+    },
+    ready: () => ready,
+    get() {
+      if (!data) {
+        throw new Error(
+          '[dndev] i18n discovery unavailable: the i18n plugin did not run (see the error above).'
+        );
+      }
+      return data;
+    },
+  };
 }
 
 /**
@@ -554,7 +571,12 @@ function i18nDiscoveryOptions(options = {}) {
  *   additionalPaths: ['../../entities/locales']
  * })
  */
-export function createViteI18nPlugin(options = {}) {
+export function createViteI18nPlugin({ i18nStore, ...options } = {}) {
+  if (!i18nStore) {
+    throw new Error(
+      "[dndev] createViteI18nPlugin: options.i18nStore is required (createVitePlugins passes it, createI18nStore)."
+    );
+  }
   // Dev mode flag — shared between lazyPlugin and wrappedTemplates
   // Set in lazyPlugin's configResolved hook
   let isDevMode = false;
@@ -562,10 +584,6 @@ export function createViteI18nPlugin(options = {}) {
   // Shared state between main plugin and lazy loader plugin
   // Maps virtual module ID → translation content for that ns+lang
   const lazyModuleRegistry = new Map();
-
-  // Shared discovery instance — used by both plugins
-  const pathResolver = PathResolver.getInstance();
-  const lazyDiscovery = createI18nDiscovery(options);
 
   /**
    * Populate the lazy module registry from discovery data.
@@ -611,6 +629,8 @@ export function createViteI18nPlugin(options = {}) {
     discoveryOptions: i18nDiscoveryOptions(options),
   })({
     ...options,
+    // This build's discovery, read by the lazy-loader, asset, font and prerender plugins
+    discoveryStore: i18nStore,
     hmrSmartDetection: false, // Disable smart detection for i18n - we want .json files to trigger HMR
   });
 
@@ -627,25 +647,9 @@ export function createViteI18nPlugin(options = {}) {
     async buildStart() {
       if (isDevMode) return; // Dev mode: all content inlined, no lazy modules needed
 
-      // Populate registry upfront so lazy modules are available before any load() call.
-      // The main plugin also runs discovery, but we need data ready BEFORE it generates
-      // the virtual module code (which contains import() calls to our lazy modules).
-      // Discovery caches internally, so this is not a duplicate scan.
-
-      // Wait for appRoot (set by main plugin's configResolved)
-      const isReady = () => {
-        const appRoot = pathResolver.getAppRoot();
-        const repoRoot = pathResolver.getRepoRoot();
-        return appRoot && appRoot !== repoRoot;
-      };
-      let waitCount = 0;
-      while (!isReady() && waitCount < 100) {
-        await new Promise((r) => setTimeout(r, 10));
-        waitCount++;
-      }
-      if (!isReady()) return; // Main plugin will handle the error
-
-      const data = await lazyDiscovery.discoverTranslations();
+      // Populate registry upfront so lazy modules are available before any load() call:
+      // the main plugin's discovery of this build (its buildStart runs in parallel)
+      const data = await i18nStore.ready();
       populateRegistry(data);
     },
 
@@ -666,54 +670,5 @@ export function createViteI18nPlugin(options = {}) {
     },
   };
 
-  // Flag filter plugin — aliases unused flag files to empty component
-  // Reduces ~112 flag chunks down to only the ones matching supportedLanguages
-  const flagFilterPlugin = {
-    name: 'dndev-i18n-flag-filter',
-    enforce: 'pre',
-
-    async buildStart() {
-      // Dev mode: all flags allowed, no filtering needed
-      if (isDevMode) return;
-
-      // Wait for appRoot (set by main plugin's configResolved)
-      const isReady = () => {
-        const appRoot = pathResolver.getAppRoot();
-        const repoRoot = pathResolver.getRepoRoot();
-        return appRoot && appRoot !== repoRoot;
-      };
-      let waitCount = 0;
-      while (!isReady() && waitCount < 100) {
-        await new Promise((r) => setTimeout(r, 10));
-        waitCount++;
-      }
-      if (!isReady()) return;
-
-      // Discovery is cached — no duplicate scan
-      const data = await lazyDiscovery.discoverTranslations();
-      const flagCodes = data.flagCodes || [];
-      this._allowedFlags = new Set(flagCodes.map((c) => c.toUpperCase()));
-    },
-
-    resolveId(id, importer) {
-      if (isDevMode) return;
-      if (!importer || !id.includes('flag')) return;
-      // Match: flagXX.tsx or similar flag file import
-      const match = id.match(/flag([A-Z][A-Z0-9_-]*)\.(tsx|js)$/i);
-      if (!match) return;
-      const code = match[1].toUpperCase();
-      if (code === 'BASE') return; // FlagBase.tsx — always needed
-      if (!this._allowedFlags?.has(code)) {
-        return '\0empty-flag';
-      }
-    },
-
-    load(id) {
-      if (id === '\0empty-flag') {
-        return 'export default () => null;';
-      }
-    },
-  };
-
-  return [mainPlugin, lazyPlugin, flagFilterPlugin];
+  return [mainPlugin, lazyPlugin];
 }

@@ -47,6 +47,9 @@ function createAppFunctionsConfig(options = {}) {
 /**
  * Build Firebase Functions in one call.
  * Handles: esbuild bundling, functions.yaml generation, .env secret filtering.
+ * Secret bindings come from the built bundle: each endpoint binds the secrets
+ * its function declares (`secrets: [defineSecret('X')]`), read once through the
+ * firebase-functions SDK manifest; only those keys leave .env.
  *
  * @param {import('@donotdev/types').FunctionsConfig} functionsConfig - Functions configuration
  * @param {Object} [options] - Build options
@@ -56,7 +59,7 @@ function createAppFunctionsConfig(options = {}) {
  * @param {boolean} [options.sourcemap=true] - Generate source maps
  * @param {boolean} [options.analyze=false] - Print bundle analysis
  * @param {string} [options.entryFile='src/index.ts'] - Entry file for auto-detection
- * @param {string} [options.envPath='.env'] - .env path for secret detection
+ * @param {string} [options.envPath='.env'] - Unused for secrets (bindings come from the bundle's declarations)
  * @returns {Promise<void>}
  */
 export async function buildFunctions(functionsConfig, options = {}) {
@@ -106,9 +109,15 @@ export async function buildFunctions(functionsConfig, options = {}) {
 
     console.log('Functions built successfully.');
 
-    // 2. Generate functions.yaml
-    const { yaml, staticFunctions, crudFunctions, autoDetected, autoSecrets } =
-      generateFunctionsYamlWithInfo(functionsConfig, { entryFile, envPath });
+    // 2. Generate functions.yaml (reads the bundle's secret declarations once)
+    const {
+      yaml,
+      staticFunctions,
+      crudFunctions,
+      autoDetected,
+      autoSecrets,
+      declaredSecrets,
+    } = generateFunctionsYamlWithInfo(functionsConfig, { entryFile, envPath });
 
     // Always overwrite — functions.yaml is a generated artifact and
     // writeSync defaults to no-op-on-exists (silent skip).
@@ -124,12 +133,12 @@ export async function buildFunctions(functionsConfig, options = {}) {
     }
     if (autoSecrets.length > 0) {
       console.log(
-        `Auto-detected ${autoSecrets.length} secret(s): ${autoSecrets.join(', ')}`
+        `Functions declare ${autoSecrets.length} secret(s): ${autoSecrets.join(', ')}`
       );
     }
 
-    // 3. Filter .env secrets
-    const { stripped } = filterEnvSecrets(functionsConfig);
+    // 3. Filter .env secrets (declared keys only)
+    const { stripped } = filterEnvSecrets(functionsConfig, { declaredSecrets });
     if (stripped.length > 0) {
       console.log(
         `Filtered ${stripped.length} secret(s) from .env to .env.local`

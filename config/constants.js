@@ -136,6 +136,13 @@ export const GENERATED_PATHS = {
 /** Site-wide link-preview image, generated from public/logo.svg unless the app provides it. */
 export const DEFAULT_OG_IMAGE = '/og-image.png';
 
+/**
+ * The Vite SPA shell as Vite built it (`dist/_shell.html`): the hosting rewrite serves it
+ * for every URL without a prerendered file. `dist/index.html` is the prerendered home
+ * page, never the fallback (its tags would land on every other URL).
+ */
+export const SPA_SHELL_FILE = '_shell.html';
+
 export const FRAMEWORK_CONFIG = {
   // Default framework package
   package: '@donotdev/ui',
@@ -175,6 +182,8 @@ export const I18N_PATHS = {
   PUBLISHED_LOCALES: 'i18n/locales',
   PUBLISHED_EAGER: 'i18n/locales/eager',
   PUBLISHED_LAZY: 'i18n/locales/lazy',
+  // Flag artwork: one SVG per flag code (flagFileName), copied to public/flags/ (AssetDiscovery)
+  PUBLISHED_FLAGS: 'i18n/flags',
 };
 
 // ===== SCAN PATTERNS =====
@@ -241,7 +250,12 @@ export const SCAN_PATTERNS = {
       'logo.avif',
       'apple-touch-icon*.png',
       'android-chrome-*.png',
-      'manifest.json',
+      // Generated from logo.svg (AssetDiscovery._generateMissingAssets) or the app's own
+      'icon-*x*.png',
+      DEFAULT_OG_IMAGE.slice(1),
+      // Not manifest.json: the web app manifest is a build output on Next (the PWA step
+      // rewrites it after this scan), so its scanned size would differ between a clean
+      // build and a rebuild. The asset manifest's `manifest` reads it from disk instead.
     ],
     fonts: ['fonts/**/*.woff2', 'fonts/**/*.woff', 'fonts/**/*.ttf'],
     framework: ['packages/ui/assets/**/*'],

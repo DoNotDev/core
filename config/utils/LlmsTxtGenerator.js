@@ -2,15 +2,17 @@
  * @fileoverview llms.txt Generator
  * @description llms.txt (llmstxt.org) from the same routes as the sitemap
  * (SEOGenerator.getSitemapRoutes), labelled in the app's language. Next serves it from
- * a generated route (records expanded at request time); Vite writes it at build.
+ * a generated route (records expanded at request time); Vite writes it at build with the
+ * records (`buildLlmsTxt`, vite/buildPages.js).
  *
  * @version 0.0.1
  * @since 0.1.0
  * @author AMBROISE PARK Consulting
  */
 
-import { formatLlmsTxt } from './llmsTxtFormat.js';
+import { routeTitle } from './headTags.js';
 import { PathResolver } from './PathResolver.js';
+import { translationT } from './translationT.js';
 
 /** Framework namespace holding the llms.txt section labels (`seo.llmsPages`, `seo.llmsBlog`). */
 const FRAMEWORK_NAMESPACE = 'dndev';
@@ -40,39 +42,65 @@ function text(value) {
 }
 
 /**
- * Label and description of a page in the app's language, from what the page itself
- * declares: its i18n namespace (`title`, `description`, `meta.fullTitle`) and its
- * PageMeta `seo` (written in the app's language). The discovered `meta.title` is
- * derived from the file name (English) and is never used.
+ * PageMeta of a route as discovery holds it (Next: `metaExport`; Vite manifest: `meta`).
+ * @param {Object | undefined} route
+ * @returns {Object}
+ */
+function pageMeta(route) {
+  return route?.metaExport || route?.meta || {};
+}
+
+/**
+ * Label of a page in the app's language: its own title without the site name, by the
+ * chain of its `<title>` (`routeTitle` of core `headTags.ts`, the one AutoMetaTags, the
+ * Vite prerender and the Next metadata manifest apply): `seo.title` (`null`: none), else
+ * the namespace's `title` (a page without its own namespace: its `seo.title` only); without
+ * one, its full title (`seo.fullTitle`, the namespace's `meta.fullTitle`), else the site
+ * name. Never empty. The discovered `meta.title` is derived from the file name (English)
+ * and is never used.
  *
- * @param {Object} route - Discovered route (Next: `metaExport`; Vite manifest: `meta`)
+ * @param {Object | undefined} route - Discovered route (none: the site name)
+ * @param {Object} site
+ * @param {string} site.siteName - Site name
+ * @param {string} site.defaultNamespace - `appConfig.seo.defaultNamespace` (`home`)
+ * @param {(key: string, options?: { defaultValue?: string }) => string} site.t - `t` over the translations in the app's language
+ * @returns {string}
+ * @since 0.3.2
+ */
+export function resolvePageTitle(route, { siteName, defaultNamespace, t }) {
+  const meta = pageMeta(route);
+  const { title, pageTitle } = routeTitle({
+    meta,
+    ns: meta.namespace || null,
+    defaultNs: defaultNamespace,
+    t,
+    siteName,
+  });
+  return pageTitle ?? title;
+}
+
+/**
+ * Description of a page in the app's language, from what the page itself declares: its
+ * PageMeta `seo.description` (written in the app's language; `null`: none), else its i18n
+ * namespace's `description`.
+ *
+ * @param {Object | undefined} route - Discovered route (Next: `metaExport`; Vite manifest: `meta`)
  * @param {Record<string, Record<string, Object>>} translations - i18n discovery `content`
  * @param {string} language - App default language
- * @returns {{ title?: string, description?: string }}
+ * @returns {string | undefined}
  */
-export function resolvePageText(route, translations, language) {
-  const meta = route.metaExport || route.meta || {};
+export function resolvePageDescription(route, translations, language) {
+  const meta = pageMeta(route);
   const seo = meta.seo || {};
+  if (seo.description === null) return undefined;
   const translation = translationOf(translations, meta.namespace, language);
-  const title =
-    text(translation?.title) ??
-    text(seo.title) ??
-    text(translation?.meta?.fullTitle) ??
-    text(seo.fullTitle);
-  const description =
-    seo.description === null
-      ? undefined
-      : (text(seo.description) ?? text(translation?.description));
-  return {
-    ...(title && { title }),
-    ...(description && { description }),
-  };
+  return text(seo.description) ?? text(translation?.description);
 }
 
 /**
  * Source of the app's llms.txt: the sitemap's routes with their labels in the app's
  * language. Serialized into the Next llms.txt route (records expanded at request time
- * by `buildLlmsTxt` from @donotdev/core/next/seo) and formatted at build by Vite.
+ * by `buildLlmsTxt`, utils/llmsTxt.js) and built at build by Vite with the same function.
  *
  * @param {Object} options
  * @param {string} options.siteName - appConfig.app.name
@@ -84,9 +112,12 @@ export function resolvePageText(route, translations, language) {
  * @param {string} [options.blogPath='/blog']
  * @param {Record<string, Record<string, Object>>} options.translations - i18n discovery `content`
  * @param {string} options.language - App default language
+ * @param {string} options.defaultNamespace - `appConfig.seo.defaultNamespace` (`home`): the
+ *   site defaults a page without its own namespace reads ({@link resolvePageTitle})
  * @returns {{ name: string, summary?: string, baseUrl: string, pagesHeading: string, routes: Array, entityHeadings: Record<string, string>, language: string, translations: Record<string, Object> }}
  *   `translations`: entity namespaces and `crud` in `language` (record text, formatted like the card)
- * @throws {Error} When a static page or a framework label has no text in the app language
+ * @throws {Error} When a framework label has no text in the app language, or without
+ *   `defaultNamespace`
  */
 export function getLlmsTxtSource(options) {
   const {
@@ -99,6 +130,7 @@ export function getLlmsTxtSource(options) {
     blogPath = '/blog',
     translations,
     language,
+    defaultNamespace,
   } = options;
 
   const labels = translationOf(translations, FRAMEWORK_NAMESPACE, language)?.seo;
@@ -110,7 +142,25 @@ export function getLlmsTxtSource(options) {
     );
   }
 
+  if (!defaultNamespace) {
+    throw new Error(
+      '[dndev] llms.txt: getLlmsTxtSource needs options.defaultNamespace (appConfig.seo.defaultNamespace, else "home").'
+    );
+  }
+
   const routeByPath = new Map(routes.map((route) => [route.path, route]));
+  const site = {
+    siteName,
+    defaultNamespace,
+    t: translationT(
+      Object.fromEntries(
+        Object.entries(translations || {}).map(([namespace, byLanguage]) => [
+          namespace,
+          byLanguage?.[language],
+        ])
+      )
+    ),
+  };
   const postByPath = new Map(
     blogPosts.map((post) => [`${blogPath}/${post.slug}`, post])
   );
@@ -126,24 +176,16 @@ export function getLlmsTxtSource(options) {
       };
     }
     if (collection) return { path, collection };
-    const page = pageText(path);
-    if (path === blogPath && !page.title) return { path, ...page, title: blogHeading };
-    if (!page.title) {
-      const route = routeByPath.get(path);
-      const namespace = (route?.metaExport || route?.meta)?.namespace;
-      throw new Error(
-        `[dndev] llms.txt: page "${path}" has no title in "${language}". Add "title" to ` +
-          (namespace ? `${namespace}_${language}.json` : 'its translations') +
-          ' or `seo: { title }` to its PageMeta.'
-      );
-    }
-    return { path, ...page };
-  });
-
-  function pageText(path) {
     const route = routeByPath.get(path);
-    return route ? resolvePageText(route, translations, language) : {};
-  }
+    // The blog index the posts imply, without a page of its own: the blog heading
+    if (!route && path === blogPath) return { path, title: blogHeading };
+    const pageDescription = resolvePageDescription(route, translations, language);
+    return {
+      path,
+      title: resolvePageTitle(route, site),
+      ...(pageDescription && { description: pageDescription }),
+    };
+  });
 
   const entityHeadings = {};
   // Record titles/descriptions are formatted like the CRUD card: entity namespaces + crud
@@ -168,32 +210,6 @@ export function getLlmsTxtSource(options) {
     language,
     translations: entityTranslations,
   };
-}
-
-/**
- * Static llms.txt (Vite build): the static pages of the source, which is exactly the
- * Vite sitemap's URL set (no runtime to expand entity records).
- *
- * @param {ReturnType<typeof getLlmsTxtSource>} source
- * @returns {string} llms.txt text
- */
-export function generateStaticLlmsTxt(source) {
-  const sections = new Map([[source.pagesHeading, []]]);
-  for (const route of source.routes) {
-    if (route.collection || route.path.includes(':')) continue;
-    const heading = route.section ?? source.pagesHeading;
-    if (!sections.has(heading)) sections.set(heading, []);
-    sections.get(heading).push({
-      title: route.title,
-      url: `${source.baseUrl}${route.path}`,
-      ...(route.description && { description: route.description }),
-    });
-  }
-  return formatLlmsTxt({
-    name: source.name,
-    ...(source.summary && { summary: source.summary }),
-    sections: [...sections].map(([heading, links]) => ({ heading, links })),
-  });
 }
 
 /**

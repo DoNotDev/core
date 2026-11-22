@@ -11,6 +11,7 @@
 
 export * from './adapters';
 export * from './arrayTranslations';
+export * from './blogFrontmatter';
 export * from './createMetadata';
 export * from './currencyFormat';
 export * from './dateUtils';
@@ -19,6 +20,7 @@ export * from './fieldText';
 export * from './errors';
 export * from './generateFirestoreRuleCondition';
 export * from './maybeTranslate';
+export * from './headTags';
 export * from './pkce';
 export * from './gracefulInit';
 export * from './lazyImport';
@@ -28,6 +30,7 @@ export * from './providers';
 export * from './entityTranslations';
 export * from './languagePath';
 export * from './requestLanguage';
+export * from './routeMatch';
 export * from './singleton';
 export * from './updateMetadata';
 export * from './schema';

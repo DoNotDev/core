@@ -10,56 +10,9 @@
 import { BaseDiscovery } from './BaseDiscovery.js';
 import { getGlobOptionsFor } from '../constants.js';
 import { detectMissingOptionalDeps } from '../utils/detectOptionalDeps.js';
+import { languageFlagCode } from '../utils/flagAsset.js';
 
 export class I18nDiscovery extends BaseDiscovery {
-  /**
-   * Language-to-flag-code overrides where flagCode !== language id.
-   * SSOT: packages/core/i18n/src/utils/constants.ts LANGUAGES array
-   */
-  static LANGUAGE_FLAG_OVERRIDES = {
-    en: 'gb',
-    'en-ca': 'ca',
-    'es-ar': 'ar',
-    'fr-be': 'be',
-    ar: 'sa',
-    'ar-ma': 'ma',
-    'ar-dz': 'dz',
-    'ar-tn': 'tn',
-    'ar-ly': 'ly',
-    'ar-mr': 'mr',
-    hi: 'in',
-    sl: 'si',
-    uk: 'ua',
-    ga: 'ie',
-    gd: 'gb-sct',
-    br: 'bzh',
-    co: 'fr-cor',
-    am: 'et',
-    bn: 'bd',
-    gu: 'in',
-    kn: 'in',
-    ml: 'in',
-    mr: 'in',
-    ne: 'np',
-    pa: 'pk',
-    ta: 'in',
-    te: 'in',
-    ur: 'pk',
-    fa: 'ir',
-    kk: 'kz',
-    ky: 'kg',
-    tg: 'tj',
-    my: 'mm',
-    km: 'kh',
-    lo: 'la',
-    ka: 'ge',
-    hy: 'am',
-    be: 'by',
-    bs: 'ba',
-    sq: 'al',
-    ms: 'my',
-  };
-
   constructor(pathResolver, options = {}) {
     super(pathResolver, {
       fallbackLanguage: 'en',
@@ -485,15 +438,9 @@ export class I18nDiscovery extends BaseDiscovery {
       );
     }
 
-    // Derive flag codes from supported languages
-    // Most languages use their ID as country code; overrides handle exceptions
-    const flagCodes = [
-      ...new Set(
-        finalLanguages.map(
-          (lang) => I18nDiscovery.LANGUAGE_FLAG_OVERRIDES[lang] || lang
-        )
-      ),
-    ];
+    // Flag codes of the supported languages, as the language pickers render them
+    // (LANGUAGES flagCode, else the id): the flags the asset discovery copies to public/
+    const flagCodes = [...new Set(finalLanguages.map(languageFlagCode))];
 
     return {
       mapping: result.mapping,
@@ -515,10 +462,7 @@ export class I18nDiscovery extends BaseDiscovery {
       allNamespaces: ['common'],
       supportedLanguages: [this.options.fallbackLanguage],
       fallbackLanguage: this.options.fallbackLanguage,
-      flagCodes: [
-        I18nDiscovery.LANGUAGE_FLAG_OVERRIDES[this.options.fallbackLanguage] ||
-          this.options.fallbackLanguage,
-      ],
+      flagCodes: [languageFlagCode(this.options.fallbackLanguage)],
       files: [],
 
       timestamp: Date.now(),

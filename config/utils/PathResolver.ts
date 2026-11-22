@@ -37,7 +37,6 @@ import {
   basename,
   extname,
 } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import fastGlob from 'fast-glob';
 
@@ -1149,7 +1148,10 @@ export class PathResolver {
   }
 
   /**
-   * Execute fast-glob with normalized results
+   * Execute fast-glob with normalized results, sorted. fast-glob returns files in
+   * filesystem completion order, which varies between runs: every discovery (routes,
+   * themes, i18n, assets) and what it generates (route manifest, sitemap, llms.txt,
+   * proxy) must list the same sources in the same order on every build.
    * @private
    */
   async _globWithNormalization(
@@ -1158,10 +1160,12 @@ export class PathResolver {
     options: any
   ): Promise<string[]> {
     const results = await fastGlob(patterns, options);
-    return results.map((path: string | { path: string }) => {
-      const pathStr = typeof path === 'string' ? path : path.path;
-      return this.normalizePath(pathStr);
-    });
+    return results
+      .map((path: string | { path: string }) => {
+        const pathStr = typeof path === 'string' ? path : path.path;
+        return this.normalizePath(pathStr);
+      })
+      .sort();
   }
 
   /**
@@ -1391,16 +1395,6 @@ export class PathResolver {
   getEmptyModulePath(): string {
     const cjsPath = this.getEmptyCjsModulePath();
     return cjsPath.replace(/\.cjs$/, '.js');
-  }
-
-  /**
-   * Get absolute path to empty flag component module.
-   * Returns `export default () => null;` — used by flag filtering plugins
-   * to replace unused flag files at build time.
-   */
-  getEmptyFlagModulePath(): string {
-    const __dirname = dirname(fileURLToPath(import.meta.url));
-    return this.normalizePath(resolve(__dirname, 'emptyFlag.js'));
   }
 
   /**

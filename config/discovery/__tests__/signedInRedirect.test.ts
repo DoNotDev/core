@@ -27,7 +27,7 @@ describe('PageMeta signedInRedirect', () => {
   it('fails the build on an external or relative target, or a self loop', () => {
     for (const bad of ['https://evil.example', '//evil.example', 'catalogue', 42]) {
       expect(() => validateSignedInRedirect(route(bad))).toThrow(
-        /must be an app path/
+        /^\[dndev-routes\] src\/pages\/HomePage\.tsx: PageMeta signedInRedirect must be an app path/
       );
     }
     expect(() => validateSignedInRedirect(route('/?x=1'))).toThrow(/loop/);

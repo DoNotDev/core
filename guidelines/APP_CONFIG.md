@@ -43,13 +43,16 @@ export const appConfig: AppConfig = {
     defaultTheme: 'light',
   },
 
+  // prerenderRecords: true,  // Entity pages (/produits/:slug) built at build, one per published record (Next and Vite)
+
   // Next only
   // revalidate: 3600,        // Cache lifetime of cached pages, sitemap, llms.txt (seconds, or false = until next deploy)
-  // prerenderRecords: true,  // Entity pages (/produits/:slug) built at build, one per published record
 };
 ```
 
-**Next caching.** Every public page is cached (ISR, `revalidate`). Entity pages (single-param route whose page sits in `src/pages/<entity>/`, not `auth`, not `seo.noindex`: the sitemap's dynamic routes) are prerendered at build, one per published record (`status` not in `HIDDEN_STATUSES`, public anonymous reader, same records as the sitemap, at most 1000 per route). Records published later render on their first request, then are cached. The build reads the database as a signed-out visitor: Supabase with `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLIC_KEY` (RLS decides), Firebase with `NEXT_PUBLIC_FIREBASE_API_KEY` / `NEXT_PUBLIC_FIREBASE_PROJECT_ID` (Firestore Security Rules decide; they must allow the whole query `status not-in HIDDEN_STATUSES`, rules are not filters). Missing variables or a failed read fail it (as for the sitemap). An app on any other provider fails the build on such a page: set `prerenderRecords: false` (every URL renders on its first request). Any other value than a boolean fails the build.
+**Next caching.** Every public page is cached (ISR, `revalidate`). Entity pages (single-param route whose page declares its entity in PageMeta, `entity: productEntity`, not `auth`, not `seo.noindex`: the sitemap's dynamic routes) are prerendered at build, one per published record (`status` not in `HIDDEN_STATUSES`, public anonymous reader, same records as the sitemap, at most 1000 per route). Records published later render on their first request, then are cached. The build reads the database as a signed-out visitor: Supabase with `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLIC_KEY` (RLS decides), Firebase with `NEXT_PUBLIC_FIREBASE_API_KEY` / `NEXT_PUBLIC_FIREBASE_PROJECT_ID` (Firestore Security Rules decide; they must allow the whole query `status not-in HIDDEN_STATUSES`, rules are not filters). Missing variables or a failed read fail it (as for the sitemap). Each entity page also reads its own record with that reader for its server metadata (`generateMetadata`, JSON-LD) and answers 404 when no public record matches (see ui `SEO.md`); Firestore then needs the composite index of `<param> == value` + `status not-in` (the read fails with the link to create it). `prerenderRecords: false` skips the build-time prerender only (every URL renders on its first request). An app on any other provider fails the build on such a page: mark it `seo: { noindex: true }`, or export `generateMetadata` from a server page module and set `prerenderRecords: false`. Any other value than a boolean fails the build.
+
+**Vite record pages.** With `prerender: 'auto'` (the default) the Vite build writes one static HTML per published record of the same entity pages and per language (`dist/produits/serum.html`; same records, same identity as the Next entity page: title, description, canonical, Open Graph, Twitter, hreflang, Product and BreadcrumbList JSON-LD; see ui `SEO.md`). It reads the database once as a signed-out visitor, for these pages and for `dist/sitemap.xml` / `dist/llms.txt` (which list the records too): Supabase with `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLIC_KEY`, Firebase with `VITE_FIREBASE_API_KEY` / `VITE_FIREBASE_PROJECT_ID`; record pages also need `VITE_APP_URL` (absolute, no trailing slash; public on a deploy build: `dndev deploy`, Vercel or CI. A local build takes a localhost one, with one warning line, and writes no record page without one; ui `SEO.md`, Sitemap & llms.txt, URLs). Missing variables, a failed read, another provider or no `entities` package fail the build. Records published later get the SPA shell (`dist/_shell.html`) until the next build. `prerenderRecords: false` writes no record page (the sitemap still lists the records, so the build still reads them).
 
 ---
 
@@ -168,12 +171,30 @@ VITE_FIREBASE_PROJECT_ID=...       # Written by dndev setup
 VITE_AUTH_PARTNERS=github,google
 VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
 
-# functions/.env - server-side secrets (never exposed to browser)
+# .dndev.secrets (project root, gitignored) - server-side secrets (never exposed to browser)
 STRIPE_SECRET_KEY=<stripe_secret_key>
 STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
-Push server secrets to Firebase: `dndev sync-secrets`
+Push server secrets to Firebase: `dndev sync-secrets` (also done by `dndev deploy` for the secrets the functions bind; see [ENV_SETUP.md](./ENV_SETUP.md))
+
+---
+
+## 6. Next: running a foreign Next app (Payload CMS)
+
+A foreign Next app (Payload CMS: `/admin`, `/api`) can live inside a dndev Next app. Working reference: carvolix `apps/cms` (`next.config.ts`, `src/app/(payload)/`). Three rules:
+
+1. **Route files carry the `.next.` marker.** The framework sets Next `pageExtensions` to `next.tsx|ts|jsx|js` (`config/next/nextFiles.js`: `NEXT_PAGE_EXTENSIONS`), so only `layout.next.tsx`, `page.next.tsx`, `route.next.ts`... are routes. An unmarked `layout.tsx` / `page.tsx` is ignored by Next. Rename the foreign app's route files.
+2. **A route group with its own root layout (`(payload)`) needs 2+ languages.** With 2+ languages the framework root layout lives in `src/app/[lang]/layout.next.tsx` (`RouteHandler.rootDir()`), so `src/app/(payload)/layout.next.tsx` is a second root layout beside it. The proxy matcher excludes `api` (`/api` is never a page); `/admin` is not a page of the app, and carvolix relies on the proxy passing it through (not confirmed from the proxy code, only from carvolix running). With one language the framework generates `src/app/layout.next.tsx` as the only root layout, rendering `AppDocument`; `(payload)/layout.next.tsx` then nests inside it (two `<html>`), and the app cannot replace the generated root layout: `assertAppDocument()` fails the build when `src/app/layout.next.tsx` (or `[lang]/layout.next.tsx`, `not-found.next.tsx`, `global-not-found.next.tsx`) is app-owned. So a foreign root layout cannot coexist with one language. The nesting outcome (nested `<html>` at runtime) is Next behaviour, not verified here.
+3. **`defineNextConfig` returns an async function** (Next calls it with the phase). A Next plugin such as `withPayload` takes the resolved object, so wrap the resolved config:
+
+   ```ts
+   const dndevConfig = defineNextConfig({ appConfig, i18n: { fallbackLanguage: 'fr', only: ['fr', 'en'] } });
+
+   export default async function nextConfig(...args: unknown[]) {
+     return withPayload(await dndevConfig(...args), { devBundleServerPackages: false });
+   }
+   ```
 
 ---
 

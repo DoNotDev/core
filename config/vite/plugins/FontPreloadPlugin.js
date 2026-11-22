@@ -21,7 +21,6 @@ import {
   resolveFontManifest,
   stripWoffFromSrc,
 } from '../../fonts/resolveFontManifest.js';
-import { I18nDiscovery } from '../../discovery/I18nDiscovery.js';
 import { ThemeDiscovery } from '../../discovery/ThemeDiscovery.js';
 import { createLogger } from '../../utils/debugLog.js';
 import { PathResolver } from '../../utils/PathResolver.js';
@@ -32,11 +31,17 @@ const FONT_PRELOAD_MARKER = '<!-- DNDEV_FONT_PRELOADS -->';
 const CSS_URL_RE = /url\(\s*['"]?([^'")]+)['"]?\s*\)/g;
 
 /**
- * @param {Object} options - Plugin options
+ * @param {Object} options - Plugin options (`i18nStore`: this build's i18n discovery,
+ *   `createI18nStore`, set by the i18n plugin: the languages the font subsets follow)
  * @returns {Object} Vite plugin
  */
 export function createViteFontPreloadPlugin(options = {}) {
-  const { debug = false, i18nOptions = {} } = options;
+  const { debug = false, i18nStore } = options;
+  if (!i18nStore) {
+    throw new Error(
+      '[dndev] createViteFontPreloadPlugin: options.i18nStore is required (createVitePlugins passes the i18n plugin\'s, createI18nStore).'
+    );
+  }
   const logger = createLogger('font-preload', debug, false);
 
   let pathResolver;
@@ -73,22 +78,8 @@ export function createViteFontPreloadPlugin(options = {}) {
       const appRoot = pathResolver.getAppRoot();
       if (!appRoot) return;
 
-      // 1. Discover locales from I18n (determines which subsets to keep)
-      let locales = [i18nOptions.fallbackLanguage || 'en'];
-      try {
-        const i18n = new I18nDiscovery(pathResolver, {
-          fallbackLanguage: i18nOptions.fallbackLanguage || 'en',
-          only: i18nOptions.only,
-        });
-        const data = await i18n.discoverTranslations();
-        if (data?.supportedLanguages?.length) {
-          locales = data.supportedLanguages;
-        }
-      } catch (err) {
-        logger.debug(
-          `Font preload: i18n discovery failed, using 'en': ${err?.message}`
-        );
-      }
+      // 1. Locales of this build's i18n discovery (determines which subsets to keep)
+      const { supportedLanguages: locales } = await i18nStore.ready();
 
       // 2. Families the theme renders text in (fails the build when unknown)
       const themes = new ThemeDiscovery(null, pathResolver, { debug });

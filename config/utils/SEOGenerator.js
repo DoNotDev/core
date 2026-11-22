@@ -1,17 +1,18 @@
 /**
  * @fileoverview SEO Generator - Core SEO Logic
- * @description Generates robots.txt, sitemap.xml, rss.xml, and SEO manifest. Platform-agnostic - used by both Vite and Next.js.
- * Auto-discovers blog content from src/content/blog/ and integrates posts into sitemap + RSS.
+ * @description Generates robots.txt, rss.xml and the SEO manifest, and lists the sitemap's routes
+ * (`getSitemapRoutes`: the shared sitemap.xml / llms.txt builders write the files). Platform-agnostic -
+ * used by both Vite and Next.js. Auto-discovers blog content from src/content/blog/ (sitemap routes + RSS).
  *
  * @version 0.0.2
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
  */
 
-import { DEFAULT_OG_IMAGE } from '../constants.js';
-import { PathResolver } from './PathResolver.js';
+import { readBlogPosts } from './blogFeed.js';
+import { createBuildError, isBuildError } from './buildError.js';
 import { createLogger } from './debugLog.js';
-import { RouteDiscovery } from '../discovery/RouteDiscovery.js';
+import { routeParams } from './publicPages.js';
 
 /**
  * Escape XML special characters in text content and attribute values
@@ -39,12 +40,26 @@ function escapeCdata(str) {
   return str.replace(/\]\]>/g, ']]]]><![CDATA[>');
 }
 
+/**
+ * Base URL of a Vite build's published URLs (robots.txt, sitemap.xml, llms.txt):
+ * `seo.baseUrl`, else `VITE_APP_URL`, trimmed, without trailing slashes. One reading
+ * for the SEO plugin and the build pages.
+ * @param {string | undefined} configured - `appConfig.seo.baseUrl`
+ * @param {string | undefined} appUrl - `VITE_APP_URL` (Vite `loadEnv`)
+ * @returns {string} `''` when neither is set
+ * @since 0.3.2
+ */
+export function seoBaseUrl(configured, appUrl) {
+  return (configured || appUrl || '').trim().replace(/\/+$/, '');
+}
+
 /** Hosts that only resolve on the build machine. */
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '0.0.0.0', '[::1]']);
 
 /**
- * Fail a production build whose base URL is not public: the sitemap, robots.txt and
- * llms.txt publish absolute URLs, and a localhost URL makes them useless to crawlers.
+ * Fail a deploy build whose base URL is not public ({@link publishedBaseUrl}): the sitemap,
+ * robots.txt and llms.txt publish absolute URLs, and a localhost URL makes them useless to
+ * crawlers.
  * @param {string} baseUrl - Resolved base URL
  * @param {string} envVar - Env var that sets it (for the error message)
  * @throws {Error} When the URL is not absolute http(s) or its host is local
@@ -62,11 +77,150 @@ export function assertPublicBaseUrl(baseUrl, envVar) {
   }
   if (LOCAL_HOSTS.has(hostname) || hostname.endsWith('.localhost')) {
     throw new Error(
-      `[dndev] SEO: production build with base URL "${baseUrl}". The sitemap, robots.txt and llms.txt ` +
+      `[dndev] SEO: deploy build with base URL "${baseUrl}". The sitemap, robots.txt and llms.txt ` +
         `would publish local URLs. Set ${envVar} (or seo.baseUrl) to the production URL in the build environment.`
     );
   }
 }
+
+/**
+ * Env var `dndev deploy` sets on the app build it runs (packages/tooling `deploy.ts`):
+ * the build publishes to production.
+ */
+export const DEPLOY_BUILD_ENV = 'DNDEV_DEPLOY';
+
+/**
+ * Whether a build is a deploy build, from documented signals only: `dndev deploy`
+ * ({@link DEPLOY_BUILD_ENV}`=1`), a Vercel build (`VERCEL=1`, Vercel system environment
+ * variables) or a CI build (`CI` set to anything but `false` / `0`: `CI=1` on Vercel,
+ * `CI=true` on GitHub Actions). Anything else is a local build.
+ * @param {Record<string, string | undefined>} [env] - Environment (default `process.env`)
+ * @returns {boolean}
+ * @since 0.3.2
+ */
+export function isDeployBuild(env = process.env) {
+  const ci = env.CI;
+  return (
+    env[DEPLOY_BUILD_ENV] === '1' ||
+    env.VERCEL === '1' ||
+    (ci !== undefined && ci !== '' && ci !== 'false' && ci !== '0')
+  );
+}
+
+/** Warnings already printed this process (one line per URL, whichever plugin asks first). */
+const warnedBaseUrls = new Set();
+
+/**
+ * The base URL a production build publishes (sitemap.xml, llms.txt, robots.txt, canonical
+ * URLs, record pages), Next and Vite alike:
+ *
+ * - Deploy build ({@link isDeployBuild}): the URL must be public, else the build fails
+ *   ({@link assertPublicBaseUrl}): crawlers would get local or no URLs.
+ * - Local build: never fails because of the URL. It publishes the URL it has, localhost
+ *   included, with one warning line when it is not public. Without a usable URL (none, or
+ *   not an absolute http(s) URL) it returns `null` with one warning line: the caller skips
+ *   what needs a URL.
+ *
+ * @param {string | null | undefined} baseUrl - Resolved base URL (no trailing slash)
+ * @param {string} envVar - Env var that sets it (`VITE_APP_URL`, `NEXT_PUBLIC_APP_URL`)
+ * @param {{ warn: (message: string) => void }} logger - Logger for the local-build warning
+ * @param {Record<string, string | undefined>} [env] - Environment (default `process.env`)
+ * @returns {string | null} The URL to publish, `null` when a local build has none
+ * @throws {Error} On a deploy build without a public URL
+ * @since 0.3.2
+ */
+export function publishedBaseUrl(baseUrl, envVar, logger, env = process.env) {
+  if (isDeployBuild(env)) {
+    if (!baseUrl) {
+      throw new Error(
+        `[dndev] SEO: deploy build without ${envVar}. The sitemap, robots.txt, llms.txt and ` +
+          `canonical URLs need the production URL: set ${envVar} (or seo.baseUrl) in the build environment.`
+      );
+    }
+    assertPublicBaseUrl(baseUrl, envVar);
+    return baseUrl;
+  }
+  const once = (message) => {
+    if (warnedBaseUrls.has(message)) return;
+    warnedBaseUrls.add(message);
+    logger.warn(message);
+  };
+  if (!baseUrl || !isAbsoluteHttpUrl(baseUrl)) {
+    once(
+      `[dndev] Local build without a usable ${envVar}${baseUrl ? ` ("${baseUrl}")` : ''}: no sitemap.xml, llms.txt, robots.txt, rss.xml, canonical URLs or record pages. Set ${envVar} to build them.`
+    );
+    return null;
+  }
+  if (!isPublicUrl(baseUrl)) {
+    once(
+      `[dndev] Local build: sitemap.xml, llms.txt, canonical URLs and record pages carry ${baseUrl} (${envVar}). A deploy build (dndev deploy, Vercel, CI) needs the production URL.`
+    );
+  }
+  return baseUrl;
+}
+
+/**
+ * Run one group of SEO files, failing loud by the rule of the app URL check
+ * ({@link publishedBaseUrl}), on Vite (SEO plugin) and Next (SEO handler) alike:
+ *
+ * - a build error (`createBuildError`: the app is misconfigured) fails every build;
+ * - any other error (a failed read or write, a missing framework label, a step run out of
+ *   order) fails a deploy build ({@link isDeployBuild}) with a build error naming the files
+ *   (`[dndev-seo] <files> not written: <cause>`);
+ * - on a local build it is one warning line naming the files not written and why; the
+ *   caller's other groups still run.
+ *
+ * @param {string[]} files - Files the group writes, for the message
+ * @param {() => unknown} run - Writes them
+ * @param {{ warn: (message: string) => void }} logger - Build logger (the local warning)
+ * @param {Record<string, string | undefined>} [env] - Environment (default `process.env`)
+ * @returns {Promise<boolean>} `true` when the group ran without error
+ * @throws {Error} A build error, or any error on a deploy build
+ * @since 0.3.2
+ */
+export async function seoStep(files, run, logger, env = process.env) {
+  try {
+    await run();
+    return true;
+  } catch (error) {
+    if (isBuildError(error)) throw error;
+    const message = `${files.join(', ')} not written: ${error.message}`;
+    if (isDeployBuild(env)) {
+      throw createBuildError(
+        'dndev-seo',
+        `${message}. A deploy build publishes every SEO file.`,
+        'seo-generation-failed',
+        { files }
+      );
+    }
+    logger.warn(`[dndev] Local build: ${message} (a deploy build fails on it).`);
+    return false;
+  }
+}
+
+/** Whether a URL is absolute http(s). */
+function isAbsoluteHttpUrl(value) {
+  try {
+    const { protocol } = new URL(value);
+    return protocol === 'https:' || protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+/** Whether an absolute URL's host resolves beyond the build machine. */
+function isPublicUrl(value) {
+  const { hostname } = new URL(value);
+  return !LOCAL_HOSTS.has(hostname) && !hostname.endsWith('.localhost');
+}
+
+/**
+ * robots.txt `Disallow` paths: non-page paths only (`/api`: route handlers, no HTML). Pages
+ * are never blocked, `noindex` keeps them out of the index instead (a crawler must fetch a
+ * page to read it). Never /_next: it serves the JS, CSS and images Google fetches to render
+ * the page, and it does not render blocked resources.
+ */
+const ROBOTS_DISALLOWED_PATHS = Object.freeze(['/api']);
 
 /** Error / not-found routes: never listed in sitemap.xml or llms.txt. */
 const ERROR_ROUTE_PATHS = new Set(['/404', '/not-found', '/500', '/error']);
@@ -89,8 +243,22 @@ export function isIndexableRoute(route) {
 }
 
 /**
+ * Catch-all route (`*` segment: `/docs/*`, Next `[...slug]`). Its URLs come from no
+ * entity, so the sitemap and llms.txt cannot list them: they leave it out instead of
+ * printing the pattern as a URL. Route discovery's dynamic-route SEO check exempts it
+ * for the same reason (`assertDynamicRouteSeo`).
+ * @param {Object} route - Route from discovery
+ * @returns {boolean} `true` when the route path has a `*` segment
+ * @since 0.3.2
+ */
+export function isCatchAllRoute(route) {
+  return typeof route.path === 'string' && route.path.split('/').includes('*');
+}
+
+/**
  * Collection whose public records fill an indexable dynamic route's `:param`: the
- * route's entity (`meta.entity`, from its `src/pages/<entity>/` folder). One decision for
+ * route's entity (`meta.entity`, the collection of the entity its page declares in
+ * PageMeta, `entity: productEntity`). One decision for
  * the sitemap, llms.txt and the pages Next prerenders at build, so all three list the
  * same records.
  * @param {Object} route - Route from discovery
@@ -104,14 +272,48 @@ export function publicCollection(route) {
 }
 
 /**
+ * Route whose `:param` is filled by public records: a single-param route (`/produits/:slug`)
+ * whose records the sitemap lists ({@link publicCollection}: indexable, with an entity).
+ * One decision for the Next prerendered records and generated entity metadata, and the
+ * Vite record prerender.
+ * @param {Object} route - Route from discovery or the route manifest (`path` in React Router syntax)
+ * @returns {{ path: string, collection: string } | null}
+ * @since 0.3.2
+ */
+export function publicRecordsRoute(route) {
+  if (typeof route.path !== 'string' || route.path.includes('*')) return null;
+  if (routeParams(route.path).length !== 1) return null;
+  const collection = publicCollection(route);
+  return collection ? { path: route.path, collection } : null;
+}
+
+/**
+ * Route counts of the SEO manifest (`seo-manifest.json`): all routes, public ones
+ * (no `auth`), protected ones (`auth.required`).
+ * @param {Array<Object> | undefined} routes - Routes from discovery
+ * @returns {{ totalRoutes: number, publicRoutes: number, protectedRoutes: number }}
+ */
+function routeCounts(routes = []) {
+  return {
+    totalRoutes: routes.length,
+    publicRoutes: routes.filter((r) => !r.auth || r.auth === false).length,
+    protectedRoutes: routes.filter((r) => r.auth && r.auth.required).length,
+  };
+}
+
+/**
  * SEO Generator class - single source of truth for SEO generation
  */
 export class SEOGenerator {
+  /**
+   * @param {Object} options - `baseUrl`, `siteName` (required), `generateRobotsTxt`,
+   *   `crawlDelay`, `aiCrawlers`, `appRoot`, and `shellPath`: the Vite SPA shell's public URL
+   *   (`/_shell`), disallowed in robots.txt (Vite only: Next has no shell file)
+   */
   constructor(options = {}) {
     const {
       debug = false,
       generateRobotsTxt = true,
-      generateSitemap = true,
       baseUrl,
       siteName,
       crawlDelay = 1,
@@ -128,18 +330,12 @@ export class SEOGenerator {
     this.options = {
       debug,
       generateRobotsTxt,
-      generateSitemap,
       baseUrl,
       siteName,
       crawlDelay,
       aiCrawlers,
       routes: routeOptions,
-      defaultImage: DEFAULT_OG_IMAGE,
-      twitterHandle: '@donotdev',
-      defaultAuthor: 'DNDev Team',
-      defaultLanguage: 'en',
       blogPath: '/blog',
-      staticTags: {},
       ...pluginOptions,
     };
 
@@ -149,97 +345,59 @@ export class SEOGenerator {
   }
 
   /**
-   * Generate all SEO files
+   * Generate all SEO files: robots.txt, rss.xml (with blog posts) and seo-manifest.json.
    * @param {Object} routeData - Route discovery data
    * @param {Function} writeFile - Function to write files (platform-specific)
+   * @param {Array} blogPosts - The build's blog posts ({@link discoverBlogPosts}, read once per build)
    * @returns {Object} Generation results
+   * @throws {Error} A failed write, unlogged: the caller reports it once ({@link seoStep})
    */
-  async generateSEOFiles(routeData, writeFile) {
-    try {
-      // Generate route meta tags
-      const routeMetaTags = this.generateRouteMetaTags(routeData.routes || []);
+  async generateSEOFiles(routeData, writeFile, blogPosts) {
+    // Prepare SEO data
+    const seoData = {
+      routes: routeData.routes || [],
+      baseUrl: this.options.baseUrl,
+      siteName: this.options.siteName,
+    };
 
-      // Prepare SEO data
-      const seoData = {
-        routes: routeData.routes || [],
-        routeMetaTags,
-        baseUrl: this.options.baseUrl,
-        siteName: this.options.siteName,
-      };
+    const results = { robotsTxt: null, rss: null, manifest: null };
 
-      // Discover blog content (no-ops if src/content/blog/ doesn't exist)
-      const blogPosts = this.discoverBlogPosts();
-
-      const results = {
-        robotsTxt: null,
-        sitemap: null,
-        rss: null,
-        manifest: null,
-        totalRoutes: seoData.routes.length,
-        publicRoutes: seoData.routes.filter((r) => !r.auth || r.auth === false)
-          .length,
-        protectedRoutes: seoData.routes.filter((r) => r.auth && r.auth.required)
-          .length,
-        blogPosts: blogPosts.length,
-      };
-
-      // Generate robots.txt
-      if (this.options.generateRobotsTxt) {
-        results.robotsTxt = await this.generateRobotsTxt(seoData, writeFile);
-      }
-
-      // Generate sitemap.xml (includes blog post URLs if any)
-      if (this.options.generateSitemap) {
-        results.sitemap = await this.generateSitemap(
-          seoData,
-          writeFile,
-          blogPosts
-        );
-      }
-
-      // Generate RSS feed if blog content exists
-      if (blogPosts.length > 0) {
-        results.rss = await this.generateRSSFeed(blogPosts, writeFile);
-      }
-
-      // Generate SEO manifest
-      results.manifest = await this.generateManifest(seoData, writeFile);
-
-      return results;
-    } catch (error) {
-      this.logger.error(
-        `SEO generator failed to create files (robots.txt/sitemap.xml/manifest): ${error.message}`
-      );
-      this.logger.error(`Stack: ${error.stack || 'No stack trace available'}`);
-      // Log error but continue - SEO files are optional, build can proceed without them
-      throw error; // Re-throw to let caller decide - SEO plugin/handler will catch and continue
+    // Generate robots.txt
+    if (this.options.generateRobotsTxt) {
+      results.robotsTxt = await this.generateRobotsTxt(seoData, writeFile);
     }
+
+    // Generate RSS feed if blog content exists
+    if (blogPosts.length > 0) {
+      results.rss = await this.generateRSSFeed(blogPosts, writeFile);
+    }
+
+    // Generate SEO manifest
+    results.manifest = await this.generateManifest(seoData, writeFile);
+
+    return results;
   }
 
   /**
-   * Generate robots.txt file
+   * Generate robots.txt file. Disallows non-page paths only ({@link ROBOTS_DISALLOWED_PATHS},
+   * plus the Vite SPA shell's own URL, `options.shellPath`): every page stays crawlable,
+   * auth-only and sign-in pages included, so crawlers read their
+   * `<meta name="robots" content="noindex">` (AutoMetaTags). Google never sees a noindex on
+   * a page robots.txt blocks, and can still index a blocked URL linked elsewhere.
    * @param {Object} seoData - SEO data
    * @param {Function} writeFile - Function to write files
    * @returns {Object} Generation result
    */
   async generateRobotsTxt(seoData, writeFile) {
-    const disallowedPaths = [];
-
-    // Auto-detect protected routes to disallow
-    (seoData.routes || []).forEach((route) => {
-      if (route.auth && route.auth.required) {
-        // Ensure path starts with /
-        const path = route.path.startsWith('/') ? route.path : `/${route.path}`;
-        disallowedPaths.push(path);
-      }
-    });
-
-    // Add common disallowed paths. Never /_next: it serves the JS, CSS and images
-    // Google fetches to render the page, and it does not render blocked resources.
-    disallowedPaths.push('/admin', '/api');
+    // The shell is served (rewritten) for every unprerendered page, under that page's URL:
+    // blocking its public URL (`/_shell`, `/_shell.html`) never blocks a page. No robots
+    // tag in the shell itself: those pages are crawlable.
+    const disallowedPaths = this.options.shellPath
+      ? [...ROBOTS_DISALLOWED_PATHS, this.options.shellPath]
+      : ROBOTS_DISALLOWED_PATHS;
 
     const robotsContent = this.generateRobotsTxtContent({
-      disallowedPaths: [...new Set(disallowedPaths)], // Remove duplicates
+      disallowedPaths,
       sitemap: `${this.options.baseUrl}/sitemap.xml`,
       crawlDelay: this.options.crawlDelay,
     });
@@ -254,67 +412,10 @@ export class SEOGenerator {
   }
 
   /**
-   * Generate sitemap.xml file
-   * @param {Object} seoData - SEO data
-   * @param {Function} writeFile - Function to write files
-   * @param {Array} blogPosts - Discovered blog posts (from discoverBlogPosts)
-   * @returns {Object} Generation result
-   */
-  async generateSitemap(seoData, writeFile, blogPosts = []) {
-    const publicRoutes = (seoData.routes || []).filter((route) => {
-      // Exclude auth-protected and noindex routes
-      if (!isIndexableRoute(route)) return false;
-      // Exclude dynamic :param routes (not real URLs; the Next runtime sitemap expands them)
-      if (typeof route.path === 'string' && route.path.includes(':'))
-        return false;
-      // Exclude /blog if blog posts exist (blog discovery adds it with proper lastmod)
-      if (blogPosts.length > 0 && route.path === this.options.blogPath)
-        return false;
-      return true;
-    });
-
-    const sitemapUrls = publicRoutes.map((route) => ({
-      url: route.path,
-      lastmod: new Date().toISOString().split('T')[0],
-      changefreq: 'weekly',
-      priority: route.path === '/' ? '1.0' : '0.8',
-    }));
-
-    // Append blog post URLs if any
-    if (blogPosts.length > 0) {
-      sitemapUrls.push({
-        url: this.options.blogPath,
-        lastmod: blogPosts[0]?.date || new Date().toISOString().split('T')[0],
-        changefreq: 'weekly',
-        priority: '0.7',
-      });
-
-      for (const post of blogPosts) {
-        sitemapUrls.push({
-          url: `${this.options.blogPath}/${post.slug}`,
-          lastmod: post.date,
-          changefreq: 'monthly',
-          priority: '0.6',
-          image: post.image || null,
-        });
-      }
-    }
-
-    const sitemapContent = this.generateSitemapContent(sitemapUrls);
-
-    await writeFile('sitemap.xml', sitemapContent);
-
-    return {
-      fileName: 'sitemap.xml',
-      content: sitemapContent,
-      publicRoutes: sitemapUrls.length,
-    };
-  }
-
-  /**
    * Routes of the runtime sitemap (Next `app/sitemap.xml` route, see buildSitemap in @donotdev/core/next).
    * Static indexable routes, dynamic routes with the collection of their entity
-   * (`meta.entity`), and blog posts (file-based, resolved at build).
+   * (`meta.entity`, declared by the page in PageMeta), and blog posts (file-based, resolved at build). Catch-all routes
+   * (`/docs/*`) are left out: no URL list to expand them from.
    * @param {Array} routes - Routes from discovery
    * @param {Array} blogPosts - Discovered blog posts
    * @returns {Array<{path: string, collection?: string, lastModified?: string, priority?: number, changeFrequency?: string}>}
@@ -324,6 +425,7 @@ export class SEOGenerator {
     const sitemapRoutes = [];
     for (const route of routes || []) {
       if (!isIndexableRoute(route) || typeof route.path !== 'string') continue;
+      if (isCatchAllRoute(route)) continue;
       const isBlogRoute =
         route.path === blogPath || route.path.startsWith(`${blogPath}/`);
       if (blogPosts.length > 0 && isBlogRoute) continue;
@@ -357,22 +459,17 @@ export class SEOGenerator {
   }
 
   /**
-   * Generate SEO manifest
+   * Generate the SEO manifest (`seo-manifest.json`): route counts, base URL, site name.
    * @param {Object} seoData - SEO data
    * @param {Function} writeFile - Function to write files
    * @returns {Object} Generation result
    */
   async generateManifest(seoData, writeFile) {
     const manifest = {
-      totalRoutes: seoData.routes?.length || 0,
-      publicRoutes:
-        seoData.routes?.filter((r) => !r.auth || r.auth === false).length || 0,
-      protectedRoutes:
-        seoData.routes?.filter((r) => r.auth && r.auth.required).length || 0,
+      ...routeCounts(seoData.routes),
       baseUrl: this.options.baseUrl,
       siteName: this.options.siteName,
       generatedAt: new Date().toISOString(),
-      routeMetaTags: seoData.routeMetaTags || [],
     };
 
     const manifestContent = JSON.stringify(manifest, null, 2);
@@ -393,7 +490,7 @@ export class SEOGenerator {
   generateRobotsTxtContent(options = {}) {
     const {
       allowedPaths = ['/'],
-      disallowedPaths = ['/admin', '/api'],
+      disallowedPaths = ROBOTS_DISALLOWED_PATHS,
       sitemap,
       crawlDelay,
     } = options;
@@ -430,182 +527,14 @@ export class SEOGenerator {
   }
 
   /**
-   * Generate sitemap XML content
-   * @param {Array} urls - Array of URLs with metadata
-   * @returns {string} Sitemap XML content
-   */
-  generateSitemapContent(urls) {
-    const hasImages = urls.some((u) => u.image);
-    const urlElements = urls
-      .map(({ url, lastmod, changefreq, priority, image }) => {
-        const elements = [
-          `    <loc>${escapeXml(this.options.baseUrl)}${escapeXml(url)}</loc>`,
-        ];
-
-        if (lastmod) {
-          elements.push(`    <lastmod>${lastmod}</lastmod>`);
-        }
-
-        if (changefreq) {
-          elements.push(`    <changefreq>${changefreq}</changefreq>`);
-        }
-
-        if (priority) {
-          elements.push(`    <priority>${priority}</priority>`);
-        }
-
-        if (image) {
-          elements.push(
-            `    <image:image>\n      <image:loc>${escapeXml(this.options.baseUrl)}${escapeXml(image)}</image:loc>\n    </image:image>`
-          );
-        }
-
-        return `  <url>\n${elements.join('\n')}\n  </url>`;
-      })
-      .join('\n');
-
-    return `<?xml version="1.0" encoding="UTF-8"?>
-  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"${hasImages ? '\n    xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"' : ''}>
-  ${urlElements}
-  </urlset>`;
-  }
-
-  /**
-   * Generate meta tags from routes data
-   * @param {Array} routes - Route data
-   * @returns {Array} Array of meta tag objects
-   */
-  generateRouteMetaTags(routes) {
-    return routes.map((route) => {
-      // Generate meaningful title
-      let title = this.options.siteName;
-      if (route.meta?.title) {
-        title = `${route.meta.title} - ${this.options.siteName}`;
-      } else if (route.path !== '/') {
-        // Generate title from path
-        const pathParts = route.path.split('/').filter(Boolean);
-        if (pathParts.length > 0) {
-          const lastPart = pathParts[pathParts.length - 1];
-          const formattedPart = lastPart
-            .split('-')
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-          title = `${formattedPart} - ${this.options.siteName}`;
-        }
-      }
-
-      // Generate meaningful description
-      let description = `Welcome to ${this.options.siteName}`;
-      if (route.meta?.description) {
-        description = route.meta.description;
-      } else if (route.meta?.entity && route.meta?.action) {
-        description = `${route.meta.action} ${route.meta.entity} on ${this.options.siteName}`;
-      } else if (route.path !== '/') {
-        // Generate description from path
-        const pathParts = route.path.split('/').filter(Boolean);
-        if (pathParts.length > 0) {
-          const lastPart = pathParts[pathParts.length - 1];
-          const formattedPart = lastPart
-            .split('-')
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-          description = `Explore ${formattedPart.toLowerCase()} on ${this.options.siteName}`;
-        }
-      }
-
-      return {
-        path: route.path,
-        meta: {
-          title,
-          description,
-          canonical: `${this.options.baseUrl}${route.path}`,
-          robots:
-            route.auth && route.auth.required
-              ? 'noindex, nofollow'
-              : 'index, follow',
-        },
-      };
-    });
-  }
-
-  /**
-   * Discover blog posts from src/content/blog/ directory.
-   * Reads only *_en.md files (one URL per post for sitemap/RSS, regardless of translations).
-   * @returns {Array<{slug: string, title: string, description: string, date: string, tags: string[]}>}
+   * The app's blog posts ({@link readBlogPosts} of `blogFeed.js`, the one reading of
+   * `src/content/blog/`). Next reads them once per build here; a Vite build reads them
+   * once in the route plugin (the route manifest's `blogPosts`).
+   * @returns {Array<{slug: string, title: string, description: string, date: string, tags: string[], image: string | null}>}
    */
   discoverBlogPosts() {
     if (!this.appRoot) return [];
-
-    const pathResolver = PathResolver.getInstance();
-    const blogDir = pathResolver.resolvePath('src/content/blog', this.appRoot);
-
-    try {
-      if (!pathResolver.pathExists(blogDir)) return [];
-
-      const files = pathResolver
-        .readdirSync(blogDir)
-        .filter((f) => f.endsWith('_en.md'));
-      if (files.length === 0) return [];
-
-      const posts = [];
-
-      for (const file of files) {
-        const filePath = pathResolver.resolvePath(file, blogDir);
-        const raw = pathResolver.readSync(filePath, { format: 'text' });
-        const slug = file.replace(/_en\.md$/, '');
-
-        // Parse frontmatter
-        const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-        const meta = {};
-        if (match) {
-          for (const line of match[1].split('\n')) {
-            const colonIdx = line.indexOf(':');
-            if (colonIdx === -1) continue;
-            meta[line.slice(0, colonIdx).trim()] = line
-              .slice(colonIdx + 1)
-              .trim();
-          }
-        }
-
-        // Date: frontmatter > file mtime > warn
-        let postDate = meta.date;
-        if (!postDate) {
-          try {
-            const stat = pathResolver.statSync(filePath);
-            postDate = stat.mtime.toISOString().split('T')[0];
-            this.logger.warn(
-              `Blog post "${slug}" has no frontmatter date, using file mtime (${postDate})`
-            );
-          } catch {
-            postDate = new Date().toISOString().split('T')[0];
-            this.logger.warn(
-              `Blog post "${slug}" has no date and file stat failed, using today`
-            );
-          }
-        }
-
-        posts.push({
-          slug,
-          title: meta.title || slug,
-          description: meta.description || '',
-          date: postDate,
-          tags: meta.tags ? meta.tags.split(',').map((t) => t.trim()) : [],
-          image: meta.image || null,
-        });
-      }
-
-      // Sort by date descending
-      posts.sort((a, b) => b.date.localeCompare(a.date));
-
-      this.logger.info(
-        `📝 Discovered ${posts.length} blog post(s) in src/content/blog/`
-      );
-
-      return posts;
-    } catch (error) {
-      this.logger.debug(`Blog content discovery skipped: ${error.message}`);
-      return [];
-    }
+    return readBlogPosts(this.appRoot, this.logger);
   }
 
   /**
@@ -653,39 +582,6 @@ ${items}
       fileName: 'rss.xml',
       content: rssContent,
       postCount: blogPosts.length,
-    };
-  }
-
-  /**
-   * Get generation summary
-   * @param {Object} seoData - SEO data
-   * @returns {string} Summary string
-   */
-  getGenerationSummary(seoData) {
-    const totalRoutes = seoData.routes?.length || 0;
-    const publicRoutes =
-      seoData.routes?.filter((r) => !r.auth || r.auth === false).length || 0;
-    const protectedRoutes =
-      seoData.routes?.filter((r) => r.auth && r.auth.required).length || 0;
-
-    return `${totalRoutes} routes (${publicRoutes} public, ${protectedRoutes} protected)`;
-  }
-
-  /**
-   * Format API response
-   * @param {Object} seoData - SEO data
-   * @returns {Object} API response
-   */
-  formatAPIResponse(seoData) {
-    return {
-      totalRoutes: seoData.routes?.length || 0,
-      publicRoutes:
-        seoData.routes?.filter((r) => !r.auth || r.auth === false).length || 0,
-      protectedRoutes:
-        seoData.routes?.filter((r) => r.auth && r.auth.required).length || 0,
-      baseUrl: this.options.baseUrl,
-      siteName: this.options.siteName,
-      generatedAt: new Date().toISOString(),
     };
   }
 }

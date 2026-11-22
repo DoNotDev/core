@@ -903,12 +903,18 @@ export interface NextConfigOptions {
   generateManifest?: boolean;
   /** PWA configuration */
   pwa?: PWAOptions;
-  /** Server shim options */
+  /**
+   * Ignored on Next (Vite's server shim, `createServerShimPlugin`): Next keeps server-only
+   * modules out of client bundles itself
+   */
   serverShim?: ServerShimOptions;
   /**
    * Standard Next.js config options, passed through to Next (which validates them).
-   * `webpack`, `rewrites`, `redirects` and `headers` are composed with the framework's:
-   * `headers` rules come after the framework header policy (last wins). Prefer
+   * `rewrites`, `redirects`, `headers` and `compiler.runAfterProductionCompile` are composed
+   * with the framework's: `headers` rules come after the framework header policy (last
+   * wins), the app's `runAfterProductionCompile` runs after the framework's (Safari < 14.1
+   * destructuring fix). The framework sets no `webpack` config (Next 16 builds with
+   * Turbopack): an app's own passes through. Prefer
    * `appConfig.headers` for CSP sources and cache overrides (same option on Vite).
    */
   [key: string]: any;

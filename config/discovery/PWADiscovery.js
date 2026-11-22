@@ -36,31 +36,14 @@ export class PWADiscovery extends BaseDiscovery {
 
     this.logger.debug(`Processing ${allFiles.length} PWA files`);
 
-    // Use asset data from AssetDiscovery if provided (avoids re-scanning)
-    let pwaAssets = [];
-    if (this.options.assetData?.pwaIcons) {
-      this.logger.debug(
-        `Using ${this.options.assetData.pwaIcons.length} icons from AssetDiscovery`
-      );
-      pwaAssets = [...this.options.assetData.pwaIcons];
-    }
-
-    // Still scan for manifest.json and service workers
+    // The one scan of the PWA files in public/: manifest and service worker, then the icons
     const scannedAssets = await this._analyzePWAFiles(allFiles);
-    const manifestAssets = scannedAssets.filter(
-      (asset) => asset.type === 'manifest' || asset.type === 'service-worker'
-    );
-    pwaAssets.push(...manifestAssets);
-
-    // Also scan for any icons not found by AssetDiscovery (fallback)
-    const scannedIcons = scannedAssets.filter((asset) => asset.type === 'icon');
-    const existingIconPaths = new Set(
-      pwaAssets.filter((a) => a.type === 'icon').map((a) => a.path)
-    );
-    const newIcons = scannedIcons.filter(
-      (icon) => !existingIconPaths.has(icon.path)
-    );
-    pwaAssets.push(...newIcons);
+    const pwaAssets = [
+      ...scannedAssets.filter(
+        (asset) => asset.type === 'manifest' || asset.type === 'service-worker'
+      ),
+      ...scannedAssets.filter((asset) => asset.type === 'icon'),
+    ];
 
     const manifest = this._generatePWAManifest(pwaAssets);
 

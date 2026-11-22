@@ -4,11 +4,10 @@
  */
 
 import fs from 'node:fs';
-import { createLowerDestructuringWebpackPlugin } from './plugins/LowerDestructuringWebpackPlugin.js';
+import { lowerClientDestructuring } from './lowerDestructuring.js';
 import { createPostCSSConfig } from './postcss.js';
 import { NEXT_PAGE_EXTENSIONS } from './nextFiles.js';
 import { isPlainObject } from './utils.js';
-import { PathResolver } from '../utils/PathResolver.js';
 import { GENERATED_PATHS, VIRTUAL_MODULES } from '../constants.js';
 
 /**
@@ -18,207 +17,11 @@ import { GENERATED_PATHS, VIRTUAL_MODULES } from '../constants.js';
  *
  * NOTE: Turbopack resolveAlias does NOT work for CSS @import (verified Next.js 16).
  * The authoritative CSS alias lives in postcss.js (postcss-import resolver).
- * These webpack/turbopack aliases are defense-in-depth only.
+ * This Turbopack alias is defense-in-depth only.
  */
 const DNDEV_CSS_ALIAS = {
   '@donotdev/ui/dndev.css': '@donotdev/ui/dndev-next.css',
 };
-
-/**
- * Build webpack configuration for Next.js
- *
- * Handles: SVG imports, CSS aliasing, Vite-specific ignores,
- * feature package exclusion, and optional dependency resolution.
- *
- * @param {Object} options - Options
- * @param {Function} [options.originalWebpack] - Consumer's webpack config function (composed)
- * @param {string[]} options.unusedFeaturePackages - @donotdev/* feature packages to externalize
- * @param {string[]} options.usedFeaturePackages - @donotdev/* feature packages in use (for logging)
- * @param {string[]} [options.missingOptionalDeps=[]] - Third-party optional deps not installed
- *   (e.g. shiki, @tiptap/*). Aliased to empty module via NormalModuleReplacementPlugin.
- *   Regex matches exact name + subpaths (e.g. 'shiki' and 'shiki/engine/javascript').
- * @param {string[]} [options.flagCodes=[]] - Allowed flag country codes from I18n discovery.
- *   Flag files not in this list are aliased to an empty component.
- * @param {Object} options.logger - Framework logger
- * @param {boolean} options.debug - Enable debug logging
- * @returns {Function} Webpack config function for next.config.js
- */
-export function createWebpackConfig({
-  originalWebpack,
-  unusedFeaturePackages,
-  usedFeaturePackages,
-  missingOptionalDeps = [],
-  flagCodes = [],
-  logger,
-  debug,
-}) {
-  return (config, context) => {
-    const { dev, isServer, webpack } = context;
-
-    // Enhanced WebSocket error handling for development
-    if (dev && !isServer) {
-      config.infrastructureLogging = { level: 'error' };
-      config.stats = {
-        ...config.stats,
-        logging: 'error',
-        loggingTrace: false,
-      };
-      config.ignoreWarnings = [
-        ...(config.ignoreWarnings || []),
-        /WebSocket connection to/,
-        /WebSocket closed without opened/,
-        /failed to connect to websocket/,
-        /WebSocket error/,
-      ];
-    }
-
-    // SVG support - import as URL (like Vite does)
-    // Find existing SVG rule and modify it, or add new one
-    const fileLoaderRule = config.module?.rules?.find((rule) =>
-      rule.test?.test?.('.svg')
-    );
-    if (fileLoaderRule) {
-      // Exclude SVG from default file loader
-      fileLoaderRule.exclude = /\.svg$/i;
-    }
-    // Add SVG as asset/resource (returns URL like Vite)
-    config.module = config.module || {};
-    config.module.rules = config.module.rules || [];
-    config.module.rules.push({
-      test: /\.svg$/i,
-      type: 'asset/resource',
-      generator: {
-        filename: 'static/media/[name].[hash][ext]',
-      },
-    });
-
-    // Markdown files as raw strings (for blog content)
-    config.module.rules.push({ test: /\.md$/, type: 'asset/source' });
-
-    // Alias @donotdev/blog-content → generated blog file, or empty stub when no
-    // blog exists. ALWAYS set: @donotdev/templates re-exports blog-loader at top
-    // level (`import blogContent from '@donotdev/blog-content'`), so any consumer
-    // pulling templates (legal pages, FAQ, docs) needs this to resolve.
-    // Empty stub (@donotdev/core/empty) is a Proxy noop — Object.entries(noop)
-    // is [], blog loader yields 0 posts. Graceful degradation.
-    config.resolve = config.resolve || {};
-    config.resolve.alias = config.resolve.alias || {};
-    try {
-      const pathResolver = PathResolver.getInstance();
-      const blogGeneratedPath = pathResolver.resolveAppPath(GENERATED_PATHS.next.blogContent);
-      config.resolve.alias[VIRTUAL_MODULES.blog] = fs.existsSync(blogGeneratedPath)
-        ? blogGeneratedPath
-        : pathResolver.getEmptyCjsModulePath();
-    } catch (e) {
-      logger.debug(`Blog content alias fallback to empty stub: ${e?.message}`);
-    }
-
-    // Alias @donotdev/ui/dndev.css → dndev-next.css (strips @fontsource CSS imports)
-    config.resolve = config.resolve || {};
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      ...DNDEV_CSS_ALIAS,
-    };
-
-    // Ignore Vite-specific packages
-    if (webpack?.IgnorePlugin) {
-      config.plugins.push(
-        new webpack.IgnorePlugin({
-          resourceRegExp: /^(vite|@vitejs|vite-tsconfig-paths)$/,
-        })
-      );
-    }
-
-    // Safari fix: lower JS destructuring on the production client bundle so it
-    // parses on older Safari (< 14.1), which has a destructuring parser bug that
-    // blanks the page. Client build only; the plugin self-guards dev/server.
-    if (!isServer) {
-      try {
-        config.plugins.push(
-          createLowerDestructuringWebpackPlugin({ logger, debug })
-        );
-      } catch (e) {
-        logger.debug(`Lower-destructuring webpack plugin skipped: ${e?.message}`);
-      }
-    }
-
-    // Feature exclusion logic
-    if (unusedFeaturePackages.length > 0) {
-      logger.info(
-        `🚫 Excluding unused features: ${unusedFeaturePackages.join(', ')}`
-      );
-      logger.info(`✅ Including features: ${usedFeaturePackages.join(', ')}`);
-
-      config.externals = config.externals || [];
-      if (Array.isArray(config.externals)) {
-        config.externals.push(...unusedFeaturePackages);
-      } else {
-        const originalExternals = config.externals;
-        config.externals = (context, request, callback) => {
-          if (unusedFeaturePackages.includes(request)) {
-            return callback(null, 'commonjs ' + request);
-          }
-          if (typeof originalExternals === 'function') {
-            return originalExternals(context, request, callback);
-          }
-          return callback();
-        };
-      }
-    }
-
-    // Alias missing optional deps (shiki, @tiptap/*) to empty module
-    // Prevents webpack "module not found" when consumer doesn't install them
-    if (
-      missingOptionalDeps.length > 0 &&
-      webpack?.NormalModuleReplacementPlugin
-    ) {
-      const pathResolver = PathResolver.getInstance();
-      const emptyModulePath = pathResolver.getEmptyCjsModulePath();
-      const escaped = missingOptionalDeps.map((d) =>
-        d.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      );
-      const pattern = new RegExp(`^(${escaped.join('|')})(\\/|$)`);
-      config.plugins.push(
-        new webpack.NormalModuleReplacementPlugin(pattern, emptyModulePath)
-      );
-      if (debug) {
-        logger.debug(
-          `Aliased ${missingOptionalDeps.length} missing optional deps to empty module`
-        );
-      }
-    }
-
-    // Alias unused flag files to empty flag component
-    // Reduces ~112 flag chunks down to only the ones matching supportedLanguages
-    if (flagCodes.length > 0 && webpack?.NormalModuleReplacementPlugin) {
-      const pathResolver = PathResolver.getInstance();
-      const emptyFlagPath = pathResolver.getEmptyFlagModulePath();
-      const allowed = new Set(flagCodes.map((c) => c.toUpperCase()));
-      config.plugins.push(
-        new webpack.NormalModuleReplacementPlugin(
-          /flags\/raw\/flag([A-Z][A-Z0-9_-]*)\./,
-          (resource) => {
-            const match = resource.request.match(/flag([A-Z][A-Z0-9_-]*)\./i);
-            if (
-              match &&
-              match[1].toUpperCase() !== 'BASE' &&
-              !allowed.has(match[1].toUpperCase())
-            ) {
-              resource.request = emptyFlagPath;
-            }
-          }
-        )
-      );
-      if (debug) {
-        logger.debug(
-          `Flag filter: allowing ${allowed.size} flags, aliasing rest to empty component`
-        );
-      }
-    }
-
-    return originalWebpack ? originalWebpack(config, context) : config;
-  };
-}
 
 /**
  * Build rewrites configuration
@@ -371,10 +174,16 @@ export function createHeadersConfig({ policyRules, originalHeaders }) {
 }
 
 /**
- * Merge all handler configs into final Next.js config
+ * Build the final Next.js config
  *
- * Assembles transpilePackages, Turbopack resolveAlias (CSS + optional deps),
- * webpack/rewrites/redirects/headers, handler results, and environment variables.
+ * Assembles transpilePackages, Turbopack resolveAlias (CSS, blog content, missing optional
+ * deps), rewrites/redirects/headers, the production post-compile step (Safari < 14.1
+ * destructuring fix, `lowerDestructuring.js`) and environment variables. Next 16 builds
+ * with Turbopack: the framework sets no webpack config (an app's own `webpack` passes
+ * through untouched in `restNextConfig`).
+ * The discovery handlers contribute no config of their own: they generate their files in
+ * `runDiscoveries`, and their rewrites reach `rewritesConfig` (`createRewritesConfig`, every
+ * handler's `getAPIRewrites`, none for `output: 'export'`).
  *
  * @param {Object} options - Options
  * @param {string[]} [options.missingOptionalDeps] - Optional deps to alias in Turbopack
@@ -383,32 +192,19 @@ export function createHeadersConfig({ policyRules, originalHeaders }) {
  * @returns {Object} Merged Next.js config
  */
 export function buildFinalConfig({
-  // Handler configs
-  routeResult,
-  themeResult,
-  i18nResult,
-  assetResult,
-  seoResult,
-  pwaResult,
-  serverShimResult,
-
   // Build options
   restNextConfig,
   discoveredPackages,
   reactCompiler = false,
   routingMode,
 
-  // Webpack/rewrites/redirects/headers
-  webpackConfig,
+  // Rewrites/redirects/headers
   rewritesConfig,
   redirectsConfig,
   headersConfig,
 
   // Optional deps (for Turbopack aliasing)
   missingOptionalDeps,
-
-  // Flag filtering
-  flagCodes = [],
 
   // Resolution
   pathResolver,
@@ -488,7 +284,7 @@ export function buildFinalConfig({
         ...(restNextConfig?.turbopack?.resolveAlias || {}),
         ...DNDEV_CSS_ALIAS,
         // Alias @donotdev/blog-content → generated blog file, or empty stub when
-        // no blog exists (mirrors webpack alias above). ALWAYS set so apps without
+        // no blog exists. ALWAYS set so apps without
         // .md files don't crash on the top-level blog-loader import in
         // @donotdev/templates. Empty stub is the same Proxy used for missing
         // optional deps below.
@@ -538,56 +334,19 @@ export function buildFinalConfig({
       },
     }),
 
-    // Handler configs (with validation)
-    ...(isPlainObject(routeResult)
-      ? routeResult
-      : (logger.error(
-          `Route handler config invalid (got ${typeof routeResult}):`,
-          routeResult
-        ),
-        {})),
-    ...(isPlainObject(themeResult)
-      ? themeResult
-      : (logger.error(
-          `Theme handler config invalid (got ${typeof themeResult}):`,
-          themeResult
-        ),
-        {})),
-    ...(isPlainObject(i18nResult)
-      ? i18nResult
-      : (logger.error(
-          `I18n handler config invalid (got ${typeof i18nResult}):`,
-          i18nResult
-        ),
-        {})),
-    ...(isPlainObject(assetResult)
-      ? assetResult
-      : (logger.error(
-          `Asset handler config invalid (got ${typeof assetResult}):`,
-          assetResult
-        ),
-        {})),
-    ...(isPlainObject(seoResult)
-      ? seoResult
-      : (logger.error(
-          `SEO handler config invalid (got ${typeof seoResult}):`,
-          seoResult
-        ),
-        {})),
-    ...(isPlainObject(pwaResult)
-      ? pwaResult
-      : (logger.error(
-          `PWA handler config invalid (got ${typeof pwaResult}):`,
-          pwaResult
-        ),
-        {})),
-    ...(isPlainObject(serverShimResult)
-      ? serverShimResult
-      : (logger.warn('serverShimConfig returned non-object:', serverShimResult),
-        {})),
+    // After the production compile (Turbopack): the Safari < 14.1 destructuring fix on the
+    // client chunks, for apps whose browserslist reaches it; then the app's own hook
+    compiler: {
+      ...restNextConfig?.compiler,
+      runAfterProductionCompile: async (build) => {
+        const lowered = await lowerClientDestructuring(build);
+        if (lowered > 0) {
+          logger.info(`Safari < 14.1 destructuring fix: ${lowered} client chunks lowered`);
+        }
+        await restNextConfig?.compiler?.runAfterProductionCompile?.(build);
+      },
+    },
 
-    // Webpack and rewrites
-    webpack: webpackConfig,
     // Skip rewrites/redirects for static export (they don't work with output: 'export')
     // Only set rewrites if not static export AND there are actual rewrites
     // (rewritesConfig returns null when empty - don't set rewrites at all to avoid interfering with Next.js)

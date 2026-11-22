@@ -72,10 +72,16 @@ export function createAppFunctionsConfig(options = {}) {
 
 // YAML generation and .env utilities
 export {
+  detectDeclaredSecrets,
   generateFunctionsYaml,
   generateFunctionsYamlWithInfo,
   filterEnvSecrets,
 } from './generateYaml.js';
 
-// High-level build orchestrator (consumer-facing)
+// High-level build orchestrators (consumer-facing)
 export { buildFunctions } from './buildFunctions.js';
+export {
+  buildVercelFunctions,
+  vercelFunctionConfig,
+  VERCEL_FUNCTIONS_RUNTIME,
+} from './buildVercelFunctions.js';

@@ -74,12 +74,16 @@ describe('generateYaml — PathResolver integration', () => {
       mockPathExists.mockImplementation((path: string) => path === '.env');
       mockReadSync.mockReturnValue('MY_SECRET=value\nFIREBASE_REGION=eu');
 
-      filterEnvSecrets({ functions: {} });
+      filterEnvSecrets(
+        { functions: {} },
+        { declaredSecrets: { fn: ['MY_SECRET'] } }
+      );
 
-      // readSync called for .env (secret detection + filtering)
-      expect(mockReadSync).toHaveBeenCalled();
-      // writeSync called for .env (stripped) and .env.local (secrets)
-      expect(mockWriteSync).toHaveBeenCalledWith('.env', expect.any(String));
+      expect(mockReadSync).toHaveBeenCalledWith('.env');
+      // writeSync overwrites .env (stripped) and writes .env.local (secrets)
+      expect(mockWriteSync).toHaveBeenCalledWith('.env', expect.any(String), {
+        overwrite: true,
+      });
       expect(mockWriteSync).toHaveBeenCalledWith(
         '.env.local',
         expect.stringContaining('MY_SECRET=value')
@@ -88,13 +92,14 @@ describe('generateYaml — PathResolver integration', () => {
 
     it('filterEnvSecrets appends to existing .env.local', () => {
       mockPathExists.mockReturnValue(true);
-      // First readSync for secret detection, second for .env content, third for .env.local
       mockReadSync
-        .mockReturnValueOnce('MY_SECRET=value') // detectSecretsFromEnv
         .mockReturnValueOnce('MY_SECRET=value\nFIREBASE_REGION=eu') // filterEnvSecrets .env read
         .mockReturnValueOnce('EXISTING_KEY=old'); // .env.local existing content
 
-      filterEnvSecrets({ functions: {} });
+      filterEnvSecrets(
+        { functions: {} },
+        { declaredSecrets: { fn: ['MY_SECRET'] } }
+      );
 
       // Should call writeSync on .env.local with appended content
       const envLocalCalls = mockWriteSync.mock.calls.filter(
@@ -103,6 +108,7 @@ describe('generateYaml — PathResolver integration', () => {
       expect(envLocalCalls.length).toBe(1);
       expect(envLocalCalls[0][1]).toContain('EXISTING_KEY=old');
       expect(envLocalCalls[0][1]).toContain('MY_SECRET=value');
+      expect(envLocalCalls[0][2]).toEqual({ overwrite: true });
     });
   });
 
@@ -206,12 +212,15 @@ describe('generateYaml — PathResolver integration', () => {
     it('generates YAML with manual functions', () => {
       mockPathExists.mockReturnValue(false); // no .env, no entry file
 
-      const yaml = generateFunctionsYaml({
-        defaults: { region: ['europe-west1'] },
-        functions: {
-          sendEmail: { trigger: 'http', category: 'email' },
+      const yaml = generateFunctionsYaml(
+        {
+          defaults: { region: ['europe-west1'] },
+          functions: {
+            sendEmail: { trigger: 'http', category: 'email' },
+          },
         },
-      });
+        { declaredSecrets: {} }
+      );
 
       expect(yaml).toContain('sendEmail:');
       expect(yaml).toContain('httpsTrigger:');
@@ -222,11 +231,14 @@ describe('generateYaml — PathResolver integration', () => {
     it('generates YAML with CRUD entities', () => {
       mockPathExists.mockReturnValue(false);
 
-      const yaml = generateFunctionsYaml({
-        defaults: {},
-        functions: {},
-        crud: { entities: ['user'] },
-      });
+      const yaml = generateFunctionsYaml(
+        {
+          defaults: {},
+          functions: {},
+          crud: { entities: ['user'] },
+        },
+        { declaredSecrets: {} }
+      );
 
       expect(yaml).toContain('create_user:');
       expect(yaml).toContain('get_user:');
@@ -246,33 +258,69 @@ describe('generateYaml — PathResolver integration', () => {
 
       const yaml = generateFunctionsYaml(
         { defaults: {}, functions: {} },
-        { entryFile: 'src/index.ts' }
+        { entryFile: 'src/index.ts', declaredSecrets: {} }
       );
 
       expect(yaml).toContain('processPayment:');
     });
 
-    it('auto-detects secrets from .env', () => {
+    it('binds only the secrets each function declares, never .env keys', () => {
       mockPathExists.mockReturnValue(true);
       mockReadSync.mockImplementation((path: string) => {
-        if (path === '.env') return 'STRIPE_KEY=sk_test';
+        if (path === '.env') return 'STRIPE_KEY=sk_test\nOTHER_KEY=x';
         if (path === 'src/index.ts')
-          return "export { handler } from './handler';";
+          return "export { handler, plain } from './handler';";
         return '';
       });
 
       const yaml = generateFunctionsYaml(
-        { defaults: {}, functions: {} },
-        { entryFile: 'src/index.ts', envPath: '.env' }
+        { defaults: {}, functions: {}, crud: { entities: ['post'] } },
+        {
+          entryFile: 'src/index.ts',
+          envPath: '.env',
+          declaredSecrets: { handler: ['STRIPE_KEY'] },
+        }
       );
 
-      expect(yaml).toContain('key: STRIPE_KEY');
+      const handlerBlock = yaml.split('  plain:')[0]!;
+      expect(handlerBlock).toContain('key: STRIPE_KEY');
+      expect(yaml.match(/secretEnvironmentVariables/g)).toHaveLength(1);
+      expect(yaml).not.toContain('OTHER_KEY');
+      expect(mockReadSync).not.toHaveBeenCalledWith('.env');
+    });
+
+    it('manual config.functions[name].secrets override the declarations', () => {
+      const yaml = generateFunctionsYaml(
+        {
+          defaults: {},
+          functions: { handler: { secrets: ['MANUAL_KEY'] } },
+        },
+        { declaredSecrets: { handler: ['DECLARED_KEY'] } }
+      );
+
+      expect(yaml).toContain('key: MANUAL_KEY');
+      expect(yaml).not.toContain('DECLARED_KEY');
+    });
+
+    it('looks declarations up by entryPoint', () => {
+      const yaml = generateFunctionsYaml(
+        {
+          defaults: {},
+          functions: { publicName: { entryPoint: 'internalName' } },
+        },
+        { declaredSecrets: { internalName: ['API_KEY'] } }
+      );
+
+      expect(yaml).toContain('key: API_KEY');
     });
 
     it('includes header with generation timestamp', () => {
       mockPathExists.mockReturnValue(false);
 
-      const yaml = generateFunctionsYaml({ defaults: {}, functions: {} });
+      const yaml = generateFunctionsYaml(
+        { defaults: {}, functions: {} },
+        { declaredSecrets: {} }
+      );
 
       expect(yaml).toContain('# Firebase Functions Configuration');
       expect(yaml).toContain('# Generated by @donotdev/core/functions');
@@ -287,16 +335,24 @@ describe('generateYaml — PathResolver integration', () => {
     it('returns metadata alongside YAML', () => {
       mockPathExists.mockReturnValue(false);
 
-      const result = generateFunctionsYamlWithInfo({
-        defaults: {},
-        functions: { myFunc: {} },
-        crud: { entities: ['post'] },
-      });
+      const result = generateFunctionsYamlWithInfo(
+        {
+          defaults: {},
+          functions: { myFunc: {} },
+          crud: { entities: ['post'] },
+        },
+        { declaredSecrets: { myFunc: ['B_KEY', 'A_KEY'], other: ['A_KEY'] } }
+      );
 
       expect(result.yaml).toBeDefined();
       expect(result.staticFunctions).toContain('myFunc');
       expect(result.crudFunctions).toContain('create_post');
       expect(result.crudFunctions).toHaveLength(7); // create, get, list, listCard, update, delete, bulk
+      expect(result.autoSecrets).toEqual(['A_KEY', 'B_KEY']);
+      expect(result.declaredSecrets).toEqual({
+        myFunc: ['B_KEY', 'A_KEY'],
+        other: ['A_KEY'],
+      });
     });
 
     it('reports auto-detected functions', () => {
@@ -307,7 +363,7 @@ describe('generateYaml — PathResolver integration', () => {
 
       const result = generateFunctionsYamlWithInfo(
         { defaults: {}, functions: { manualFunc: {} } },
-        { entryFile: 'src/index.ts' }
+        { entryFile: 'src/index.ts', declaredSecrets: {} }
       );
 
       expect(result.autoDetected).toContain('autoFunc');
@@ -325,36 +381,45 @@ describe('generateYaml — PathResolver integration', () => {
     it('returns empty when no .env exists', () => {
       mockPathExists.mockReturnValue(false);
 
-      const result = filterEnvSecrets({ functions: {} });
+      const result = filterEnvSecrets(
+        { functions: {} },
+        { declaredSecrets: { fn: ['STRIPE_KEY'] } }
+      );
       expect(result.stripped).toEqual([]);
     });
 
-    it('strips secrets and keeps config vars', () => {
+    it('strips only declared secrets; other keys stay as plain config', () => {
       mockPathExists.mockImplementation((path: string) => path === '.env');
       mockReadSync.mockReturnValue(
-        '# Config\nFIREBASE_REGION=eu\nSTRIPE_KEY=sk_test\nSENTRY_DSN=https://dsn'
+        '# Config\nFIREBASE_REGION=eu\nSTRIPE_KEY=sk_test\nSENTRY_DSN=https://dsn\nGITHUB_CLIENT_ID=id'
       );
 
-      const result = filterEnvSecrets({ functions: {} });
+      const result = filterEnvSecrets(
+        { functions: {} },
+        { declaredSecrets: { checkout: ['STRIPE_KEY'] } }
+      );
 
-      expect(result.stripped).toContain('STRIPE_KEY');
-      expect(result.stripped).toContain('SENTRY_DSN');
-      expect(result.stripped).not.toContain('FIREBASE_REGION');
+      expect(result.stripped).toEqual(['STRIPE_KEY']);
 
-      // .env should be written without secrets
+      // .env keeps every undeclared key
       const envWrite = mockWriteSync.mock.calls.find((c) => c[0] === '.env');
       expect(envWrite).toBeDefined();
       expect(envWrite![1]).toContain('FIREBASE_REGION=eu');
+      expect(envWrite![1]).toContain('SENTRY_DSN=https://dsn');
+      expect(envWrite![1]).toContain('GITHUB_CLIENT_ID=id');
       expect(envWrite![1]).not.toContain('STRIPE_KEY');
     });
 
-    it('does nothing when no secrets detected', () => {
+    it('does nothing when no function declares a secret', () => {
       mockPathExists.mockReturnValue(true);
       mockReadSync.mockReturnValue(
-        'FIREBASE_REGION=eu\nFIREBASE_PROJECT_ID=my-project'
+        'FIREBASE_REGION=eu\nSENTRY_DSN=https://dsn'
       );
 
-      const result = filterEnvSecrets({ functions: {} });
+      const result = filterEnvSecrets(
+        { functions: {} },
+        { declaredSecrets: {} }
+      );
 
       expect(result.stripped).toEqual([]);
       expect(mockWriteSync).not.toHaveBeenCalled();
@@ -364,13 +429,16 @@ describe('generateYaml — PathResolver integration', () => {
       mockPathExists.mockImplementation((path: string) => path === '.env');
       mockReadSync.mockReturnValue('MY_MANUAL_SECRET=abc\nFIREBASE_REGION=eu');
 
-      const result = filterEnvSecrets({
-        functions: {
-          myFunc: { secrets: ['MY_MANUAL_SECRET'] },
+      const result = filterEnvSecrets(
+        {
+          functions: {
+            myFunc: { secrets: ['MY_MANUAL_SECRET'] },
+          },
         },
-      });
+        { declaredSecrets: {} }
+      );
 
-      expect(result.stripped).toContain('MY_MANUAL_SECRET');
+      expect(result.stripped).toEqual(['MY_MANUAL_SECRET']);
     });
   });
 

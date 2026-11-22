@@ -164,7 +164,8 @@ interface ExtendedThemeState extends ThemeState {
   routeHideBreadcrumbs: boolean;
   /**
    * Display label of the record the current page shows (transient, NOT persisted).
-   * Breadcrumbs show `label` instead of the URL segment equal to `id` (a raw record id).
+   * Breadcrumbs show `label` instead of the URL segment equal to `id` (the decoded value
+   * naming the record in the URL: its slug, or its raw id).
    * Set by the record page (EntityFormRenderer / EntityDisplayRenderer), cleared on unmount.
    */
   routeRecordLabel: { id: string; label: string } | null;

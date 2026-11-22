@@ -14,8 +14,14 @@ import {
   DEFAULT_OG_IMAGE,
   DIR_PATHS,
   GLOB_OPTIONS,
+  I18N_PATHS,
   getGlobOptionsFor,
 } from '../constants.js';
+import {
+  FLAGS_PUBLIC_PATH,
+  flagFileName,
+  telFieldFlagCodes,
+} from '../utils/flagAsset.js';
 
 /** Link-preview canvas and the box the logo is fitted into. */
 const OG_IMAGE = {
@@ -25,6 +31,16 @@ const OG_IMAGE = {
   logoHeight: 360,
   background: '#ffffff',
 };
+
+/**
+ * Build warning when the app has no `public/logo.svg` (once per discovery run; the build
+ * continues without the logo and the icons generated from it).
+ */
+export const MISSING_LOGO_WARNING =
+  'public/logo.svg is missing: it is the site logo (Organization / publisher logo in the JSON-LD, the default logo) and the source of the favicon, PWA icons and og-image.png. Add public/logo.svg.';
+
+/** Public URL of the web app manifest (`public/manifest.json`, `<link rel="manifest">`). */
+const WEB_APP_MANIFEST = '/manifest.json';
 
 export class AssetDiscovery extends BaseDiscovery {
   constructor(pathResolver, options = {}) {
@@ -38,6 +54,10 @@ export class AssetDiscovery extends BaseDiscovery {
     });
 
     this.hasRunForSession = false;
+    // Flag codes of the app's languages and the entities resolver (useFlagCodes): their
+    // flags (every country flag with a tel field) are copied to public/flags/
+    this.flagCodes = null;
+    this.entityResolver = null;
   }
 
   // === ABSTRACT METHOD IMPLEMENTATIONS ===
@@ -54,21 +74,44 @@ export class AssetDiscovery extends BaseDiscovery {
     return 'assets';
   }
 
-  async _processFiles(files) {
+  /**
+   * What is missing in `public/`, before the scan: the framework default assets
+   * (`manifest.json`, not the logo) and the flags of the app's languages
+   * ({@link useFlagCodes}, {@link _ensureFlags}) are copied, and the PWA icons, favicon
+   * and `og-image.png` are generated from `public/logo.svg` (`generateAssets !== false`).
+   * @returns {Promise<{ copiedAssets: string[], generatedAssets: string[] }>}
+   */
+  async _prepareFiles() {
     const appRoot = this.pathResolver.getAppRoot();
 
     // 1. Ensure default assets (manifest.json, etc.) - but NOT logo assets
     const copiedAssets = await this._ensureDefaultAssets(appRoot);
+
+    // Flags of the app's languages, and every country flag a tel field shows when an
+    // entity has one (not listed: flags are no asset of the manifest). No flag codes: a
+    // discovery used on its own, without the i18n one (the Vite asset plugin and Next's
+    // runDiscoveries always set them).
+    if (this.flagCodes) {
+      const telField = await this.entityResolver.usesFieldType('tel');
+      const copiedFlags = this._ensureFlags(
+        telField
+          ? [...new Set([...this.flagCodes, ...telFieldFlagCodes()])]
+          : this.flagCodes
+      );
+      if (copiedFlags.length > 0) {
+        this.logger.debug(
+          `Copied ${copiedFlags.length} flags to public${FLAGS_PUBLIC_PATH}/: ${copiedFlags.join(', ')}`
+        );
+      }
+    }
 
     // 2. Check if logo.svg exists (user must provide it)
     const logoPath = this.pathResolver.resolveAppPath('public/logo.svg');
     const logoExists = this.pathResolver.pathExists(logoPath);
 
     if (!logoExists) {
-      // Warn user - they need to provide logo.svg
-      this.logger.warn(
-        'logo.svg not found in public/. Add your logo.svg to generate PWA assets, or copy from node_modules/@donotdev/ui/assets/logo.svg'
-      );
+      // A warning, never a failure: the build goes on without the logo and its icons
+      this.logger.warn(MISSING_LOGO_WARNING);
     }
 
     // 3. Generate missing PWA assets from logo.svg (if it exists and generation enabled)
@@ -82,12 +125,31 @@ export class AssetDiscovery extends BaseDiscovery {
       generatedAssets = generationResult?.generated || [];
     }
 
+    return { copiedAssets, generatedAssets };
+  }
+
+  /**
+   * Everything in `public/`, scanned after {@link _prepareFiles} copied and generated what
+   * was missing: the asset list, asset manifest and PWA icons of a clean build are a
+   * rebuild's.
+   * @param {{ consumerFiles: string[] }} files - Scanned `public/` files
+   * @param {{ copiedAssets: string[], generatedAssets: string[] }} prepared - {@link _prepareFiles}
+   * @returns {Promise<Object>}
+   */
+  async _processFiles(files, { copiedAssets, generatedAssets }) {
+    const appRoot = this.pathResolver.getAppRoot();
+
     // Process files from pattern system (like other discoveries)
     const { consumerFiles } = files;
     const assets = await this._processAssetFiles(consumerFiles);
 
-    // Build asset manifest
-    const manifest = this._buildAssetManifest(assets);
+    // The web app manifest: exactly public/manifest.json (a scanned asset is named by its
+    // file name only, `public/x/manifest.json` included)
+    const manifest = this._buildAssetManifest(assets, {
+      webAppManifest: this.pathResolver.pathExists(
+        this.pathResolver.resolveAppPath(`public${WEB_APP_MANIFEST}`)
+      ),
+    });
 
     // Try to read logo.svg content for inlining (may be null if missing)
     const logoSvgContent = await this._readLogoSvgContent('/logo.svg', appRoot);
@@ -100,67 +162,7 @@ export class AssetDiscovery extends BaseDiscovery {
       },
       copiedAssets,
       generatedAssets,
-      // Expose PWA icons for PWADiscovery to use (avoids re-scanning)
-      pwaIcons: this._extractPWAIcons(assets),
     };
-  }
-
-  /**
-   * Extract PWA icons from discovered assets
-   * Used by PWADiscovery to avoid re-scanning filesystem
-   * @param {Array} assets - Discovered assets
-   * @returns {Array} PWA icon data
-   */
-  _extractPWAIcons(assets) {
-    const pwaIconPatterns = [
-      /icon-(\d+)x(\d+)\.(png|jpg|jpeg|webp|svg)/i,
-      /apple-touch-icon/i,
-      /android-chrome/i,
-      /favicon\.(ico|svg)/i,
-    ];
-
-    return assets
-      .filter((asset) => {
-        const fileName = asset.path.split('/').pop() || '';
-        return pwaIconPatterns.some((pattern) => pattern.test(fileName));
-      })
-      .map((asset) => {
-        const fileName = asset.path.split('/').pop() || '';
-        const sizeMatch = fileName.match(/(\d+)x(\d+)/);
-        const size = sizeMatch
-          ? { width: parseInt(sizeMatch[1]), height: parseInt(sizeMatch[2]) }
-          : this._getDefaultIconSize(fileName);
-
-        return {
-          type: 'icon',
-          path: asset.path.replace(/^\/?public\//, ''),
-          size,
-          format: asset.format || this._getFormatFromPath(asset.path),
-          purpose: this._getIconPurpose(fileName),
-        };
-      });
-  }
-
-  _getDefaultIconSize(fileName) {
-    if (fileName.includes('apple-touch-icon')) {
-      return { width: 180, height: 180 };
-    }
-    if (fileName.includes('favicon')) {
-      return { width: 32, height: 32 };
-    }
-    return { width: 192, height: 192 };
-  }
-
-  _getFormatFromPath(path) {
-    const ext = path.split('.').pop()?.toLowerCase();
-    return ext || 'png';
-  }
-
-  _getIconPurpose(fileName) {
-    if (fileName.includes('maskable') || fileName.includes('mask')) {
-      return 'maskable';
-    }
-    return 'any';
   }
 
   _getEmptyResult() {
@@ -180,6 +182,22 @@ export class AssetDiscovery extends BaseDiscovery {
   }
 
   // === PUBLIC API METHODS ===
+
+  /**
+   * Flag codes of the app's languages (the i18n discovery's `flagCodes`: `LANGUAGES`
+   * `flagCode`, else the id) and the route discovery's entities resolver, set before
+   * discovery by the Vite asset plugin and Next's `runDiscoveries`: discovery copies
+   * their flags to `public/flags/` ({@link _ensureFlags}), plus every flag a `tel` field
+   * shows (`telFieldFlagCodes`: all `COUNTRIES`) when an entity of the `entities` package
+   * has a `tel` field (`entityResolver.usesFieldType('tel')`).
+   * @param {string[]} flagCodes - e.g. `['gb', 'fr']`
+   * @param {{ usesFieldType: (type: string) => Promise<boolean> }} entityResolver - `createEntityResolver` of the route discovery
+   * @since 0.3.2
+   */
+  useFlagCodes(flagCodes, entityResolver) {
+    this.flagCodes = flagCodes;
+    this.entityResolver = entityResolver;
+  }
 
   /**
    * Discover assets and ensure fallbacks, return pure data
@@ -300,6 +318,53 @@ export class AssetDiscovery extends BaseDiscovery {
     return false;
   }
 
+  /**
+   * Copy the flag of each code from the framework artwork (`@donotdev/core/i18n/flags/`,
+   * one SVG per code) to `public/flags/<code>.svg` (`Flag` renders `/flags/<code>.svg`),
+   * only when the app has no file there: a file in `public/flags/` is never overwritten or
+   * deleted, so an app ships other flags (a picker of every language, a `tel` field
+   * outside the `entities` package) or its own artwork by putting the SVG there. A code without
+   * framework artwork is warned and not copied.
+   * @param {string[]} flagCodes - Flag codes (`gb`, `fr`, `gb-sct`)
+   * @returns {string[]} File names copied (`fr.svg`)
+   * @throws {Error} When `@donotdev/core` cannot be found or a copy fails
+   * @since 0.3.2
+   */
+  _ensureFlags(flagCodes) {
+    const corePackage =
+      this.pathResolver.resolveFrameworkPackage('@donotdev/core');
+    if (!corePackage) {
+      throw new Error('Flag copy: @donotdev/core not found');
+    }
+    const artworkDir = this.pathResolver.normalizePath(
+      `${corePackage}/${I18N_PATHS.PUBLISHED_FLAGS}`
+    );
+    const publicFlagsDir = `${DIR_PATHS.public}${FLAGS_PUBLIC_PATH}`;
+    const copied = [];
+
+    for (const code of flagCodes) {
+      const fileName = flagFileName(code);
+      const target = this.pathResolver.resolveAppPath(
+        `${publicFlagsDir}/${fileName}`
+      );
+      if (this.pathResolver.pathExists(target)) continue;
+
+      const source = `${artworkDir}/${fileName}`;
+      if (!this.pathResolver.pathExists(source)) {
+        this.logger.warn(
+          `No flag artwork for "${code}": add ${publicFlagsDir}/${fileName} to the app`
+        );
+        continue;
+      }
+      if (!this.pathResolver.copySync(source, target)) {
+        throw new Error(`Flag copy: cannot copy ${source} to ${target}`);
+      }
+      copied.push(fileName);
+    }
+
+    return copied;
+  }
+
   async _processAssetFiles(consumerFiles) {
     const assets = [];
 
@@ -392,14 +457,29 @@ export class AssetDiscovery extends BaseDiscovery {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
+  /**
+   * Whether a file name is exactly an asset pattern's name (`*`: any characters; case
+   * insensitive): `manifest.json` is `manifest.json` only, never `asset-manifest.json` or
+   * another discovery output a previous build wrote into `public/`.
+   * @param {string} filename - File name
+   * @param {string} pattern - Asset pattern (`SCAN_PATTERNS.assets.patterns`)
+   * @returns {boolean}
+   */
   _matchesPattern(filename, pattern) {
-    const lowerFilename = filename.toLowerCase();
-    const lowerPattern = pattern.toLowerCase();
-
-    return lowerFilename.includes(lowerPattern.replace('*', ''));
+    const source = pattern
+      .split('*')
+      .map((part) => part.replace(/[.+?^${}()|[\]\\]/g, '\\$&'))
+      .join('.*');
+    return new RegExp(`^${source}$`, 'i').test(filename);
   }
 
-  _buildAssetManifest(assets) {
+  /**
+   * Asset manifest of the scanned public assets.
+   * @param {Array<{ path: string, isModern: boolean }>} assets - Scanned assets
+   * @param {{ webAppManifest: boolean }} options - Whether `public/manifest.json` exists
+   * @returns {Object}
+   */
+  _buildAssetManifest(assets, { webAppManifest }) {
     const assetPaths = assets.map((a) => a.path);
 
     const manifest = {
@@ -430,8 +510,9 @@ export class AssetDiscovery extends BaseDiscovery {
           'png',
         ]),
       },
-      manifest:
-        assetPaths.find((path) => path.includes('manifest.json')) || null,
+      // The web app manifest: exactly /manifest.json (the file Next's PWA handler writes and
+      // the framework default asset), never another *-manifest.json discovery output
+      manifest: webAppManifest ? WEB_APP_MANIFEST : null,
       modernFormats: assets.filter((a) => a.isModern).map((a) => a.path),
       fallbackFormats: assets.filter((a) => !a.isModern).map((a) => a.path),
     };
@@ -554,46 +635,6 @@ export class AssetDiscovery extends BaseDiscovery {
   }
 
   /**
-   * Copy framework logo.svg to public/logo.svg
-   * @param {string} appRoot - Application root directory
-   * @returns {Promise<boolean>} True if copied successfully
-   */
-  async _copyFrameworkLogo(appRoot) {
-    try {
-      const frameworkAssetsDir = await this._resolveFrameworkAssetsDir(appRoot);
-      if (!frameworkAssetsDir) {
-        this.logger.debug('Framework assets directory not found');
-        return false;
-      }
-
-      const frameworkLogoPath = this.pathResolver.normalizePath(
-        `${frameworkAssetsDir}/logo.svg`
-      );
-      if (!this.pathResolver.pathExists(frameworkLogoPath)) {
-        this.logger.debug('Framework logo.svg not found');
-        return false;
-      }
-
-      const publicDir = this.pathResolver.resolveAppPath(DIR_PATHS.public);
-      if (!this.pathResolver.pathExists(publicDir)) {
-        this.pathResolver.mkdir(publicDir);
-      }
-
-      const publicLogoPath =
-        this.pathResolver.resolveAppPath('public/logo.svg');
-
-      const success = await this.pathResolver.copy(
-        frameworkLogoPath,
-        publicLogoPath
-      );
-      return success;
-    } catch (error) {
-      this.logger.debug(`Failed to copy framework logo: ${error.message}`);
-      return false;
-    }
-  }
-
-  /**
    * Render the link-preview image: the logo centered on a 1200x630 canvas.
    * The SVG is rasterized at the density of its final size, so it stays sharp.
    * @param {Function} sharp - sharp factory
@@ -625,7 +666,8 @@ export class AssetDiscovery extends BaseDiscovery {
 
   /**
    * Generate missing PWA assets from logo.svg
-   * Creates favicon, icons, and manifest assets from logo.svg if they don't exist
+   * Creates favicon, icons, and manifest assets from logo.svg if they don't exist, in the
+   * app's `public/` (absolute paths: never relative to the working directory)
    * @param {string} appRoot - Application root directory
    * @returns {Promise<Object>} Generation results
    */
@@ -680,7 +722,7 @@ export class AssetDiscovery extends BaseDiscovery {
         }
 
         try {
-          await this.pathResolver.write(`public/${asset.name}`, logoContent);
+          await this.pathResolver.write(publicPath, logoContent);
           generated.push(asset.name);
         } catch (error) {
           this.logger.debug(`Failed to copy ${asset.name}: ${error.message}`);
@@ -718,7 +760,7 @@ export class AssetDiscovery extends BaseDiscovery {
                 .toBuffer();
             }
 
-            await this.pathResolver.write(`public/${asset.name}`, outputBuffer);
+            await this.pathResolver.write(publicPath, outputBuffer);
             generated.push(asset.name);
           } catch (error) {
             this.logger.debug(
@@ -734,7 +776,7 @@ export class AssetDiscovery extends BaseDiscovery {
         } else {
           try {
             const ogImage = await this._renderOgImage(sharp.default, logoPath);
-            await this.pathResolver.write(`public/${ogName}`, ogImage);
+            await this.pathResolver.write(`${publicDir}/${ogName}`, ogImage);
             generated.push(ogName);
           } catch (error) {
             this.logger.debug(`Failed to generate ${ogName}: ${error.message}`);
@@ -752,7 +794,7 @@ export class AssetDiscovery extends BaseDiscovery {
       this.logger.debug(`Asset generation failed: ${error.message}`);
       return {
         generated: [],
-        skipped: requiredAssets.map((a) => a.name),
+        skipped: [...copyAssets, ...sharpAssets].map((a) => a.name),
         error: error.message,
       };
     }

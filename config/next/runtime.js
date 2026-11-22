@@ -17,12 +17,22 @@ export {
 } from './getMetadataForPath.js';
 
 // Sitemap / llms.txt (generated app/sitemap.xml and app/llms.txt route handlers)
-export { buildSitemap, formatSitemapXml } from './seo/sitemap.js';
-export { buildLlmsTxt } from './seo/llmsTxt.js';
+export { buildSitemap, formatSitemapXml } from '../utils/sitemap.js';
+export { buildLlmsTxt } from '../utils/llmsTxt.js';
 export { appBaseUrl } from './seo/baseUrl.js';
 
 // generateStaticParams of the generated entity pages (same records as the sitemap)
-export { listStaticParams } from './seo/publicPages.js';
+export { listStaticParams } from '../utils/publicPages.js';
+
+// Read schemas of the record readers (sitemap, llms.txt, entity pages)
+export { entityReadSchemas } from '../utils/entityRecordSeo.js';
+
+// Server identity of the generated entity pages (generateMetadata, JSON-LD, 404)
+export {
+  entityPageSeo,
+  jsonLdScript,
+  readEntityPageRecord,
+} from './seo/entityPage.js';
 
 // On-demand revalidation (generated app/api/dndev/revalidate route handler)
 export {

@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview Flag assets package barrel exports
- * @description Barrel exports for flag components and utilities. Provides access to the Flag component and utility functions for working with country flag codes.
+ * @description Barrel exports for flag components and utilities. Provides access to the Flag component (a static `<img>` of `/flags/<code>.svg`) and utility functions for working with country flag codes.
  * @version 0.1.0
  * @since 0.0.1
  * @author AMBROISE PARK Consulting
@@ -10,8 +10,7 @@
 
 import { LANGUAGES } from '../utils/constants';
 
-// Export types from raw
-export type { FlagBaseProps } from './raw/FlagBase';
+export type { FlagBaseProps } from './Flag';
 
 // Export the convenience component
 export { Flag } from './Flag';

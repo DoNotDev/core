@@ -23,12 +23,13 @@ import type {
   ThemeMode,
   LayoutPreset,
 } from '@donotdev/types';
-import { PLATFORMS, LAYOUT_PRESET } from '@donotdev/types';
+import { PLATFORMS, LAYOUT_PRESET, DEFAULT_OG_IMAGE } from '@donotdev/types';
 import {
   isDev,
   isClient,
   resolveAppConfig,
   getPlatformEnvVar,
+  FAVICON_DEFAULTS,
 } from '@donotdev/utils';
 
 /**
@@ -58,18 +59,8 @@ const DEFAULT_APP_NAME = 'DoNotDev App';
 const DEFAULT_SEO: SEOConfig = {
   enabled: true,
   defaultNamespace: 'home',
-  defaultImage: '/logo.svg',
-};
-
-/**
- * Base favicon configuration (appName is set dynamically)
- */
-const DEFAULT_FAVICON_BASE: Omit<FaviconConfig, 'appName'> = {
-  enabled: true,
-  themeColor: '#2563eb',
-  backgroundColor: '#ffffff',
-  includeManifestIcons: true,
-  includeMSIcons: false,
+  // The generated link-preview PNG, same as the build side (never the SVG logo)
+  defaultImage: DEFAULT_OG_IMAGE,
 };
 
 /**
@@ -173,21 +164,12 @@ export function AppConfigProvider({
   // Resolve app metadata (single source of truth - handles name/shortName/description/links/metadata)
   const resolvedApp = resolveAppConfig(config.app);
 
-  // Logo path is /logo.svg (user must provide, or copy from packages/ui/assets/logo.svg)
-  const defaultLogoPath = '/logo.svg';
-
   // Resolve app URL from env var (platform-aware), identical on server and client so SSR
   // output (canonical, JSON-LD, OG) hydrates without mismatch. Never window.location:
   // the server cannot know it (a dev server on another port, a preview URL, www vs apex).
   // Development without APP_URL: http://localhost:3000. Production: APP_URL (SSOT).
   const resolvedAppUrl: string =
     getPlatformEnvVar('APP_URL') || (isDev() ? 'http://localhost:3000' : '');
-
-  // Default SEO (use logo as default OG image)
-  const defaultSeo: SEOConfig = {
-    ...DEFAULT_SEO,
-    defaultImage: defaultLogoPath, // Override with resolved path
-  };
 
   // Default app metadata with defaults (single source of truth for defaults)
   // Note: footer is special - null = hide, undefined = use defaults
@@ -203,9 +185,9 @@ export function AppConfigProvider({
     metadata: resolvedApp.metadata || {},
   };
 
-  // Default favicon
+  // Default favicon (FAVICON_DEFAULTS: the Vite build applies the same)
   const defaultFavicon: FaviconConfig = {
-    ...DEFAULT_FAVICON_BASE,
+    ...FAVICON_DEFAULTS,
     appName: defaultAppMetadata.name, // Use resolved name
   };
 
@@ -225,7 +207,7 @@ export function AppConfigProvider({
       config.seo === false
         ? false
         : {
-            ...defaultSeo,
+            ...DEFAULT_SEO,
             ...(typeof config.seo === 'object' ? config.seo : {}),
           },
 
@@ -326,7 +308,7 @@ export function useAppConfig(
     auth: DEFAULT_AUTH,
     seo: DEFAULT_SEO,
     favicon: {
-      ...DEFAULT_FAVICON_BASE,
+      ...FAVICON_DEFAULTS,
       appName: DEFAULT_APP_NAME,
     },
     // preset omitted - themeStore handles default

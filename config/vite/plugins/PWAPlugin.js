@@ -9,7 +9,6 @@
 
 import { VitePWA } from 'vite-plugin-pwa';
 
-import { assetDataCache } from './AssetPlugin.js';
 import { PWADiscovery } from '../../discovery/PWADiscovery.js';
 import { createLogger } from '../../utils/debugLog.js';
 import { PathResolver } from '../../utils/PathResolver.js';
@@ -46,13 +45,8 @@ export function createVitePWAPlugin(options = {}) {
 
   const pathResolver = PathResolver.getInstance();
 
-  // Get asset data from AssetPlugin (if available) to avoid re-scanning
-  const assetData = assetDataCache.data;
-
-  const discovery = new PWADiscovery(pathResolver, {
-    ...options,
-    assetData, // Pass asset data to avoid re-scanning
-  });
+  // The PWA discovery scans public/ itself (manifest, service worker, icons)
+  const discovery = new PWADiscovery(pathResolver, options);
   const isDev = options.devEnabled === true;
 
   const smartDefaults = {

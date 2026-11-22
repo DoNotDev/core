@@ -1,6 +1,6 @@
 /**
  * @fileoverview Asset Plugin - Factory Implementation
- * @description Minimal plugin definition using the discovery factory. Generates PWA assets from logo.svg before discovery.
+ * @description Minimal plugin definition using the discovery factory. Copies the flags of the app's languages and generates PWA assets from logo.svg before discovery.
  *
  * @version 0.0.2
  * @since 0.0.1
@@ -15,11 +15,12 @@ import {
   CONFIG_KEYS,
 } from '../../constants.js';
 import { AssetDiscovery } from '../../discovery/AssetDiscovery.js';
-import { createLogger } from '../../utils/debugLog.js';
+import {
+  FLAGS_PUBLIC_PATH,
+  flagFileName,
+  telFieldFlagCodes,
+} from '../../utils/flagAsset.js';
 import { PathResolver } from '../../utils/PathResolver.js';
-
-// Shared cache for asset data (used by PWAPlugin to avoid re-scanning)
-export const assetDataCache = { data: null };
 
 // Asset-specific templates
 const assetTemplates = {
@@ -310,13 +311,40 @@ const assetFilePatterns = [
     file.includes('manifest'),
 ];
 
-// Create the plugin using createDiscoveryPlugin
-export function createViteAssetPlugin(options = {}) {
+/**
+ * Asset discovery plugin: `virtual:assets` from `public/` (copy-then-scan, AssetDiscovery).
+ * Before discovery it hands the flag codes of the app's languages (this build's i18n
+ * discovery, `i18nStore`) and the route discovery's entities resolver (`routeManifest`)
+ * to the asset discovery, which copies their flags, plus every country flag when an
+ * entity has a `tel` field, to `public/flags/` (dev and build). The dev server lists `public/` before `buildStart`
+ * and its watcher can miss files written while it starts: each flag copied is announced
+ * to it (watcher `add`), so it is served at once, not after a restart.
+ * @param {Object} options - Plugin options (`i18nStore`: this build's i18n discovery,
+ *   `createI18nStore`; `routeManifest`: the route plugin's store, `createRouteManifestStore`;
+ *   `createVitePlugins` passes both)
+ * @returns {import('vite').Plugin}
+ * @throws {Error} Without `options.i18nStore` or `options.routeManifest`
+ */
+export function createViteAssetPlugin({
+  i18nStore,
+  routeManifest,
+  ...options
+} = {}) {
+  if (!i18nStore || !routeManifest) {
+    throw new Error(
+      "[dndev] createViteAssetPlugin: options.i18nStore and options.routeManifest are required (createVitePlugins passes the i18n and route plugins' stores)."
+    );
+  }
+  let assetDiscovery = null;
   const plugin = createDiscoveryPlugin({
     pluginName: 'dndev-vite-asset-discovery',
     icon: '🎯',
     virtualModuleId: VIRTUAL_MODULES.assets,
     DiscoveryClass: AssetDiscovery,
+    createDiscovery: (pathResolver, discoveryOptions) => {
+      assetDiscovery = new AssetDiscovery(pathResolver, discoveryOptions);
+      return assetDiscovery;
+    },
     discoveryMethod: 'discoverAssets',
     filePatterns: assetFilePatterns,
     templates: assetTemplates,
@@ -324,14 +352,39 @@ export function createViteAssetPlugin(options = {}) {
     configKey: 'assets',
   })(options);
 
-  const pathResolver = PathResolver.getInstance();
-  const logger = createLogger('asset-plugin', options.debug, options.verbose);
   const originalBuildStart = plugin.buildStart;
+  const originalConfigureServer = plugin.configureServer;
+  let devServer = null;
+
+  plugin.configureServer = function (server) {
+    devServer = server;
+    return originalConfigureServer.call(this, server);
+  };
 
   plugin.buildStart = async function (...args) {
-    // Call original buildStart (runs discovery via PluginFactory)
-    if (originalBuildStart) {
-      await originalBuildStart.apply(this, args);
+    // The i18n and route plugins' discoveries of this build (their buildStart runs in parallel)
+    const [{ flagCodes }, entityResolver] = await Promise.all([
+      i18nStore.ready(),
+      routeManifest.entityResolver(),
+    ]);
+    assetDiscovery.useFlagCodes(flagCodes, entityResolver);
+    const pathResolver = PathResolver.getInstance();
+    const missingFlags = [
+      ...new Set([...(flagCodes ?? []), ...telFieldFlagCodes()]),
+    ]
+      .map((code) =>
+        pathResolver.resolveAppPath(
+          `public${FLAGS_PUBLIC_PATH}/${flagFileName(code)}`
+        )
+      )
+      .filter((file) => !pathResolver.pathExists(file));
+    // Discovery via PluginFactory: copies the flags, then scans public/
+    await originalBuildStart.apply(this, args);
+    // Dev: the server's public file list predates this copy (Vite adds a file on `add`)
+    if (devServer) {
+      for (const file of missingFlags) {
+        if (pathResolver.pathExists(file)) devServer.watcher.emit('add', file);
+      }
     }
   };
 

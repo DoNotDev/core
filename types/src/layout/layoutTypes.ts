@@ -17,6 +17,7 @@ import type { FooterMode, LayoutPreset } from './layoutConstants';
 
 export {
   DEFAULT_LAYOUT_PRESET,
+  DEFAULT_OG_IMAGE,
   FOOTER_MODE,
   LAYOUT_PRESET,
 } from './layoutConstants';
@@ -363,7 +364,11 @@ export interface SEOConfig {
   generateSitemap?: boolean;
   /** Default namespace for i18n translations (default: 'home') */
   defaultNamespace?: string;
-  /** Default image for social sharing */
+  /**
+   * Default image for social sharing (`og:image`, Twitter card) of pages that set none
+   * (default: {@link DEFAULT_OG_IMAGE}, `/og-image.png`, generated from `public/logo.svg`).
+   * PNG or JPG: link-preview crawlers do not render SVG.
+   */
   defaultImage?: string;
   /** Twitter handle (without @) */
   twitterHandle?: string;
@@ -486,7 +491,7 @@ export interface HeadersConfig {
  * @author AMBROISE PARK Consulting
  */
 export interface FaviconConfig {
-  /** Enable automatic favicon system (default: true) */
+  /** Favicon tags in the HTML (default: true); `false` writes none, like `favicon: false` */
   enabled?: boolean;
   /** App name for PWA manifest */
   appName?: string;
@@ -496,7 +501,7 @@ export interface FaviconConfig {
   backgroundColor?: string;
   /** Include PWA manifest icons */
   includeManifestIcons?: boolean;
-  /** Include Microsoft tile icons */
+  /** Microsoft tile metas: `msapplication-TileImage` (needs `/favicon-32x32.png`) and `msapplication-TileColor` (`themeColor`) */
   includeMSIcons?: boolean;
 }
 
@@ -685,14 +690,21 @@ export interface AppConfig {
    */
   revalidate?: number | false;
   /**
-   * Prerender entity pages at build (Next adapter). **Defaults to `true`**: each
-   * single-param page whose records the sitemap lists (`/produits/:slug`, entity from
-   * its `src/pages/<entity>/` folder, not `auth`, not `seo.noindex`) is built once per
+   * Prerender entity pages at build. **Defaults to `true`**: each
+   * single-param page whose records the sitemap lists (`/produits/:slug`, page declaring
+   * its entity in PageMeta `entity: productEntity`, not `auth`, not `seo.noindex`) is built once per
    * published record (public reader, `status` not in `HIDDEN_STATUSES`, same records as
-   * the sitemap), so a first visit is served from the cache. Records published later
-   * render on their first request; all refresh per {@link revalidate}. The build reads
-   * the database: missing env or a failed read fails it. `false` = every URL renders
-   * on its first request. Ignored by Vite.
+   * the sitemap). The build reads the database: missing env or a failed read fails it.
+   *
+   * - Next: a first visit is served from the cache. Records published later render on
+   *   their first request; all refresh per {@link revalidate}. `false` = every URL renders
+   *   on its first request.
+   * - Vite (`prerender: 'auto'`, the default): one static HTML per record and language
+   *   (`dist/produits/serum.html`) with the record's title, description, canonical, Open
+   *   Graph / Twitter tags, hreflang, Product and BreadcrumbList JSON-LD. Records
+   *   published later get the SPA shell until the next build. `false` = every record URL
+   *   gets the SPA shell (sitemap.xml and llms.txt still list the records: the build
+   *   still reads them).
    *
    * @since 0.3.1
    */

@@ -88,5 +88,5 @@ export const myFunction = createFunction(schema, 'operation_name', async (data, 
 
 **Environment variables:**
 - Client: `apps/my-app/.env` (prefix with `VITE_*`)
-- Server: `functions/.env` (secrets: `STRIPE_*`, OAuth tokens)
+- Server: secrets (`STRIPE_*`, OAuth client secrets) in `.dndev.secrets` at the project root; `functions/.env` is plain server config (e.g. `GITHUB_CLIENT_ID`)
 - Local overrides: `.env.local` (gitignored)

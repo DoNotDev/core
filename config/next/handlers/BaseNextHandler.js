@@ -9,8 +9,44 @@
 
 import { GENERATED_PATHS, CONFIG_KEYS, NEXT_RENDER } from '../../constants.js';
 import { DEFAULT_OPTIONS } from '../../next/options.js';
+import { createBuildError } from '../../utils/buildError.js';
 import { createLogger } from '../../utils/debugLog.js';
 import { PathResolver } from '../../utils/PathResolver.js';
+import {
+  PUBLIC_READER_DEPENDENCIES,
+  publicReaderProvider,
+} from '../../utils/publicReaders.js';
+
+/**
+ * Discovery options every Next handler passes (whatever the app's config):
+ * `pageGenerateMetadata`, a page module's own `generateMetadata` sets its identity
+ * (route discovery's dynamic-route SEO check counts it; Vite has no server).
+ * @since 0.3.2
+ */
+export const NEXT_DISCOVERY_OPTIONS = Object.freeze({ pageGenerateMetadata: true });
+
+/**
+ * Code text of each public reader in a generated Next file ({@link BaseNextHandler#serverCrudReader}),
+ * by provider of `PUBLIC_READERS` (`utils/publicReaders.js`, the table the Vite build reads
+ * in process): the names it imports from the reader module, the comment on who decides
+ * what a signed-out visitor reads, and the `CRUD` construction from the env constants.
+ */
+const NEXT_READER_CODE = Object.freeze({
+  '@donotdev/supabase': {
+    exports: 'createPublicServerClient, SupabasePublicReader',
+    comment: 'RLS returns what a signed-out visitor can read.',
+    construct: `new SupabasePublicReader(
+  createPublicServerClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY)
+)`,
+  },
+  '@donotdev/firebase': {
+    exports: 'createPublicServerFirestore, FirestorePublicReader',
+    comment: 'Security Rules return what a signed-out visitor can read.',
+    construct: `new FirestorePublicReader(
+  createPublicServerFirestore({ apiKey: FIREBASE_API_KEY, projectId: FIREBASE_PROJECT_ID })
+)`,
+  },
+});
 
 export class BaseNextHandler {
   constructor(discoveryClass, defaultOptions = {}) {
@@ -97,11 +133,24 @@ export class BaseNextHandler {
    *   (`NEXT_PUBLIC_FIREBASE_API_KEY`, `NEXT_PUBLIC_FIREBASE_PROJECT_ID`,
    *   `@donotdev/firebase/public`), Security Rules decide what it reads.
    *
+   * The provider, its module and env come from `PUBLIC_READERS` (`utils/publicReaders.js`),
+   * shared with the Vite build; the code text from `NEXT_READER_CODE`.
+   *
+   * With the reader, the read schemas its records are queried with (`READ_SCHEMAS`:
+   * `entityReadSchemas` of the app's `entities` package, `createSchemas(entity).get` per
+   * listed collection, as the client lists query): rows keep the entity's field names, with
+   * everything the database returns to a signed-out visitor (the public reader filters
+   * nothing). The generated file imports `entities`.
+   *
    * @param {Array<{ path: string, collection?: string }>} routes - Routes of the generated file
    * @param {string} [purpose] - What the file reads records for, in the missing-env error
    * @param {string} [optOut] - How to keep these routes from reading records, in the no-reader error
-   * @returns {{ imports: string, setup: string, expr: string | null }} Code to insert
-   * @throws {Error} When a route lists records and the app depends on neither provider
+   * @returns {{ imports: string, setup: string, expr: string | null, schemas: string | null,
+   *   named: Record<string, string[]> }} Code to insert: import lines (provider module,
+   *   `entities`), setup (`CRUD`, `READ_SCHEMAS`), the reader and schemas expressions, and
+   *   the framework names the setup uses, by module (merged into the file's import lines)
+   * @throws {Error} When a route lists records and the app depends on neither provider, or
+   *   on no `entities` package
    * @since 0.2.3
    */
   serverCrudReader(
@@ -110,51 +159,57 @@ export class BaseNextHandler {
     optOut = 'Mark these pages `seo: { noindex: true }`.'
   ) {
     const listing = routes.filter((route) => route.collection);
-    if (listing.length === 0) return { imports: '', setup: '', expr: null };
-    if (this.appDependsOn('@donotdev/supabase')) {
-      return {
-        imports:
-          "import { createPublicServerClient, SupabaseCrudAdapter } from '@donotdev/supabase/server';\n",
-        setup: `
-// Public (anonymous) reader: RLS returns what a signed-out visitor can read.
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_PUBLIC_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY;
-if (!SUPABASE_URL || !SUPABASE_PUBLIC_KEY) {
+    if (listing.length === 0) {
+      return { imports: '', setup: '', expr: null, schemas: null, named: {} };
+    }
+    const paths = listing.map((route) => route.path).join(', ');
+    const reader = publicReaderProvider((dependency) => this.appDependsOn(dependency));
+    if (!reader) {
+      throw new Error(
+        `[dndev] ${paths} list published records, but the app's ` +
+          `backend provider has no server reader (supported: ${PUBLIC_READER_DEPENDENCIES}). ${optOut}`
+      );
+    }
+    if (!this.appDependsOn('entities')) {
+      const collections = [...new Set(listing.map((route) => route.collection))];
+      throw createBuildError(
+        'dndev-routes',
+        `${paths} ${listing.length === 1 ? 'lists' : 'list'} published ` +
+          `${collections.map((c) => `"${c}"`).join(', ')} records, read with ` +
+          "their entity definition's read schema, but the app does not depend on an `entities` package. " +
+          "Add the app's `entities` package (exporting the defineEntity definition) to its dependencies. " +
+          optOut,
+        'missing-entities-package',
+        { routes: listing.map((route) => route.path), collections }
+      );
+    }
+    const { exports, comment, construct } = NEXT_READER_CODE[reader.dependency];
+    // The env constants of the generated file: SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const names = reader.env;
+    const schemaRoutes = listing.map(({ path, collection }) => ({ path, collection }));
+    return {
+      imports: `import { ${exports} } from '${reader.module}';\nimport * as entities from 'entities';\n`,
+      setup: `
+// Public (anonymous) reader: ${comment}
+${names.map((name) => `const ${name} = process.env.NEXT_PUBLIC_${name};`).join('\n')}
+if (${names.map((name) => `!${name}`).join(' || ')}) {
   throw new Error(
-    '[dndev] Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLIC_KEY: ${purpose}.'
+    '[dndev] Set ${names.map((name) => `NEXT_PUBLIC_${name}`).join(' and ')}: ${purpose}.'
   );
 }
-const CRUD = new SupabaseCrudAdapter(
-  createPublicServerClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY)
-);
+const CRUD = ${construct};
+
+// Records are read with their entity's read schema: keyed by the entity's field names
+// (RLS / Security Rules decide what a signed-out visitor reads)
+const READ_SCHEMAS = entityReadSchemas(entities, ${JSON.stringify(schemaRoutes)}, createSchemas);
 `,
-        expr: 'CRUD',
-      };
-    }
-    if (this.appDependsOn('@donotdev/firebase')) {
-      return {
-        imports:
-          "import { createPublicServerFirestore, FirestorePublicReader } from '@donotdev/firebase/public';\n",
-        setup: `
-// Public (anonymous) reader: Security Rules return what a signed-out visitor can read.
-const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
-const FIREBASE_PROJECT_ID = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-if (!FIREBASE_API_KEY || !FIREBASE_PROJECT_ID) {
-  throw new Error(
-    '[dndev] Set NEXT_PUBLIC_FIREBASE_API_KEY and NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${purpose}.'
-  );
-}
-const CRUD = new FirestorePublicReader(
-  createPublicServerFirestore({ apiKey: FIREBASE_API_KEY, projectId: FIREBASE_PROJECT_ID })
-);
-`,
-        expr: 'CRUD',
-      };
-    }
-    throw new Error(
-      `[dndev] ${listing.map((route) => route.path).join(', ')} list published records, but the app's ` +
-        `backend provider has no server reader (supported: @donotdev/supabase, @donotdev/firebase). ${optOut}`
-    );
+      expr: 'CRUD',
+      schemas: 'READ_SCHEMAS',
+      named: {
+        '@donotdev/core/server': ['createSchemas'],
+        '@donotdev/core/next': ['entityReadSchemas'],
+      },
+    };
   }
 
   /**
@@ -182,6 +237,7 @@ const CRUD = new FirestorePublicReader(
     const mergedDiscoveryOptions = {
       ...DEFAULT_OPTIONS.discovery, // Base discovery defaults from config
       ...this.options, // Handler options override discovery defaults
+      ...NEXT_DISCOVERY_OPTIONS,
     };
     return new discoveryClass(this.pathResolver, mergedDiscoveryOptions);
   }
@@ -199,61 +255,6 @@ const CRUD = new FirestorePublicReader(
   setAppRoot(root) {
     this.configRoot = root;
     this.pathResolver.setAppRoot(root);
-  }
-
-  /**
-   * Create Next.js configuration function
-   */
-  createNextConfig() {
-    return (nextConfig = {}) => {
-      if (this.options.debug) {
-        this.logger.debug(`${this.getHandlerName()} handler initialized`);
-      }
-
-      return {
-        ...nextConfig,
-
-        // Add discovery to build process
-        webpack: (config, context) => {
-          const { dev, isServer, webpack } = context;
-
-          // Apply Vite ignore plugin to prevent webpack warnings
-          this.applyViteIgnorePlugin(config, webpack);
-
-          // Generate files during both development and build
-          this._generateFiles();
-
-          // Call original webpack config if exists
-          if (nextConfig.webpack) {
-            return nextConfig.webpack(config, context);
-          }
-
-          return config;
-        },
-
-        // Add API routes for discovery
-        rewrites: async function () {
-          try {
-            const baseRewrites = nextConfig.rewrites
-              ? await nextConfig.rewrites()
-              : [];
-
-            const discoveryRewrites = this.getAPIRewrites();
-
-            return this.mergeRewrites(baseRewrites, discoveryRewrites);
-          } catch (error) {
-            this.logger.error(
-              `${this.getHandlerName()} handler failed to merge rewrites: ${error.message}`
-            );
-            this.logger.error(
-              `Stack: ${error.stack || 'No stack trace available'}`
-            );
-            // Return empty rewrites as fallback, but log the failure clearly
-            return [];
-          }
-        }.bind(this),
-      };
-    };
   }
 
   /**
@@ -417,78 +418,6 @@ export default ${handlerName}Config;
     }
   }
 
-  /**
-   * Apply Vite ignore plugin to webpack config
-   * This prevents webpack from trying to parse Vite-related modules
-   */
-  applyViteIgnorePlugin(config, webpack) {
-    config.plugins = config.plugins || [];
-
-    // Ignore Vite and related packages completely
-    config.plugins.push(
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^vite$/,
-      })
-    );
-
-    // Ignore @vitejs packages
-    config.plugins.push(
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^@vitejs\//,
-      })
-    );
-
-    // Ignore any file paths containing vite in node_modules
-    config.plugins.push(
-      new webpack.IgnorePlugin({
-        resourceRegExp: /vite/,
-        contextRegExp: /node_modules/,
-      })
-    );
-
-    return config;
-  }
-
-  /**
-   * Merge Next.js rewrites properly
-   */
-  mergeRewrites(baseRewrites, discoveryRewrites) {
-    // Ensure discoveryRewrites has the correct structure
-    const safeDiscoveryRewrites = {
-      beforeFiles: discoveryRewrites?.beforeFiles || [],
-      afterFiles: discoveryRewrites?.afterFiles || [],
-      fallback: discoveryRewrites?.fallback || [],
-    };
-
-    // Always return object format for consistency
-    return {
-      beforeFiles: [
-        ...(Array.isArray(baseRewrites) ? [] : baseRewrites?.beforeFiles || []),
-        ...safeDiscoveryRewrites.beforeFiles,
-      ],
-      afterFiles: [
-        ...(Array.isArray(baseRewrites)
-          ? baseRewrites
-          : baseRewrites?.afterFiles || []),
-        ...safeDiscoveryRewrites.afterFiles,
-      ],
-      fallback: [
-        ...(Array.isArray(baseRewrites) ? [] : baseRewrites?.fallback || []),
-        ...safeDiscoveryRewrites.fallback,
-      ],
-    };
-  }
-
-  /**
-   * Debug logging
-   */
-
-  // === PRIVATE METHODS ===
-
-  async _generateFiles() {
-    return this.generateFiles();
-  }
-
   // === ABSTRACT METHODS (Override in subclass) ===
 
   /**
@@ -512,15 +441,6 @@ export default ${handlerName}Config;
     throw new Error('generateSpecificFiles() must be implemented by subclass');
   }
 
-  /**
-   * Generate API handler (no-op - API routes replaced by direct config files)
-   * Kept for backwards compatibility with handlers that call it
-   */
-  async generateAPIHandler(discoveryData) {
-    // No-op: API routes replaced by direct config files (dndev-config.js)
-    // This method exists to prevent errors when handlers call it
-    return Promise.resolve();
-  }
 
   /**
    * Get API rewrites for this handler
@@ -529,12 +449,6 @@ export default ${handlerName}Config;
     throw new Error('getAPIRewrites() must be implemented by subclass');
   }
 
-  /**
-   * Format discovery data for API response
-   */
-  formatAPIResponse(discoveryData) {
-    throw new Error('formatAPIResponse() must be implemented by subclass');
-  }
 
   /**
    * Create manifest content from discovery data

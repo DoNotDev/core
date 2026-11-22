@@ -196,6 +196,14 @@ export interface EntityListExtraColumn {
 export interface EntityCardListProps extends EntityBrowseBaseProps {
   /** Grid columns (responsive) - defaults to [1, 2, 3, 4] */
   cols?: number | [number, number, number, number];
+  /**
+   * Opt-in feed rendering (web): render this many cards first (server HTML included),
+   * then this many more each time the end of the grid nears the viewport, until every
+   * card is shown. Data is still fetched in one go; this only cuts the cards rendered
+   * and hydrated up front, and cards past the first page are not in the server HTML.
+   * Omitted: every card renders at once.
+   */
+  pageSize?: number;
   /** Optional filter function to filter items client-side */
   filter?: (item: Record<string, unknown> & { id: string }) => boolean;
   /**

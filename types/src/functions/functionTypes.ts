@@ -651,7 +651,7 @@ export interface FunctionMeta {
   minInstances?: number;
   /** Maximum instances */
   maxInstances?: number;
-  /** Secret environment variable names (synced via sync-secrets, read via defineSecret) */
+  /** Secret names to bind, replacing the ones the function declares in code (synced via sync-secrets, read via defineSecret) */
   secrets?: string[];
 }
 

@@ -8,6 +8,8 @@
  */
 
 import { TemplateEngine } from '../../discovery/TemplateEngine.js';
+import { readBlogPosts } from '../../utils/blogFeed.js';
+import { isBuildError } from '../../utils/buildError.js';
 import { createLogger } from '../../utils/debugLog.js';
 import { PathResolver } from '../../utils/PathResolver.js';
 import { expandBlogRoutes } from '../../utils/routeParser.js';
@@ -45,6 +47,10 @@ export function createDiscoveryPlugin(config) {
       hmrCacheTimeout, // Already merged from DEFAULT_OPTIONS.pluginFactory
       hmrSmartDetection, // Already merged from DEFAULT_OPTIONS.pluginFactory
       disableHmr, // Already merged from DEFAULT_OPTIONS.pluginFactory
+      // Route plugin: the build's in-memory route manifest (createRouteManifestStore)
+      routeManifest,
+      // The build's discovery result, shared with other plugins (i18n: createI18nStore)
+      discoveryStore,
       ...userDiscoveryOptions
     } = options;
 
@@ -406,6 +412,7 @@ export function createDiscoveryPlugin(config) {
 
           return moduleCode;
         } catch (error) {
+          if (isBuildError(error)) throw error;
           logger.error(
             `${pluginName} virtual module (${resolvedVirtualModuleId}) failed to load: ${error.message}`
           );
@@ -448,45 +455,25 @@ export function createDiscoveryPlugin(config) {
           const data = await discovery[discoveryMethod](!lastDiscoveryData);
           lastDiscoveryData = data;
 
-          // Write canonical JSON route manifest to public/ for build-time consumers
-          // (SEOPlugin and PrerenderPlugin read public/route-manifest.json)
-          if (manifestFileName && configKey === 'routes' && data?.routes) {
-            try {
-              // Expand dynamic blog routes with frontmatter SEO metadata
-              const blogRoutes = expandBlogRoutes(data.routes, {
-                appRoot: pathResolver.getAppRoot(),
-              });
-
-              const allRoutes = [
-                ...data.routes.map((route) => ({
-                  path: route.path,
-                  auth: route.auth,
-                  meta: route.meta,
-                })),
-                ...blogRoutes,
-              ];
-
-              const manifest = {
-                routes: allRoutes,
-                source: data.source || 'auto-discovery',
-                totalRoutes: allRoutes.length,
-                generatedAt: new Date().toISOString(),
-              };
-              const manifestPath = pathResolver.resolveAppPath(
-                `public/${manifestFileName}`
-              );
-              await pathResolver.write(
-                manifestPath,
-                JSON.stringify(manifest, null, 2)
-              );
-              logger.debug(
-                `Generated route manifest: public/${manifestFileName}`
-              );
-            } catch (manifestError) {
-              logger.error(
-                `Failed to write route manifest: ${manifestError.message}`
-              );
-            }
+          // The build's route manifest (blog posts expanded from their frontmatter) and its
+          // blog posts, read once here, in memory for the SEO and prerender plugins
+          // (routeManifest). Never written to public/: nothing reads a file there on Vite.
+          if (configKey === 'routes' && data?.routes) {
+            const blogPosts = readBlogPosts(pathResolver.getAppRoot(), logger);
+            const blogRoutes = expandBlogRoutes(data.routes, blogPosts);
+            const allRoutes = [
+              ...data.routes.map((route) => ({
+                path: route.path,
+                auth: route.auth,
+                meta: route.meta,
+              })),
+              ...blogRoutes,
+            ];
+            routeManifest?.set({
+              routes: allRoutes,
+              source: data.source || 'auto-discovery',
+              blogPosts,
+            });
           }
 
           // ===================================================================
@@ -497,6 +484,8 @@ export function createDiscoveryPlugin(config) {
             templates.logStats(data, icon, logger);
           }
         } catch (error) {
+          // A misconfigured app (createBuildError) fails the build with its message
+          if (isBuildError(error)) throw error;
           logger.error(
             `${pluginName} discovery failed during file scanning: ${error.message}`
           );
@@ -509,6 +498,12 @@ export function createDiscoveryPlugin(config) {
           );
         } finally {
           isDiscoveryComplete = true; // Enable HMR after discovery completes
+        }
+        // The other plugins read this build's result instead of discovering again
+        discoveryStore?.set(lastDiscoveryData);
+        // The entities package as route discovery parsed it, for the asset plugin (tel-field flags)
+        if (configKey === 'routes') {
+          routeManifest?.useEntityResolver(discovery.getEntityResolver());
         }
       },
 

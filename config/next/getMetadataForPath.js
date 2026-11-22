@@ -64,7 +64,10 @@ function loadManifest() {
  * @param {string} [locale] - Current locale (defaults to manifest's defaultLocale)
  * @param {Object} [options] - Additional options
  * @param {string} [options.siteName] - Site name for OpenGraph
- * @returns {Object} Next.js Metadata object
+ * @returns {Object} Next.js Metadata object. Same defaults as AutoMetaTags: image
+ *   `appConfig.seo.defaultImage` (else `/og-image.png`) when the page sets none; `robots`
+ *   noindex for auth-only pages (`{ index: false }`, opt back in with `seo: { noindex: false }`)
+ *   and `noindex, nofollow` for `seo: { noindex: true }`.
  */
 export function getMetadataForPath(path, locale, options) {
   const manifest = loadManifest();
@@ -128,8 +131,13 @@ export function getMetadataForPath(path, locale, options) {
     ...(localeMetadata.image && { images: [localeMetadata.image] }),
   };
 
-  if (localeMetadata.noindex) {
-    metadata.robots = { index: false, follow: false };
+  // Manifest `robots` (routeSeo's, the AutoMetaTags rule): `noindex` (auth-only page) or
+  // `noindex, nofollow` (seo.noindex: true)
+  if (localeMetadata.robots) {
+    metadata.robots = {
+      index: false,
+      ...(localeMetadata.robots === 'noindex, nofollow' && { follow: false }),
+    };
   }
 
   return metadata;

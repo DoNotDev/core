@@ -7,7 +7,6 @@
  * @author AMBROISE PARK Consulting
  */
 
-import { nextAssetDataCache } from './AssetHandler.js';
 import { BaseNextHandler } from './BaseNextHandler.js';
 import { GENERATED_PATHS } from '../../constants.js';
 import { PWADiscovery } from '../../discovery/PWADiscovery.js';
@@ -36,14 +35,8 @@ export class NextPWAHandler extends BaseNextHandler {
   }
 
   createDiscovery(discoveryClass) {
-    // Get asset data from AssetHandler if available (avoids re-scanning)
-    // AssetHandler stores data in shared cache during getDiscoveryData()
-    const assetData = this.options.assetData || nextAssetDataCache.data;
-
-    return new discoveryClass(this.pathResolver, {
-      ...this.options,
-      assetData, // Pass asset data to avoid re-scanning
-    });
+    // The PWA discovery scans public/ itself (manifest, service worker, icons)
+    return new discoveryClass(this.pathResolver, this.options);
   }
 
   getHandlerName() {
@@ -68,14 +61,6 @@ export class NextPWAHandler extends BaseNextHandler {
     return this.discovery.getPWARewrites();
   }
 
-  formatAPIResponse(pwaData) {
-    return {
-      assets: pwaData.assets,
-      manifest: pwaData.manifest,
-      totalAssets: pwaData.assets.length,
-      timestamp: pwaData.timestamp,
-    };
-  }
 
   createManifestContent(pwaData) {
     return {
@@ -115,9 +100,6 @@ export class NextPWAHandler extends BaseNextHandler {
     if (this.options.generateServiceWorker) {
       await this.generateServiceWorker(pwaData);
     }
-
-    // Generate API route
-    await this.generateAPIHandler(pwaData);
   }
 
   async generatePWAManifest(pwaData) {
@@ -154,45 +136,6 @@ export class NextPWAHandler extends BaseNextHandler {
       serviceWorkerContent,
       'service worker'
     );
-  }
-
-  // === NEXT.JS CONFIGURATION ===
-
-  createNextConfig() {
-    if (!this.options.enabled) {
-      return () => ({});
-    }
-
-    return (nextConfig = {}) => {
-      this.logger.debug('Initializing Next.js PWA handler');
-
-      return {
-        ...nextConfig,
-
-        // PWA file headers (manifest, service worker) come from the header policy
-        // (headerPolicy.js, `pwa` option), served by defineNextConfig's headers().
-
-        // Add PWA to webpack
-        webpack: (config, context) => {
-          const { dev, isServer, webpack } = context;
-
-          // Apply Vite ignore plugin to prevent webpack warnings
-          this.applyViteIgnorePlugin(config, webpack);
-
-          // Generate PWA files during build
-          if (!dev && !isServer) {
-            this._generateFiles();
-          }
-
-          // Call original webpack config if exists
-          if (nextConfig.webpack) {
-            return nextConfig.webpack(config, context);
-          }
-
-          return config;
-        },
-      };
-    };
   }
 
   async generatePWA() {

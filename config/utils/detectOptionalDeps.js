@@ -16,8 +16,8 @@
  *   Physical presence is irrelevant (dn pack --install installs all as transitive deps).
  * - **Third-party deps**: checked via physical resolution (only present if consumer installed).
  *
- * Used by Vite (`OptionalDepResolver` plugin), webpack (`NormalModuleReplacementPlugin`),
- * and Turbopack (`resolveAlias`) to alias missing deps to `empty.cjs`.
+ * Used by Vite (`OptionalDepResolver` plugin) and Next's Turbopack (`resolveAlias`) to
+ * alias missing deps to the empty module.
  *
  * @version 0.0.4
  * @since 0.0.1

@@ -2,15 +2,19 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import type { ICrudAdapter } from '@donotdev/types';
 
+import { createSchemas } from '../../../schemas/src/common/createSchema';
 import { HIDDEN_STATUSES } from '../../../schemas/src/common/visibility';
 import { deriveEntitySeo } from '../../../utils/src/common/entitySeo';
-import { buildLlmsTxt } from '../../next/seo/llmsTxt.js';
+import { formatTrailingSlash } from '../../../utils/src/common/languagePath';
+import { entityReadSchemas } from '../entityRecordSeo.js';
+import { buildLlmsTxt } from '../llmsTxt.js';
 import {
   generateLlmsFullTxt,
-  generateStaticLlmsTxt,
   getLlmsTxtSource,
-  resolvePageText,
+  resolvePageDescription,
+  resolvePageTitle,
 } from '../LlmsTxtGenerator.js';
+import { translationT } from '../translationT.js';
 import { formatLlmsTxt } from '../llmsTxtFormat.js';
 import { SEOGenerator } from '../SEOGenerator.js';
 import { productEntity } from '@dndev/test-entities';
@@ -110,6 +114,7 @@ function shopSource() {
     routes: ROUTES,
     translations: TRANSLATIONS,
     language: 'fr',
+    defaultNamespace: 'home',
   });
 }
 
@@ -120,25 +125,64 @@ function mockCrud(rows: Record<string, Record<string, unknown>[]>) {
   return { crud: { query } as unknown as ICrudAdapter, query };
 }
 
-describe('resolvePageText', () => {
-  it('prefers the i18n title, then PageMeta seo.title, never the file-name title', () => {
-    expect(resolvePageText(ROUTES[0], TRANSLATIONS, 'fr')).toEqual({
-      title: 'Marques coréennes pour instituts',
-    });
-    expect(resolvePageText(ROUTES[2], TRANSLATIONS, 'fr')).toEqual({
-      title: 'Conditions générales de vente',
-    });
-    expect(resolvePageText(ROUTES[6], TRANSLATIONS, 'fr')).toEqual({});
+/** `resolvePageTitle` site of the French shop: translations in `fr`. */
+const SITE = {
+  siteName: 'Boutique',
+  defaultNamespace: 'home',
+  t: translationT(
+    Object.fromEntries(
+      Object.entries(TRANSLATIONS).map(([ns, byLanguage]) => [
+        ns,
+        (byLanguage as Record<string, object>).fr,
+      ])
+    )
+  ),
+};
+
+describe('resolvePageTitle', () => {
+  // REGRESSION: labels carried the <title>'s " | <site name>" suffix
+  it('is the page\'s own title (routeTitle): PageMeta seo.title, then i18n, never the file-name title', () => {
+    expect(resolvePageTitle(ROUTES[0], SITE)).toBe('Marques coréennes pour instituts');
+    expect(resolvePageTitle(ROUTES[2], SITE)).toBe('Conditions générales de vente');
+    expect(resolvePageTitle(ROUTES[1], SITE)).toBe('Catalogue');
+    expect(
+      resolvePageTitle(
+        { path: '/catalogue', meta: { namespace: 'catalogue', seo: { title: 'Sélection' } } },
+        SITE
+      )
+    ).toBe('Sélection');
+    // The page's own title wins over its full title
+    expect(
+      resolvePageTitle(
+        { path: '/catalogue', meta: { namespace: 'catalogue', seo: { fullTitle: 'Catalogue Boutique' } } },
+        SITE
+      )
+    ).toBe('Catalogue');
   });
 
+  // REGRESSION: a page without a title failed the Vite build ("has no title") and made the
+  // Next build drop llms.txt; it gets its full title, else the site name
+  it('a page without its own title gets its full title, else the site name', () => {
+    expect(
+      resolvePageTitle({ path: '/presse', meta: { seo: { fullTitle: 'Presse Boutique' } } }, SITE)
+    ).toBe('Presse Boutique');
+    expect(resolvePageTitle(ROUTES[6], SITE)).toBe('Boutique');
+    // Without its own namespace: its PageMeta title, never the site defaults' (home) title
+    expect(resolvePageTitle({ path: '/faq', meta: {} }, SITE)).toBe('Boutique');
+    expect(resolvePageTitle({ path: '/faq', meta: { seo: { title: 'FAQ' } } }, SITE)).toBe('FAQ');
+  });
+});
+
+describe('resolvePageDescription', () => {
   it('reads Vite manifest routes (meta only) and drops a null seo.description', () => {
+    expect(
+      resolvePageDescription({ path: '/catalogue', meta: { namespace: 'catalogue' } }, TRANSLATIONS, 'fr')
+    ).toBe('Toute la sélection SOHEE.');
     const route = {
       path: '/catalogue',
       meta: { namespace: 'catalogue', seo: { description: null } },
     };
-    expect(resolvePageText(route, TRANSLATIONS, 'fr')).toEqual({
-      title: 'Catalogue',
-    });
+    expect(resolvePageDescription(route, TRANSLATIONS, 'fr')).toBeUndefined();
   });
 });
 
@@ -163,9 +207,10 @@ describe('getLlmsTxtSource', () => {
     expect(source.summary).toBe('Boutique professionnelle.');
   });
 
-  it('fails when a static page has no label in the app language', () => {
+  // REGRESSION: "[dndev] llms.txt: page "/about" has no title" failed the Vite build
+  it('lists a static page without a title under the site name', () => {
     const routes = [discovered('/about', 'About', 'pages', { namespace: 'about' })];
-    expect(() =>
+    expect(
       getLlmsTxtSource({
         siteName: 'Boutique',
         baseUrl: BASE,
@@ -173,11 +218,12 @@ describe('getLlmsTxtSource', () => {
         routes,
         translations: TRANSLATIONS,
         language: 'fr',
-      })
-    ).toThrow(/about_fr\.json/);
+        defaultNamespace: 'home',
+      }).routes
+    ).toEqual([{ path: '/about', title: 'Boutique' }]);
   });
 
-  it('lists blog posts under the localized blog heading', () => {
+  it('lists blog posts under the localized blog heading', async () => {
     const seoGenerator = new SEOGenerator({ baseUrl: BASE, siteName: 'Boutique' });
     const blogPosts = [
       { slug: 'routine', title: 'La routine', description: 'Matin et soir', date: '2026-01-01' },
@@ -190,8 +236,18 @@ describe('getLlmsTxtSource', () => {
       blogPosts,
       translations: TRANSLATIONS,
       language: 'fr',
+      defaultNamespace: 'home',
     });
-    expect(generateStaticLlmsTxt(source)).toBe(
+    const text = await buildLlmsTxt({
+      ...source,
+      trailingSlash: false,
+      formatTrailingSlash,
+      entities: {},
+      crud: undefined,
+      deriveEntitySeo,
+      hiddenStatuses: HIDDEN_STATUSES,
+    });
+    expect(text).toBe(
       [
         '# Boutique',
         '',
@@ -206,27 +262,6 @@ describe('getLlmsTxtSource', () => {
         '',
       ].join('\n')
     );
-  });
-});
-
-describe('generateStaticLlmsTxt (Vite build)', () => {
-  it('writes the static sitemap pages: absolute, localized, no template', () => {
-    const text = generateStaticLlmsTxt(shopSource());
-    expect(text).toBe(
-      [
-        '# Boutique',
-        '',
-        '> Boutique professionnelle.',
-        '',
-        '## Pages',
-        '',
-        `- [Marques coréennes pour instituts](${BASE}/)`,
-        `- [Catalogue](${BASE}/catalogue): Toute la sélection SOHEE.`,
-        `- [Conditions générales de vente](${BASE}/legal/cgv)`,
-        '',
-      ].join('\n')
-    );
-    expect(text).not.toMatch(/\/:\w/);
   });
 });
 
@@ -246,20 +281,31 @@ describe('llms.txt route (Next): build source → runtime buildLlmsTxt', () => {
     // The generated route serializes the source as JSON
     const source = JSON.parse(JSON.stringify(shopSource()));
 
+    const entities = { productEntity: PRODUCT_ENTITY, SLUG_PATTERN: /x/ };
+    // As the generated route builds them
+    const readSchemas = entityReadSchemas(entities, source.routes, createSchemas);
     const text = await buildLlmsTxt({
       ...source,
-      entities: { productEntity: PRODUCT_ENTITY, SLUG_PATTERN: /x/ },
+      entities,
       crud,
+      readSchemas,
       deriveEntitySeo,
       hiddenStatuses: HIDDEN_STATUSES,
+      trailingSlash: false,
+      formatTrailingSlash,
     });
 
-    expect(query).toHaveBeenCalledWith('products', {
-      where: [
-        { field: 'status', operator: 'not-in', value: [...HIDDEN_STATUSES] },
-      ],
-      limit: 1000,
-    });
+    // The entity's read schema: rows keep its field names (the record titles read them)
+    expect(query).toHaveBeenCalledWith(
+      'products',
+      {
+        where: [
+          { field: 'status', operator: 'not-in', value: [...HIDDEN_STATUSES] },
+        ],
+        limit: 1000,
+      },
+      readSchemas.products
+    );
     expect(text).toBe(
       [
         '# Boutique',

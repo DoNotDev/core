@@ -9,7 +9,10 @@
 
 import { BaseDiscovery } from './BaseDiscovery.js';
 import { ROUTE_DISCOVERY } from '../constants.js';
-import { extractMeta } from '../utils/MetaExtractor.js';
+import { createBuildError, isBuildError } from '../utils/buildError.js';
+import { extractMeta, hasGenerateMetadataExport } from '../utils/MetaExtractor.js';
+import { createEntityResolver, resolvePageEntity } from '../utils/pageEntity.js';
+import { isCatchAllRoute, isIndexableRoute } from '../utils/SEOGenerator.js';
 
 // Module-level cache to prevent duplicate discovery scans in same build
 let cachedRouteData = null;
@@ -31,7 +34,7 @@ function extractComponentName(filePath) {
  * (`/x`, never `//host` or `https://…`) or that points at the page itself (loop).
  *
  * @param {{ path: string, file: string, meta?: { signedInRedirect?: unknown } }} route - Discovered route
- * @throws {Error} When the target is invalid
+ * @throws {Error} Build error ({@link createBuildError}) when the target is invalid
  */
 export function validateSignedInRedirect(route) {
   const to = route.meta?.signedInRedirect;
@@ -42,16 +45,63 @@ export function validateSignedInRedirect(route) {
     to.startsWith('//') ||
     to.startsWith('/\\')
   ) {
-    throw new Error(
-      `PageMeta signedInRedirect in ${route.file} must be an app path starting with '/' (got ${JSON.stringify(to)}). ` +
-        `Example: export const meta: PageMeta = { signedInRedirect: '/catalogue' };`
+    throw createBuildError(
+      'dndev-routes',
+      `${route.file}: PageMeta signedInRedirect must be an app path starting with '/' (got ${JSON.stringify(to)}). ` +
+        `Example: export const meta: PageMeta = { signedInRedirect: '/catalogue' };`,
+      'invalid-configuration'
     );
   }
   if (to.split(/[?#]/)[0] === route.path) {
-    throw new Error(
-      `PageMeta signedInRedirect in ${route.file} points at the page itself (${to}): signed-in visitors would loop. Use another page.`
+    throw createBuildError(
+      'dndev-routes',
+      `${route.file}: PageMeta signedInRedirect points at the page itself (${to}): signed-in visitors would loop. Use another page.`,
+      'invalid-configuration'
     );
   }
+}
+
+/**
+ * Fail the build on a public, indexable `:param` route with no per-URL identity: every URL
+ * of it would share one title and description (PageMeta + i18n), duplicate pages for
+ * search engines. Ways out: the page declares its record entity (PageMeta `entity`), it
+ * exports Next's `generateMetadata` (Next only: `pageGenerateMetadata`), or it is
+ * `seo: { noindex: true }`. Exempt, like the sitemap ({@link isIndexableRoute},
+ * {@link isCatchAllRoute}): auth-only and error routes (`/404`, `/not-found`, ...),
+ * catch-all routes (`/docs/*`, no URL list: the sitemap leaves them out too) and blog
+ * post routes (`blog` namespace: identity from the post's frontmatter).
+ *
+ * @param {{ path: string, file: string, auth?: unknown, meta?: object,
+ *   metaExport?: { namespace?: string } | null, exportsGenerateMetadata?: boolean }} route - Discovered route
+ * @param {{ pageGenerateMetadata?: boolean }} [platform] - `pageGenerateMetadata: true` on
+ *   Next, where a page module's own `generateMetadata` sets the identity (Vite has no server)
+ * @returns {void}
+ * @throws {Error} Build error ({@link createBuildError}) listing the ways out
+ * @since 0.3.2
+ *
+ * @example
+ * assertDynamicRouteSeo({ path: '/produits/:slug', file: 'src/pages/ProductPage.tsx', meta: {} }); // throws
+ */
+export function assertDynamicRouteSeo(route, { pageGenerateMetadata = false } = {}) {
+  if (!route.path.split('/').some((segment) => segment.startsWith(':'))) return;
+  if (isCatchAllRoute(route) || !isIndexableRoute(route)) return;
+  if (route.meta?.entity || route.metaExport?.namespace === 'blog') return;
+  if (pageGenerateMetadata && route.exportsGenerateMetadata) return;
+  const ways = [
+    "declare the record entity it shows: import { productEntity } from 'entities'; then " +
+      'entity: productEntity in its PageMeta (title, description and image from the record)',
+    ...(pageGenerateMetadata
+      ? ["export Next's generateMetadata from the page module (a server module, no 'use client')"]
+      : []),
+    'keep it out of search engines: seo: { noindex: true } in its PageMeta',
+  ];
+  throw createBuildError(
+    'dndev-routes',
+    `${route.file}: public dynamic route ${route.path} has no per-URL SEO: every URL would get the ` +
+      'same title and description (PageMeta + i18n), duplicate pages for search engines. Fix, one of:\n' +
+      ways.map((way, index) => `  ${index + 1}. ${way}`).join('\n'),
+    'invalid-configuration'
+  );
 }
 
 export class RouteDiscovery extends BaseDiscovery {
@@ -90,6 +140,7 @@ export class RouteDiscovery extends BaseDiscovery {
       this.routes = cachedRouteData.routes;
       this.errors = cachedRouteData.errors;
       this.source = cachedRouteData.source;
+      this.entityResolver = cachedRouteData.entityResolver;
       return {
         routes: this.routes,
         errors: this.errors,
@@ -129,6 +180,7 @@ export class RouteDiscovery extends BaseDiscovery {
       routes: this.routes,
       errors: this.errors,
       source: this.source,
+      entityResolver: this.entityResolver,
     };
     cachedBuildId = process.env.DNDEV_BUILD_ID;
 
@@ -157,6 +209,20 @@ export class RouteDiscovery extends BaseDiscovery {
   // === PUBLIC API METHODS ===
 
   /**
+   * The entities resolver of this route discovery run (`createEntityResolver`: the
+   * `entities` package parsed once), for the other discoveries that read the entities
+   * (the asset discovery's tel-field check). Created here when discovery has not run.
+   * @returns {{ collectionOf: Function, usesFieldType: (type: string) => Promise<boolean> }}
+   * @since 0.3.2
+   */
+  getEntityResolver() {
+    this.entityResolver ??= createEntityResolver(
+      this.pathResolver.getAppRoot()
+    );
+    return this.entityResolver;
+  }
+
+  /**
    * Discover routes (delegates to base discover method)
    * @param {boolean} force - Force re-discovery
    * @returns {Object} Pure route data
@@ -176,6 +242,8 @@ export class RouteDiscovery extends BaseDiscovery {
 
   async _performAutoDiscovery(files, appRoot) {
     const { consumerFiles } = files;
+    // PageMeta entity declarations → collections (entities package parsed once per run)
+    this.entityResolver = createEntityResolver(appRoot);
 
     // Process app pages only (no framework pages)
     const appResults = await this._batchProcessFiles(
@@ -204,6 +272,7 @@ export class RouteDiscovery extends BaseDiscovery {
      *
      * Validation:
      * - Multiple routes with same path → Build error (use PageMeta route override)
+     * - Public indexable `:param` route without per-URL SEO → Build error (assertDynamicRouteSeo)
      */
     this.routes = allResults.filter((route) => {
       if (route.path === 'home' || route.path === '/home') {
@@ -221,15 +290,19 @@ export class RouteDiscovery extends BaseDiscovery {
       const path = route.path;
       if (pathMap.has(path)) {
         const existingRoute = pathMap.get(path);
-        throw new Error(
-          `Route conflict: Multiple routes found for path '${path}'. ` +
-            `Routes: ${existingRoute.file} and ${route.file}. ` +
-            `Use PageMeta route override to specify unique paths. ` +
-            `Example: export const meta: PageMeta = { route: '/custom-path' };`
+        throw createBuildError(
+          'dndev-routes',
+          `${route.file}: route ${path} is also the route of ${existingRoute.file}: ` +
+            `two pages cannot share a URL. Give one of them another path with a PageMeta route override, ` +
+            `e.g. export const meta: PageMeta = { route: '/custom-path' };`,
+          'invalid-configuration'
         );
       }
       pathMap.set(path, route);
       validateSignedInRedirect(route);
+      assertDynamicRouteSeo(route, {
+        pageGenerateMetadata: this.options.pageGenerateMetadata === true,
+      });
     }
 
     this.logger.debug(
@@ -271,8 +344,8 @@ export class RouteDiscovery extends BaseDiscovery {
       .replace(/src\/src\//g, 'src/')
       .replace(/src\/src\//g, 'src/');
 
-    // Extract meta export first to check for route override
-    const metaExport = this._extractMetaExport(content, fileInfo.absolutePath);
+    // Extract meta export first to check for route override (unreadable: build error)
+    const metaExport = this._extractMetaExport(content, relativePath);
 
     // Extract component name - React 19 convention: default exports only
     const componentName = extractComponentName(importPath);
@@ -283,12 +356,25 @@ export class RouteDiscovery extends BaseDiscovery {
       ? ROUTE_DISCOVERY.HOMEPAGE_PATH
       : this._resolveRoutePath(metaExport, relativePath, fileInfo.absolutePath);
 
-    // Auto-discover entity and action from file path (always takes precedence)
-    const discoveredMeta = this._extractPageMeta(relativePath, content);
+    // Title and action from the file name
+    const discoveredMeta = this._extractPageMeta(relativePath);
 
-    // Merge metaExport but exclude entity/action (they're auto-discovered)
+    // The record page's declared entity (PageMeta `entity: productEntity`, imported from
+    // 'entities') → its collection; the folder never sets it. Invalid: build error.
+    const entity = await resolvePageEntity(
+      metaExport,
+      content,
+      relativePath,
+      this.entityResolver
+    );
+
+    // Merge metaExport but exclude entity (resolved above) and action (from the file name)
     // Title can be overridden if provided in PageMeta
-    const { entity, action, ...metaExportWithoutAutoFields } = metaExport || {};
+    const {
+      entity: _declaredEntity,
+      action,
+      ...metaExportWithoutAutoFields
+    } = metaExport || {};
 
     return {
       path: routePath, // Use HomePage convention or meta.route or auto-generated
@@ -296,13 +382,16 @@ export class RouteDiscovery extends BaseDiscovery {
       importPath: importPath, // Full path with .tsx extension for Vite
       auth: metaExport?.auth || false, // Extract auth from meta object
       meta: {
-        ...discoveredMeta, // Auto-discovered title, entity, action
+        ...discoveredMeta, // Auto-discovered title, action
         ...metaExportWithoutAutoFields, // Other meta fields from PageMeta (title override, namespace, icon, etc.)
-        // Ensure entity and action are always from discovery (not overridable)
-        entity: discoveredMeta.entity,
+        // Collection of the declared entity (absent when the page declares none)
+        ...(entity && { entity }),
         action: discoveredMeta.action,
       },
-      metaExport: metaExport,
+      // PageMeta as written, entity as its collection (the reference is build-time only)
+      metaExport: metaExport && { ...metaExport, ...(entity && { entity }) },
+      // Next: the page module exports generateMetadata (re-exported by the generated page)
+      exportsGenerateMetadata: hasGenerateMetadataExport(content),
       file: relativePath,
     };
   }
@@ -312,8 +401,10 @@ export class RouteDiscovery extends BaseDiscovery {
    * Parses: export const meta = { title: "...", description: "..." }
    *
    * @param {string} content - File content
-   * @param {string} filePath - File path for better error reporting
+   * @param {string} filePath - Page path (`src/pages/…`), named in errors
    * @returns {Object|null} Parsed meta object or null
+   * @throws {Error} Build error ({@link extractMeta}): a PageMeta that cannot be read fails
+   *   the build instead of dropping the page's route, auth and seo
    * @private
    */
   _extractMetaExport(content, filePath) {
@@ -329,6 +420,7 @@ export class RouteDiscovery extends BaseDiscovery {
 
       return null;
     } catch (error) {
+      if (isBuildError(error)) throw error;
       this.logger.debug(
         `Error parsing meta export from ${filePath}: ${error.message}`
       );
@@ -414,7 +506,16 @@ export class RouteDiscovery extends BaseDiscovery {
     return this._generateRoutePath(relativePath);
   }
 
-  _extractPageMeta(relativePath, content) {
+  /**
+   * Title and action of a page from its file name (`ProductListPage.tsx` → title
+   * `Product List`, action `list`). Folders set neither the entity nor anything else
+   * here: they only shape the route path ({@link _generateRoutePath}).
+   *
+   * @param {string} relativePath - Page path (`src/pages/products/ProductPage.tsx`)
+   * @returns {{ title: string, action: string | null, file: string }}
+   * @private
+   */
+  _extractPageMeta(relativePath) {
     const fileName = relativePath.split('/').pop()?.replace('.tsx', '') || '';
 
     let title = fileName.replace(/Page$/, '');
@@ -425,11 +526,9 @@ export class RouteDiscovery extends BaseDiscovery {
     title = title.charAt(0).toUpperCase() + title.slice(1);
 
     const pathParts = relativePath.split('/');
-    let entity = null;
     let action = null;
 
     if (pathParts.length > 1) {
-      entity = pathParts[pathParts.length - 2];
       if (fileName.includes('List')) action = 'list';
       else if (
         fileName.includes('Form') ||
@@ -441,6 +540,6 @@ export class RouteDiscovery extends BaseDiscovery {
         action = 'detail';
     }
 
-    return { title, entity, action, file: relativePath };
+    return { title, action, file: relativePath };
   }
 }

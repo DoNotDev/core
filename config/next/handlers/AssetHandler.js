@@ -11,9 +11,6 @@ import { BaseNextHandler } from './BaseNextHandler.js';
 import { GENERATED_PATHS, CONFIG_KEYS } from '../../constants.js';
 import { AssetDiscovery } from '../../discovery/AssetDiscovery.js';
 
-// Shared cache for asset data (used by PWAHandler to avoid re-scanning)
-export const nextAssetDataCache = { data: null };
-
 export class NextAssetHandler extends BaseNextHandler {
   constructor(options = {}) {
     super(AssetDiscovery, options);
@@ -25,7 +22,6 @@ export class NextAssetHandler extends BaseNextHandler {
     return {
       manifestPath: GENERATED_PATHS.next.assetManifest,
       generateManifest: true,
-      optimizeImages: true,
       modernFormats: ['webp', 'avif', 'png', 'jpg', 'jpeg'],
     };
   }
@@ -93,13 +89,21 @@ export default assetConfig;
 
   // === DISCOVERY INTEGRATION ===
 
+  /**
+   * Flag codes of the app's languages, from the i18n discovery, and the route discovery's
+   * entities resolver (set by runDiscoveries): the asset discovery copies their flags,
+   * plus every country flag when an entity has a `tel` field, to `public/flags/`
+   * (AssetDiscovery.useFlagCodes).
+   * @param {string[]} flagCodes - The i18n discovery's `flagCodes`
+   * @param {{ usesFieldType: (type: string) => Promise<boolean> }} entityResolver - `createEntityResolver`
+   * @since 0.3.2
+   */
+  useFlagCodes(flagCodes, entityResolver) {
+    this.discovery.useFlagCodes(flagCodes, entityResolver);
+  }
+
   async getDiscoveryData() {
-    const assetData = await this.discovery.discoverAssets();
-    // Store in shared cache for PWAHandler to use (avoids re-scanning)
-    if (assetData?.pwaIcons) {
-      nextAssetDataCache.data = { pwaIcons: assetData.pwaIcons };
-    }
-    return assetData;
+    return await this.discovery.discoverAssets();
   }
 
   getAPIRewrites() {
@@ -115,16 +119,6 @@ export default assetConfig;
     };
   }
 
-  formatAPIResponse(assetData) {
-    return {
-      assets: assetData.assets,
-      manifest: assetData.manifest,
-      copiedAssets: assetData.copiedAssets,
-      source: assetData.source,
-      totalAssets: assetData.assets.length,
-      timestamp: assetData.timestamp,
-    };
-  }
 
   createManifestContent(assetData) {
     return {
@@ -153,13 +147,6 @@ export default assetConfig;
     if (this.options.generateManifest) {
       await this.generateAssetManifest(assetData);
     }
-
-    if (this.options.optimizeImages) {
-      await this.generateImageOptimization(assetData);
-    }
-
-    // Generate API route
-    await this.generateAPIHandler(assetData);
   }
 
   async generateAssetManifest(assetData) {
@@ -212,56 +199,6 @@ export const assetStats = {
 };
 
 export default assets;
-`;
-  }
-
-  async generateImageOptimization(assetData) {
-    const imageAssets = assetData.assets.filter(
-      (asset) => asset.type === 'image'
-    );
-
-    if (imageAssets.length === 0) {
-      this.logger.debug('No image assets found, skipping optimization config');
-      return;
-    }
-
-    const optimizationContent =
-      this.generateImageOptimizationContent(imageAssets);
-    this.writeGeneratedFile(
-      'src/app/image-optimization.generated.ts',
-      optimizationContent,
-      'image optimization config'
-    );
-  }
-
-  generateImageOptimizationContent(imageAssets) {
-    const imageConfigs = imageAssets
-      .map((asset) => {
-        const baseName = asset.path.split('/').pop().split('.')[0];
-        return `  '${baseName}': {
-    src: '${asset.path}',
-    alt: '${baseName}',
-    width: ${asset.width || 'auto'},
-    height: ${asset.height || 'auto'},
-    priority: false
-  }`;
-      })
-      .join(',\n');
-
-    return `// Auto-generated image optimization config by @donotdev/config
-// Generated at ${new Date().toISOString()}
-
-export const imageConfigs = {
-${imageConfigs}
-};
-
-export const imageAssets = ${JSON.stringify(
-      imageAssets.map((a) => a.path),
-      null,
-      2
-    )};
-
-export default imageConfigs;
 `;
   }
 }

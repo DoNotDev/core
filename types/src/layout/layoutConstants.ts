@@ -20,6 +20,19 @@
 export const DEFAULT_LAYOUT_PRESET = 'landing' as const;
 
 /**
+ * Site-wide link-preview image (`og:image`, Twitter card) when a page sets none: the
+ * build generates `public/og-image.png` (1200x630) from `public/logo.svg` unless the app
+ * provides it. Runtime default of `appConfig.seo.defaultImage`; the build side
+ * (`DEFAULT_OG_IMAGE` in `@donotdev/core` config constants) uses the same path (a test
+ * guards it). PNG, never SVG: link-preview crawlers do not render SVG.
+ *
+ * @version 0.1.0
+ * @since 0.3.2
+ * @author AMBROISE PARK Consulting
+ */
+export const DEFAULT_OG_IMAGE = '/og-image.png';
+
+/**
  * Footer mode constants - DRY single source of truth
  *
  * @version 0.1.0

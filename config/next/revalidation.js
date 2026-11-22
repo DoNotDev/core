@@ -15,7 +15,7 @@
 
 import { createHash, timingSafeEqual } from 'node:crypto';
 
-import { routeParams } from './seo/publicPages.js';
+import { routeParams } from '../utils/publicPages.js';
 
 /** Env variable holding the webhook's shared secret (`Authorization: Bearer <secret>`). */
 export const REVALIDATE_SECRET_ENV = 'DNDEV_REVALIDATE_SECRET';

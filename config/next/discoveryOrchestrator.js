@@ -4,6 +4,8 @@
  */
 
 import { GENERATED_PATHS, CONFIG_KEYS } from '../constants.js';
+import { isBuildError } from '../utils/buildError.js';
+import { createEntityResolver } from '../utils/pageEntity.js';
 import { PathResolver } from '../utils/PathResolver.js';
 import {
   copyFontsToPublic,
@@ -202,8 +204,12 @@ export async function runDiscoveries(
     if (routeHandler) {
       try {
         routeHandler.useLanguages(languageRouting);
+        // Metadata manifest: this build's translations, not the config file a previous build wrote
+        routeHandler.useI18n(i18nData);
         logger.info('🔍 Starting route discovery...');
         const routeData = await routeHandler.generateFiles();
+        // The SEO files list the same routes (no second discovery)
+        seoHandler.useRoutes(routeData);
         const routeCount = routeData?.routes?.length || 0;
         logger.info(`✅ Routes generated: ${routeCount} routes found`);
         if (routeCount === 0) {
@@ -222,7 +228,16 @@ export async function runDiscoveries(
       );
     }
 
-    // 2-6: Other discoveries (non-critical, continue on error)
+    // The flags of the app's languages (all country flags with a tel field: the route
+    // discovery's entities resolver) are copied to public/flags/
+    assetHandler.useFlagCodes(
+      i18nData.flagCodes,
+      routeHandler
+        ? routeHandler.getEntityResolver()
+        : createEntityResolver(appRoot)
+    );
+
+    // 2-6: Other discoveries (non-critical, continue on error; a build error fails the build)
     const nonCriticalHandlers = [
       { name: 'Theme', handler: themeHandler },
       { name: 'I18n', handler: i18nHandler },
@@ -236,6 +251,8 @@ export async function runDiscoveries(
       try {
         await handler.generateFiles();
       } catch (error) {
+        // A misconfigured app (createBuildError) fails the build with its message
+        if (isBuildError(error)) throw error;
         logger.debug(`${name} generation failed: ${error.message}`);
       }
     }
@@ -321,28 +338,4 @@ export default envConfig;
   pathResolver.writeSync(fullPath, configContent, { overwrite: true });
   const varCount = Object.keys(envVars).length;
   logger.debug(`Generated env config: ${varCount} NEXT_PUBLIC_* vars`);
-}
-
-/**
- * Copy assets from framework to app public directory
- * @param {Object} assetHandler - Asset handler instance
- * @param {Object} logger - Logger instance
- * @param {boolean} alreadyCopied - Guard flag
- * @returns {Promise<boolean>} True if copied
- */
-export async function copyFrameworkAssets(assetHandler, logger, alreadyCopied) {
-  if (alreadyCopied) return false;
-
-  try {
-    const assetData = await assetHandler.getDiscoveryData();
-    if (assetData?.copiedAssets?.length > 0) {
-      logger.info(
-        `📦 Copied ${assetData.copiedAssets.length} assets from framework`
-      );
-    }
-    return true;
-  } catch (error) {
-    logger.debug(`Asset discovery failed (non-critical): ${error.message}`);
-    return false;
-  }
 }

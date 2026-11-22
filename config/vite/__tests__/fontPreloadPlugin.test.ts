@@ -10,6 +10,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { PathResolver } from '../../utils/PathResolver.js';
 import { createViteFontPreloadPlugin } from '../plugins/FontPreloadPlugin.js';
+import { createI18nStore } from '../plugins/I18nPlugin.js';
 
 type Asset = { type: 'asset'; source: string };
 
@@ -50,7 +51,9 @@ async function build(themesCss: string) {
   writeFileSync(join(appRoot, 'src', 'themes.css'), themesCss);
   PathResolver.getInstance().setAppRoot(appRoot);
 
-  const plugin = createViteFontPreloadPlugin({});
+  const i18nStore = createI18nStore();
+  i18nStore.set({ supportedLanguages: ['en'] });
+  const plugin = createViteFontPreloadPlugin({ i18nStore });
   plugin.configResolved({ command: 'build', root: appRoot, base: '/' });
   await plugin.buildStart();
   const bundle = catalogueBundle();
