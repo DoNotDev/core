@@ -11,19 +11,6 @@ import { isPlainObject } from './utils.js';
 import { GENERATED_PATHS, VIRTUAL_MODULES } from '../constants.js';
 
 /**
- * CSS alias: redirect @donotdev/ui/dndev.css → dndev-next.css in Next.js.
- * The -next variant strips @fontsource imports; the fonts the theme uses are served
- * from public/dndev-fonts.css instead (see copyFontsToPublic + FontPreloadLinks).
- *
- * NOTE: Turbopack resolveAlias does NOT work for CSS @import (verified Next.js 16).
- * The authoritative CSS alias lives in postcss.js (postcss-import resolver).
- * This Turbopack alias is defense-in-depth only.
- */
-const DNDEV_CSS_ALIAS = {
-  '@donotdev/ui/dndev.css': '@donotdev/ui/dndev-next.css',
-};
-
-/**
  * Build rewrites configuration
  * @param {Object} options - Options
  * @returns {Function} Rewrites config function
@@ -282,7 +269,6 @@ export function buildFinalConfig({
       root: restNextConfig?.turbopack?.root || pathResolver.getRepoRoot(),
       resolveAlias: {
         ...(restNextConfig?.turbopack?.resolveAlias || {}),
-        ...DNDEV_CSS_ALIAS,
         // Alias @donotdev/blog-content → generated blog file, or empty stub when
         // no blog exists. ALWAYS set so apps without
         // .md files don't crash on the top-level blog-loader import in

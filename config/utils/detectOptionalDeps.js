@@ -14,7 +14,10 @@
  * Missing detection:
  * - **@donotdev/* packages**: checked against consumer's explicit package.json deps.
  *   Physical presence is irrelevant (dn pack --install installs all as transitive deps).
- * - **Third-party deps**: checked via physical resolution (only present if consumer installed).
+ * - **Third-party deps**: physically installed AND required by the app: listed in its
+ *   package.json, or a `dependencies` entry of a `@donotdev/*` package it lists (an app
+ *   on `@donotdev/supabase` gets `@supabase/supabase-js`, even when another installed
+ *   package, `@donotdev/functions`, declares it an optional peer).
  *
  * Used by Vite (`OptionalDepResolver` plugin) and Next's Turbopack (`resolveAlias`) to
  * alias missing deps to the empty module.
@@ -175,6 +178,35 @@ function getConsumerExplicitDeps(appRoot) {
 }
 
 /**
+ * Hard dependencies of the `@donotdev/*` packages the consumer lists: they run whenever
+ * that package runs, so they are never optional for this app (another installed
+ * framework package declaring one an optional peer does not make it missing).
+ *
+ * @param {string} appRoot - Consumer's app root directory
+ * @param {Set<string>} explicitDeps - Consumer's explicit dependencies
+ * @param {import('./PathResolver.js').PathResolver} pathResolver
+ * @returns {Set<string>} `dependencies` names of the listed framework packages
+ */
+function getFrameworkHardDeps(appRoot, explicitDeps, pathResolver) {
+  const hardDeps = new Set();
+  // node_modules/@donotdev/ from the core main entry (the exports map blocks /package.json)
+  const coreMainPath = pathResolver.resolvePackage('@donotdev/core', appRoot);
+  if (!coreMainPath) return hardDeps;
+  const scopeDir = pathResolver.getDirname(pathResolver.getDirname(coreMainPath));
+  for (const name of explicitDeps) {
+    if (!name.startsWith('@donotdev/')) continue;
+    const pkgJsonPath = pathResolver.resolvePath(
+      `${name.slice('@donotdev/'.length)}/package.json`,
+      scopeDir
+    );
+    if (!pathResolver.pathExists(pkgJsonPath)) continue;
+    const pkg = pathResolver.readSync(pkgJsonPath, { format: 'json' });
+    for (const dep of Object.keys(pkg?.dependencies || {})) hardDeps.add(dep);
+  }
+  return hardDeps;
+}
+
+/**
  * Check if a third-party package is physically installed.
  * Uses resolvePackage first, then falls back to directory existence check
  * for packages with no main export (e.g. @tiptap/pm has only subpath exports).
@@ -216,8 +248,9 @@ function isThirdPartyInstalled(pkg, appRoot, pathResolver) {
  * If the consumer didn't explicitly list a feature package, it's "missing"
  * and gets aliased to empty.cjs.
  *
- * For third-party deps (shiki, @tiptap/*, etc.): checks physical resolution
- * as before — these are only present when the consumer installed them.
+ * For third-party deps (shiki, @tiptap/*, etc.): physically installed AND listed
+ * by the consumer, or a hard dependency of a `@donotdev/*` package it lists
+ * ({@link getFrameworkHardDeps}).
  *
  * @param {string} appRoot - Consumer's app root directory
  * @returns {{ missing: string[], installed: string[] }} Missing and installed optional deps
@@ -228,6 +261,7 @@ export function detectMissingOptionalDeps(appRoot) {
   const installed = [];
   const pathResolver = PathResolver.getInstance();
   const explicitDeps = getConsumerExplicitDeps(appRoot);
+  const frameworkHardDeps = getFrameworkHardDeps(appRoot, explicitDeps, pathResolver);
 
   for (const pkg of allOptional) {
     if (pkg.startsWith('@donotdev/')) {
@@ -240,13 +274,14 @@ export function detectMissingOptionalDeps(appRoot) {
         missing.push(pkg);
       }
     } else {
-      // Third-party optional deps: require BOTH explicit listing AND physical presence.
+      // Third-party optional deps: require BOTH a reason (explicit listing, or a hard
+      // dependency of a framework package the app lists) AND physical presence.
       // Physical presence alone is insufficient — deps like shiki get hoisted into
       // node_modules as transitive deps of @donotdev/components even when the consumer
       // never uses them. Without this check, Vite bundles the entire dep (e.g. 673
       // shiki language grammars) into apps that don't need syntax highlighting.
       if (
-        explicitDeps.has(pkg) &&
+        (explicitDeps.has(pkg) || frameworkHardDeps.has(pkg)) &&
         isThirdPartyInstalled(pkg, appRoot, pathResolver)
       ) {
         installed.push(pkg);

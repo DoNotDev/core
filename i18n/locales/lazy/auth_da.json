@@ -35,6 +35,7 @@
   "signingIn": "Logger ind...",
   "creatingAccount": "Opretter konto...",
   "email": "E-mail",
+  "name": "Navn",
   "password": "Adgangskode",
   "emailHint": "Indtast din e-mailadresse",
   "passwordHintSignin": "Indtast din adgangskode",
@@ -115,6 +116,10 @@
   "passwordStrength.fair": "Tilpas",
   "passwordStrength.good": "God",
   "passwordStrength.strong": "Stærk",
+  "passwordToggle": {
+    "show": "Vis adgangskode",
+    "hide": "Skjul adgangskode"
+  },
   "rememberMe": "Husk mig",
   "signUp": "Opret konto",
   "alreadyHaveAccount": "Har du allerede en konto? Log ind",
@@ -128,7 +133,19 @@
     "email_not_confirmed": "Bekræft venligst din e-mail, før du logger ind.",
     "invalid_credentials": "Ugyldig e-mail eller adgangskode.",
     "weak_password": "Adgangskoden er for svag. Vælg venligst en stærkere adgangskode.",
-    "breached_password": "Denne adgangskode er fundet i et datalæk. Vælg venligst en anden adgangskode."
+    "breached_password": "Denne adgangskode er fundet i et datalæk. Vælg venligst en anden adgangskode.",
+    "invalid_code": "Koden er forkert eller udløbet. Tjek e-mailen eller bed om en ny kode.",
+    "code_expired": "Koden er udløbet. Bed om en ny kode."
+  },
+  "codeConfirmation": {
+    "label": "Bekræftelseskode",
+    "digit": "Ciffer {{index}} af {{length}}",
+    "incomplete": "Indtast den {{length}}-cifrede kode.",
+    "resend": "Send koden igen",
+    "resend_in": "Send koden igen om {{seconds}} s",
+    "sent": "En ny kode er sendt.",
+    "intro": "Indtast koden sendt til {{email}}",
+    "change_email": "Skift adresse"
   },
   "signup": {
     "success_title": "Tjek din e-mail",
@@ -184,7 +201,10 @@
     "signingIn": "Logger ind med {{partner}}...",
     "signedIn": "Logget ind med {{partner}}"
   },
-  "actions": { "sign_in_submit": "Log ind", "sign_up_submit": "Opret konto" },
+  "actions": {
+    "sign_in_submit": "Log ind",
+    "sign_up_submit": "Opret konto"
+  },
   "guard": {
     "signInRequired": "Login påkrævet",
     "signInDescription": "Log ind for at få adgang til denne side"

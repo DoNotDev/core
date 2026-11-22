@@ -21,7 +21,7 @@ import { COUNTRIES, LANGUAGES } from '../utils/constants';
 
 /**
  * Public URL folder of the flag files (`public/flags/` in the app): root-absolute, like
- * the other framework public files (`/dndev-fonts.css`, `/logo.svg`).
+ * the other framework public files (`/fonts/`, `/logo.svg`).
  *
  * @version 0.1.0
  * @since 0.3.2

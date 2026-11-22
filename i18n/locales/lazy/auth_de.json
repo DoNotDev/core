@@ -35,6 +35,7 @@
   "signingIn": "Anmeldung...",
   "creatingAccount": "Konto wird erstellt...",
   "email": "E-Mail",
+  "name": "Name",
   "password": "Passwort",
   "emailHint": "Geben Sie Ihre E-Mail-Adresse ein",
   "passwordHintSignin": "Geben Sie Ihr Passwort ein",
@@ -115,6 +116,10 @@
   "passwordStrength.fair": "Mäßig",
   "passwordStrength.good": "Gut",
   "passwordStrength.strong": "Stark",
+  "passwordToggle": {
+    "show": "Passwort anzeigen",
+    "hide": "Passwort verbergen"
+  },
   "rememberMe": "Angemeldet bleiben",
   "signUp": "Registrieren",
   "alreadyHaveAccount": "Haben Sie bereits ein Konto? Anmelden",
@@ -128,7 +133,19 @@
     "email_not_confirmed": "Bitte bestätigen Sie Ihre E-Mail-Adresse, bevor Sie sich anmelden.",
     "invalid_credentials": "Ungültige E-Mail-Adresse oder Passwort.",
     "weak_password": "Das Passwort ist zu schwach. Bitte wählen Sie ein stärkeres Passwort.",
-    "breached_password": "Dieses Passwort wurde in einem Datenleck gefunden. Bitte wählen Sie ein anderes Passwort."
+    "breached_password": "Dieses Passwort wurde in einem Datenleck gefunden. Bitte wählen Sie ein anderes Passwort.",
+    "invalid_code": "Dieser Code ist falsch oder abgelaufen. Prüfen Sie die E-Mail oder fordern Sie einen neuen Code an.",
+    "code_expired": "Dieser Code ist abgelaufen. Fordern Sie einen neuen Code an."
+  },
+  "codeConfirmation": {
+    "label": "Bestätigungscode",
+    "digit": "Ziffer {{index}} von {{length}}",
+    "incomplete": "Geben Sie den {{length}}-stelligen Code ein.",
+    "resend": "Code erneut senden",
+    "resend_in": "Code erneut senden in {{seconds}} s",
+    "sent": "Ein neuer Code wurde gesendet.",
+    "intro": "Gib den an {{email}} gesendeten Code ein",
+    "change_email": "Adresse ändern"
   },
   "signup": {
     "success_title": "Überprüfen Sie Ihre E-Mail",
@@ -186,7 +203,7 @@
   },
   "actions": {
     "sign_in_submit": "Anmelden",
-    "sign_up_submit": "Registrieren"
+    "sign_up_submit": "Konto erstellen"
   },
   "guard": {
     "signInRequired": "Anmeldung erforderlich",

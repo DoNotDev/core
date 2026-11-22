@@ -17,6 +17,12 @@ const transpile = (code: string) =>
     },
   });
 
+/** A font plan as runDiscoveries hands it to the route handler (useFonts). */
+const FONT_PLAN = {
+  css: "@font-face{font-family:'Inter';font-display:optional;src:url(/fonts/inter-latin-400-normal.1a2b3c4d.woff2) format('woff2');}",
+  preloads: { fr: ['/fonts/inter-latin-400-normal.1a2b3c4d.woff2'], en: ['/fonts/inter-latin-400-normal.1a2b3c4d.woff2'] },
+};
+
 type Result = { type: string; url?: string; status?: number };
 
 /** Supabase auth cookie (name only matters: refreshSupabaseSession is stubbed). */
@@ -563,13 +569,31 @@ describe('RouteHandler pages with 2+ languages', () => {
     );
     expect(layout).toContain('export function generateStaticParams()');
     expect(layout).toContain('if (!LANGUAGES.includes(lang)) notFound();');
-    expect(layout).toContain('<AppDocument lang={lang}>{children}</AppDocument>');
+    // The framework's font tags (the URL language's preloads) inside the app's document
+    expect(layout).toMatch(
+      /<AppDocument lang=\{lang\}>\s*<FontHead fonts=\{FONTS\} lang=\{lang\} \/>\s*\{children\}\s*<\/AppDocument>/
+    );
+    expect(layout).toContain("import { FontHead } from '@donotdev/ui/next';");
+    expect(layout).toContain("import { FONTS } from '../fonts.generated';");
     expect(layout).toContain("export { metadata } from '../AppDocument';");
-    const written: string[] = [];
+    const written: Array<{ path: string; content: string }> = [];
     Object.assign(Object.create(handler), {
-      writeGeneratedFile: (path: string) => written.push(path),
+      fonts: FONT_PLAN,
+      writeGeneratedFile: (path: string, content: string) => written.push({ path, content }),
     }).generateRootLayout();
-    expect(written).toEqual(['src/app/[lang]/layout.next.tsx']);
+    expect(written.map((w) => w.path)).toEqual([
+      'src/app/fonts.generated.ts',
+      'src/app/[lang]/layout.next.tsx',
+    ]);
+    const fonts = written[0]!.content;
+    expect(transpile(fonts).diagnostics ?? []).toEqual([]);
+    expect(fonts).toContain("import type { FontHeadData } from '@donotdev/ui/next';");
+    expect(fonts).toContain(`export const FONTS: FontHeadData = ${JSON.stringify(
+      { css: FONT_PLAN.css, preloads: FONT_PLAN.preloads },
+      null,
+      2
+    )};`);
+    expect(() => Object.create(handler).generateFontsContent()).toThrow('the font plan is not set');
   });
 
   it('renders the tree layouts under [lang], importing ClientLayout two levels up', () => {
@@ -915,16 +939,22 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
     single.useLanguages({ languages: ['fr'], defaultLanguage: 'fr' });
     const layout = single.generateRootLayoutContent();
     expect(transpile(layout).diagnostics ?? []).toEqual([]);
-    expect(layout).toContain('<AppDocument lang="fr">{children}</AppDocument>');
+    expect(layout).toContain('const lang = "fr";');
+    expect(layout).toMatch(
+      /<AppDocument lang=\{lang\}>\s*<FontHead fonts=\{FONTS\} lang=\{lang\} \/>\s*\{children\}/
+    );
+    expect(layout).toContain("import { FONTS } from './fonts.generated';");
     expect(layout).toContain("export { metadata } from './AppDocument';");
     expect(layout).not.toContain('[lang]');
     const written: string[] = [];
+    single.useFonts(FONT_PLAN);
     Object.assign(single, {
       writeGeneratedFile: (path: string) => written.push(path),
     });
     single.generateRootLayout();
     single.generateNotFoundPages();
     expect(written).toEqual([
+      'src/app/fonts.generated.ts',
       'src/app/layout.next.tsx',
       'src/app/not-found.next.tsx',
       'src/app/global-not-found.next.tsx',
@@ -932,6 +962,8 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
     const global = single.generateGlobalNotFoundContent();
     expect(transpile(global).diagnostics ?? []).toEqual([]);
     expect(global).toContain('const lang = "fr";');
+    expect(global).toContain("import { FONTS } from './fonts.generated';");
+    expect(global).toMatch(/<AppDocument lang=\{lang\}>\s*<FontHead fonts=\{FONTS\} lang=\{lang\} \/>\s*<NotFoundDocument>/);
     for (const code of [global, single.generateNotFoundContent()]) {
       expect(code).toContain('<NotFoundPage showRequestedPath={false} />');
       expect(code).toContain('<Suspense fallback={null}>');

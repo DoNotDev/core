@@ -2,6 +2,7 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   rmSync,
   utimesSync,
@@ -26,8 +27,20 @@ const logger = {
 /** The route discovery's entities resolver: an app without a tel field. */
 const entityResolver = { usesFieldType: async () => false };
 
-/** i18n, SEO and asset handlers: runDiscoveries reads the app languages before routes, then hands the routes to SEO and the flag codes to assets. */
+/** Theme handler of an app whose theme renders text in system fonts only (empty font plan). */
+const themeHandler = (fontCss: unknown) => ({
+  generateFiles: async () => ({}),
+  getDiscoveryData: async () => ({ fontCss }),
+});
+const SYSTEM_FONTS = {
+  framework:
+    ':root { --font-family: system-ui, sans-serif; --font-headline: var(--font-family); --font-weight-normal: 400; --font-weight-bold: 700; }',
+  app: [],
+};
+
+/** Theme, i18n, SEO and asset handlers: runDiscoveries reads the app languages and builds the font plan before routes, then hands the routes to SEO and the flag codes to assets. */
 const languageHandlers = {
+  themeHandler: themeHandler(SYSTEM_FONTS),
   i18nHandler: {
     getDiscoveryData: async () => ({
       supportedLanguages: ['en'],
@@ -73,6 +86,7 @@ describe('runDiscoveries build marker', () => {
       pathResolver,
       useLanguages: () => {},
       useI18n: () => {},
+      useFonts: () => {},
       getEntityResolver: () => entityResolver,
       generateFiles: async () => {
         routeRuns += 1;
@@ -108,6 +122,7 @@ describe('runDiscoveries build marker', () => {
       pathResolver,
       useLanguages: () => {},
       useI18n: () => {},
+      useFonts: () => {},
       getEntityResolver: () => entityResolver,
       generateFiles: async () => {
         routeConfigPresentDuringRun = existsSync(routeConfig);
@@ -137,6 +152,7 @@ describe('runDiscoveries build marker', () => {
       pathResolver,
       useLanguages: () => {},
       useI18n: () => {},
+      useFonts: () => {},
       getEntityResolver: () => entityResolver,
       generateFiles: async () => {
         pathResolver.writeSync(routeConfig, 'route config', {
@@ -159,6 +175,7 @@ describe('runDiscoveries build marker', () => {
       pathResolver,
       useLanguages: () => {},
       useI18n: () => {},
+      useFonts: () => {},
       getEntityResolver: () => entityResolver,
       generateFiles: async () => {
         throw new Error('route discovery failed');
@@ -173,66 +190,64 @@ describe('runDiscoveries build marker', () => {
     );
   });
 
-  it('ships the theme fonts only: none (and no stale ones) when the app packs its own', async () => {
+  it('builds the font plan before the routes: files in public/fonts/, the plan handed to the route handler', async () => {
     const pathResolver = PathResolver.getInstance();
+    const calls: string[] = [];
+    let plan: { css: string; preloads: Record<string, string[]> } | null = null;
     const routeHandler = {
       pathResolver,
       useLanguages: () => {},
       useI18n: () => {},
+      useFonts: (fonts: typeof plan) => {
+        plan = fonts;
+        calls.push('fonts');
+      },
       getEntityResolver: () => entityResolver,
-      generateFiles: async () => ({ routes: [{}] }),
+      generateFiles: async () => {
+        calls.push('routes');
+        return { routes: [{}] };
+      },
     };
-    const themeHandler = (fontFamilies: string[]) => ({
-      generateFiles: async () => ({}),
-      getDiscoveryData: async () => ({ fontFamilies }),
-    });
-    const fontsCss = join(appRoot, 'public', 'dndev-fonts.css');
+    writeFileSync(join(appRoot, 'package.json'), '{"name":"fixture-app"}');
+    mkdirSync(join(appRoot, 'public', 'fonts'), { recursive: true });
+    writeFileSync(join(appRoot, 'public', 'fonts', 'stale.woff2'), '');
+    writeFileSync(join(appRoot, 'public', 'dndev-fonts.css'), '/* former font stylesheet */');
+    const inter = {
+      framework: `:root { --font-family: Inter, 'Inter Fallback', sans-serif; --font-headline: var(--font-family);
+        --font-weight-normal: 400; --font-weight-bold: 700; }`,
+      app: [],
+    };
 
-    process.env.DNDEV_BUILD_ID = 'fonts-framework';
-    await runDiscoveries(
-      {
-        routeHandler,
-        themeHandler: themeHandler(['Inter']),
-        ...languageHandlers,
-      },
-      logger
-    );
-    expect(readFileSync(fontsCss, 'utf8')).toContain("font-family: 'Inter'");
+    process.env.DNDEV_BUILD_ID = 'fonts-plan';
+    await runDiscoveries({ routeHandler, ...languageHandlers, themeHandler: themeHandler(inter) }, logger);
 
-    process.env.DNDEV_BUILD_ID = 'fonts-own';
-    await runDiscoveries(
-      {
-        routeHandler,
-        themeHandler: themeHandler(['ui-monospace']),
-        ...languageHandlers,
-      },
-      logger
-    );
-    expect(existsSync(fontsCss)).toBe(false);
-    expect(existsSync(join(appRoot, 'public', 'fonts'))).toBe(false);
+    expect(calls).toEqual(['fonts', 'routes']);
+    expect(plan!.css).toContain("font-family:'Inter'");
+    const files = readdirSync(join(appRoot, 'public', 'fonts'));
+    expect(files).not.toContain('stale.woff2');
+    for (const href of plan!.preloads.en) expect(files).toContain(href.split('/').pop());
+    // The former stylesheet is swept as a stale artifact
+    expect(existsSync(join(appRoot, 'public', 'dndev-fonts.css'))).toBe(false);
   });
 
-  it('fails the run when theme discovery gives no font families', async () => {
+  it('fails the run when theme discovery gives no font input', async () => {
     process.env.DNDEV_BUILD_ID = 'fonts-missing';
     const pathResolver = PathResolver.getInstance();
     const routeHandler = {
       pathResolver,
       useLanguages: () => {},
       useI18n: () => {},
+      useFonts: () => {},
       getEntityResolver: () => entityResolver,
       generateFiles: async () => ({ routes: [{}] }),
-    };
-    const themeHandler = {
-      generateFiles: async () => ({}),
-      getDiscoveryData: async () => ({ themes: [] }),
     };
 
     await expect(
       runDiscoveries(
-        { routeHandler, themeHandler, ...languageHandlers },
+        { routeHandler, ...languageHandlers, themeHandler: themeHandler(undefined) },
         logger
       )
-    ).rejects.toThrow(/families/);
+    ).rejects.toThrow(/fontCss is required/);
   });
 
   it('fails the run on a build error from a non-critical handler; other errors are logged', async () => {
@@ -241,6 +256,7 @@ describe('runDiscoveries build marker', () => {
       pathResolver,
       useLanguages: () => {},
       useI18n: () => {},
+      useFonts: () => {},
       getEntityResolver: () => entityResolver,
       generateFiles: async () => ({ routes: [{}] }),
     };
@@ -278,6 +294,7 @@ describe('runDiscoveries build marker', () => {
       pathResolver,
       useLanguages: () => {},
       useI18n: () => {},
+      useFonts: () => {},
       getEntityResolver: () => entityResolver,
       generateFiles: async () => ({ routes: [{}] }),
     };

@@ -374,7 +374,8 @@
   "sheet": {
     "navigation": "Navigation",
     "codeInspector": "Code Inspector",
-    "debugPanel": "Debug Panel"
+    "debugPanel": "Debug Panel",
+    "close": "Close sheet"
   },
   "routeError": {
     "title": "Something went wrong",

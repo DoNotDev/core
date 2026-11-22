@@ -688,3 +688,42 @@ export function faviconHeadTags(set: FaviconSet, config: FaviconConfig): HeadTag
   tags.push(meta('name', 'color-scheme', 'light dark'));
   return tags;
 }
+
+/**
+ * Key of the framework's inline `@font-face` style (the app's font plan, built at build
+ * time by `@donotdev/core` config `fonts/buildFontPlan.js`): the `id` of the `<style>` the
+ * Vite build writes into `index.html` and every prerendered page, the `href` / `precedence`
+ * React hoists and dedupes on Next (`FontHead`). One style per document.
+ *
+ * @version 0.1.0
+ * @since 0.3.3
+ * @author AMBROISE PARK Consulting
+ */
+export const FONT_STYLE_ID = 'dndev-fonts';
+
+/**
+ * Preload tags of a page's first-paint font files (the font plan's `preloads` for the
+ * page language), in order: `<link rel="preload" as="font" type="font/woff2" crossorigin>`.
+ * `crossorigin` is required even same-origin: fonts are fetched in CORS mode, a preload
+ * without it is not reused. The Vite build writes them into `<head>` before the
+ * stylesheet; Next renders the same preloads through React's `preload()` (`FontHead`).
+ *
+ * @param hrefs - Font file URLs (`/fonts/inter-latin-400-normal.1a2b3c4d.woff2`)
+ * @returns Tags, one per href
+ *
+ * @version 0.1.0
+ * @since 0.3.3
+ * @author AMBROISE PARK Consulting
+ */
+export function fontPreloadHeadTags(hrefs: readonly string[]): HeadTag[] {
+  return hrefs.map((href) => ({
+    tag: 'link',
+    attributes: {
+      rel: 'preload',
+      as: 'font',
+      type: 'font/woff2',
+      href,
+      crossorigin: 'anonymous',
+    },
+  }));
+}

@@ -89,7 +89,9 @@
     "matches": "{{field}}은(는) 패턴 {{pattern}}과 일치해야 합니다",
     "unique": "{{field}}은(는) 고유해야 합니다",
     "alphanumeric": "{{field}}은(는) 문자와 숫자만 포함해야 합니다",
-    "lettersOnly": "{{field}}은(는) 문자만 포함해야 합니다"
+    "lettersOnly": "{{field}}은(는) 문자만 포함해야 합니다",
+    "phone": "유효한 전화번호를 입력해 주세요",
+    "invalid": "{{field}}이(가) 올바르지 않습니다"
   },
   "number": {
     "required": "{{field}}은(는) 필수입니다",

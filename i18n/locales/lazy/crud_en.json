@@ -365,7 +365,9 @@
     "matches": "{{field}} must match the pattern {{pattern}}",
     "unique": "{{field}} must be unique",
     "alphanumeric": "{{field}} must only contain letters and numbers",
-    "lettersOnly": "{{field}} must only contain letters"
+    "lettersOnly": "{{field}} must only contain letters",
+    "phone": "Please enter a valid phone number",
+    "invalid": "{{field}} is not valid"
   },
   "number": {
     "required": "{{field}} is required",

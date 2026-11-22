@@ -365,7 +365,9 @@
     "matches": "{{field}} deve corresponder ao padrão {{pattern}}",
     "unique": "{{field}} deve ser único",
     "alphanumeric": "{{field}} deve conter apenas letras e números",
-    "lettersOnly": "{{field}} deve conter apenas letras"
+    "lettersOnly": "{{field}} deve conter apenas letras",
+    "phone": "Digite um número de telefone válido",
+    "invalid": "{{field}} não é válido"
   },
   "number": {
     "required": "{{field}} é obrigatório",

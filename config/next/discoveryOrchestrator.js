@@ -4,13 +4,11 @@
  */
 
 import { GENERATED_PATHS, CONFIG_KEYS } from '../constants.js';
+import { buildFontPlan } from '../fonts/buildFontPlan.js';
+import { writeFontPlan } from '../fonts/writeFontPlan.js';
 import { isBuildError } from '../utils/buildError.js';
 import { createEntityResolver } from '../utils/pageEntity.js';
 import { PathResolver } from '../utils/PathResolver.js';
-import {
-  copyFontsToPublic,
-  cleanFontAssets,
-} from './fonts/copyFontsToPublic.js';
 
 /** Artifacts to clean at build start */
 const DISCOVERY_ARTIFACTS = [
@@ -20,6 +18,7 @@ const DISCOVERY_ARTIFACTS = [
   'public/asset-manifest.json',
   'public/seo-manifest.json',
   'public/pwa-manifest.json',
+  // Former font stylesheet (fonts now ship inline from the font plan): removed when present
   'public/dndev-fonts.css',
   // SEO output files — must be cleaned to prevent stale content
   'public/robots.txt',
@@ -125,11 +124,14 @@ export function removeStaleDiscoveryArtifacts(appRoot, logger, writtenPaths) {
 
 /**
  * Run all discovery handlers in correct order
- * Discovery order: Routes → Themes → I18n → Assets → SEO → PWA
+ * Discovery order: languages → font plan → Routes → Themes → I18n → Assets → SEO → PWA
  *
  * @param {Object} handlers - Handler instances
  * @param {Object} logger - Logger instance
+ * @param {Object} [options]
+ * @param {Readonly<Record<string, import('@donotdev/types').LocalFontConfig>>} [options.appFonts] - `appConfig.fonts`: the app's own font files (font plan)
  * @returns {Promise<void>}
+ * @throws {Error} A build error (font plan, route discovery, a non-critical handler's build error)
  */
 export async function runDiscoveries(
   {
@@ -141,7 +143,8 @@ export async function runDiscoveries(
     pwaHandler,
     blogContentHandler,
   },
-  logger
+  logger,
+  { appFonts } = {}
 ) {
   // CRITICAL: Ensure appRoot is set before running discovery
   const pathResolver = routeHandler?.pathResolver;
@@ -185,10 +188,6 @@ export async function runDiscoveries(
   pathResolver.startWriteRecording();
   let writtenPaths;
   try {
-    // Font assets are copied, not overwritten: clear them before copying.
-    // Every other artifact is overwritten in place and swept after the run.
-    cleanFontAssets();
-
     // App languages first: with 2+ languages pages live under app/[lang] and the
     // sitemap lists every language URL, and routes run before the i18n handler.
     const i18nData = await i18nHandler.getDiscoveryData();
@@ -200,12 +199,29 @@ export async function runDiscoveries(
     // llms.txt labels pages in the app's language
     seoHandler.useTranslations(i18nData.content);
 
+    // Font plan before the routes: the generated root layout and global 404 render it
+    // (FontHead: preloads + inline @font-face). Its files replace public/fonts/. Fails
+    // the build: a wrong font set must not ship silently.
+    const { fontCss } = themeHandler ? await themeHandler.getDiscoveryData() : {};
+    const fontPlan = await buildFontPlan({
+      fontCss,
+      appFonts,
+      languages: i18nData.supportedLanguages,
+      pathResolver,
+    });
+    writeFontPlan(fontPlan, { pathResolver });
+    logger.debug(
+      `Font plan: ${fontPlan.families.map(({ family }) => family).join(', ') || 'system fonts only'} (${fontPlan.files.length} files)`
+    );
+    for (const notice of fontPlan.notices) logger.info(`🔤 ${notice}`);
+
     // 1. Routes (must be first - Next.js needs app/page.tsx before compilation)
     if (routeHandler) {
       try {
         routeHandler.useLanguages(languageRouting);
         // Metadata manifest: this build's translations, not the config file a previous build wrote
         routeHandler.useI18n(i18nData);
+        routeHandler.useFonts(fontPlan);
         logger.info('🔍 Starting route discovery...');
         const routeData = await routeHandler.generateFiles();
         // The SEO files list the same routes (no second discovery)
@@ -264,17 +280,6 @@ export async function runDiscoveries(
       logger.debug(
         `Env config generation failed (non-critical): ${error.message}`
       );
-    }
-
-    // Framework fonts the theme renders text in → public/ (Turbopack CSS url()
-    // workaround), subsets of the app languages. None when the app packs its own.
-    // Fails the build: a wrong font set must not ship silently.
-    if (themeHandler) {
-      const { fontFamilies } = await themeHandler.getDiscoveryData();
-      copyFontsToPublic({
-        families: fontFamilies,
-        languages: i18nData.supportedLanguages,
-      });
     }
   } finally {
     writtenPaths = pathResolver.stopWriteRecording();

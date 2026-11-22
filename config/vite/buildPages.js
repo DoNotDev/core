@@ -169,7 +169,8 @@ function onceReader(crud) {
  * @param {boolean} options.hreflang - `appConfig.seo.hreflang !== false`
  * @param {string} options.defaultNamespace - `appConfig.seo.defaultNamespace` (`home`)
  * @param {string} options.defaultImage - `appConfig.seo.defaultImage` (`DEFAULT_OG_IMAGE`)
- * @param {string} options.shellHtml - The SPA shell
+ * @param {(language: string) => string} options.pageShell - The SPA shell a page in a language
+ *   starts from (the shell with that language's font preloads)
  * @returns {Promise<{ pages: Array<{ file: string, html: string }>, skipped: string[] }>}
  *   `file`: output file (`/en/about.html`); `skipped`: URL paths left to the shell
  * @throws {Error} When a read fails or a route's collection has no entity definition
@@ -189,7 +190,7 @@ export async function buildPrerenderedPages({
   hreflang,
   defaultNamespace,
   defaultImage,
-  shellHtml,
+  pageShell,
 }) {
   const withHreflang = hreflang && core.isMultilingual(routing.languages);
   const pages = [];
@@ -222,7 +223,7 @@ export async function buildPrerenderedPages({
       ];
       pages.push({
         file,
-        html: renderPrerenderedPage(shellHtml, {
+        html: renderPrerenderedPage(pageShell(language), {
           tags,
           headScript: core.jsonScriptText({ url, ...identity }),
           headElementId: core.PRERENDERED_HEAD_ELEMENT_ID,
@@ -404,6 +405,8 @@ async function importModule(runner, id, purpose) {
  * @param {Array<{ path: string, meta?: Object, auth?: unknown }>} options.staticRoutes - Static pages to prerender (none: `prerender` off)
  * @param {boolean} options.prerenderRecords - Record pages (`prerender: 'auto'` and `appConfig.prerenderRecords`)
  * @param {string} options.shellHtml - The SPA shell as Vite wrote it
+ * @param {(language: string) => string} options.pageShell - The shell a page in a language
+ *   starts from (`shellHtml` with that language's font preloads)
  * @param {Object} options.seo - SEO options (`appConfig.seo`, site name and description)
  * @param {() => Promise<Object>} options.loadI18n - The app's i18n discovery
  * @param {Object | null} options.pkg - The app's package.json
@@ -421,6 +424,7 @@ export async function writeBuildPages({
   staticRoutes,
   prerenderRecords,
   shellHtml,
+  pageShell,
   seo,
   loadI18n,
   pkg,
@@ -543,7 +547,7 @@ export async function writeBuildPages({
       hreflang: seo.hreflang !== false,
       defaultNamespace,
       defaultImage: seo.defaultImage || DEFAULT_OG_IMAGE,
-      shellHtml,
+      pageShell,
     });
     for (const page of pages) await write(page.file, page.html);
     if (skipped.length > 0) {

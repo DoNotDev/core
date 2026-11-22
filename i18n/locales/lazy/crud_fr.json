@@ -90,7 +90,9 @@
     "matches": "{{field}} doit correspondre au modèle {{pattern}}",
     "unique": "{{field}} doit être unique",
     "alphanumeric": "{{field}} ne doit contenir que des lettres et des chiffres",
-    "lettersOnly": "{{field}} ne doit contenir que des lettres"
+    "lettersOnly": "{{field}} ne doit contenir que des lettres",
+    "phone": "Veuillez entrer un numéro de téléphone valide",
+    "invalid": "{{field}} n'est pas valide"
   },
   "number": {
     "required": "{{field}} est obligatoire",

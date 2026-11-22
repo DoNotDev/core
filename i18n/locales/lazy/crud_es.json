@@ -89,7 +89,9 @@
     "matches": "{{field}} debe coincidir con el patrón {{pattern}}",
     "unique": "{{field}} debe ser único",
     "alphanumeric": "{{field}} debe contener solo letras y números",
-    "lettersOnly": "{{field}} debe contener solo letras"
+    "lettersOnly": "{{field}} debe contener solo letras",
+    "phone": "Ingrese un número de teléfono válido",
+    "invalid": "{{field}} no es válido"
   },
   "number": {
     "required": "{{field}} es obligatorio",

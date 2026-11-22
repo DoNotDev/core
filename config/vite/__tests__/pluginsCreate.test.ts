@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { createI18nStore, createViteI18nPlugin } from '../plugins/I18nPlugin.js';
+import { createFontPlanStore } from '../plugins/FontPlugin.js';
 import { createVitePrerenderPlugin } from '../plugins/PrerenderPlugin.js';
 import { createViteSEOPlugin } from '../plugins/SEOPlugin.js';
 import { createRouteManifestStore } from '../../utils/routeParser.js';
@@ -28,7 +29,11 @@ describe('Vite plugin creation', () => {
   });
 
   it('creates the prerender plugin, failing on a non-boolean appConfig.prerenderRecords', () => {
-    const stores = { routeManifest: createRouteManifestStore(), i18nStore: createI18nStore() };
+    const stores = {
+      routeManifest: createRouteManifestStore(),
+      i18nStore: createI18nStore(),
+      fontPlan: createFontPlanStore(),
+    };
     expect(createVitePrerenderPlugin({ prerenderRecords: false, ...stores }).name).toBe(
       'dndev-prerender'
     );
@@ -38,7 +43,9 @@ describe('Vite plugin creation', () => {
   });
 
   it('the SEO and prerender plugins read the route plugin\'s manifest from memory, required', () => {
-    expect(() => createVitePrerenderPlugin({})).toThrow(/routeManifest and options.i18nStore are required/);
+    expect(() => createVitePrerenderPlugin({})).toThrow(
+      /routeManifest, options.i18nStore and options.fontPlan are required/
+    );
     expect(() => createViteSEOPlugin({ siteName: 'App' })).toThrow(/routeManifest is required/);
     const store = createRouteManifestStore();
     expect(() => store.get()).toThrow(/route discovery did not run/);

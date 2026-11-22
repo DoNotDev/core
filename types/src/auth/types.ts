@@ -841,6 +841,34 @@ export interface RemoveCustomClaimsResponse {
 }
 
 /**
+ * One account of the auth backend, as listed for admins (`AuthProvider.listUsers`).
+ * Read from the auth backend itself (Supabase `auth.admin.listUsers`, Firebase Admin
+ * `listUsers`): no copy in an app table. Dates are ISO 8601 strings.
+ *
+ * @since 0.3.3
+ */
+export interface AuthUserSummary {
+  /** Auth user ID (Supabase `auth.users.id`, Firebase `uid`) */
+  id: string;
+  email: string | null;
+  /** When the address was confirmed; null while unconfirmed */
+  emailConfirmedAt: string | null;
+  createdAt: string;
+  /** Last sign-in; null when the user never signed in */
+  lastSignInAt: string | null;
+  displayName: string | null;
+}
+
+/**
+ * Response of the admin-only `listAuthUsers` server function: every account.
+ *
+ * @since 0.3.3
+ */
+export interface ListAuthUsersResponse {
+  users: AuthUserSummary[];
+}
+
+/**
  * Function to unsubscribe from auth state changes
  *
  * @version 0.1.0
@@ -1004,6 +1032,22 @@ export interface AuthProvider {
    */
   sendEmailVerification(email?: string): Promise<void>;
 
+  /**
+   * Confirm a sign-up address with the code from the confirmation email (one-time
+   * code), instead of the link. Success signs the user in: the provider keeps the
+   * session and fires the auth state change.
+   * Implemented by providers that send sign-up codes (Supabase: `verifyOtp`, type
+   * `signup`); absent otherwise.
+   *
+   * @param email - The address that signed up
+   * @param code - The code typed by the user
+   * @returns The confirmed, signed-in user
+   * @throws DoNotDevError (via `wrapAuthError`) on a wrong / expired code or a rate
+   *   limit; the provider's code stays in `details.originalCode`
+   * @since 0.3.3
+   */
+  verifyEmailCode?(email: string, code: string): Promise<AuthUser>;
+
   sendSignInLinkToEmail(
     email: string,
     actionCodeSettings?: { url: string; handleCodeInApp: boolean }
@@ -1028,6 +1072,18 @@ export interface AuthProvider {
   ): Promise<void>;
 
   deleteAccount(password?: string): Promise<void>;
+
+  /**
+   * List every account of the auth backend (admin apps). The adapter calls its own
+   * admin-only `listAuthUsers` server function (`@donotdev/functions`: Supabase
+   * `createListAuthUsers`, Firebase `listAuthUsers`), which the app deploys; a
+   * non-admin caller is refused by the server. Absent on providers without it.
+   *
+   * @returns All accounts, every page included
+   * @throws DoNotDevError (via `wrapAuthError`) when the call fails or is refused
+   * @since 0.3.3
+   */
+  listUsers?(): Promise<AuthUserSummary[]>;
 
   /**
    * Set session persistence (remember me) for the next sign-in.
@@ -1193,6 +1249,12 @@ export interface AuthAPI {
   verifyPasswordResetCode: (code: string) => Promise<string | null>;
   confirmPasswordReset: (code: string, newPassword: string) => Promise<void>;
   sendEmailVerification: (email?: string) => Promise<void>;
+  /**
+   * Confirm a sign-up address with the emailed code; signs the user in. Throws when
+   * the provider does not implement `AuthProvider.verifyEmailCode`.
+   * @since 0.3.3
+   */
+  verifyEmailCode: (email: string, code: string) => Promise<AuthUser>;
   getEmailVerificationStatus: () => Promise<{ status: string }>;
   isEmailVerificationEnabled: () => Promise<boolean>;
   sendSignInLinkToEmail: (email: string, settings?: any) => Promise<void>;
@@ -1208,6 +1270,12 @@ export interface AuthAPI {
     method?: AuthMethod
   ) => Promise<void>;
   deleteAccount: (password?: string) => Promise<void>;
+  /**
+   * List every auth account (admin apps; the server refuses non-admins). Throws when
+   * the provider does not implement `AuthProvider.listUsers`.
+   * @since 0.3.3
+   */
+  listUsers: () => Promise<AuthUserSummary[]>;
   /** Choose persistent vs session-only for the next sign-in. Throws when unsupported. */
   setRememberMe: (remember: boolean) => Promise<void>;
   /** Whether the provider can honour `setRememberMe` (render the checkbox only then). */

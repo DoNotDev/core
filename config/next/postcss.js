@@ -1,26 +1,15 @@
 /**
  * @fileoverview PostCSS Configuration for Next.js
  * @description PostCSS configuration for Next.js with workspace-aware package resolution.
- * Handles @fontsource CSS alias: Turbopack resolveAlias doesn't work for CSS @import,
- * so we redirect @donotdev/ui/dndev.css → dndev-next.css here instead.
- * The theme's framework fonts are served from public/dndev-fonts.css (see copyFontsToPublic + FontPreloadLinks).
+ * No font goes through CSS: the font plan (fonts/buildFontPlan.js) ships the theme's
+ * fonts as head tags (FontHead), so `@donotdev/ui/dndev.css` is the same file on both bundlers.
  */
 
 import { PathResolver } from '../utils/PathResolver.js';
 import { getPostCSSPlugins } from '../utils/postcssConfig.js';
 
 /**
- * CSS imports that must be aliased in Next.js.
- * Turbopack resolveAlias is JS-only — CSS @import aliases live here.
- * @type {Record<string, string>}
- */
-const NEXT_CSS_ALIASES = {
-  '@donotdev/ui/dndev.css': '@donotdev/ui/dndev-next.css',
-};
-
-/**
- * CSS import resolver for postcss-import using PathResolver.
- * Applies Next.js CSS aliases and handles workspace-aware resolution.
+ * CSS import resolver for postcss-import using PathResolver: workspace-aware resolution.
  * Must be synchronous (postcss-import requirement).
  *
  * @param {PathResolver} pathResolver
@@ -28,11 +17,6 @@ const NEXT_CSS_ALIASES = {
  */
 function createCSSResolver(pathResolver) {
   return (id, basedir) => {
-    // Apply Next.js CSS aliases (font CSS redirect)
-    if (NEXT_CSS_ALIASES[id]) {
-      id = NEXT_CSS_ALIASES[id];
-    }
-
     // Try package resolution first
     const resolved = pathResolver.resolvePackage(id, basedir);
     if (resolved) return resolved;

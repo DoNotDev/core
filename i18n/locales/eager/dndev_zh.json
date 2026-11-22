@@ -358,7 +358,8 @@
   "sheet": {
     "navigation": "导航",
     "codeInspector": "代码检查器",
-    "debugPanel": "调试面板"
+    "debugPanel": "调试面板",
+    "close": "关闭面板"
   },
   "routeError": {
     "title": "出错了",

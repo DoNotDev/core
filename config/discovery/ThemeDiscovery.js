@@ -9,7 +9,6 @@
 
 import { BaseDiscovery } from './BaseDiscovery.js';
 import { ESSENTIAL_THEMES } from '../constants.js';
-import { resolveThemeFontFamilies } from '../fonts/resolveFontManifest.js';
 import { createBuildError } from '../utils/buildError.js';
 import { CSSExtractor } from '../utils/CSSExtractor.js';
 
@@ -101,12 +100,9 @@ export class ThemeDiscovery extends BaseDiscovery {
 
     const themes = this._serializeThemes();
 
-    // Families the themes render text in: decides which framework fonts ship
-    const fontFamilies = resolveThemeFontFamilies({
-      frameworkCss: this._readFrameworkTokenCss(),
-      appCss,
-    });
-    this.logger.debug('Theme font families:', fontFamilies);
+    // The font plan's input (fonts/buildFontPlan.js, built once per build by the
+    // bundler adapter): framework token CSS + the app's CSS files
+    const fontCss = { framework: this._readFrameworkTokenCss(), app: appCss };
 
     // Aggregate summary shown by plugin's logStats, not here
     this.logger.debug(
@@ -126,7 +122,7 @@ export class ThemeDiscovery extends BaseDiscovery {
       },
       classes: Array.from(this.discovered.classes).sort(),
       keyframes: Array.from(this.discovered.keyframes).sort(),
-      fontFamilies,
+      fontCss,
     };
   }
 
@@ -230,7 +226,8 @@ export class ThemeDiscovery extends BaseDiscovery {
 
   /**
    * @param {string[]} consumerFiles
-   * @returns {Promise<string[]>} The CSS text of every file read (font families input)
+   * @returns {Promise<Array<{ file: string, css: string }>>} Every file read (path relative
+   *   to the app root, CSS text): the font plan's app CSS
    */
   async _processConsumerFiles(consumerFiles) {
     const contents = [];
@@ -238,8 +235,11 @@ export class ThemeDiscovery extends BaseDiscovery {
       try {
         // Read as text (CSS/TS theme files, not JSON)
         const content = await this.pathResolver.read(file, { format: 'text' });
-        contents.push(content);
         const normalizedFile = this.pathResolver.normalizePath(file);
+        contents.push({
+          file: this.pathResolver.getRelativePath(normalizedFile),
+          css: content,
+        });
 
         this.cssExtractor.extractThemes(
           content,
@@ -267,8 +267,8 @@ export class ThemeDiscovery extends BaseDiscovery {
   /**
    * The framework's design-token CSS (@donotdev/components styles: src/ in the
    * monorepo, dist/ when published), relative @imports inlined. Source of the
-   * default font tokens (--font-sans: Inter…). Throws when it cannot be read: font
-   * selection would be wrong without it.
+   * default font tokens (--font-sans: Inter…, --font-weight-*). Throws when it cannot be
+   * read: the font plan would be wrong without it.
    * @returns {string}
    * @throws {Error} Build error ({@link createBuildError}): it fails the build, never an empty theme result
    */

@@ -369,7 +369,9 @@
     "matches": "Pole {{field}} musi pasować do wzorca {{pattern}}",
     "unique": "Wartość pola {{field}} musi być unikalna",
     "alphanumeric": "Pole {{field}} może zawierać tylko litery i cyfry",
-    "lettersOnly": "Pole {{field}} może zawierać tylko litery"
+    "lettersOnly": "Pole {{field}} może zawierać tylko litery",
+    "phone": "Wprowadź prawidłowy numer telefonu",
+    "invalid": "{{field}} jest nieprawidłowe"
   },
   "number": {
     "required": "Pole {{field}} jest wymagane",

@@ -14,6 +14,7 @@
  */
 
 import { createLogger } from '../../utils/debugLog.js';
+import { localizeFontPreloads } from './FontPlugin.js';
 import { PathResolver } from '../../utils/PathResolver.js';
 import { PrerenderEngine } from '../../utils/PrerenderEngine.js';
 import { getPublicStaticRoutes } from '../../utils/routeParser.js';
@@ -44,6 +45,7 @@ function prerendersRecords(value = true) {
  * @param {Object} [options.seo] - SEO options (`appConfig.seo` merged with the defaults, site
  *   name and description); `disabled` (`seo: false`): the shell only
  * @param {ReturnType<import('./I18nPlugin.js').createI18nStore>} options.i18nStore - This build's i18n discovery (languages, translations), set by the i18n plugin
+ * @param {ReturnType<import('./FontPlugin.js').createFontPlanStore>} options.fontPlan - This build's font plan, set by the font plugin (each page language's font preloads)
  * @param {boolean} [options.debug] - Debug logging
  * @param {boolean} [options.verbose] - Verbose logging
  * @param {ReturnType<import('../../utils/routeParser.js').createRouteManifestStore>} options.routeManifest - The build's route manifest, set by the route plugin
@@ -55,14 +57,15 @@ export function createVitePrerenderPlugin(options = {}) {
     prerenderRecords,
     seo = {},
     i18nStore,
+    fontPlan,
     debug,
     verbose,
     routeManifest,
   } = options;
 
-  if (!routeManifest || !i18nStore) {
+  if (!routeManifest || !i18nStore || !fontPlan) {
     throw new Error(
-      '[dndev] createVitePrerenderPlugin: options.routeManifest and options.i18nStore are required (createVitePlugins passes the route and i18n plugins\', createRouteManifestStore / createI18nStore).'
+      '[dndev] createVitePrerenderPlugin: options.routeManifest, options.i18nStore and options.fontPlan are required (createVitePlugins passes the route, i18n and font plugins\', createRouteManifestStore / createI18nStore / createFontPlanStore).'
     );
   }
 
@@ -136,6 +139,9 @@ export function createVitePrerenderPlugin(options = {}) {
           : engine.expandRoutes(manifestData);
       const staticRoutes = paths.map((path) => routeByPath.get(path) ?? { path });
 
+      // The SPA shell as Vite wrote it, before index.html becomes the home page
+      const shellHtml = pathResolver.readSync(pathResolver.resolvePath('index.html', outDir));
+      const { preloads } = fontPlan.get();
       const { pages, listings } = await writeBuildPages({
         appRoot,
         mode: resolvedConfig.mode,
@@ -143,8 +149,9 @@ export function createVitePrerenderPlugin(options = {}) {
         blogPosts: manifestData.blogPosts,
         staticRoutes,
         prerenderRecords: recordsEnabled,
-        // The SPA shell as Vite wrote it, before index.html becomes the home page
-        shellHtml: pathResolver.readSync(pathResolver.resolvePath('index.html', outDir)),
+        shellHtml,
+        // A page in another language than the shell's gets its language's font preloads
+        pageShell: (language) => localizeFontPreloads(shellHtml, preloads[language]),
         seo,
         loadI18n: async () => i18nStore.get(),
         pkg: pathResolver.readSync(pathResolver.resolveAppPath('package.json'), {

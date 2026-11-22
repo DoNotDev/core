@@ -35,6 +35,7 @@
   "signingIn": "ログイン中...",
   "creatingAccount": "アカウント作成中...",
   "email": "メールアドレス",
+  "name": "名前",
   "password": "パスワード",
   "emailHint": "メールアドレスを入力してください",
   "passwordHintSignin": "パスワードを入力してください",
@@ -115,6 +116,10 @@
   "passwordStrength.fair": "普通",
   "passwordStrength.good": "良い",
   "passwordStrength.strong": "強い",
+  "passwordToggle": {
+    "show": "パスワードを表示",
+    "hide": "パスワードを非表示"
+  },
   "rememberMe": "ログイン状態を保持",
   "signUp": "サインアップ",
   "alreadyHaveAccount": "すでにアカウントをお持ちですか？ログイン",
@@ -128,7 +133,19 @@
     "email_not_confirmed": "ログインする前にメールアドレスを確認してください。",
     "invalid_credentials": "メールアドレスまたはパスワードが正しくありません。",
     "weak_password": "パスワードが弱すぎます。より強力なパスワードを選択してください。",
-    "breached_password": "このパスワードはデータ漏洩で発見されました。別のパスワードを選択してください。"
+    "breached_password": "このパスワードはデータ漏洩で発見されました。別のパスワードを選択してください。",
+    "invalid_code": "コードが正しくないか、有効期限が切れています。メールを確認するか、新しいコードをリクエストしてください。",
+    "code_expired": "コードの有効期限が切れています。新しいコードをリクエストしてください。"
+  },
+  "codeConfirmation": {
+    "label": "確認コード",
+    "digit": "{{length}}桁中{{index}}桁目",
+    "incomplete": "{{length}}桁のコードを入力してください。",
+    "resend": "コードを再送信",
+    "resend_in": "{{seconds}}秒後にコードを再送信できます",
+    "sent": "新しいコードを送信しました。",
+    "intro": "{{email}} に送信されたコードを入力してください",
+    "change_email": "アドレスを変更"
   },
   "signup": {
     "success_title": "メールを確認してください",
@@ -186,7 +203,7 @@
   },
   "actions": {
     "sign_in_submit": "サインイン",
-    "sign_up_submit": "サインアップ"
+    "sign_up_submit": "アカウントを作成"
   },
   "guard": {
     "signInRequired": "ログインが必要です",

@@ -15,7 +15,7 @@ import { createViteAssetPlugin } from './plugins/AssetPlugin.js';
 import { createViteBlogPlugin } from './plugins/BlogPlugin.js';
 import { createViteEnvPlugin } from './plugins/EnvPlugin.js';
 import { createViteFaviconPlugin } from './plugins/FaviconPlugin.js';
-import { createViteFontPreloadPlugin } from './plugins/FontPreloadPlugin.js';
+import { createFontPlanStore, createViteFontPlugin } from './plugins/FontPlugin.js';
 import { createViteHostHeadersPlugin } from './plugins/HostHeadersPlugin.js';
 import { createI18nStore, createViteI18nPlugin } from './plugins/I18nPlugin.js';
 import { createOptionalDepResolverPlugin } from './plugins/OptionalDepResolver.js';
@@ -280,8 +280,10 @@ export function createVitePlugins(options = {}) {
     // The build's route manifest: set by the route plugin, read by the SEO and prerender plugins
     const routeManifest = createRouteManifestStore();
     // The build's i18n discovery, run once: set by the i18n plugin, read by its lazy-loader
-    // plugin, the asset (flags of the app's languages), font preload and prerender plugins
+    // plugin, the asset (flags of the app's languages), font and prerender plugins
     const i18nStore = createI18nStore();
+    // The build's font plan: set by the font plugin, read by the prerender (per-language preloads)
+    const fontPlan = createFontPlanStore();
 
     plugins.push(
       createViteRoutePlugin({
@@ -352,11 +354,14 @@ export function createVitePlugins(options = {}) {
       );
     }
 
+    // The font plan in the document head (preloads + inline @font-face), files in
+    // public/fonts/: theme font tokens, appConfig.fonts, subsets of the app's languages
     plugins.push(
-      createViteFontPreloadPlugin({
+      createViteFontPlugin({
+        appConfig,
         debug,
-        // Font subsets follow the languages the app actually uses (i18n.only)
         i18nStore,
+        fontPlan,
       })
     );
 
@@ -396,8 +401,7 @@ export function createVitePlugins(options = {}) {
       },
     });
 
-    // Prerender — MUST be last: runs after build-summary, SEO files, font preloads
-    // are all written. Serves the complete dist/ and captures rendered HTML.
+    // Prerender — MUST be last: runs after build-summary and SEO files are written. Serves the complete dist/ and captures rendered HTML.
     plugins.push(
       createVitePrerenderPlugin({
         ...prerenderOptions,
@@ -407,6 +411,8 @@ export function createVitePlugins(options = {}) {
         prerenderRecords: appConfig?.prerenderRecords,
         seo: seoOptions,
         i18nStore,
+        // Pages in another language than the shell's get that language's font preloads
+        fontPlan,
         debug,
         verbose,
       })

@@ -358,7 +358,8 @@
   "sheet": {
     "navigation": "내비게이션",
     "codeInspector": "코드 검사기",
-    "debugPanel": "디버그 패널"
+    "debugPanel": "디버그 패널",
+    "close": "패널 닫기"
   },
   "routeError": {
     "title": "문제가 발생했습니다",

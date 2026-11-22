@@ -119,6 +119,9 @@ export const GENERATED_PATHS = {
     configEnv: 'src/config/dndev-config-env.js',
     configServer: 'src/config/dndev-config-server.js',
     blogContent: 'src/content/blog/blog-content.generated.ts',
+    // The app's font plan (fonts/buildFontPlan.js): inline @font-face CSS and the preloads
+    // per language, rendered by the generated root layout and global 404 (FontHead)
+    fonts: 'src/app/fonts.generated.ts',
   },
 
   // Manifests
@@ -471,43 +474,66 @@ export const CSS_PATTERNS = {
 };
 
 /**
- * Framework font catalogue: CSS family name → @fontsource package stem.
- * The families @donotdev/ui depends on (packages/ui/package.json). An app ships
- * only the ones its theme renders text in (resolveThemeFontFamilies →
- * resolveFontManifest); any other family is the app's own font.
+ * Font families every visitor's system provides: a font stack may name them without a
+ * source (no package, no `appConfig.fonts` entry). The font plan
+ * (fonts/buildFontPlan.js) fails the build on any other family it cannot source. CSS
+ * generic families (`sans-serif`, `system-ui`, `ui-monospace`, …) are always allowed.
+ * Compared case-insensitively.
  */
-export const FONT_FAMILY_TO_STEMS = {
-  Inter: 'inter',
-  'Space Grotesk': 'space-grotesk',
-  'Playfair Display': 'playfair-display',
-  'Press Start 2P': 'press-start-2p',
-  Roboto: 'roboto',
-};
-
-/**
- * Weights shipped per catalogue stem. Must match the @fontsource imports of
- * packages/ui/src/dndev.css (Vite bundles from there): a test guards the parity.
- */
-export const FONT_WEIGHTS = {
-  inter: [300, 400, 600, 700],
-  'playfair-display': [400, 500, 600, 700],
-  roboto: [400, 700],
-  'space-grotesk': [300, 400, 500, 600, 700],
-  'press-start-2p': [400],
-};
-
-/**
- * System font category per catalogue stem: picks the local font of its size-matched
- * fallback face (serif → Times New Roman, otherwise Arial; see fonts/fontFallback.js).
- * Same keys as FONT_WEIGHTS: a test guards the parity.
- */
-export const FONT_FALLBACK_CATEGORY = {
-  inter: 'sans-serif',
-  'playfair-display': 'serif',
-  roboto: 'sans-serif',
-  'space-grotesk': 'sans-serif',
-  'press-start-2p': 'sans-serif',
-};
+export const SYSTEM_FONT_FAMILIES = [
+  // Apple
+  '-apple-system',
+  'BlinkMacSystemFont',
+  'SF Pro',
+  'SF Pro Text',
+  'SF Pro Display',
+  'SF Mono',
+  'Helvetica Neue',
+  'Helvetica',
+  'Menlo',
+  'Monaco',
+  'Apple SD Gothic Neo',
+  'Hiragino Sans',
+  'Hiragino Kaku Gothic ProN',
+  'PingFang SC',
+  'PingFang TC',
+  'Apple Color Emoji',
+  // Windows
+  'Segoe UI',
+  'Segoe UI Emoji',
+  'Segoe UI Symbol',
+  'Cascadia Code',
+  'Cascadia Mono',
+  'Consolas',
+  'Arial',
+  'Georgia',
+  'Times New Roman',
+  'Times',
+  'Courier New',
+  'Courier',
+  'Verdana',
+  'Tahoma',
+  'Trebuchet MS',
+  'Malgun Gothic',
+  'Yu Gothic',
+  'Meiryo',
+  'Microsoft YaHei',
+  'Microsoft JhengHei',
+  // Linux / Android
+  'Liberation Sans',
+  'Liberation Serif',
+  'Liberation Mono',
+  'DejaVu Sans',
+  'DejaVu Serif',
+  'DejaVu Sans Mono',
+  'Ubuntu',
+  'Cantarell',
+  'Noto Sans',
+  'Noto Serif',
+  'Noto Color Emoji',
+  'Droid Sans',
+  'Droid Sans Mono',
+];
 
 /**
  * Locale code → fontsource unicode-range subset names.

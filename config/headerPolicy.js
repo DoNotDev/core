@@ -24,6 +24,8 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { DIR_PATHS } from './constants.js';
+
 /** Every path (Next and Vercel `source` syntax; also matches `/`). */
 const ALL_PATHS = '/(.*)';
 
@@ -123,6 +125,13 @@ const IMMUTABLE_BUILD_ASSETS = Object.freeze({
   'next-export': ['/_next/static/:path*'],
   next: [],
 });
+
+/**
+ * The font plan's files (`public/fonts/`, framework-owned, content-hashed names: a new
+ * file gets a new URL): cached a year, immutable, on every target. Next serves `public/`
+ * with `max-age=0` by default.
+ */
+const FONT_FILES = `/${DIR_PATHS.fonts}/:path*`;
 
 /** Public (unhashed) images: one day. */
 const IMAGE_EXTENSIONS = Object.freeze(['jpg', 'jpeg', 'png', 'svg', 'webp', 'ico']);
@@ -290,7 +299,8 @@ export function buildContentSecurityPolicy({ csp = {}, providers = [], target })
  * Resolve the app's header rules (`{ source, headers: [{ key, value }] }[]`, the format of
  * both Next `headers()` and vercel.json `headers`).
  *
- * Order: security headers on every path, hashed build assets (immutable, 1 year), public
+ * Order: security headers on every path, hashed build assets and the font plan's
+ * `/fonts/` files (immutable, 1 year), public
  * images (1 day), JSON data (1 hour), PWA files, then the app's cache overrides (last wins).
  * HTML documents get no policy rule (Next sets their Cache-Control from `revalidate`; static
  * hosts serve them revalidated).
@@ -326,7 +336,7 @@ export function resolveHeaderRules({
 
   return [
     { source: ALL_PATHS, headers: security },
-    ...IMMUTABLE_BUILD_ASSETS[target].map((source) =>
+    ...[...IMMUTABLE_BUILD_ASSETS[target], FONT_FILES].map((source) =>
       cacheRule(source, publicCache(ONE_YEAR, true))
     ),
     ...IMAGE_EXTENSIONS.map((ext) =>

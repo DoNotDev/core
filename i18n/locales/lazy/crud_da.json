@@ -364,7 +364,9 @@
     "matches": "{{field}} skal matche {{pattern}}",
     "unique": "{{field}} skal være unikt",
     "alphanumeric": "{{field}} må kun indeholde bogstaver og tal",
-    "lettersOnly": "{{field}} må kun indeholde bogstaver"
+    "lettersOnly": "{{field}} må kun indeholde bogstaver",
+    "phone": "Indtast et gyldigt telefonnummer",
+    "invalid": "{{field}} er ugyldig"
   },
   "number": {
     "required": "{{field}} er påkrævet",

@@ -358,7 +358,8 @@
   "sheet": {
     "navigation": "التنقل",
     "codeInspector": "فاحص الكود",
-    "debugPanel": "لوحة التصحيح"
+    "debugPanel": "لوحة التصحيح",
+    "close": "إغلاق اللوحة"
   },
   "routeError": {
     "title": "حدث خطأ ما",

@@ -35,6 +35,7 @@
   "signingIn": "登录中...",
   "creatingAccount": "创建账户中...",
   "email": "电子邮箱",
+  "name": "姓名",
   "password": "密码",
   "emailHint": "输入您的电子邮箱",
   "passwordHintSignin": "输入您的密码",
@@ -115,6 +116,10 @@
   "passwordStrength.fair": "一般",
   "passwordStrength.good": "良好",
   "passwordStrength.strong": "强",
+  "passwordToggle": {
+    "show": "显示密码",
+    "hide": "隐藏密码"
+  },
   "rememberMe": "记住我",
   "signUp": "注册",
   "alreadyHaveAccount": "已有账户？登录",
@@ -128,7 +133,19 @@
     "email_not_confirmed": "请在登录前验证您的电子邮箱。",
     "invalid_credentials": "无效的电子邮箱或密码。",
     "weak_password": "密码过弱。请选择更强的密码。",
-    "breached_password": "此密码曾出现在数据泄露事件中。请选择其他密码。"
+    "breached_password": "此密码曾出现在数据泄露事件中。请选择其他密码。",
+    "invalid_code": "验证码不正确或已过期。请查看邮件或重新获取验证码。",
+    "code_expired": "验证码已过期。请重新获取验证码。"
+  },
+  "codeConfirmation": {
+    "label": "验证码",
+    "digit": "第 {{index}} 位，共 {{length}} 位",
+    "incomplete": "请输入 {{length}} 位验证码。",
+    "resend": "重新发送验证码",
+    "resend_in": "{{seconds}} 秒后可重新发送验证码",
+    "sent": "新验证码已发送。",
+    "intro": "请输入发送至 {{email}} 的验证码",
+    "change_email": "更改邮箱"
   },
   "signup": {
     "success_title": "查看您的电子邮箱",
@@ -186,7 +203,7 @@
   },
   "actions": {
     "sign_in_submit": "登录",
-    "sign_up_submit": "注册"
+    "sign_up_submit": "创建账户"
   },
   "guard": {
     "signInRequired": "需要登录",

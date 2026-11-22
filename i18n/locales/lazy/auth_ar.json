@@ -35,6 +35,7 @@
   "signingIn": "جاري تسجيل الدخول...",
   "creatingAccount": "جاري إنشاء الحساب...",
   "email": "البريد الإلكتروني",
+  "name": "الاسم",
   "password": "كلمة المرور",
   "emailHint": "أدخل عنوان بريدك الإلكتروني",
   "passwordHintSignin": "أدخل كلمة المرور",
@@ -115,6 +116,10 @@
   "passwordStrength.fair": "متوسطة",
   "passwordStrength.good": "جيدة",
   "passwordStrength.strong": "قوية",
+  "passwordToggle": {
+    "show": "إظهار كلمة المرور",
+    "hide": "إخفاء كلمة المرور"
+  },
   "rememberMe": "تذكرني",
   "signUp": "إنشاء حساب",
   "alreadyHaveAccount": "هل لديك حساب بالفعل؟ تسجيل الدخول",
@@ -128,7 +133,19 @@
     "email_not_confirmed": "يرجى التحقق من بريدك الإلكتروني قبل تسجيل الدخول.",
     "invalid_credentials": "بريد إلكتروني أو كلمة مرور غير صحيحة.",
     "weak_password": "كلمة المرور ضعيفة جداً. يرجى اختيار كلمة مرور أقوى.",
-    "breached_password": "ظهرت كلمة المرور هذه في تسريب بيانات. يرجى اختيار كلمة مرور مختلفة."
+    "breached_password": "ظهرت كلمة المرور هذه في تسريب بيانات. يرجى اختيار كلمة مرور مختلفة.",
+    "invalid_code": "هذا الرمز غير صحيح أو منتهي الصلاحية. تحقق من البريد أو اطلب رمزاً جديداً.",
+    "code_expired": "انتهت صلاحية هذا الرمز. اطلب رمزاً جديداً."
+  },
+  "codeConfirmation": {
+    "label": "رمز التأكيد",
+    "digit": "الرقم {{index}} من {{length}}",
+    "incomplete": "أدخل الرمز المكوّن من {{length}} أرقام.",
+    "resend": "إعادة إرسال الرمز",
+    "resend_in": "إعادة إرسال الرمز بعد {{seconds}} ث",
+    "sent": "تم إرسال رمز جديد.",
+    "intro": "أدخل الرمز المرسل إلى {{email}}",
+    "change_email": "تغيير العنوان"
   },
   "signup": {
     "success_title": "تحقق من بريدك الإلكتروني",
@@ -186,7 +203,7 @@
   },
   "actions": {
     "sign_in_submit": "تسجيل الدخول",
-    "sign_up_submit": "إنشاء حساب"
+    "sign_up_submit": "إنشاء حسابي"
   },
   "guard": {
     "signInRequired": "تسجيل الدخول مطلوب",

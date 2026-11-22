@@ -35,6 +35,7 @@
   "signingIn": "Entrando...",
   "creatingAccount": "Criando conta...",
   "email": "Email",
+  "name": "Nome",
   "password": "Senha",
   "emailHint": "Digite seu endereço de email",
   "passwordHintSignin": "Digite sua senha",
@@ -115,6 +116,10 @@
   "passwordStrength.fair": "Razoável",
   "passwordStrength.good": "Boa",
   "passwordStrength.strong": "Forte",
+  "passwordToggle": {
+    "show": "Mostrar senha",
+    "hide": "Ocultar senha"
+  },
   "rememberMe": "Lembrar-me",
   "signUp": "Registrar-se",
   "alreadyHaveAccount": "Já tem uma conta? Entrar",
@@ -128,7 +133,19 @@
     "email_not_confirmed": "Por favor, verifique seu email antes de entrar.",
     "invalid_credentials": "Email ou senha inválidos.",
     "weak_password": "A senha é muito fraca. Por favor, escolha uma senha mais forte.",
-    "breached_password": "Esta senha apareceu em uma violação de dados. Por favor, escolha uma senha diferente."
+    "breached_password": "Esta senha apareceu em uma violação de dados. Por favor, escolha uma senha diferente.",
+    "invalid_code": "Este código está incorreto ou expirou. Verifique o email ou peça um novo código.",
+    "code_expired": "Este código expirou. Peça um novo código."
+  },
+  "codeConfirmation": {
+    "label": "Código de confirmação",
+    "digit": "Dígito {{index}} de {{length}}",
+    "incomplete": "Digite o código de {{length}} dígitos.",
+    "resend": "Reenviar código",
+    "resend_in": "Reenviar código em {{seconds}} s",
+    "sent": "Foi enviado um novo código.",
+    "intro": "Introduza o código enviado para {{email}}",
+    "change_email": "Alterar endereço"
   },
   "signup": {
     "success_title": "Verifique seu email",
@@ -186,7 +203,7 @@
   },
   "actions": {
     "sign_in_submit": "Entrar",
-    "sign_up_submit": "Registrar-se"
+    "sign_up_submit": "Criar a minha conta"
   },
   "guard": {
     "signInRequired": "Entrada obrigatória",

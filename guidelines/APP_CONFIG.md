@@ -45,6 +45,8 @@ export const appConfig: AppConfig = {
 
   // prerenderRecords: true,  // Entity pages (/produits/:slug) built at build, one per published record (Next and Vite)
 
+  // fonts: { ... },           // Your own woff2 files, per family named in themes.css (see "App fonts")
+
   // Next only
   // revalidate: 3600,        // Cache lifetime of cached pages, sitemap, llms.txt (seconds, or false = until next deploy)
 };
@@ -54,6 +56,26 @@ export const appConfig: AppConfig = {
 
 **Vite record pages.** With `prerender: 'auto'` (the default) the Vite build writes one static HTML per published record of the same entity pages and per language (`dist/produits/serum.html`; same records, same identity as the Next entity page: title, description, canonical, Open Graph, Twitter, hreflang, Product and BreadcrumbList JSON-LD; see ui `SEO.md`). It reads the database once as a signed-out visitor, for these pages and for `dist/sitemap.xml` / `dist/llms.txt` (which list the records too): Supabase with `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLIC_KEY`, Firebase with `VITE_FIREBASE_API_KEY` / `VITE_FIREBASE_PROJECT_ID`; record pages also need `VITE_APP_URL` (absolute, no trailing slash; public on a deploy build: `dndev deploy`, Vercel or CI. A local build takes a localhost one, with one warning line, and writes no record page without one; ui `SEO.md`, Sitemap & llms.txt, URLs). Missing variables, a failed read, another provider or no `entities` package fail the build. Records published later get the SPA shell (`dist/_shell.html`) until the next build. `prerenderRecords: false` writes no record page (the sitemap still lists the records, so the build still reads them).
 
+
+**App fonts (`fonts`).** Only for families no package provides (a custom subset, a licensed brand font): every other family the theme names ships by name from `@fontsource-variable/<slug>` / `@fontsource/<slug>` (see core `THEMES.md`, Fonts). Read at build, Next and Vite alike: the files ship content-hashed under `/fonts/`, preloaded and declared inline like any other family. Name the family in `src/themes.css` as the key reads (`--font-sans: Pretendard, 'Pretendard Fallback', 'Pretendard Rare', sans-serif;`).
+
+```typescript
+fonts: {
+  Pretendard: {
+    category: 'sans-serif', // fallback face: Arial ('serif': Times New Roman)
+    faces: [{ file: 'src/assets/fonts/pretendard.woff2', weight: '300 700' }], // core file: preloaded
+  },
+  'Pretendard Rare': {
+    category: 'sans-serif',
+    faces: [
+      // unicodeRange: downloaded only for those characters, never preloaded
+      { file: 'src/assets/fonts/pretendard-rare-1.woff2', weight: '300 700', unicodeRange: 'U+AC00-B0FF' },
+    ],
+  },
+},
+```
+
+Face fields: `file` (woff2, relative to the app root), `weight` (`400` or a variable range `'300 600'`), `style` (`'normal'` default, `'italic'`), `unicodeRange`, `subset` (a face with a `unicodeRange` preloaded on pages whose language needs that subset, e.g. `'latin-ext'` for `pl`). The build fails on a missing or non-woff2 file, or a family with no normal face (the fallback face is measured on its core file, which must hold a-z).
 ---
 
 ## 2. Vite Configuration

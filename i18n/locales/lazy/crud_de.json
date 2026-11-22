@@ -89,7 +89,9 @@
     "matches": "{{field}} muss dem Muster {{pattern}} entsprechen",
     "unique": "{{field}} muss eindeutig sein",
     "alphanumeric": "{{field}} darf nur Buchstaben und Zahlen enthalten",
-    "lettersOnly": "{{field}} darf nur Buchstaben enthalten"
+    "lettersOnly": "{{field}} darf nur Buchstaben enthalten",
+    "phone": "Bitte geben Sie eine gültige Telefonnummer ein",
+    "invalid": "{{field}} ist ungültig"
   },
   "number": {
     "required": "{{field}} ist erforderlich",

@@ -89,7 +89,9 @@
     "matches": "{{field}}はパターン{{pattern}}と一致する必要があります",
     "unique": "{{field}}は一意である必要があります",
     "alphanumeric": "{{field}}は文字と数字のみを含む必要があります",
-    "lettersOnly": "{{field}}は文字のみを含む必要があります"
+    "lettersOnly": "{{field}}は文字のみを含む必要があります",
+    "phone": "有効な電話番号を入力してください",
+    "invalid": "{{field}}が正しくありません"
   },
   "number": {
     "required": "{{field}}は必須です",

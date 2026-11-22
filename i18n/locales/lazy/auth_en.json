@@ -35,6 +35,7 @@
   "signingIn": "Signing in...",
   "creatingAccount": "Creating account...",
   "email": "Email",
+  "name": "Name",
   "password": "Password",
   "emailHint": "Enter your email address",
   "passwordHintSignin": "Enter your password",
@@ -115,6 +116,10 @@
   "passwordStrength.fair": "Fair",
   "passwordStrength.good": "Good",
   "passwordStrength.strong": "Strong",
+  "passwordToggle": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
   "rememberMe": "Remember me",
   "signUp": "Sign Up",
   "alreadyHaveAccount": "Already have an account? Sign In",
@@ -128,7 +133,19 @@
     "email_not_confirmed": "Please verify your email before signing in.",
     "invalid_credentials": "Invalid email or password.",
     "weak_password": "Password is too weak. Please choose a stronger password.",
-    "breached_password": "This password has appeared in a data breach. Please choose a different password."
+    "breached_password": "This password has appeared in a data breach. Please choose a different password.",
+    "invalid_code": "This code is incorrect or has expired. Check the email or request a new code.",
+    "code_expired": "This code has expired. Request a new code."
+  },
+  "codeConfirmation": {
+    "label": "Confirmation code",
+    "digit": "Digit {{index}} of {{length}}",
+    "incomplete": "Enter the {{length}}-digit code.",
+    "resend": "Resend code",
+    "resend_in": "Resend code in {{seconds}} s",
+    "sent": "A new code has been sent.",
+    "intro": "Enter the code sent to {{email}}",
+    "change_email": "Change address"
   },
   "signup": {
     "success_title": "Check your email",
@@ -186,7 +203,7 @@
   },
   "actions": {
     "sign_in_submit": "Sign In",
-    "sign_up_submit": "Sign Up"
+    "sign_up_submit": "Create account"
   },
   "guard": {
     "signInRequired": "Sign in required",

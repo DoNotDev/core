@@ -102,7 +102,7 @@ const options = (overrides: Record<string, unknown> = {}) => ({
   hreflang: true,
   defaultNamespace: 'home',
   defaultImage: '/og-image.png',
-  shellHtml: SHELL,
+  pageShell: () => SHELL,
   ...overrides,
 });
 

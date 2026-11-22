@@ -246,7 +246,8 @@ function defineNextConfig(userOptions = {}) {
           isCI: Boolean(process.env.CI || process.env.VERCEL),
         });
       }
-      await runDiscoveries(handlers, logger);
+      // appConfig.fonts: the app's own font files (font plan)
+      await runDiscoveries(handlers, logger, { appFonts: appConfig?.fonts });
     }
 
     // The app's own Next options (every defineNextConfig key the framework does not own),

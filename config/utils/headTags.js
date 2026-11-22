@@ -306,12 +306,27 @@ function faviconHeadTags(set, config) {
   tags.push(meta('name', 'color-scheme', 'light dark'));
   return tags;
 }
+var FONT_STYLE_ID = 'dndev-fonts';
+function fontPreloadHeadTags(hrefs) {
+  return hrefs.map((href) => ({
+    tag: 'link',
+    attributes: {
+      rel: 'preload',
+      as: 'font',
+      type: 'font/woff2',
+      href,
+      crossorigin: 'anonymous',
+    },
+  }));
+}
 export {
   FAVICON_DEFAULTS,
+  FONT_STYLE_ID,
   PRERENDERED_HEAD_ELEMENT_ID,
   SITE_LOGO_PATH,
   buildBreadcrumbJsonLd,
   faviconHeadTags,
+  fontPreloadHeadTags,
   jsonScriptText,
   readI18nSeoMeta,
   recordHeadTags,

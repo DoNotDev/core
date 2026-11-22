@@ -358,7 +358,8 @@
   "sheet": {
     "navigation": "Navigatie",
     "codeInspector": "Code-inspector",
-    "debugPanel": "Debugpanel"
+    "debugPanel": "Debugpanel",
+    "close": "Paneel sluiten"
   },
   "routeError": {
     "title": "Er ging iets mis",

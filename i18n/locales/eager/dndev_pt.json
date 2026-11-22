@@ -358,7 +358,8 @@
   "sheet": {
     "navigation": "Navegação",
     "codeInspector": "Inspetor de Código",
-    "debugPanel": "Painel de Depuração"
+    "debugPanel": "Painel de Depuração",
+    "close": "Fechar painel"
   },
   "routeError": {
     "title": "Algo deu errado",

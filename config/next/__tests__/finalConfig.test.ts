@@ -2,6 +2,7 @@
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { createContext, runInContext } from 'node:vm';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -25,15 +26,20 @@ const finalConfig = (restNextConfig: Record<string, unknown>) =>
     logger,
   });
 
-/** An app (package.json with `browserslist`) with one built client chunk. */
-function app(browserslist?: string[]) {
+/** A Turbopack client chunk (classic script): one module, pushed onto the global chunk list. */
+const turbopackChunk = (id: string, body: string) =>
+  `(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push([${JSON.stringify(id)},{f:${body}}]);`;
+const CHUNK_A = turbopackChunk('a', '({a,b})=>{let[c]=b;return a+c}');
+
+/** An app (package.json with `browserslist`) with built client chunks (`a.js` by default). */
+function app(browserslist?: string[], chunks: Record<string, string> = { 'a.js': CHUNK_A }) {
   const dir = mkdtempSync(join(tmpdir(), 'dndev-lower-'));
   writeFileSync(join(dir, 'package.json'), JSON.stringify({ name: 'app', ...(browserslist && { browserslist }) }));
   mkdirSync(join(dir, '.next/static/chunks'), { recursive: true });
-  writeFileSync(join(dir, '.next/static/chunks/a.js'), 'function f({a,b}){let[c]=b;return a+c}');
+  for (const [name, code] of Object.entries(chunks)) writeFileSync(join(dir, '.next/static/chunks', name), code);
   return dir;
 }
-const chunk = (dir: string) => readFileSync(join(dir, '.next/static/chunks/a.js'), 'utf8');
+const chunk = (dir: string, name = 'a.js') => readFileSync(join(dir, '.next/static/chunks', name), 'utf8');
 const SAFARI_12 = ['chrome >= 64', 'safari >= 12', 'ios_saf >= 12'];
 
 describe('Next config: Turbopack only', () => {
@@ -86,10 +92,38 @@ describe('Next config: Turbopack only', () => {
       dirs.push(dir);
       expect(targetsBuggySafari(dir)).toBe(false);
       expect(await lowerClientDestructuring({ distDir: '.next', projectDir: dir })).toBe(0);
-      expect(chunk(dir)).toBe('function f({a,b}){let[c]=b;return a+c}');
+      expect(chunk(dir)).toBe(CHUNK_A);
     }
     const dir = app(['ios_saf >= 14']);
     dirs.push(dir);
     expect(targetsBuggySafari(dir)).toBe(true);
+  });
+
+  // REGRESSION: Babel put `const _excluded = [...]` at the top of every lowered chunk; chunks
+  // share one global scope, so every chunk after the first threw "Identifier '_excluded' has
+  // already been declared" and the page never hydrated
+  it('lowered chunks run side by side in one global scope', async () => {
+    const dir = app(SAFARI_12, {
+      'a.js': turbopackChunk('a', '(o)=>{const{a,...rest}=o;return rest}'),
+      'b.js': turbopackChunk('b', '(o)=>{const{b,...rest}=o;return rest}'),
+    });
+    dirs.push(dir);
+    expect(await lowerClientDestructuring({ distDir: '.next', projectDir: dir })).toBe(2);
+    expect(chunk(dir, 'a.js')).toContain('_excluded');
+
+    const page = createContext({});
+    runInContext(chunk(dir, 'a.js'), page);
+    runInContext(chunk(dir, 'b.js'), page);
+    const [[, a], [, b]] = runInContext('globalThis.TURBOPACK', page);
+    expect(JSON.stringify(a.f({ a: 1, b: 2, c: 3 }))).toBe('{"b":2,"c":3}');
+    expect(JSON.stringify(b.f({ a: 1, b: 2, c: 3 }))).toBe('{"a":1,"c":3}');
+  });
+
+  it('fails the build on a script chunk declaring a top-level binding (its scope would hide it)', async () => {
+    const dir = app(SAFARI_12, { 'a.js': 'var shared=1;function f({a}){return a}' });
+    dirs.push(dir);
+    await expect(lowerClientDestructuring({ distDir: '.next', projectDir: dir })).rejects.toThrow(
+      /declares top-level shared, f/
+    );
   });
 });

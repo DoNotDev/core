@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { PathResolver } from '../../utils/PathResolver.js';
 import { createRouteManifestStore } from '../../utils/routeParser.js';
+import { createFontPlanStore } from '../plugins/FontPlugin.js';
 import { createI18nStore } from '../plugins/I18nPlugin.js';
 import { createVitePrerenderPlugin } from '../plugins/PrerenderPlugin.js';
 
@@ -40,6 +41,9 @@ describe('prerender plugin in a real Vite build', () => {
   const viteBuild = (plugins: unknown[]) => {
     const routeManifest = createRouteManifestStore();
     routeManifest.set({ routes: [{ path: '/' }], source: 'test', blogPosts: [] });
+    // The font plugin's plan (a system-font theme: no font tag)
+    const fontPlan = createFontPlanStore();
+    fontPlan.set({ display: 'optional', families: [], files: [], css: '', preloads: { en: [] } });
     return build({
       root: appRoot,
       configFile: false,
@@ -50,6 +54,7 @@ describe('prerender plugin in a real Vite build', () => {
           seo: { disabled: true },
           routeManifest,
           i18nStore: createI18nStore(),
+          fontPlan,
         }),
         ...(plugins as never[]),
       ],

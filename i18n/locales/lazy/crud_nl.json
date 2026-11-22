@@ -364,7 +364,9 @@
     "matches": "{{field}} moet voldoen aan {{pattern}}",
     "unique": "{{field}} moet uniek zijn",
     "alphanumeric": "{{field}} mag alleen letters en cijfers bevatten",
-    "lettersOnly": "{{field}} mag alleen letters bevatten"
+    "lettersOnly": "{{field}} mag alleen letters bevatten",
+    "phone": "Voer een geldig telefoonnummer in",
+    "invalid": "{{field}} is ongeldig"
   },
   "number": {
     "required": "{{field}} is verplicht",

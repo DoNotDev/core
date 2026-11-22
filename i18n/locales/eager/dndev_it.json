@@ -358,7 +358,8 @@
   "sheet": {
     "navigation": "Navigazione",
     "codeInspector": "Ispettore codice",
-    "debugPanel": "Pannello debug"
+    "debugPanel": "Pannello debug",
+    "close": "Chiudi pannello"
   },
   "routeError": {
     "title": "Qualcosa è andato storto",

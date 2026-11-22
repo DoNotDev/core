@@ -35,6 +35,7 @@
   "signingIn": "Logowanie...",
   "creatingAccount": "Tworzenie konta...",
   "email": "E-mail",
+  "name": "Imię i nazwisko",
   "password": "Hasło",
   "emailHint": "Wpisz swój adres e-mail",
   "passwordHintSignin": "Wpisz hasło",
@@ -115,6 +116,10 @@
   "passwordStrength.fair": "Średnie",
   "passwordStrength.good": "Dobre",
   "passwordStrength.strong": "Silne",
+  "passwordToggle": {
+    "show": "Pokaż hasło",
+    "hide": "Ukryj hasło"
+  },
   "rememberMe": "Zapamiętaj mnie",
   "signUp": "Zarejestruj się",
   "alreadyHaveAccount": "Masz już konto? Zaloguj się",
@@ -128,7 +133,19 @@
     "email_not_confirmed": "Zweryfikuj swój adres e-mail przed zalogowaniem.",
     "invalid_credentials": "Nieprawidłowy adres e-mail lub hasło.",
     "weak_password": "Hasło jest zbyt słabe. Wybierz silniejsze hasło.",
-    "breached_password": "To hasło wyciekło w incydencie naruszenia danych. Wybierz inne hasło."
+    "breached_password": "To hasło wyciekło w incydencie naruszenia danych. Wybierz inne hasło.",
+    "invalid_code": "Ten kod jest nieprawidłowy lub wygasł. Sprawdź e-mail lub poproś o nowy kod.",
+    "code_expired": "Ten kod wygasł. Poproś o nowy kod."
+  },
+  "codeConfirmation": {
+    "label": "Kod potwierdzający",
+    "digit": "Cyfra {{index}} z {{length}}",
+    "incomplete": "Wpisz {{length}}-cyfrowy kod.",
+    "resend": "Wyślij kod ponownie",
+    "resend_in": "Wyślij kod ponownie za {{seconds}} s",
+    "sent": "Wysłano nowy kod.",
+    "intro": "Wpisz kod wysłany na adres {{email}}",
+    "change_email": "Zmień adres"
   },
   "signup": {
     "success_title": "Sprawdź swoją skrzynkę e-mail",
@@ -186,7 +203,7 @@
   },
   "actions": {
     "sign_in_submit": "Zaloguj się",
-    "sign_up_submit": "Zarejestruj się"
+    "sign_up_submit": "Utwórz konto"
   },
   "guard": {
     "signInRequired": "Wymagane logowanie",

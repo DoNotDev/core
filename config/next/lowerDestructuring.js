@@ -15,10 +15,18 @@
  * Only for apps whose browserslist reaches Safari / iOS Safari below 14.1: Next's
  * default targets (no browserslist: Safari 16.4) never need it.
  *
+ * Babel injects its helpers (`function _objectWithoutPropertiesLoose`) and their hoisted
+ * data (`const _excluded = [...]`) at the top of each file. Client chunks are classic
+ * scripts sharing one global scope, so from the second chunk on the `const` is a
+ * redeclaration and the whole script aborts ("Identifier '_excluded' has already been
+ * declared"). Every rewritten script chunk therefore runs in its own function scope; a
+ * script chunk declaring a top-level binding itself (which that scope would hide from the
+ * other chunks) fails the build. Module chunks keep their own module scope.
+ *
  * File names are content-hashed before this runs, so only bytes change: cache headers and
  * the build manifest stay valid (the framework emits no SRI).
  *
- * @version 0.1.0
+ * @version 0.1.1
  * @since 0.3.2
  * @author AMBROISE PARK Consulting
  */
@@ -70,18 +78,40 @@ function* jsFiles(dir) {
 }
 
 /**
+ * Babel plugin run before the lowering: records whether the chunk is a classic script
+ * (`metadata.script`) and fails on a script that declares a top-level binding of its own,
+ * since {@link lowerClientDestructuring} moves a rewritten script into a function scope.
+ */
+function scriptScope() {
+  return {
+    pre(file) {
+      file.metadata.script = file.path.node.sourceType === 'script';
+      const own = Object.keys(file.scope.bindings);
+      if (file.metadata.script && own.length > 0) {
+        throw new Error(
+          `declares top-level ${own.join(', ')}, which its own function scope would hide from the other chunks`
+        );
+      }
+    },
+  };
+}
+
+/**
  * Lower destructuring in the client chunks (`<distDir>/static/**\/*.js`) when the app targets a
- * Safari with the bug ({@link targetsBuggySafari}).
+ * Safari with the bug ({@link targetsBuggySafari}). Each rewritten script chunk is wrapped in its
+ * own function scope, so the helpers Babel adds at its top never collide across chunks.
  *
  * @param {{ distDir: string, projectDir: string }} build - `runAfterProductionCompile` metadata
  * @returns {Promise<number>} Chunks rewritten (0 when the app's targets do not need it)
- * @throws {Error} When a chunk cannot be parsed (a chunk that cannot be proven safe fails the build)
+ * @throws {Error} When a chunk cannot be parsed, or is a script declaring top-level bindings
+ *   (a chunk that cannot be proven safe fails the build)
  * @since 0.3.2
  */
 export async function lowerClientDestructuring({ distDir, projectDir }) {
   if (!targetsBuggySafari(projectDir)) return 0;
   const babel = require('@babel/core');
   const plugins = [
+    scriptScope,
     [require.resolve('@babel/plugin-transform-destructuring'), { loose: true }],
     require.resolve('@babel/plugin-transform-parameters'),
   ];
@@ -103,7 +133,7 @@ export async function lowerClientDestructuring({ distDir, projectDir }) {
       throw new Error(`[dndev] Safari destructuring fix: cannot transform ${file}: ${error.message}`);
     }
     if (out?.code && out.code !== code) {
-      writeFileSync(file, out.code);
+      writeFileSync(file, out.metadata.script ? `(function(){${out.code}\n}).call(this);` : out.code);
       changed++;
     }
   }

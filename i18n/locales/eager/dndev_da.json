@@ -358,7 +358,8 @@
   "sheet": {
     "navigation": "Navigation",
     "codeInspector": "Kodeinspector",
-    "debugPanel": "Fejlsøgningspanel"
+    "debugPanel": "Fejlsøgningspanel",
+    "close": "Luk panel"
   },
   "routeError": {
     "title": "Noget gik galt",

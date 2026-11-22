@@ -358,7 +358,8 @@
   "sheet": {
     "navigation": "Navigation",
     "codeInspector": "Code-Inspektor",
-    "debugPanel": "Debug-Panel"
+    "debugPanel": "Debug-Panel",
+    "close": "Panel schließen"
   },
   "routeError": {
     "title": "Etwas ist schief gelaufen",

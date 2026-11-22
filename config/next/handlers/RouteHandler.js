@@ -51,6 +51,12 @@ export class NextRouteHandler extends BaseNextHandler {
      * @type {Object | null}
      */
     this.i18n = null;
+    /**
+     * This build's font plan (set by useFonts before generation): the generated root
+     * layout and global 404 render it.
+     * @type {import('../../fonts/buildFontPlan.js').FontPlan | null}
+     */
+    this.fonts = null;
   }
 
   // === HANDLER CONFIGURATION ===
@@ -114,6 +120,18 @@ export class NextRouteHandler extends BaseNextHandler {
    */
   useI18n(i18n) {
     this.i18n = i18n;
+  }
+
+  /**
+   * This build's font plan (runDiscoveries builds it before generating routes): written
+   * to `GENERATED_PATHS.next.fonts` and rendered by the generated root layout and global
+   * 404 (`FontHead`: font preloads + inline `@font-face`).
+   *
+   * @param {import('../../fonts/buildFontPlan.js').FontPlan} plan
+   * @since 0.3.3
+   */
+  useFonts(plan) {
+    this.fonts = plan;
   }
 
   /**

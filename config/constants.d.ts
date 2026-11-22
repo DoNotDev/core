@@ -103,11 +103,8 @@ export const I18N_PATHS: {
   readonly PUBLISHED_FLAGS: string;
 };
 
-export const FONT_FAMILY_TO_STEMS: Record<string, string>;
-
-export const FONT_WEIGHTS: Record<string, readonly number[]>;
-
-export const FONT_FALLBACK_CATEGORY: Record<string, 'sans-serif' | 'serif'>;
+/** Font families every system provides: a font stack names them without a source (font plan). */
+export const SYSTEM_FONT_FAMILIES: readonly string[];
 
 export const LOCALE_TO_FONT_SUBSETS: Record<string, readonly string[]>;
 

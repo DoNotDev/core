@@ -26,6 +26,8 @@ import type {
   StripeCheckoutResponse,
 } from '@donotdev/types';
 import {
+  DoNotDevError,
+  ERROR_CODES,
   USER_ROLES,
   SUBSCRIPTION_TIERS,
   FEATURE_STATUS,
@@ -84,6 +86,14 @@ export const DEGRADED_AUTH_API: AuthAPI = {
   reauthenticateWithPassword: async () => {},
   reauthenticateWithProvider: async () => {},
   deleteAccount: async () => {},
+  // Fails loud: no provider must never look like an empty user list.
+  listUsers: async () => {
+    throw new DoNotDevError(
+      'Authentication is unavailable',
+      ERROR_CODES.UNAVAILABLE,
+      { source: 'auth' }
+    );
+  },
   setRememberMe: async () => {},
   canRememberMe: () => false,
   error: null,
@@ -110,6 +120,14 @@ export const DEGRADED_AUTH_API: AuthAPI = {
   verifyPasswordResetCode: async () => null,
   confirmPasswordReset: async () => {},
   sendEmailVerification: async () => {},
+  // Fails loud: no provider must never look like a wrong code.
+  verifyEmailCode: async () => {
+    throw new DoNotDevError(
+      'Authentication is unavailable',
+      ERROR_CODES.UNAVAILABLE,
+      { source: 'auth' }
+    );
+  },
   getEmailVerificationStatus: async () => ({ status: 'pending' as const }),
   isEmailVerificationEnabled: async () => false,
   sendSignInLinkToEmail: async () => {},

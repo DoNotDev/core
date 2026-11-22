@@ -1,16 +1,19 @@
 /**
- * @fileoverview Size-matched fallback faces for framework web fonts (CLS-free swap)
- * @description A web font with `font-display: swap` first renders in the next family of
- * the stack, then swaps: when the two fonts differ in width and vertical metrics, text
- * re-wraps and the page shifts (CLS). A fallback face is a local system font (Arial,
- * or Times New Roman for serif families) scaled with `size-adjust` and given the web
- * font's ascent / descent / line gap, so both render in the same box.
+ * @fileoverview Size-matched fallback faces for web fonts (CLS-free first paint)
+ * @description Until a web font is available the browser renders the next family of the
+ * stack; with `font-display: optional` a font that misses the first-paint window is not
+ * used for the page at all. When the two fonts differ in width and vertical metrics,
+ * text wraps differently (CLS when a font does swap in, a different look when it does
+ * not). A fallback face is a local system font (Arial, or Times New Roman for serif
+ * families) scaled with `size-adjust` and given the web font's ascent / descent / line
+ * gap, so both render in the same box.
  *
  * Same technique and formulas as next/font/local (Next.js `getFallbackMetricsFromFontFile`,
  * https://developer.chrome.com/blog/font-fallbacks/): the web font's metrics are read
- * from its woff2 file (head, hhea, cmap, hmtx), the system fonts' from the constants
- * below. Stacks list the face right after the web font (`Inter, 'Inter Fallback', …`,
- * packages/components/src/styles/variables.css).
+ * from its woff2 file (head, hhea, cmap, hmtx; a variable font at its default
+ * instance), the system fonts' from the constants below. The font plan
+ * (fonts/buildFontPlan.js) writes one face per family leading a stack, and requires the
+ * stack to list it right after the web font (`Inter, 'Inter Fallback', …`).
  */
 
 import { brotliDecompressSync } from 'node:zlib';

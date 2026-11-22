@@ -35,6 +35,7 @@
   "signingIn": "Iniciando sesión...",
   "creatingAccount": "Creando cuenta...",
   "email": "Correo electrónico",
+  "name": "Nombre",
   "password": "Contraseña",
   "emailHint": "Ingrese su dirección de correo electrónico",
   "passwordHintSignin": "Ingrese su contraseña",
@@ -115,6 +116,10 @@
   "passwordStrength.fair": "Regular",
   "passwordStrength.good": "Buena",
   "passwordStrength.strong": "Fuerte",
+  "passwordToggle": {
+    "show": "Mostrar contraseña",
+    "hide": "Ocultar contraseña"
+  },
   "rememberMe": "Recordarme",
   "signUp": "Registrarse",
   "alreadyHaveAccount": "¿Ya tiene una cuenta? Iniciar sesión",
@@ -128,7 +133,19 @@
     "email_not_confirmed": "Por favor verifique su correo electrónico antes de iniciar sesión.",
     "invalid_credentials": "Correo electrónico o contraseña inválidos.",
     "weak_password": "La contraseña es demasiado débil. Por favor elija una contraseña más segura.",
-    "breached_password": "Esta contraseña ha aparecido en una filtración de datos. Por favor elija una contraseña diferente."
+    "breached_password": "Esta contraseña ha aparecido en una filtración de datos. Por favor elija una contraseña diferente.",
+    "invalid_code": "Este código es incorrecto o ha caducado. Revise el correo o solicite un código nuevo.",
+    "code_expired": "Este código ha caducado. Solicite un código nuevo."
+  },
+  "codeConfirmation": {
+    "label": "Código de confirmación",
+    "digit": "Dígito {{index}} de {{length}}",
+    "incomplete": "Introduzca el código de {{length}} dígitos.",
+    "resend": "Reenviar código",
+    "resend_in": "Reenviar código en {{seconds}} s",
+    "sent": "Se ha enviado un nuevo código.",
+    "intro": "Introduce el código enviado a {{email}}",
+    "change_email": "Cambiar dirección"
   },
   "signup": {
     "success_title": "Revise su correo electrónico",
@@ -186,7 +203,7 @@
   },
   "actions": {
     "sign_in_submit": "Iniciar sesión",
-    "sign_up_submit": "Registrarse"
+    "sign_up_submit": "Crear mi cuenta"
   },
   "guard": {
     "signInRequired": "Inicio de sesión requerido",

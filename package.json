@@ -1,6 +1,6 @@
 {
   "name": "@donotdev/core",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "private": false,
   "type": "module",
   "license": "MIT",
@@ -58,7 +58,7 @@
   ],
   "sideEffects": false,
   "peerDependencies": {
-    "@donotdev/components": "^0.3.3",
+    "@donotdev/components": "^0.3.4",
     "@sentry/react": "^10.39.0",
     "i18next": "^26.7.2",
     "i18next-browser-languagedetector": "^8.3.0",

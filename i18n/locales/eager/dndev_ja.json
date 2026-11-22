@@ -358,7 +358,8 @@
   "sheet": {
     "navigation": "ナビゲーション",
     "codeInspector": "コードインスペクター",
-    "debugPanel": "デバッグパネル"
+    "debugPanel": "デバッグパネル",
+    "close": "パネルを閉じる"
   },
   "routeError": {
     "title": "エラーが発生しました",

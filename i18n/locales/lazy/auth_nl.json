@@ -35,6 +35,7 @@
   "signingIn": "Bezig met inloggen...",
   "creatingAccount": "Account aanmaken...",
   "email": "E-mail",
+  "name": "Naam",
   "password": "Wachtwoord",
   "emailHint": "Voer je e-mailadres in",
   "passwordHintSignin": "Voer je wachtwoord in",
@@ -115,6 +116,10 @@
   "passwordStrength.fair": "Redelijk",
   "passwordStrength.good": "Goed",
   "passwordStrength.strong": "Sterk",
+  "passwordToggle": {
+    "show": "Wachtwoord tonen",
+    "hide": "Wachtwoord verbergen"
+  },
   "rememberMe": "Onthoud mij",
   "signUp": "Registreren",
   "alreadyHaveAccount": "Heb je al een account? Log in",
@@ -128,7 +133,19 @@
     "email_not_confirmed": "Bevestig je e-mailadres voordat je inlogt.",
     "invalid_credentials": "Ongeldig e-mailadres of wachtwoord.",
     "weak_password": "Het wachtwoord is te zwak. Kies een sterker wachtwoord.",
-    "breached_password": "Dit wachtwoord is gevonden in een datalek. Kies een ander wachtwoord."
+    "breached_password": "Dit wachtwoord is gevonden in een datalek. Kies een ander wachtwoord.",
+    "invalid_code": "Deze code is onjuist of verlopen. Controleer de e-mail of vraag een nieuwe code aan.",
+    "code_expired": "Deze code is verlopen. Vraag een nieuwe code aan."
+  },
+  "codeConfirmation": {
+    "label": "Bevestigingscode",
+    "digit": "Cijfer {{index}} van {{length}}",
+    "incomplete": "Voer de code van {{length}} cijfers in.",
+    "resend": "Code opnieuw verzenden",
+    "resend_in": "Code opnieuw verzenden over {{seconds}} s",
+    "sent": "Er is een nieuwe code verzonden.",
+    "intro": "Voer de code in die naar {{email}} is verzonden",
+    "change_email": "Adres wijzigen"
   },
   "signup": {
     "success_title": "Controleer je e-mail",
@@ -184,7 +201,10 @@
     "signingIn": "Inloggen met {{partner}}...",
     "signedIn": "Ingelogd met {{partner}}"
   },
-  "actions": { "sign_in_submit": "Inloggen", "sign_up_submit": "Registreren" },
+  "actions": {
+    "sign_in_submit": "Inloggen",
+    "sign_up_submit": "Account aanmaken"
+  },
   "guard": {
     "signInRequired": "Inloggen vereist",
     "signInDescription": "Log in om toegang te krijgen tot deze pagina"

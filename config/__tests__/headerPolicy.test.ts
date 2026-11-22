@@ -57,6 +57,8 @@ const JSON_RULE = {
 const VITE_ASSETS = ['woff', 'woff2', 'ttf', 'eot', 'js', 'css'].map((ext) =>
   cache(`/assets/:path*.${ext}`, 'public, max-age=31536000, immutable')
 );
+/** The font plan's content-hashed files (public/fonts/): immutable on every target. */
+const FONT_FILES = cache('/fonts/:path*', 'public, max-age=31536000, immutable');
 
 const SUPABASE_CSP =
   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests";
@@ -152,12 +154,13 @@ describe('resolveHeaderRules', () => {
         ],
       },
       ...VITE_ASSETS,
+      FONT_FILES,
       ...IMAGES,
       JSON_RULE,
     ]);
   });
 
-  it('shop (Next server): no build-asset rule (Next owns /_next/static), app override last', () => {
+  it('shop (Next server): no build-asset rule (Next owns /_next/static) but the fonts, app override last', () => {
     expect(
       resolveHeaderRules({
         appConfig: SHOP_APP,
@@ -169,6 +172,7 @@ describe('resolveHeaderRules', () => {
         source: '/(.*)',
         headers: [{ key: 'Content-Security-Policy', value: SHOP_CSP }, ...SECURITY],
       },
+      FONT_FILES,
       ...IMAGES,
       JSON_RULE,
       cache('/images/:path*', 'public, max-age=31536000'),
@@ -180,6 +184,7 @@ describe('resolveHeaderRules', () => {
     expect(rules[1]).toEqual(
       cache('/_next/static/:path*', 'public, max-age=31536000, immutable')
     );
+    expect(rules[2]).toEqual(FONT_FILES);
   });
 
   it('PWA adds manifest + service worker rules before the app overrides', () => {

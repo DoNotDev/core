@@ -15,7 +15,7 @@ export { defineNextConfig } from '../index.js';
 
 /**
  * Create PostCSS configuration for Next.js consumer apps.
- * Handles @fontsource CSS alias and workspace-aware package resolution.
+ * Workspace-aware package resolution (no font goes through CSS: the font plan ships fonts as head tags).
  *
  * @example
  * ```js

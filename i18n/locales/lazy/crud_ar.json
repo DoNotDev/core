@@ -89,7 +89,9 @@
     "matches": "{{field}} يجب أن يطابق النمط {{pattern}}",
     "unique": "{{field}} يجب أن يكون فريداً",
     "alphanumeric": "{{field}} يجب أن يحتوي على أحرف وأرقام فقط",
-    "lettersOnly": "{{field}} يجب أن يحتوي على أحرف فقط"
+    "lettersOnly": "{{field}} يجب أن يحتوي على أحرف فقط",
+    "phone": "يرجى إدخال رقم هاتف صالح",
+    "invalid": "{{field}} غير صالح"
   },
   "number": {
     "required": "{{field}} مطلوب",

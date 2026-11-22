@@ -473,6 +473,45 @@ export interface HeadersConfig {
 }
 
 /**
+ * One woff2 file of an app-owned font family ({@link LocalFontConfig}).
+ *
+ * @since 0.3.3
+ */
+export interface LocalFontFace {
+  /** woff2 path relative to the app root, e.g. `'src/assets/fonts/brand.woff2'` */
+  file: string;
+  /** A weight (`400`) or a variable font's range (`'300 600'`) */
+  weight: number | `${number} ${number}`;
+  /** Default `'normal'` */
+  style?: 'normal' | 'italic';
+  /**
+   * The face's `unicode-range` (`'U+AC00-D7A3'`): the browser downloads the file only for
+   * characters in it. Omitted: the family's core file, preloaded for the first paint.
+   */
+  unicodeRange?: string;
+  /**
+   * Subset the face covers, matched against the page language
+   * (`LOCALE_TO_FONT_SUBSETS`, e.g. `'latin-ext'` for `pl`): a face with a `unicodeRange`
+   * is preloaded on the pages whose language needs this subset.
+   */
+  subset?: string;
+}
+
+/**
+ * An app-owned font family: its woff2 files, for a family no fontsource package
+ * provides (a custom subset, a licensed brand font). The family is named in the theme
+ * tokens like any other (`--font-sans: Pretendard, 'Pretendard Fallback', sans-serif;`).
+ *
+ * @since 0.3.3
+ */
+export interface LocalFontConfig {
+  /** Picks the system font of the size-matched fallback face: Arial, or Times New Roman for `serif` */
+  category: 'sans-serif' | 'serif';
+  /** The family's files */
+  faces: readonly LocalFontFace[];
+}
+
+/**
  * Favicon and PWA configuration
  *
  * Configure automatic favicon generation and PWA manifest icons.
@@ -717,6 +756,31 @@ export interface AppConfig {
    * @since 0.3.1
    */
   headers?: HeadersConfig;
+  /**
+   * The app's own font files, per family as the theme tokens name it (`src/themes.css`),
+   * for families no package provides. Every other family is resolved by name:
+   * `@fontsource-variable/<slug>`, then `@fontsource/<slug>` in the app's dependencies,
+   * then the families `@donotdev/ui` bundles (Inter, Playfair Display, Space Grotesk,
+   * Roboto, Press Start 2P). The framework ships every family the theme renders text in
+   * (Next and Vite alike): font preloads and inline `@font-face` in the server HTML,
+   * `font-display: optional`, size-matched `'<Family> Fallback'` face, content-hashed
+   * files under `/fonts/` cached immutable. Read at build; the app writes no
+   * `@font-face`, imports no `@fontsource` CSS and uses no `next/font` (each fails the
+   * build).
+   *
+   * @example
+   * ```typescript
+   * fonts: {
+   *   Pretendard: {
+   *     category: 'sans-serif',
+   *     faces: [{ file: 'src/assets/fonts/pretendard.woff2', weight: '300 700' }],
+   *   },
+   * }
+   * ```
+   *
+   * @since 0.3.3
+   */
+  fonts?: Readonly<Record<string, LocalFontConfig>>;
 }
 
 /**
