@@ -94,6 +94,7 @@ import type { Metadata } from 'next';
 
 import type {
   AnyEntity,
+  BreadcrumbRoute,
   EntitySeo,
   EntitySeoOptions,
   EntitySeoRecord,
@@ -348,6 +349,14 @@ export interface EntityPageContext {
   languageUrl: typeof languageUrl;
   /** `buildBreadcrumbJsonLd` from @donotdev/core/server (BreadcrumbList ending with the record title) */
   buildBreadcrumbJsonLd: typeof buildBreadcrumbJsonLd;
+  /**
+   * Routes the BreadcrumbList reads: the page's route and its ancestors (`routeAncestors`:
+   * URL prefixes that are routes, PageMeta `parent`) with their PageMeta `namespace`,
+   * `seo` and `parent` (the generated page embeds them; the Vite build passes the manifest)
+   */
+  routes: readonly BreadcrumbRoute[];
+  /** `appConfig.seo.defaultNamespace` (`home`): labels of ancestors without a namespace (`routeLabel`) */
+  defaultNamespace: string;
 }
 
 /** Server identity of one entity page. */
@@ -363,8 +372,8 @@ export interface EntityPageSeo {
   /** Product JSON-LD (`type: 'product'`), null otherwise */
   jsonLd: Record<string, unknown> | null;
   /**
-   * BreadcrumbList JSON-LD: site home, the URL's segments as the visible breadcrumb names
-   * them, the record title last (null without a record title). AutoMetaTags emits no
+   * BreadcrumbList JSON-LD: site home, the page's ancestors named by their titles as the
+   * visible breadcrumb names them, the record title last (null without a record title). AutoMetaTags emits no
    * breadcrumb on these routes (`routes.manifest.recordBreadcrumbPaths`).
    */
   breadcrumb: Record<string, unknown> | null;

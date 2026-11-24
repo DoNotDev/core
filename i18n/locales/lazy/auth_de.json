@@ -135,7 +135,8 @@
     "weak_password": "Das Passwort ist zu schwach. Bitte wählen Sie ein stärkeres Passwort.",
     "breached_password": "Dieses Passwort wurde in einem Datenleck gefunden. Bitte wählen Sie ein anderes Passwort.",
     "invalid_code": "Dieser Code ist falsch oder abgelaufen. Prüfen Sie die E-Mail oder fordern Sie einen neuen Code an.",
-    "code_expired": "Dieser Code ist abgelaufen. Fordern Sie einen neuen Code an."
+    "code_expired": "Dieser Code ist abgelaufen. Fordern Sie einen neuen Code an.",
+    "captcha_failed": "Die Sicherheitsprüfung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
   },
   "codeConfirmation": {
     "label": "Bestätigungscode",
@@ -208,5 +209,10 @@
   "guard": {
     "signInRequired": "Anmeldung erforderlich",
     "signInDescription": "Bitte melden Sie sich an, um auf diese Seite zuzugreifen"
+  },
+  "signUpFlow": {
+    "account_title": "Konto erstellen",
+    "code_title": "Prüfen Sie Ihre E-Mails",
+    "progress": "Schritt {{current}} von {{total}}"
   }
 }

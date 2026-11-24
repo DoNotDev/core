@@ -12,6 +12,7 @@ import { ROUTE_DISCOVERY } from '../constants.js';
 import { createBuildError, isBuildError } from '../utils/buildError.js';
 import { extractMeta, hasGenerateMetadataExport } from '../utils/MetaExtractor.js';
 import { createEntityResolver, resolvePageEntity } from '../utils/pageEntity.js';
+import { getPathPrefixes, routeAncestors } from '../utils/routeAncestors.js';
 import { isCatchAllRoute, isIndexableRoute } from '../utils/SEOGenerator.js';
 
 // Module-level cache to prevent duplicate discovery scans in same build
@@ -58,6 +59,80 @@ export function validateSignedInRedirect(route) {
       `${route.file}: PageMeta signedInRedirect points at the page itself (${to}): signed-in visitors would loop. Use another page.`,
       'invalid-configuration'
     );
+  }
+}
+
+/**
+ * Fail the build on a PageMeta `parent` the ancestor chain cannot use: not a same-app
+ * static route path (`/x`: no `:param`, `*`, query or hash, never `//host`), no page at
+ * that path, the page itself, or a page whose URL prefix is itself a page (that page is
+ * its parent: `parent` would never be read). Loops: {@link assertParentChains}.
+ *
+ * @param {{ path: string, file: string, meta?: { parent?: unknown } }} route - Discovered route
+ * @param {ReadonlyArray<{ path: string, meta?: Object }>} routes - Every discovered route
+ * @returns {void}
+ * @throws {Error} Build error ({@link createBuildError}) naming the page and the fix
+ * @since 0.3.4
+ *
+ * @example
+ * validatePageParent({ path: '/produits/:slug', file: 'src/pages/ProductPage.tsx', meta: { parent: '/produits' } }, routes); // throws: no page
+ */
+export function validatePageParent(route, routes) {
+  const parent = route.meta?.parent;
+  if (parent === undefined) return;
+  const fail = (reason) => {
+    throw createBuildError(
+      'dndev-routes',
+      `${route.file}: PageMeta parent ${JSON.stringify(parent)} ${reason}`,
+      'invalid-configuration'
+    );
+  };
+  if (
+    typeof parent !== 'string' ||
+    !parent.startsWith('/') ||
+    parent.startsWith('//') ||
+    /[\\?#*:]/.test(parent)
+  ) {
+    fail(
+      "must be the static path of one of the app's pages, starting with '/' (no :param, *, query or hash). " +
+        "Example: export const meta: PageMeta = { parent: '/catalogue' };"
+    );
+  }
+  if (!routes.some((other) => other.path === parent)) {
+    fail(`is not the path of a page of the app. Use the path of an existing page, e.g. one of: ${routes
+      .map((other) => other.path)
+      .filter((path) => !/[:*]/.test(path))
+      .slice(0, 8)
+      .join(', ')}.`);
+  }
+  if (parent === route.path) fail('is the page itself. Name the page its visitors come from.');
+  const direct = getPathPrefixes(route.path).slice(0, -1).at(-1);
+  if (direct && routes.some((other) => other.path === direct)) {
+    fail(`is never used: the URL prefix ${direct} is a page, so it is the parent. Remove parent.`);
+  }
+}
+
+/**
+ * Fail the build when a page's ancestor chain (`routeAncestors`, the one the breadcrumbs,
+ * BreadcrumbList and forms read) loops through PageMeta `parent` declarations. Run after
+ * {@link validatePageParent} on every route (each `parent` names an existing page).
+ *
+ * @param {ReadonlyArray<{ path: string, file: string, meta?: Object }>} routes - Every discovered route
+ * @returns {void}
+ * @throws {Error} Build error naming the page and the loop
+ * @since 0.3.4
+ */
+export function assertParentChains(routes) {
+  for (const route of routes) {
+    try {
+      routeAncestors(route.path, routes);
+    } catch (error) {
+      throw createBuildError(
+        'dndev-routes',
+        `${route.file}: ${error.message.replace(/^\[dndev\] /, '')} Fix the PageMeta parent of one of these pages.`,
+        'invalid-configuration'
+      );
+    }
   }
 }
 
@@ -273,6 +348,8 @@ export class RouteDiscovery extends BaseDiscovery {
      * Validation:
      * - Multiple routes with same path → Build error (use PageMeta route override)
      * - Public indexable `:param` route without per-URL SEO → Build error (assertDynamicRouteSeo)
+     * - PageMeta `parent` that is no other page, or never read, or loops → Build error
+     *   (validatePageParent, assertParentChains)
      */
     this.routes = allResults.filter((route) => {
       if (route.path === 'home' || route.path === '/home') {
@@ -304,6 +381,9 @@ export class RouteDiscovery extends BaseDiscovery {
         pageGenerateMetadata: this.options.pageGenerateMetadata === true,
       });
     }
+    // Parents name other pages: checked once every route is known
+    for (const route of this.routes) validatePageParent(route, this.routes);
+    assertParentChains(this.routes);
 
     this.logger.debug(
       `Auto-discovered ${this.routes.length} routes from ${consumerFiles.length + additionalFiles.length} files`

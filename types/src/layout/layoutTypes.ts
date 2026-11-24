@@ -401,7 +401,7 @@ export interface SEOConfig {
   speculationRules?: boolean;
   /** Emit hreflang alternate links when i18n has 2+ languages (default: true). No-op for monolingual apps. Set to false to disable. */
   hreflang?: boolean;
-  /** Auto-generate BreadcrumbList JSON-LD from URL path segments (default: true). Set to false to disable. */
+  /** Auto-generate BreadcrumbList JSON-LD: the site, the page's ancestors (`routeAncestors`: URL prefixes that are pages, PageMeta `parent`) and the page, by page title (default: true). Set to false to disable. */
   breadcrumbSchema?: boolean;
   /** Auto-generate WebSite JSON-LD with SearchAction for sitelinks search box (default: true). Set to false to disable. */
   websiteSchema?: boolean;

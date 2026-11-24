@@ -607,6 +607,32 @@ export interface PageMeta {
   entity?: AnyEntity;
 
   /**
+   * App path of this page's parent page, for pages whose URL does not name it: the page
+   * at the URL prefix is the parent when it exists (`/routines/:id` → `/routines`); a page
+   * whose URL prefix is no page (`/produits/:slug`, no `/produits` page) names it here.
+   * One ancestor chain reads it (`routeAncestors` in `@donotdev/core`): the visible
+   * breadcrumbs, the BreadcrumbList JSON-LD (every page, entity record pages included)
+   * and the forms' parent path (cancel / after-save navigation).
+   * @description Read statically at build, like `route`: a literal same-app static route
+   * path (`'/catalogue'`: starts with `/`, no `:param`, `*`, query or hash) of an existing
+   * page, never the page itself, without a cycle. The build fails when it is not, and
+   * when the page's URL prefix is itself a page (that page is the parent: drop `parent`).
+   * `'/'` makes the home page the parent (the trail is the home crumb, then this page).
+   *
+   * @example
+   * ```tsx
+   * // src/pages/ProductPage.tsx: /produits/:slug, the catalogue lists the products
+   * export const meta: PageMeta = {
+   *   route: '/produits/:slug',
+   *   entity: productEntity,
+   *   parent: '/catalogue', // Home > Catalogue > <product name>
+   * };
+   * ```
+   * @since 0.3.4
+   */
+  parent?: string;
+
+  /**
    * User-facing category for sidebar/menu grouping
    * @description Groups routes into collapsible sections in navigation. Unlike
    * `entity` (the record a page shows), `category` is a navigation label

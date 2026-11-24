@@ -135,7 +135,8 @@
     "weak_password": "Le mot de passe est trop faible. Veuillez choisir un mot de passe plus robuste.",
     "breached_password": "Ce mot de passe est apparu dans une fuite de données. Veuillez en choisir un différent.",
     "invalid_code": "Ce code est incorrect ou a expiré. Vérifiez l'email ou demandez un nouveau code.",
-    "code_expired": "Ce code a expiré. Demandez un nouveau code."
+    "code_expired": "Ce code a expiré. Demandez un nouveau code.",
+    "captcha_failed": "La vérification de sécurité a échoué. Veuillez réessayer."
   },
   "codeConfirmation": {
     "label": "Code de confirmation",
@@ -208,5 +209,10 @@
   "guard": {
     "signInRequired": "Connexion requise",
     "signInDescription": "Veuillez vous connecter pour accéder à cette page"
+  },
+  "signUpFlow": {
+    "account_title": "Créez votre compte",
+    "code_title": "Vérifiez vos e-mails",
+    "progress": "Étape {{current}} sur {{total}}"
   }
 }

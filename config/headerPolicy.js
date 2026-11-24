@@ -77,10 +77,15 @@ const SCRIPT_SRC_BASELINE = Object.freeze({
 /**
  * CSP sources each backend provider's browser SDK needs, keyed by provider package.
  * Billing needs none: checkout redirects to Stripe (no Stripe.js in the browser).
+ * Supabase: Cloudflare Turnstile (CAPTCHA of Supabase Auth, on when the app sets
+ * `TURNSTILE_SITE_KEY`) loads its script and iframe from challenges.cloudflare.com.
+ * Allowed whether or not the key is set, so the policy never depends on the build's env.
  */
 export const PROVIDER_CSP = Object.freeze({
   '@donotdev/supabase': {
+    'script-src': ['https://challenges.cloudflare.com'],
     'connect-src': ['https://*.supabase.co', 'wss://*.supabase.co'],
+    'frame-src': ['https://challenges.cloudflare.com'],
   },
   '@donotdev/firebase': {
     'script-src': ['https://accounts.google.com', 'https://apis.google.com'],

@@ -158,6 +158,7 @@ function onceReader(crud) {
  * @param {Object} options
  * @param {Array<{ path: string, meta?: Object, auth?: unknown }>} options.staticRoutes - Static pages (manifest routes; blog posts with their frontmatter `meta`)
  * @param {ReturnType<typeof recordRoutes>} options.records - Entity routes whose records get pages (empty: none)
+ * @param {Array<{ path: string, meta?: Object }>} options.routes - Manifest routes: the record pages' BreadcrumbList ancestors (`routeAncestors`)
  * @param {import('@donotdev/core/server').ICrudAdapter | undefined} options.crud - Public reader (required with records)
  * @param {Readonly<Record<string, Object>> | undefined} options.readSchemas - `entityReadSchemas` of the entity routes (required with records)
  * @param {Object} options.core - `@donotdev/core/server` exports
@@ -179,6 +180,7 @@ function onceReader(crud) {
 export async function buildPrerenderedPages({
   staticRoutes,
   records,
+  routes,
   crud,
   readSchemas,
   core,
@@ -283,6 +285,8 @@ export async function buildPrerenderedPages({
           buildProductJsonLd: core.buildProductJsonLd,
           buildBreadcrumbJsonLd: core.buildBreadcrumbJsonLd,
           languageUrl: core.languageUrl,
+          routes,
+          defaultNamespace,
         });
         return { tags: core.recordHeadTags(seo), breadcrumb: seo.breadcrumb !== null };
       });
@@ -536,6 +540,7 @@ export async function writeBuildPages({
     const { pages, skipped } = await buildPrerenderedPages({
       staticRoutes,
       records: pageRecords,
+      routes: manifestRoutes,
       crud,
       readSchemas,
       core,

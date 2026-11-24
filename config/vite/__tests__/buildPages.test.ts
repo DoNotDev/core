@@ -56,8 +56,8 @@ const PRODUCT = {
 
 /** Translations per language, `ns:key` → text; missing → defaultValue (the client `t`). */
 const TEXTS: Record<string, Record<string, string>> = {
-  fr: { 'about:title': 'À propos', 'about:description': 'Qui sommes-nous', 'home:title': 'Accueil' },
-  en: { 'about:title': 'About', 'about:description': 'Who we are', 'home:title': 'Home' },
+  fr: { 'about:title': 'À propos', 'about:description': 'Qui sommes-nous', 'home:title': 'Accueil', 'catalogue:title': 'Catalogue' },
+  en: { 'about:title': 'About', 'about:description': 'Who we are', 'home:title': 'Home', 'catalogue:title': 'Catalog' },
 };
 const translate = (_namespaces: string[], language: string) =>
   ((key: string, options?: { defaultValue?: string }) =>
@@ -80,6 +80,12 @@ const PRODUCT_ROUTE = {
   meta: { entity: 'products', seo: { type: 'product' } },
 };
 
+/** Manifest routes: the product page names the catalogue its parent (no /produits page). */
+const MANIFEST_ROUTES = [
+  { path: '/catalogue', meta: { namespace: 'catalogue' } },
+  { ...PRODUCT_ROUTE, meta: { ...PRODUCT_ROUTE.meta, parent: '/catalogue' } },
+];
+
 /** Read schemas of the entity routes, as writeBuildPages builds them. */
 const READ_SCHEMAS = entityReadSchemas(
   { productEntity },
@@ -91,6 +97,7 @@ const READ_SCHEMAS = entityReadSchemas(
 const options = (overrides: Record<string, unknown> = {}) => ({
   staticRoutes: [] as Array<{ path: string; meta?: object }>,
   records: recordRoutes([PRODUCT_ROUTE]),
+  routes: MANIFEST_ROUTES,
   crud: mockCrud([PRODUCT]).crud,
   readSchemas: READ_SCHEMAS,
   core: CORE,
@@ -309,12 +316,18 @@ describe('buildPrerenderedPages: entity records', () => {
       ...tags.matchAll(/<script type="application\/ld\+json" data-rh="true">([^<]*)<\/script>/g),
     ].map((m) => JSON.parse(m[1]!));
     expect(jsonLd.map((item) => item['@type'])).toEqual(['Product', 'BreadcrumbList']);
-    expect(jsonLd[1].itemListElement.at(-1)).toEqual({
-      '@type': 'ListItem',
-      position: 3,
-      name: 'Bakuchiol Serum',
-      item: `${BASE}/en/produits/serum`,
-    });
+    // Home, the declared parent (PageMeta parent, titled in the page language), the record:
+    // never the URL prefix /produits (no page there)
+    expect(jsonLd[1].itemListElement).toEqual([
+      { '@type': 'ListItem', position: 1, name: 'Shop', item: `${BASE}/en` },
+      { '@type': 'ListItem', position: 2, name: 'Catalog', item: `${BASE}/en/catalogue` },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: 'Bakuchiol Serum',
+        item: `${BASE}/en/produits/serum`,
+      },
+    ]);
     expect(embedded(html).breadcrumb).toBe(true);
   });
 

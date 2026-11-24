@@ -135,7 +135,8 @@
     "weak_password": "Het wachtwoord is te zwak. Kies een sterker wachtwoord.",
     "breached_password": "Dit wachtwoord is gevonden in een datalek. Kies een ander wachtwoord.",
     "invalid_code": "Deze code is onjuist of verlopen. Controleer de e-mail of vraag een nieuwe code aan.",
-    "code_expired": "Deze code is verlopen. Vraag een nieuwe code aan."
+    "code_expired": "Deze code is verlopen. Vraag een nieuwe code aan.",
+    "captcha_failed": "De beveiligingscontrole is mislukt. Probeer het opnieuw."
   },
   "codeConfirmation": {
     "label": "Bevestigingscode",
@@ -208,5 +209,10 @@
   "guard": {
     "signInRequired": "Inloggen vereist",
     "signInDescription": "Log in om toegang te krijgen tot deze pagina"
+  },
+  "signUpFlow": {
+    "account_title": "Maak je account aan",
+    "code_title": "Controleer je e-mail",
+    "progress": "Stap {{current}} van {{total}}"
   }
 }

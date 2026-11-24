@@ -709,18 +709,17 @@ describe('RouteHandler render trees (cached pages, per-request pages)', () => {
       return handler;
     };
     const supabase = app(['@donotdev/supabase', 'entities']);
-    const entityPage = (h: NextRouteHandler, route: Record<string, unknown> = {}, tree?: 'site' | 'session') =>
-      h.generatePageFileContent(
-        {
-          filePath: '/app/src/pages/products/ProductPage.tsx',
-          relativePath: 'src/pages/products/ProductPage.tsx',
-          path: '/produits/:slug',
-          auth: false,
-          meta: { namespace: 'product', entity: 'products' },
-          ...route,
-        },
-        tree
-      );
+    const entityPage = (h: NextRouteHandler, route: Record<string, unknown> = {}, tree?: 'site' | 'session') => {
+      const page = {
+        filePath: '/app/src/pages/products/ProductPage.tsx',
+        relativePath: 'src/pages/products/ProductPage.tsx',
+        path: '/produits/:slug',
+        auth: false,
+        meta: { namespace: 'product', entity: 'products' },
+        ...route,
+      };
+      return h.generatePageFileContent(page, tree, [page]);
+    };
 
     it('lists every published record at build with the public reader', () => {
       const code = entityPage(supabase);
@@ -1226,7 +1225,7 @@ describe('RouteHandler entity pages: server identity (generateMetadata, JSON-LD,
   });
 
   it('reads the record once per request, sets generateMetadata, renders JSON-LD, 404s without a record', () => {
-    const code = app().generatePageFileContent(productRoute());
+    const code = app().generatePageFileContent(productRoute(), 'site', [productRoute()]);
     expect(transpile(code).diagnostics ?? []).toEqual([]);
     expect(code).toContain("import { notFound } from 'next/navigation';");
     expect(code).toContain("import { cache } from 'react';");
@@ -1268,7 +1267,7 @@ describe('RouteHandler entity pages: server identity (generateMetadata, JSON-LD,
   });
 
   it("reads the URL's language with 2+ languages", () => {
-    const code = app(['fr', 'en']).generatePageFileContent(productRoute());
+    const code = app(['fr', 'en']).generatePageFileContent(productRoute(), 'site', [productRoute()]);
     expect(transpile(code).diagnostics ?? []).toEqual([]);
     expect(code).toContain('type Params = Promise<{ lang: string; slug: string }>;');
     expect(code).toContain('const { lang, slug } = await params;\n  const seo = await pageSeo(lang, slug);');
@@ -1279,21 +1278,45 @@ describe('RouteHandler entity pages: server identity (generateMetadata, JSON-LD,
   });
 
   it("takes og:type from the PageMeta seo.type (default website), the app's trailingSlash", () => {
-    const code = app(['fr'], { trailingSlash: true }).generatePageFileContent(
-      productRoute({ meta: { namespace: 'product', entity: 'products' } })
-    );
+    const route = productRoute({ meta: { namespace: 'product', entity: 'products' } });
+    const code = app(['fr'], { trailingSlash: true }).generatePageFileContent(route, 'site', [route]);
     expect(code).toContain('type: "website",');
     expect(code).toContain('const TRAILING_SLASH = true;');
   });
 
   it('wraps a server page module, guards included, and keeps its props', () => {
     const handler = Object.assign(app(), { isClientComponent: () => false });
-    const code = handler.generatePageFileContent(
-      productRoute({ meta: { namespace: 'product', entity: 'products', signedInRedirect: '/compte' } })
-    );
+    const route = productRoute({
+      meta: { namespace: 'product', entity: 'products', signedInRedirect: '/compte' },
+    });
+    const code = handler.generatePageFileContent(route, 'site', [route]);
     expect(transpile(code).diagnostics ?? []).toEqual([]);
     expect(code).toContain("import ProductPage from '../../../../pages/products/ProductPage';");
     expect(code).toContain('<SignedInRedirect to={"/compte"}><ProductPage {...props} /></SignedInRedirect>');
+  });
+
+  // REGRESSION (BUGS #35): the BreadcrumbList named the URL prefix /produits (a 404)
+  it("embeds the BreadcrumbList routes: the page's ancestors (PageMeta parent), then its route", () => {
+    const page = productRoute({
+      meta: { namespace: 'product', entity: 'products', parent: '/catalogue', icon: 'Box' },
+    });
+    const routes = [
+      { path: '/', meta: { namespace: 'home' } },
+      { path: '/catalogue', meta: { namespace: 'catalogue', seo: { title: 'Catalogue' } } },
+      page,
+    ];
+    const code = app(['fr'], { defaultNamespace: 'accueil' }).generatePageFileContent(page, 'site', routes);
+    expect(transpile(code).diagnostics ?? []).toEqual([]);
+    expect(code).toContain(
+      'const BREADCRUMB_ROUTES: BreadcrumbRoute[] = [{"path":"/catalogue","meta":{"namespace":"catalogue","seo":{"title":"Catalogue"}}},' +
+        '{"path":"/produits/:slug","meta":{"namespace":"product","parent":"/catalogue"}}];'
+    );
+    expect(code).toContain('    routes: BREADCRUMB_ROUTES,\n    defaultNamespace: "accueil",\n');
+    expect(code).toContain(
+      "import type { BreadcrumbRoute, LanguageRouting } from '@donotdev/core/server';"
+    );
+    // Without the discovered routes the list cannot be built: fail loud
+    expect(() => app().generatePageFileContent(page)).toThrow(/needs the discovered routes/);
   });
 
   it('re-exports the generated metadata in the per-request tree', () => {

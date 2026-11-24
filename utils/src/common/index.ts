@@ -30,6 +30,7 @@ export * from './providers';
 export * from './entityTranslations';
 export * from './languagePath';
 export * from './requestLanguage';
+export * from './routeAncestors';
 export * from './routeMatch';
 export * from './singleton';
 export * from './updateMetadata';

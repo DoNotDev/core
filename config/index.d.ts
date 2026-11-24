@@ -910,11 +910,9 @@ export interface NextConfigOptions {
   serverShim?: ServerShimOptions;
   /**
    * Standard Next.js config options, passed through to Next (which validates them).
-   * `rewrites`, `redirects`, `headers` and `compiler.runAfterProductionCompile` are composed
-   * with the framework's: `headers` rules come after the framework header policy (last
-   * wins), the app's `runAfterProductionCompile` runs after the framework's (Safari < 14.1
-   * destructuring fix). The framework sets no `webpack` config (Next 16 builds with
-   * Turbopack): an app's own passes through. Prefer
+   * `rewrites`, `redirects` and `headers` are composed with the framework's: `headers` rules
+   * come after the framework header policy (last wins). The framework sets no `webpack` or
+   * `compiler` config (Next 16 builds with Turbopack): an app's own passes through. Prefer
    * `appConfig.headers` for CSP sources and cache overrides (same option on Vite).
    */
   [key: string]: any;

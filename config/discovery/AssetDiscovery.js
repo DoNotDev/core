@@ -7,6 +7,8 @@
  * @author AMBROISE PARK Consulting
  */
 
+import { createHash } from 'node:crypto';
+
 import { BaseDiscovery } from './BaseDiscovery.js';
 import {
   SCAN_PATTERNS,
@@ -22,6 +24,7 @@ import {
   flagFileName,
   telFieldFlagCodes,
 } from '../utils/flagAsset.js';
+import { createBuildError } from '../utils/buildError.js';
 
 /** Link-preview canvas and the box the logo is fitted into. */
 const OG_IMAGE = {
@@ -34,10 +37,86 @@ const OG_IMAGE = {
 
 /**
  * Build warning when the app has no `public/logo.svg` (once per discovery run; the build
- * continues without the logo and the icons generated from it).
+ * continues without the logo and the icons generated from it). Framework default icons found
+ * in `public/` ({@link FRAMEWORK_DEFAULT_ICON_SHA256}) are named after it.
  */
 export const MISSING_LOGO_WARNING =
   'public/logo.svg is missing: it is the site logo (Organization / publisher logo in the JSON-LD, the default logo) and the source of the favicon, PWA icons and og-image.png. Add public/logo.svg.';
+
+/**
+ * The icons derived from `public/logo.svg` by {@link AssetDiscovery#_generateMissingAssets}
+ * (`sharp`: rasterized, needs the sharp package; `favicon.svg` is a copy of the logo).
+ */
+const LOGO_OUTPUTS = [
+  { name: 'favicon.svg', sharp: false },
+  { name: 'favicon.ico', size: 32, sharp: true },
+  { name: 'apple-touch-icon.png', size: 180, sharp: true },
+  { name: 'icon-192x192.png', size: 192, sharp: true },
+  { name: 'icon-512x512.png', size: 512, sharp: true },
+  { name: DEFAULT_OG_IMAGE.slice(1), sharp: true },
+];
+
+/**
+ * Record of the icons generated from `logo.svg`, relative to the app root and committed with
+ * the app (outside `public/`: never deployed). JSON, one entry per generated icon:
+ * `{ "<file in public/>": { "logo": "<sha256 of logo.svg>", "sha256": "<sha256 of the icon>" } }`.
+ * An icon whose bytes still match its entry is the generator's, regenerated when `logo.svg`
+ * changes; any other icon is the app's own and never touched.
+ */
+export const ICON_STATE_FILE = '.dndev/icons.json';
+
+/** Build warning when `logo.svg` exists and sharp is not installed (once per discovery run). */
+export const SHARP_MISSING_WARNING =
+  'sharp is not installed: favicon.ico, apple-touch-icon.png, icon-192x192.png, icon-512x512.png and og-image.png cannot be generated from public/logo.svg or kept in sync with it. Add sharp to the app devDependencies.';
+
+/**
+ * sha256 of every framework `logo.svg` (`packages/ui/assets/logo.svg`, the CLI templates'
+ * `logo.svg.example`, `apps/dndev/public/logo.svg`, current and past versions). An app with
+ * one of these logos is a DoNotDev app: its DoNotDev icons are correct and never replaced.
+ * Regenerate: see {@link FRAMEWORK_DEFAULT_ICON_SHA256}.
+ */
+export const FRAMEWORK_DEFAULT_LOGO_SHA256 = new Set([
+  '2b2e767d7d7b8f8775f6f7c3c670f4dba20d5b721da40812b2e76b70efe5bcb2',
+  '8a6ee0566fb17bfd659284911fe9e3913fdb6b33b339b0912a68c9f6f825e690',
+]);
+
+/**
+ * sha256 of every icon the framework ships or has shipped, which an app must never deploy:
+ * `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `icon-192x192.png`,
+ * `icon-512x512.png`, `og-image.png` (and their `.example` template copies) in every git
+ * revision of `packages/ui/assets`, `packages/cli/templates/app-demo/public`,
+ * `packages/cli/templates/app-dndev/public` and `apps/dndev/public`, plus the output of
+ * {@link AssetDiscovery#_generateMissingAssets} for each {@link FRAMEWORK_DEFAULT_LOGO_SHA256}
+ * logo (sharp 0.35.5 / libvips 8.18.7). Hard-coded, never computed at runtime.
+ * Regenerate after changing one of those files or the generator's rendering (from the repo
+ * root, zsh):
+ *   for c in $(git rev-list --all -- packages/ui/assets packages/cli/templates/app-demo/public packages/cli/templates/app-dndev/public apps/dndev/public); do
+ *     git ls-tree -r $c -- packages/ui/assets packages/cli/templates/app-demo/public packages/cli/templates/app-dndev/public apps/dndev/public; done |
+ *     grep -E '/(favicon\.(svg|ico)|apple-touch-icon\.png|icon-(192x192|512x512)\.png|og-image\.png|logo\.svg)(\.example)?$' |
+ *     awk '{print $3}' | sort -u | while read b; do git cat-file blob $b | sha256sum; done
+ * (the `logo.svg` hashes go to {@link FRAMEWORK_DEFAULT_LOGO_SHA256}), then, for each
+ * framework logo, run discovery on an empty app whose only file is `public/logo.svg` and
+ * `sha256sum` its generated `public/` icons.
+ */
+export const FRAMEWORK_DEFAULT_ICON_SHA256 = new Set([
+  // Shipped files
+  '2b2e767d7d7b8f8775f6f7c3c670f4dba20d5b721da40812b2e76b70efe5bcb2', // favicon.svg
+  '74f31fd5ca0d86421b467b2191f650d18ddc8334103142fcd3fc92d3e64a56b9', // favicon.ico (ui/assets)
+  '3ed7374c80df501da384dcbec914e9a2270b2d0af4866061a5f5a61172d68b29', // favicon.ico (apps/dndev)
+  'd6f17727836ccdd5dd784e6576bfe3293b4ea8523c25a98aa092be3f30594a59', // favicon.ico.example
+  '69970478481c9a5cd9e4c3437c325a315d321e6b4b055a7da29a25d71bcf6b85', // apple-touch-icon.png (ui/assets)
+  'c5de4c60c6412ad995ea48f5d4f6204f2874473f28044bc1a21aaf0ee224f6a6', // apple-touch-icon.png (templates, apps/dndev)
+  'cf96587a25bbe3d259275f34f22fe5212188c2e1c8e74bf0cf7ad6fb72c82ca1', // icon-192x192.png
+  '376d735f3903c8320c41df554900b03a93c1659508e91b75e0a9752464238fff', // icon-512x512.png
+  'b6c933dcd6d075296cdff68aaa8f7b64287477fb19d666455ac5b94767ec88dd', // og-image.png (apps/dndev)
+  // Generator output from the framework logos
+  // (apple-touch-icon.png, icon-*.png and og-image.png equal the shipped files above)
+  '8a6ee0566fb17bfd659284911fe9e3913fdb6b33b339b0912a68c9f6f825e690', // favicon.svg
+  '3c38ea7022ee2cc83fb8d4cc2e54f09ab88dd056fc5724ba207b5fde762d879d', // favicon.ico
+]);
+
+/** @param {Buffer} bytes @returns {string} Hex sha256 */
+const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
 /** Public URL of the web app manifest (`public/manifest.json`, `<link rel="manifest">`). */
 const WEB_APP_MANIFEST = '/manifest.json';
@@ -78,7 +157,8 @@ export class AssetDiscovery extends BaseDiscovery {
    * What is missing in `public/`, before the scan: the framework default assets
    * (`manifest.json`, not the logo) and the flags of the app's languages
    * ({@link useFlagCodes}, {@link _ensureFlags}) are copied, and the PWA icons, favicon
-   * and `og-image.png` are generated from `public/logo.svg` (`generateAssets !== false`).
+   * and `og-image.png` are kept in sync with `public/logo.svg` (`generateAssets !== false`,
+   * {@link _generateMissingAssets}).
    * @returns {Promise<{ copiedAssets: string[], generatedAssets: string[] }>}
    */
   async _prepareFiles() {
@@ -110,11 +190,28 @@ export class AssetDiscovery extends BaseDiscovery {
     const logoExists = this.pathResolver.pathExists(logoPath);
 
     if (!logoExists) {
-      // A warning, never a failure: the build goes on without the logo and its icons
-      this.logger.warn(MISSING_LOGO_WARNING);
+      // A warning, never a failure: the build goes on without the logo and its icons. The
+      // framework default icons it finds would deploy the DoNotDev brand: named
+      const defaults = [];
+      for (const { name } of LOGO_OUTPUTS) {
+        const iconPath = this.pathResolver.resolveAppPath(`public/${name}`);
+        if (
+          this.pathResolver.pathExists(iconPath) &&
+          FRAMEWORK_DEFAULT_ICON_SHA256.has(
+            sha256(await this.pathResolver.read(iconPath, { format: 'buffer' }))
+          )
+        ) {
+          defaults.push(`public/${name}`);
+        }
+      }
+      this.logger.warn(
+        defaults.length > 0
+          ? `${MISSING_LOGO_WARNING} These icons are framework defaults (the DoNotDev logo): ${defaults.join(', ')}.`
+          : MISSING_LOGO_WARNING
+      );
     }
 
-    // 3. Generate missing PWA assets from logo.svg (if it exists and generation enabled)
+    // 3. Sync the PWA assets with logo.svg (if it exists and generation enabled)
     let generatedAssets = [];
     const finalLogoPath = this.pathResolver.resolveAppPath('public/logo.svg');
     if (
@@ -638,13 +735,13 @@ export class AssetDiscovery extends BaseDiscovery {
    * Render the link-preview image: the logo centered on a 1200x630 canvas.
    * The SVG is rasterized at the density of its final size, so it stays sharp.
    * @param {Function} sharp - sharp factory
-   * @param {string} logoPath - Absolute path to logo.svg
+   * @param {Buffer} logoBytes - logo.svg (bytes, not its path: sharp caches files by path)
    * @returns {Promise<Buffer>} PNG bytes
    */
-  async _renderOgImage(sharp, logoPath) {
-    const { width, height } = await sharp(logoPath).metadata();
+  async _renderOgImage(sharp, logoBytes) {
+    const { width, height } = await sharp(logoBytes).metadata();
     const scale = Math.min(OG_IMAGE.logoWidth / width, OG_IMAGE.logoHeight / height);
-    const logo = await sharp(logoPath, { density: Math.ceil(72 * scale) })
+    const logo = await sharp(logoBytes, { density: Math.ceil(72 * scale) })
       .resize(OG_IMAGE.logoWidth, OG_IMAGE.logoHeight, {
         fit: 'inside',
       })
@@ -665,11 +762,74 @@ export class AssetDiscovery extends BaseDiscovery {
   }
 
   /**
-   * Generate missing PWA assets from logo.svg
-   * Creates favicon, icons, and manifest assets from logo.svg if they don't exist, in the
-   * app's `public/` (absolute paths: never relative to the working directory)
+   * sharp, the image library that rasterizes `logo.svg` (an optional peer of the app).
+   * @returns {Promise<Function|null>} The sharp factory, or `null` when it is not installed
+   */
+  async _importSharp() {
+    const sharp = await import('sharp').catch(() => null);
+    return sharp ? sharp.default : null;
+  }
+
+  /**
+   * Bytes of one icon derived from `logo.svg` ({@link LOGO_OUTPUTS}).
+   * @param {{ name: string, size?: number, sharp: boolean }} output - The icon
+   * @param {Buffer} logoBytes - `public/logo.svg` (rendered from its bytes: sharp caches
+   *   files by path, a changed logo would render as the old one in the same process)
+   * @param {Function} sharp - sharp factory ({@link _importSharp})
+   * @returns {Promise<Buffer>}
+   */
+  async _renderLogoOutput(output, logoBytes, sharp) {
+    if (output.name === 'favicon.svg') return logoBytes;
+    if (output.name === DEFAULT_OG_IMAGE.slice(1)) {
+      return this._renderOgImage(sharp, logoBytes);
+    }
+    // favicon.ico is PNG bytes: every browser reads a PNG favicon.ico
+    return sharp(logoBytes)
+      .resize(output.size, output.size, {
+        fit: 'contain',
+        background: { r: 255, g: 255, b: 255, alpha: 0 },
+      })
+      .png()
+      .toBuffer();
+  }
+
+  /**
+   * The record of the icons generated from `logo.svg` ({@link ICON_STATE_FILE}).
+   * @returns {Promise<Record<string, { logo: string, sha256: string }>>} `{}` when the app has none
+   * @throws {Error} Build error when the file is not valid JSON
+   */
+  async _readIconState() {
+    const statePath = this.pathResolver.resolveAppPath(ICON_STATE_FILE);
+    if (!this.pathResolver.pathExists(statePath)) return {};
+    const text = await this.pathResolver.read(statePath, { format: 'text' });
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      throw createBuildError(
+        'dndev-assets',
+        `${ICON_STATE_FILE} is not valid JSON (${error.message}): fix it, or delete it and the icons generated from public/logo.svg to regenerate both.`,
+        'invalid-configuration'
+      );
+    }
+  }
+
+  /**
+   * Keep the icons derived from `public/logo.svg` ({@link LOGO_OUTPUTS}) in sync with it, in
+   * the app's `public/` (absolute paths: never relative to the working directory). Each output:
+   * - missing: generated;
+   * - a framework default ({@link FRAMEWORK_DEFAULT_ICON_SHA256}): replaced, with a warning;
+   * - generated by this method (its sha256 is the one in {@link ICON_STATE_FILE}) from another
+   *   `logo.svg`: regenerated;
+   * - anything else is the app's own icon: never touched.
+   * An app whose `logo.svg` is the framework's ({@link FRAMEWORK_DEFAULT_LOGO_SHA256}: the
+   * DoNotDev apps) only gets its missing icons: its DoNotDev icons are correct. Every icon this
+   * method writes is recorded in {@link ICON_STATE_FILE} (sha256 of `logo.svg` and of the
+   * output), written only when the record changes. Without sharp only `favicon.svg` is
+   * generated, with a warning.
    * @param {string} appRoot - Application root directory
-   * @returns {Promise<Object>} Generation results
+   * @returns {Promise<{ generated: string[], skipped: string[], error: string|null }>} File
+   *   names written, and left as they are
+   * @throws {Error} Build error when {@link ICON_STATE_FILE} is not valid JSON
    */
   async _generateMissingAssets(appRoot) {
     const logoPath = this.pathResolver.resolveAppPath('public/logo.svg');
@@ -686,117 +846,104 @@ export class AssetDiscovery extends BaseDiscovery {
       };
     }
 
-    // Assets that require sharp for conversion
-    const sharpAssets = [
-      { name: 'favicon.ico', size: 32, format: 'ico' },
-      { name: 'apple-touch-icon.png', size: 180, format: 'png' },
-      { name: 'icon-192x192.png', size: 192, format: 'png' },
-      { name: 'icon-512x512.png', size: 512, format: 'png' },
-    ];
+    const logoBytes = await this.pathResolver.read(logoPath, {
+      format: 'buffer',
+    });
+    if (!logoBytes) {
+      return {
+        generated: [],
+        skipped: LOGO_OUTPUTS.map((o) => o.name),
+        error: 'Failed to read logo.svg',
+      };
+    }
+    const logoHash = sha256(logoBytes);
+    const frameworkLogo = FRAMEWORK_DEFAULT_LOGO_SHA256.has(logoHash);
+    const state = await this._readIconState();
+    const nextState = {};
 
-    // Assets that are simple copies (no sharp needed)
-    const copyAssets = [{ name: 'favicon.svg', format: 'svg' }];
+    const sharp = await this._importSharp();
+    if (!sharp) {
+      this.logger.warn(SHARP_MISSING_WARNING);
+    }
 
     const generated = [];
     const skipped = [];
 
-    try {
-      // Read logo content once (as text - logo files are text-based SVGs or similar)
-      const logoContent = await this.pathResolver.read(logoPath, {
-        format: 'text',
-      });
-      if (!logoContent) {
-        return {
-          generated: [],
-          skipped: [...copyAssets, ...sharpAssets].map((a) => a.name),
-          error: 'Failed to read logo.svg',
-        };
-      }
+    for (const output of LOGO_OUTPUTS) {
+      const outputPath = `${publicDir}/${output.name}`;
+      const recorded = state[output.name];
+      let replacedDefault = false;
 
-      // 1. Handle copy assets first (no sharp needed)
-      for (const asset of copyAssets) {
-        const publicPath = `${publicDir}/${asset.name}`;
-        if (this.pathResolver.pathExists(publicPath)) {
-          skipped.push(asset.name);
+      if (this.pathResolver.pathExists(outputPath)) {
+        const currentHash = sha256(
+          await this.pathResolver.read(outputPath, { format: 'buffer' })
+        );
+        const tracked = recorded?.sha256 === currentHash;
+        if (tracked) nextState[output.name] = recorded;
+
+        if (frameworkLogo) {
+          skipped.push(output.name);
           continue;
         }
-
-        try {
-          await this.pathResolver.write(publicPath, logoContent);
-          generated.push(asset.name);
-        } catch (error) {
-          this.logger.debug(`Failed to copy ${asset.name}: ${error.message}`);
-          skipped.push(asset.name);
+        if (FRAMEWORK_DEFAULT_ICON_SHA256.has(currentHash)) {
+          replacedDefault = true;
+        } else if (!tracked) {
+          this.logger.debug(
+            `public/${output.name} is the app's own (not generated from logo.svg): left as is`
+          );
+          skipped.push(output.name);
+          continue;
+        } else if (recorded.logo === logoHash) {
+          skipped.push(output.name);
+          continue;
         }
       }
 
-      // 2. Handle sharp assets (require image conversion)
-      const sharp = await import('sharp').catch(() => null);
-      if (!sharp) {
-        this.logger.debug('sharp not installed, skipping PNG/ICO generation');
-        skipped.push(...sharpAssets.map((a) => a.name));
-      } else {
-        for (const asset of sharpAssets) {
-          const publicPath = `${publicDir}/${asset.name}`;
-          if (this.pathResolver.pathExists(publicPath)) {
-            skipped.push(asset.name);
-            continue;
-          }
-
-          try {
-            const sharpInstance = sharp
-              .default(logoPath)
-              .resize(asset.size, asset.size, {
-                fit: 'contain',
-                background: { r: 255, g: 255, b: 255, alpha: 0 },
-              });
-
-            let outputBuffer;
-            if (asset.format === 'ico') {
-              outputBuffer = await sharpInstance.toFormat('png').toBuffer();
-            } else {
-              outputBuffer = await sharpInstance
-                .toFormat(asset.format)
-                .toBuffer();
-            }
-
-            await this.pathResolver.write(publicPath, outputBuffer);
-            generated.push(asset.name);
-          } catch (error) {
-            this.logger.debug(
-              `Failed to generate ${asset.name}: ${error.message}`
-            );
-            skipped.push(asset.name);
-          }
-        }
-
-        const ogName = DEFAULT_OG_IMAGE.slice(1);
-        if (this.pathResolver.pathExists(`${publicDir}/${ogName}`)) {
-          skipped.push(ogName);
-        } else {
-          try {
-            const ogImage = await this._renderOgImage(sharp.default, logoPath);
-            await this.pathResolver.write(`${publicDir}/${ogName}`, ogImage);
-            generated.push(ogName);
-          } catch (error) {
-            this.logger.debug(`Failed to generate ${ogName}: ${error.message}`);
-            skipped.push(ogName);
-          }
-        }
+      if (output.sharp && !sharp) {
+        skipped.push(output.name);
+        continue;
       }
 
-      return {
-        generated,
-        skipped,
-        error: null,
-      };
-    } catch (error) {
-      this.logger.debug(`Asset generation failed: ${error.message}`);
-      return {
-        generated: [],
-        skipped: [...copyAssets, ...sharpAssets].map((a) => a.name),
-        error: error.message,
-      };
+      try {
+        const bytes = await this._renderLogoOutput(output, logoBytes, sharp);
+        if (
+          !(await this.pathResolver.write(outputPath, bytes, {
+            overwrite: true,
+          }))
+        ) {
+          throw new Error(`cannot write ${outputPath}`);
+        }
+        nextState[output.name] = { logo: logoHash, sha256: sha256(bytes) };
+        generated.push(output.name);
+        if (replacedDefault) {
+          this.logger.warn(`replaced framework default public/${output.name}`);
+        }
+      } catch (error) {
+        this.logger.debug(`Failed to generate ${output.name}: ${error.message}`);
+        skipped.push(output.name);
+      }
+    }
+
+    await this._writeIconState(state, nextState);
+
+    return { generated, skipped, error: null };
+  }
+
+  /**
+   * Write {@link ICON_STATE_FILE} when its record changed (never an empty file for an app
+   * without generated icons).
+   * @param {Record<string, { logo: string, sha256: string }>} previous - {@link _readIconState}
+   * @param {Record<string, { logo: string, sha256: string }>} next - Record after generation
+   */
+  async _writeIconState(previous, next) {
+    if (JSON.stringify(previous) === JSON.stringify(next)) return;
+    const statePath = this.pathResolver.resolveAppPath(ICON_STATE_FILE);
+    if (Object.keys(next).length === 0) {
+      await this.pathResolver.remove(statePath);
+      return;
+    }
+    if (!(await this.pathResolver.write(statePath, next, { overwrite: true }))) {
+      throw new Error(`Asset generation: cannot write ${statePath}`);
     }
   }
 }

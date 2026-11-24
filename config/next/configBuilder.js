@@ -4,7 +4,6 @@
  */
 
 import fs from 'node:fs';
-import { lowerClientDestructuring } from './lowerDestructuring.js';
 import { createPostCSSConfig } from './postcss.js';
 import { NEXT_PAGE_EXTENSIONS } from './nextFiles.js';
 import { isPlainObject } from './utils.js';
@@ -164,10 +163,9 @@ export function createHeadersConfig({ policyRules, originalHeaders }) {
  * Build the final Next.js config
  *
  * Assembles transpilePackages, Turbopack resolveAlias (CSS, blog content, missing optional
- * deps), rewrites/redirects/headers, the production post-compile step (Safari < 14.1
- * destructuring fix, `lowerDestructuring.js`) and environment variables. Next 16 builds
- * with Turbopack: the framework sets no webpack config (an app's own `webpack` passes
- * through untouched in `restNextConfig`).
+ * deps), rewrites/redirects/headers and environment variables. Next 16 builds with
+ * Turbopack: the framework sets no webpack or `compiler` config (an app's own `webpack` and
+ * `compiler` pass through untouched in `restNextConfig`).
  * The discovery handlers contribute no config of their own: they generate their files in
  * `runDiscoveries`, and their rewrites reach `rewritesConfig` (`createRewritesConfig`, every
  * handler's `getAPIRewrites`, none for `output: 'export'`).
@@ -319,19 +317,6 @@ export function buildFinalConfig({
         pagesBufferLength: 5,
       },
     }),
-
-    // After the production compile (Turbopack): the Safari < 14.1 destructuring fix on the
-    // client chunks, for apps whose browserslist reaches it; then the app's own hook
-    compiler: {
-      ...restNextConfig?.compiler,
-      runAfterProductionCompile: async (build) => {
-        const lowered = await lowerClientDestructuring(build);
-        if (lowered > 0) {
-          logger.info(`Safari < 14.1 destructuring fix: ${lowered} client chunks lowered`);
-        }
-        await restNextConfig?.compiler?.runAfterProductionCompile?.(build);
-      },
-    },
 
     // Skip rewrites/redirects for static export (they don't work with output: 'export')
     // Only set rewrites if not static export AND there are actual rewrites

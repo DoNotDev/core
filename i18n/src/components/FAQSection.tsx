@@ -11,12 +11,49 @@
  */
 
 import type { TFunction } from 'i18next';
+import type { ReactNode } from 'react';
 
-import { Accordion, Stack, Text } from '@donotdev/components';
+import { Accordion, Stack, Text, type GridCols } from '@donotdev/components';
 import { translateObjectArray } from '@donotdev/utils';
 
-/** Props for the FAQ accordion section with i18n support. */
-export interface FAQSectionProps {
+/** One FAQ entry, already translated and rendered by the caller. */
+export interface FAQItem {
+  /** Accordion trigger content, rendered as given */
+  question: ReactNode;
+
+  /** Accordion panel content, rendered as given */
+  answer: ReactNode;
+}
+
+interface FAQSectionBaseProps {
+  /** CSS class name for the container */
+  className?: string;
+
+  /** CSS class name for each accordion item */
+  itemClassName?: string;
+
+  /**
+   * Lay the questions out in a responsive grid; passed to the Accordion.
+   * Same type as `Section`'s `gridCols`. Absent = one column.
+   * @example [1, 1, 2, 2] - 1 column on mobile/tablet, 2 on laptop/desktop
+   */
+  gridCols?: GridCols;
+
+  /** ARIA label for the FAQ section */
+  'aria-label'?: string;
+}
+
+/** Data-driven FAQ: a ready list built by the app. */
+interface FAQSectionItemsProps extends FAQSectionBaseProps {
+  /** Ready list of translated questions and answers, rendered in order */
+  items: FAQItem[];
+  t?: never;
+  keyPrefix?: never;
+  maxIndex?: never;
+}
+
+/** Static FAQ: items read from translation keys `${keyPrefix}.N.q` / `.a`. */
+interface FAQSectionKeysProps extends FAQSectionBaseProps {
   /** Translation function from useTranslation hook */
   t: TFunction;
 
@@ -25,65 +62,66 @@ export interface FAQSectionProps {
 
   /** Maximum number of FAQ items to check (exclusive, so 50 means indices 0-49) */
   maxIndex?: number;
-
-  /** CSS class name for the container */
-  className?: string;
-
-  /** CSS class name for each accordion item */
-  itemClassName?: string;
-
-  /** ARIA label for the FAQ section */
-  'aria-label'?: string;
+  items?: never;
 }
 
+/** Props for the FAQ accordion section: either `items`, or `t` + `keyPrefix`. */
+export type FAQSectionProps = FAQSectionItemsProps | FAQSectionKeysProps;
+
 /**
- * FAQSection component for displaying frequently asked questions
- * Handles translations internally using translateObjectArray
+ * FAQSection component for displaying frequently asked questions.
+ * Keys mode builds its items with translateObjectArray; both modes share one render path.
  *
  * @example
- * // Basic usage
+ * // Static FAQ from translation keys
  * const { t } = useTranslation(['faq']);
  * <FAQSection t={t} keyPrefix="faqs.items" maxIndex={30} />
  *
  * @example
- * // With custom styling
+ * // Data-driven FAQ: items built by the app
  * <FAQSection
- *   t={t}
- *   keyPrefix="faqs.items"
- *   maxIndex={30}
- *   className="mx-auto" style={{ maxWidth: '56rem' }}
- *   aria-label="Frequently Asked Questions"
+ *   gridCols={[1, 1, 2, 2]}
+ *   items={faq.map(({ question, answer }) => ({
+ *     question: <Text as="span" weight="semibold">{question}</Text>,
+ *     answer: <Text variant="muted">{answer}</Text>,
+ *   }))}
  * />
  */
-function FAQSection({
-  t,
-  keyPrefix,
-  maxIndex = 50,
-  className = '',
-  'aria-label': ariaLabel = 'Frequently Asked Questions',
-}: FAQSectionProps) {
-  const faqs = translateObjectArray(t, keyPrefix, maxIndex, [
-    'q',
-    'a',
-  ] as const);
+function FAQSection(props: FAQSectionProps) {
+  const { gridCols, className = '', 'aria-label': ariaLabel = 'Frequently Asked Questions' } = props;
 
-  if (faqs.length === 0) {
+  const items: FAQItem[] =
+    props.items ??
+    translateObjectArray(props.t, props.keyPrefix, props.maxIndex ?? 50, [
+      'q',
+      'a',
+    ] as const).map((faq) => ({
+      question: (
+        <Text as="span" level="h4">
+          {faq.q}
+        </Text>
+      ),
+      answer: <Text variant="muted">{faq.a}</Text>,
+    }));
+
+  if (items.length === 0) {
     return null;
   }
 
-  const accordionItems = faqs.map((faq, index) => ({
+  const accordionItems = items.map(({ question, answer }, index) => ({
     value: `item-${index}`,
-    trigger: (
-      <Text as="span" level="h4">
-        {faq.q}
-      </Text>
-    ),
-    content: <Text variant="muted">{faq.a}</Text>,
+    trigger: question,
+    content: answer,
   }));
 
   return (
     <Stack aria-label={ariaLabel} className={className}>
-      <Accordion type="single" collapsible items={accordionItems} />
+      <Accordion
+        type="single"
+        collapsible
+        items={accordionItems}
+        gridCols={gridCols}
+      />
     </Stack>
   );
 }

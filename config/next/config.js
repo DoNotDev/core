@@ -251,9 +251,8 @@ function defineNextConfig(userOptions = {}) {
     }
 
     // The app's own Next options (every defineNextConfig key the framework does not own),
-    // composed with the framework's below: rewrites, redirects, headers and
-    // compiler.runAfterProductionCompile are merged; the rest (an own `webpack` included)
-    // passes through.
+    // composed with the framework's below: rewrites, redirects and headers are merged; the
+    // rest (an own `webpack` or `compiler` included) passes through.
     const safeNextConfigOptions = nextConfigOptions;
 
     const {

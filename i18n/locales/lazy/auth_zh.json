@@ -135,7 +135,8 @@
     "weak_password": "密码过弱。请选择更强的密码。",
     "breached_password": "此密码曾出现在数据泄露事件中。请选择其他密码。",
     "invalid_code": "验证码不正确或已过期。请查看邮件或重新获取验证码。",
-    "code_expired": "验证码已过期。请重新获取验证码。"
+    "code_expired": "验证码已过期。请重新获取验证码。",
+    "captcha_failed": "安全验证失败，请重试。"
   },
   "codeConfirmation": {
     "label": "验证码",
@@ -208,5 +209,10 @@
   "guard": {
     "signInRequired": "需要登录",
     "signInDescription": "请登录以访问此页面"
+  },
+  "signUpFlow": {
+    "account_title": "创建您的账户",
+    "code_title": "查收您的邮件",
+    "progress": "第 {{current}} 步，共 {{total}} 步"
   }
 }

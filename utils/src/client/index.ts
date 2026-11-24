@@ -29,3 +29,4 @@ export * from './eventEmitter';
 export * from './redirectUtils';
 export * from './degradedApis';
 export * from './emailVerification';
+export * from './captcha';

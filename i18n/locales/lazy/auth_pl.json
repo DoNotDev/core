@@ -135,7 +135,8 @@
     "weak_password": "Hasło jest zbyt słabe. Wybierz silniejsze hasło.",
     "breached_password": "To hasło wyciekło w incydencie naruszenia danych. Wybierz inne hasło.",
     "invalid_code": "Ten kod jest nieprawidłowy lub wygasł. Sprawdź e-mail lub poproś o nowy kod.",
-    "code_expired": "Ten kod wygasł. Poproś o nowy kod."
+    "code_expired": "Ten kod wygasł. Poproś o nowy kod.",
+    "captcha_failed": "Weryfikacja bezpieczeństwa nie powiodła się. Spróbuj ponownie."
   },
   "codeConfirmation": {
     "label": "Kod potwierdzający",
@@ -208,5 +209,10 @@
   "guard": {
     "signInRequired": "Wymagane logowanie",
     "signInDescription": "Zaloguj się, aby uzyskać dostęp do tej strony"
+  },
+  "signUpFlow": {
+    "account_title": "Utwórz konto",
+    "code_title": "Sprawdź swoją skrzynkę e-mail",
+    "progress": "Krok {{current}} z {{total}}"
   }
 }

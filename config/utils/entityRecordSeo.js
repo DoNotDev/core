@@ -2,8 +2,8 @@
  * @fileoverview Entity record page identity (Next runtime, Vite prerender)
  * @description The page identity of one public entity record (`/produits/:slug`): title
  * `<record title> | <site name>`, description, absolute image, og:type, URL and Product
- * JSON-LD and BreadcrumbList JSON-LD (ending with the record title, the label the visible
- * breadcrumb shows), from the entity definition (`deriveEntitySeo`, `buildProductJsonLd`,
+ * JSON-LD and BreadcrumbList JSON-LD (the page's ancestor chain, then the record title, the
+ * labels the visible breadcrumb shows), from the entity definition (`deriveEntitySeo`, `buildProductJsonLd`,
  * `buildBreadcrumbJsonLd`) in the page language. One derivation for both platforms: the Next entity page maps it to its
  * `generateMetadata` (`entityPageSeo`), the Vite build writes it into each record's
  * static HTML (`recordHeadTags`). Platform-neutral: the core helpers are passed in
@@ -95,9 +95,11 @@ export function entityReadSchemas(entities, routes, createSchemas) {
  * without a record title), description, image (absolute: the record's first, else the
  * site's default `context.defaultImage`, `appConfig.seo.defaultImage` or `DEFAULT_OG_IMAGE`), og:type from the page's `seo.type`, the page URL in
  * its language and trailing-slash form, Product JSON-LD for `type: 'product'`, and the
- * BreadcrumbList JSON-LD (site home, the URL's segments as the visible breadcrumb names
- * them, the record title last; none without a record title). The record's text is
- * formatted in the page's language with the entity's translations (`translate`).
+ * BreadcrumbList JSON-LD (site home, the page's ancestors `routeAncestors` over
+ * `context.routes`, named by their titles as the visible breadcrumb names them, the record
+ * title last; none without a record title). The record's text is formatted in the page's
+ * language with the entity's translations (`translate`), the ancestors' titles with
+ * theirs.
  *
  * @param {Record<string, unknown>} record - The public record the page URL names
  * @param {import('../next/index.js').EntityPageContext} context - Route, URL, language and the shared helpers
@@ -107,7 +109,9 @@ export function entityReadSchemas(entities, routes, createSchemas) {
  *
  * @example
  * entityRecordSeo(record, { route, value: slug, language, routing, baseUrl, trailingSlash, siteName,
- *   defaultImage: '/og-image.png', type: 'product', entities, translate, deriveEntitySeo, buildProductJsonLd, buildBreadcrumbJsonLd, languageUrl });
+ *   defaultImage: '/og-image.png', type: 'product', entities, translate, deriveEntitySeo, buildProductJsonLd, buildBreadcrumbJsonLd, languageUrl,
+ *   routes: [{ path: '/catalogue', meta: { namespace: 'catalogue' } }, { path: '/produits/:slug', meta: { parent: '/catalogue' } }],
+ *   defaultNamespace: 'home' });
  * // { url: 'https://shop.example/en/produits/serum', title: 'Bakuchiol Serum | Shop', ... }
  */
 export function entityRecordSeo(record, context) {
@@ -145,8 +149,18 @@ export function entityRecordSeo(record, context) {
     image,
     type,
     jsonLd,
+    // Home, the page's ancestors (URL prefixes that are routes, PageMeta `parent`) named
+    // by their titles in the page language, the record title last
     breadcrumb: seo.title
-      ? context.buildBreadcrumbJsonLd(path, siteName, pageUrl, seo.title)
+      ? context.buildBreadcrumbJsonLd({
+          pathname: path,
+          routes: context.routes,
+          siteName,
+          t: context.translate([context.defaultNamespace]),
+          defaultNs: context.defaultNamespace,
+          pageUrl,
+          lastName: seo.title,
+        })
       : null,
   };
 }

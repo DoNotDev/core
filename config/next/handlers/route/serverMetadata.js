@@ -9,7 +9,28 @@
  */
 
 import { routeParams } from '../../../utils/publicPages.js';
+import { routeAncestors } from '../../../utils/routeAncestors.js';
 import { publicRecordsRoute } from '../../../utils/SEOGenerator.js';
+
+/**
+ * Routes an entity page's BreadcrumbList reads, embedded in its generated page: the
+ * page's route and its ancestors (`routeAncestors` over the discovered routes), each with
+ * the PageMeta its label and chain read (`namespace`, `seo`, `parent`).
+ *
+ * @param {{ path: string, meta?: Object }} route - The entity page's route
+ * @param {ReadonlyArray<{ path: string, meta?: Object }>} routes - Discovered routes
+ * @returns {Array<{ path: string, meta: Object }>} Ancestors (top first), then the page's route
+ */
+function breadcrumbRoutes(route, routes) {
+  return [...routeAncestors(route.path, routes), route].map(({ path, meta = {} }) => ({
+    path,
+    meta: {
+      ...(meta.namespace && { namespace: meta.namespace }),
+      ...(meta.seo && { seo: meta.seo }),
+      ...(meta.parent && { parent: meta.parent }),
+    },
+  }));
+}
 
 export const serverMetadataMethods = {
   /**
@@ -124,7 +145,7 @@ export const serverMetadataMethods = {
       }
       // Same checks as the generation (reader, languages, site name), outside its
       // per-page error handling
-      this.entityMetadataExport(route, this.entityPageReader(route, 'site'));
+      this.entityMetadataExport(route, this.entityPageReader(route, 'site'), routes);
     }
   },
 
@@ -212,7 +233,8 @@ export async function generateStaticParams() {
    *   translations, in the URL's language). Canonical, `og:url` and hreflang stay with
    *   AutoMetaTags, which emits them on every route.
    * - The page: Product JSON-LD (`seo.type: 'product'` in PageMeta) and the BreadcrumbList
-   *   (record title last; AutoMetaTags emits none on `recordBreadcrumbPaths`) as
+   *   (home, the page's ancestors `routeAncestors` named by their titles, the record title
+   *   last; AutoMetaTags emits none on `recordBreadcrumbPaths`) as
    *   `<script type="application/ld+json">`, og:types the metadata API cannot render. They
    *   render AFTER the page: the layout's `main > :first-child` rule (layout-variables.css)
    *   makes the page grow and never shrink, so a script first in `main` let the page shrink
@@ -224,17 +246,25 @@ export async function generateStaticParams() {
    *
    * @param {Object} route - Route object (`path`, `meta`, `relativePath`)
    * @param {{ expr: string | null, schemas: string | null }} reader - The page's reader ({@link entityPageReader})
+   * @param {ReadonlyArray<{ path: string, meta?: Object }>} routes - Discovered routes: the
+   *   BreadcrumbList's ancestors ({@link breadcrumbRoutes}, embedded as `BREADCRUMB_ROUTES`)
    * @returns {{ vendorImports: string, named: Record<string, string[]>, typeImports: string,
    *   appImports: string, code: string, render: string } | null} Imports (vendor lines,
    *   framework names by module, type lines, app lines), module code (`Params` type,
    *   generateMetadata) and the default export's body (`{PAGE}`: the page element); null
    *   for any other route
-   * @throws {Error} When the app's languages are not set
+   * @throws {Error} When the app's languages or the discovered routes are not given, or a
+   *   PageMeta `parent` is invalid (route discovery rejects it first)
    * @since 0.3.2
    */
-  entityMetadataExport(route, reader) {
+  entityMetadataExport(route, reader, routes) {
     const recordsRoute = this.entityMetadataRoute(route);
     if (!recordsRoute) return null;
+    if (!Array.isArray(routes)) {
+      throw new Error(
+        `Route handler: ${route.path} is an entity page; its BreadcrumbList needs the discovered routes`
+      );
+    }
     const { defaultLanguage, languages } = this.options;
     if (!defaultLanguage) {
       throw new Error(
@@ -269,7 +299,7 @@ export async function generateStaticParams() {
         '@donotdev/core/next': ['appBaseUrl', 'entityPageSeo', 'jsonLdScript', 'readEntityPageRecord'],
         '@donotdev/core/rsc': ['useTranslation'],
       },
-      typeImports: "import type { LanguageRouting } from '@donotdev/core/server';\n",
+      typeImports: "import type { BreadcrumbRoute, LanguageRouting } from '@donotdev/core/server';\n",
       // `entities` comes with the page's reader (`serverCrudReader`)
       appImports: `// Server graph: the translations the server useTranslation reads\nimport '${i18nConfig}';\n`,
       code: `
@@ -277,6 +307,10 @@ export async function generateStaticParams() {
 // description, Open Graph, Twitter card, ${type === 'product' ? 'Product JSON-LD, ' : ''}in the URL's language. Canonical, og:url
 // and hreflang come from AutoMetaTags. No public record (missing, hidden status): HTTP 404.
 const ROUTE = ${JSON.stringify(recordsRoute)};
+
+// BreadcrumbList: home, the page's ancestors (URL prefixes that are routes, PageMeta parent)
+// named by their titles, the record title last
+const BREADCRUMB_ROUTES: BreadcrumbRoute[] = ${JSON.stringify(breadcrumbRoutes(route, routes))};
 
 const LANGUAGE_ROUTING: LanguageRouting = ${JSON.stringify({ languages, defaultLanguage })};
 
@@ -305,6 +339,8 @@ const pageSeo = cache(async (language: string, value: string) => {
     buildProductJsonLd,
     languageUrl,
     buildBreadcrumbJsonLd,
+    routes: BREADCRUMB_ROUTES,
+    defaultNamespace: ${JSON.stringify(this.defaultNamespace())},
   });
 });
 

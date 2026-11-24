@@ -5,7 +5,8 @@
  * @description One source for the `<head>` of a page: the route identity (PageMeta +
  * i18n, {@link routeSeo} / {@link routeHeadTags}), an entity record's identity
  * ({@link recordHeadTags}), the site tags of every page ({@link siteHeadTags}) and the
- * BreadcrumbList JSON-LD ({@link buildBreadcrumbJsonLd}) and the favicon set
+ * BreadcrumbList JSON-LD ({@link buildBreadcrumbJsonLd}, over the page's ancestor chain
+ * `routeAncestors`) and the favicon set
  * ({@link resolveFaviconFiles} / {@link faviconHeadTags}). AutoMetaTags renders these
  * lists in the browser; the Vite build writes the same lists into each prerendered
  * page and embeds them ({@link PRERENDERED_HEAD_ELEMENT_ID}), so the head
@@ -25,6 +26,9 @@ import type { TFunction } from 'i18next';
 import type { FaviconConfig, SeoMeta } from '@donotdev/types';
 
 import { translateArray } from './arrayTranslations';
+import { routeAncestors } from './routeAncestors';
+import type { AncestorRoute } from './routeAncestors';
+import { matchRoute } from './routeMatch';
 
 /**
  * One `<head>` element: tag name, attributes (HTML names), text content.
@@ -133,56 +137,6 @@ const jsonLdTag = (jsonLd: unknown): HeadTag => ({
   attributes: { type: 'application/ld+json' },
   text: jsonScriptText(jsonLd),
 });
-
-/**
- * BreadcrumbList JSON-LD of a page from its URL path: the site home, then one item per
- * path segment named like the visible breadcrumb (`Breadcrumbs`: words title-cased),
- * the last one named `lastName` when given (an entity record's title, the label
- * `useRecordBreadcrumb` shows there).
- *
- * @param pathname - Route path without language prefix (`/produits/serum`)
- * @param siteName - Name of the home item
- * @param pageUrl - Absolute public URL of an app path in the page's language
- * @param lastName - Name of the last item (record title); segment label when omitted
- * @returns BreadcrumbList JSON-LD
- *
- * @version 0.1.0
- * @since 0.3.2
- * @author AMBROISE PARK Consulting
- */
-export function buildBreadcrumbJsonLd(
-  pathname: string,
-  siteName: string,
-  pageUrl: (path: string) => string,
-  lastName?: string
-): Record<string, unknown> {
-  const segments = pathname.split('/').filter(Boolean);
-  const items = [
-    { '@type': 'ListItem', position: 1, name: siteName, item: pageUrl('/') },
-  ];
-  let currentPath = '';
-  segments.forEach((segment, index) => {
-    currentPath += `/${segment}`;
-    const isLast = index === segments.length - 1;
-    items.push({
-      '@type': 'ListItem',
-      position: index + 2,
-      name:
-        isLast && lastName
-          ? lastName
-          : segment
-              .split('-')
-              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(' '),
-      item: pageUrl(currentPath),
-    });
-  });
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items,
-  };
-}
 
 /**
  * Head tags of a record page identity, in order: `<title>`, description, Open Graph
@@ -429,6 +383,125 @@ export function routeTitle(input: {
   return {
     title: fullTitle || (pageTitle ? `${pageTitle} | ${siteName}` : siteName),
     ...(pageTitle && { pageTitle }),
+  };
+}
+
+/**
+ * A route as the breadcrumb trail reads it: its path and PageMeta (`namespace`, `seo`
+ * for its label, `parent` for the ancestor chain).
+ *
+ * @version 0.1.0
+ * @since 0.3.4
+ * @author AMBROISE PARK Consulting
+ */
+export interface BreadcrumbRoute extends AncestorRoute {
+  meta?: (RouteSeoMeta & { parent?: string }) | null;
+}
+
+/**
+ * Label of a route in a breadcrumb trail: its own title by the chain of its `<title>`
+ * ({@link routeTitle}: `seo.title`, else its namespace's `title`), else its full title
+ * (`seo.fullTitle`, the namespace's `meta.fullTitle`), else the site name. The rule of the
+ * page labels in llms.txt. Never empty.
+ *
+ * @param route - The route (`meta.namespace`, `meta.seo`)
+ * @param site - Translation function (resolves `<namespace>:title`), site defaults
+ *   namespace (`appConfig.seo.defaultNamespace`), site name
+ * @returns The label
+ *
+ * @version 0.1.0
+ * @since 0.3.4
+ * @author AMBROISE PARK Consulting
+ */
+export function routeLabel(
+  route: BreadcrumbRoute,
+  site: { t: TFunction; defaultNs: string | null; siteName: string }
+): string {
+  const meta = route.meta ?? {};
+  const { title, pageTitle } = routeTitle({
+    meta,
+    ns: meta.namespace || null,
+    defaultNs: site.defaultNs,
+    t: site.t,
+    siteName: site.siteName,
+  });
+  return pageTitle ?? title;
+}
+
+/**
+ * Translation namespaces the labels of a URL's trail read: those of its ancestors
+ * ({@link routeAncestors}) and of its own route. A client passes them to
+ * `useTranslation` so lazy page namespaces load (Next inlines every namespace: the
+ * server render and the browser read the same labels).
+ *
+ * @param pathname - URL path without language prefix
+ * @param routes - Manifest routes
+ * @returns Namespaces, deduplicated, in trail order
+ *
+ * @version 0.1.0
+ * @since 0.3.4
+ * @author AMBROISE PARK Consulting
+ */
+export function breadcrumbNamespaces(
+  pathname: string,
+  routes: readonly BreadcrumbRoute[]
+): string[] {
+  const page = matchRoute(routes, pathname)?.route;
+  const trail = [...routeAncestors(pathname, routes), ...(page ? [page] : [])];
+  const namespaces = trail.flatMap((route) =>
+    route.meta?.namespace ? [route.meta.namespace] : []
+  );
+  return [...new Set(namespaces)];
+}
+
+/**
+ * BreadcrumbList JSON-LD of a page: the site home, its ancestor pages
+ * ({@link routeAncestors}: URL prefixes that are routes, PageMeta `parent`), each named
+ * by its title ({@link routeLabel}, the label the visible breadcrumb shows) at its URL,
+ * then the page itself named `lastName` (an entity record's title, the label
+ * `useRecordBreadcrumb` shows there), else its route's label. A URL prefix that is no
+ * route is no item.
+ *
+ * @param input - URL path without language prefix (`/produits/serum`), manifest routes,
+ *   site name (home item), translation function and site defaults namespace (labels),
+ *   absolute public URL of an app path in the page's language, record title
+ * @returns BreadcrumbList JSON-LD
+ * @throws {Error} From {@link routeAncestors} on an invalid `parent` (the build rejects it)
+ *
+ * @version 0.2.0
+ * @since 0.3.2
+ * @author AMBROISE PARK Consulting
+ */
+export function buildBreadcrumbJsonLd(input: {
+  pathname: string;
+  routes: readonly BreadcrumbRoute[];
+  siteName: string;
+  t: TFunction;
+  defaultNs: string | null;
+  pageUrl: (path: string) => string;
+  lastName?: string;
+}): Record<string, unknown> {
+  const { pathname, routes, siteName, pageUrl, lastName } = input;
+  const label = (route: BreadcrumbRoute) => routeLabel(route, input);
+  const crumbs = routeAncestors(pathname, routes).map((route) => ({
+    name: label(route),
+    path: route.path,
+  }));
+  const page = matchRoute(routes, pathname)?.route;
+  const pageName = lastName || (page ? label(page) : undefined);
+  if (pageName) crumbs.push({ name: pageName, path: pathname });
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: siteName, item: pageUrl('/') },
+      ...crumbs.map((crumb, index) => ({
+        '@type': 'ListItem',
+        position: index + 2,
+        name: crumb.name,
+        item: pageUrl(crumb.path),
+      })),
+    ],
   };
 }
 

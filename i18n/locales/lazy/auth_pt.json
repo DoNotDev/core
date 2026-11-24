@@ -135,7 +135,8 @@
     "weak_password": "A senha é muito fraca. Por favor, escolha uma senha mais forte.",
     "breached_password": "Esta senha apareceu em uma violação de dados. Por favor, escolha uma senha diferente.",
     "invalid_code": "Este código está incorreto ou expirou. Verifique o email ou peça um novo código.",
-    "code_expired": "Este código expirou. Peça um novo código."
+    "code_expired": "Este código expirou. Peça um novo código.",
+    "captcha_failed": "A verificação de segurança falhou. Tente novamente."
   },
   "codeConfirmation": {
     "label": "Código de confirmação",
@@ -208,5 +209,10 @@
   "guard": {
     "signInRequired": "Entrada obrigatória",
     "signInDescription": "Por favor, entre para acessar esta página"
+  },
+  "signUpFlow": {
+    "account_title": "Crie sua conta",
+    "code_title": "Verifique seu e-mail",
+    "progress": "Etapa {{current}} de {{total}}"
   }
 }

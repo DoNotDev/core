@@ -135,7 +135,8 @@
     "weak_password": "La password è troppo debole. Scegli una password più sicura.",
     "breached_password": "Questa password è apparsa in una violazione di dati. Scegli una password diversa.",
     "invalid_code": "Questo codice è errato o scaduto. Controlla l'email o richiedi un nuovo codice.",
-    "code_expired": "Questo codice è scaduto. Richiedi un nuovo codice."
+    "code_expired": "Questo codice è scaduto. Richiedi un nuovo codice.",
+    "captcha_failed": "Il controllo di sicurezza non è riuscito. Riprova."
   },
   "codeConfirmation": {
     "label": "Codice di conferma",
@@ -208,5 +209,10 @@
   "guard": {
     "signInRequired": "Accesso richiesto",
     "signInDescription": "Effettua l'accesso per visualizzare questa pagina"
+  },
+  "signUpFlow": {
+    "account_title": "Crea il tuo account",
+    "code_title": "Controlla la tua email",
+    "progress": "Passaggio {{current}} di {{total}}"
   }
 }

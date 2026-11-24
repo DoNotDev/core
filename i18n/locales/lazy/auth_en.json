@@ -135,7 +135,8 @@
     "weak_password": "Password is too weak. Please choose a stronger password.",
     "breached_password": "This password has appeared in a data breach. Please choose a different password.",
     "invalid_code": "This code is incorrect or has expired. Check the email or request a new code.",
-    "code_expired": "This code has expired. Request a new code."
+    "code_expired": "This code has expired. Request a new code.",
+    "captcha_failed": "The security check failed. Please try again."
   },
   "codeConfirmation": {
     "label": "Confirmation code",
@@ -208,5 +209,10 @@
   "guard": {
     "signInRequired": "Sign in required",
     "signInDescription": "Please sign in to access this page"
+  },
+  "signUpFlow": {
+    "account_title": "Create your account",
+    "code_title": "Check your email",
+    "progress": "Step {{current}} of {{total}}"
   }
 }

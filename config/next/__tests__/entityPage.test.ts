@@ -64,6 +64,8 @@ const context = (overrides: Record<string, unknown> = {}) => ({
   buildProductJsonLd,
   buildBreadcrumbJsonLd,
   languageUrl,
+  routes: [ROUTE],
+  defaultNamespace: 'home',
   ...overrides,
 });
 
@@ -200,19 +202,35 @@ describe('entityPageSeo', () => {
     expect(absolute.metadata.openGraph.images).toEqual(['https://cdn.example/og.png']);
   });
 
-  it('emits the BreadcrumbList ending with the record title, the visible breadcrumb label', () => {
-    expect(entityPageSeo(PRODUCT, context()).breadcrumb).toEqual({
+  it('emits the BreadcrumbList: home, the ancestors by title, the record title last', () => {
+    // REGRESSION (BUGS #35): the URL prefix /produits (no page there, a 404) was an item
+    // named "Produits"; the PageMeta parent is the ancestor, titled in the page language
+    const texts: Record<string, string> = { 'catalogue:title': 'Catalog' };
+    const translate = vi.fn(() => (key: string, options?: { defaultValue?: string }) =>
+      texts[key] ?? options?.defaultValue ?? key);
+    const routes = [
+      { path: '/catalogue', meta: { namespace: 'catalogue' } },
+      { path: '/produits/:slug', meta: { parent: '/catalogue' } },
+    ];
+    expect(entityPageSeo(PRODUCT, context({ routes, translate })).breadcrumb).toEqual({
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Shop', item: `${BASE}/en` },
-        { '@type': 'ListItem', position: 2, name: 'Produits', item: `${BASE}/en/produits` },
+        { '@type': 'ListItem', position: 2, name: 'Catalog', item: `${BASE}/en/catalogue` },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Bakuchiol Serum',
           item: `${BASE}/en/produits/serum`,
         },
+      ],
+    });
+    // No ancestor page: home, then the record (the URL prefix is no item)
+    expect(entityPageSeo(PRODUCT, context()).breadcrumb).toMatchObject({
+      itemListElement: [
+        { position: 1, name: 'Shop', item: `${BASE}/en` },
+        { position: 2, name: 'Bakuchiol Serum', item: `${BASE}/en/produits/serum` },
       ],
     });
     // No record title: no record breadcrumb

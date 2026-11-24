@@ -135,7 +135,8 @@
     "weak_password": "La contraseña es demasiado débil. Por favor elija una contraseña más segura.",
     "breached_password": "Esta contraseña ha aparecido en una filtración de datos. Por favor elija una contraseña diferente.",
     "invalid_code": "Este código es incorrecto o ha caducado. Revise el correo o solicite un código nuevo.",
-    "code_expired": "Este código ha caducado. Solicite un código nuevo."
+    "code_expired": "Este código ha caducado. Solicite un código nuevo.",
+    "captcha_failed": "La verificación de seguridad ha fallado. Por favor, inténtelo de nuevo."
   },
   "codeConfirmation": {
     "label": "Código de confirmación",
@@ -208,5 +209,10 @@
   "guard": {
     "signInRequired": "Inicio de sesión requerido",
     "signInDescription": "Inicia sesión para acceder a esta página"
+  },
+  "signUpFlow": {
+    "account_title": "Crea tu cuenta",
+    "code_title": "Revisa tu correo",
+    "progress": "Paso {{current}} de {{total}}"
   }
 }

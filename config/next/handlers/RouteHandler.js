@@ -425,7 +425,7 @@ export default { routes: routeMapping, manifest: routeManifest };
       let generatedCount = 0;
       for (const route of routeData.routes) {
         const tree = this.isSessionOnlyRoute(route) ? 'session' : 'site';
-        const wasGenerated = await this.generateSingleAppPage(route, tree);
+        const wasGenerated = await this.generateSingleAppPage(route, tree, routeData.routes);
         if (wasGenerated) generatedCount++;
         if (wasGenerated && tree === 'site' && this.rendersSessionTree) {
           this.generateSessionPage(route);
@@ -538,10 +538,11 @@ export { ${names.join(', ')} } from '${sitePage}';
    * Skips generation if user-created file exists (no generation marker)
    *
    * @param {Object} route - Route object from discovery
-   * @param {'site'|'session'} [tree='site'] - Render tree (`session`: isSessionOnlyRoute)
+   * @param {'site'|'session'} tree - Render tree (`session`: isSessionOnlyRoute)
+   * @param {Array} routes - Discovered routes (entity pages: their BreadcrumbList ancestors)
    * @returns {Promise<boolean>} True if file was generated, false if skipped
    */
-  async generateSingleAppPage(route, tree = 'site') {
+  async generateSingleAppPage(route, tree, routes) {
     try {
       const appPath = this.appDirFor(route.path, tree);
       const pageFilePath = `src/app${appPath}/${nextFileName('page', 'tsx')}`;
@@ -571,7 +572,7 @@ export { ${names.join(', ')} } from '${sitePage}';
       };
 
       // Generate the page file content
-      const pageContent = this.generatePageFileContent(normalizedRoute, tree);
+      const pageContent = this.generatePageFileContent(normalizedRoute, tree, routes);
 
       // Write the generated file
       this.writeGeneratedFile(
@@ -657,9 +658,11 @@ export { ${names.join(', ')} } from '${sitePage}';
    * @param {Object} route - Route object with importPath, metaExport, etc.
    * @param {'site'|'session'} [tree='site'] - Render tree: per-request pages get no
    *   generateStaticParams (nothing of them is cached)
+   * @param {Array} [routes] - Discovered routes; required for an entity page (its
+   *   BreadcrumbList ancestors, {@link entityMetadataExport})
    * @returns {string} Complete page file content
    */
-  generatePageFileContent(route, tree = 'site') {
+  generatePageFileContent(route, tree = 'site', routes) {
     const componentName = this.extractComponentName(route.filePath);
     // Calculate relative path from app/**/page.tsx to src/pages/**Page.tsx
     // Example: src/app/page.tsx -> ../pages/HomePage
@@ -704,7 +707,7 @@ export { ${names.join(', ')} } from '${sitePage}';
         ? this.staticParamsExport(route, reader)
         : { named: {}, code: '' };
     // Server identity: generated from the entity record, or the page's own generateMetadata
-    const entitySeo = this.entityMetadataExport(route, reader);
+    const entitySeo = this.entityMetadataExport(route, reader, routes);
     // Framework imports, one line per module (after vendors, before the app's)
     const named = {
       '@donotdev/core/server': reader.expr ? ['HIDDEN_STATUSES'] : [],

@@ -32,6 +32,57 @@ export interface DoNotDevStore extends BaseStoreActions, BaseStoreState {
 }
 
 /**
+ * Framework persist options added on top of Zustand's `PersistOptions`.
+ *
+ * @since 0.3.1
+ */
+export interface DoNotDevPersistOptions {
+  /**
+   * Keep every tab's store in step: when another tab writes this store's storage
+   * key (the `storage` event, fired in the other same-origin tabs only), this tab
+   * rehydrates from storage (`persist.rehydrate()`). Events arriving before the
+   * store's first completed hydration are ignored (`skipHydration` is respected).
+   * Lifecycle stores keep `_hasHydrated: true` through the sync, and actions keep
+   * their identity (saved JSON holds no functions; the merge keeps current ones).
+   * A rehydration never writes storage, so tabs cannot echo each other.
+   *
+   * Requires a `localStorage`-backed storage (Zustand's default): `sessionStorage`
+   * is per tab, and custom storages (IndexedDB, cookies) fire no `storage` event.
+   * A removal in another tab (`persist.clearStorage()`) leaves this tab's state as it is.
+   * The listener lives as long as the store singleton (the page), like persist's own.
+   *
+   * @example
+   * ```ts
+   * const useCartStore = createDoNotDevStore<CartState>({
+   *   name: 'cart',
+   *   createStore: (set) => ({ lines: [], add: (line) => set((s) => ({ lines: [...s.lines, line] })) }),
+   *   persistOptions: { name: 'cart', syncAcrossTabs: true },
+   * });
+   * // Tab A: useCartStore.getState().add(line) → tab B's useCartStore((s) => s.lines) re-renders.
+   * ```
+   *
+   * @default false
+   * @since 0.3.1
+   */
+  syncAcrossTabs?: boolean;
+}
+
+/**
+ * Rehydrate a persisted store when another tab writes its storage key.
+ * No-op on the server. Page-lifetime listener (see `syncAcrossTabs`).
+ */
+function rehydrateOnOtherTabWrites(
+  key: string,
+  canSync: () => boolean,
+  rehydrate: () => Promise<void>
+): void {
+  if (!isClient()) return;
+  window.addEventListener('storage', (event: StorageEvent) => {
+    if (event.key === key && canSync()) void rehydrate();
+  });
+}
+
+/**
  * Configuration for creating a DoNotDev store
  *
  * @version 0.1.0
@@ -62,10 +113,11 @@ export interface DoNotDevStoreConfig<T> {
   persistOptions?: Omit<
     PersistOptions<T & DoNotDevStore, Partial<T & DoNotDevStore>>,
     'name'
-  > & {
-    /** Storage key name (required) */
-    name: string;
-  };
+  > &
+    DoNotDevPersistOptions & {
+      /** Storage key name (required) */
+      name: string;
+    };
 }
 
 /**
@@ -76,7 +128,7 @@ export interface DomainStoreConfig<T> {
   name: string;
   lifecycle: false;
   createStore: StateCreator<T, [], []>;
-  persistOptions?: PersistOptions<T, Partial<T>>;
+  persistOptions?: PersistOptions<T, Partial<T>> & DoNotDevPersistOptions;
 }
 
 /**
@@ -141,13 +193,29 @@ export function createDoNotDevStore<T extends object>(
     // why: registry entries are heterogeneous and identified by their unique name.
     if (cached) return cached as UseBoundStore<StoreApi<T>>;
 
-    const store = persistOptions
-      ? isDev() && isClient()
-        ? create<T>()(devtools(persist(creator, persistOptions), { name }))
-        : create<T>()(persist(creator, persistOptions))
-      : isDev() && isClient()
-        ? create<T>()(devtools(creator, { name }))
-        : create<T>()(creator);
+    let store: UseBoundStore<StoreApi<T>>;
+    if (persistOptions) {
+      const { syncAcrossTabs, ...zustandOptions } = persistOptions;
+      const persisted =
+        isDev() && isClient()
+          ? create<T>()(devtools(persist(creator, zustandOptions), { name }))
+          : create<T>()(persist(creator, zustandOptions));
+      store = persisted;
+      // why: typed as always present, but persist attaches it at runtime only with storage (not SSR).
+      const persistApi = persisted.persist as typeof persisted.persist | undefined;
+      if (syncAcrossTabs && persistApi) {
+        rehydrateOnOtherTabWrites(
+          zustandOptions.name,
+          () => persistApi.hasHydrated(),
+          () => persistApi.rehydrate()
+        );
+      }
+    } else {
+      store =
+        isDev() && isClient()
+          ? create<T>()(devtools(creator, { name }))
+          : create<T>()(creator);
+    }
 
     globalThis._DNDEV_STORES_[name] = store;
     return store;
@@ -265,8 +333,9 @@ export function createDoNotDevStore<T extends object>(
   let store: UseBoundStore<StoreApi<T & DoNotDevStore>>;
 
   if (persistOptions) {
+    const { syncAcrossTabs, ...zustandOptions } = persistOptions;
     const persistedCreator = persist(wrappedCreator, {
-      ...persistOptions,
+      ...zustandOptions,
       // Hydration status belongs to this factory, never to a saved snapshot.
       merge: (saved, current) => {
         // A synchronous creator set() can leave get() partial before hydration.
@@ -318,8 +387,28 @@ export function createDoNotDevStore<T extends object>(
             set(patch({ _hasHydrated: completed }));
           }
         };
-        persistApi.onHydrate(() => markHydrated(false));
+        // A rehydration caused by another tab's write updates an already
+        // hydrated store: completion stays true throughout (no false blip).
+        let otherTabWrite = false;
+        persistApi.onHydrate(() => {
+          if (!otherTabWrite) markHydrated(false);
+        });
         persistApi.onFinishHydration(() => markHydrated(true));
+        if (syncAcrossTabs) {
+          rehydrateOnOtherTabWrites(
+            zustandOptions.name,
+            () => hydrated,
+            () => {
+              // onHydrate listeners run synchronously inside rehydrate().
+              otherTabWrite = true;
+              try {
+                return persistApi.rehydrate();
+              } finally {
+                otherTabWrite = false;
+              }
+            }
+          );
+        }
         // Synchronous storage can finish before listeners can be registered.
         if (persistApi.hasHydrated()) {
           hydrated = true;

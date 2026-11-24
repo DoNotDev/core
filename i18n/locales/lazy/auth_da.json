@@ -135,7 +135,8 @@
     "weak_password": "Adgangskoden er for svag. Vælg venligst en stærkere adgangskode.",
     "breached_password": "Denne adgangskode er fundet i et datalæk. Vælg venligst en anden adgangskode.",
     "invalid_code": "Koden er forkert eller udløbet. Tjek e-mailen eller bed om en ny kode.",
-    "code_expired": "Koden er udløbet. Bed om en ny kode."
+    "code_expired": "Koden er udløbet. Bed om en ny kode.",
+    "captcha_failed": "Sikkerhedstjekket mislykkedes. Prøv igen."
   },
   "codeConfirmation": {
     "label": "Bekræftelseskode",
@@ -208,5 +209,10 @@
   "guard": {
     "signInRequired": "Login påkrævet",
     "signInDescription": "Log ind for at få adgang til denne side"
+  },
+  "signUpFlow": {
+    "account_title": "Opret din konto",
+    "code_title": "Tjek din e-mail",
+    "progress": "Trin {{current}} af {{total}}"
   }
 }
