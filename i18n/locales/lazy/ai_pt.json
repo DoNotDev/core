@@ -17,7 +17,8 @@
     "tokens": "tokens",
     "last_usage": "Último",
     "total": "Total",
-    "unavailable": "Bate-papo com IA não está disponível."
+    "unavailable": "Bate-papo com IA não está disponível.",
+    "tool_call": "Chamada de ferramenta"
   },
   "cost": {
     "tokens": "tokens"

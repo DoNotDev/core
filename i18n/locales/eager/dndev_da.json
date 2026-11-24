@@ -1,5 +1,10 @@
 {
   "signIn": "Log ind",
+  "auth": {
+    "userMenu": "Brugermenu",
+    "profile": "Profil",
+    "title": "Godkendelse"
+  },
   "choosePlatform": "Vælg en platform at logge ind med",
   "providers": {
     "google": "Google",
@@ -20,12 +25,13 @@
   },
   "accountLinking": {
     "title": "Kontokobling påkrævet",
-    "message": "Den her e-mail er allerede knyttet til andre login-metoder ({{methods}}). Log ind med en af dem for at koble dine konti sammen.",
+    "message": "Der findes allerede en konto med e-mailen {{email}} via {{methods}}. Log ind med {{methods}} først for at koble din {{newProvider}}-konto.",
     "instruction": "Log ind med en af følgende metoder for at koble dine konti:",
     "explanation": "Når du logger ind, kobles dine konti automatisk, så du fremover kan bruge begge metoder.",
     "success": "Kontierne er koblet sammen.",
     "error": "Kontokobling mislykkedes. Prøv igen.",
-    "emailLabel": "E-mail:"
+    "emailLabel": "E-mail:",
+    "dismiss": "Luk"
   },
   "emailVerification": {
     "title": "Bekræft din e-mail",
@@ -266,11 +272,13 @@
   },
   "globalGoTo": {
     "placeholder": "Søg i sider eller gå til...",
-    "noResults": "Ingen sider fundet.",
+    "noResults": "Ingen resultater fundet.",
     "favorites": "Favoritter",
     "allPages": "Alle sider",
     "addFavorite": "Tilføj til favoritter",
-    "removeFavorite": "Fjern fra favoritter"
+    "removeFavorite": "Fjern fra favoritter",
+    "searchPlaceholder": "Søg i sider...",
+    "ariaLabel": "Søg i navigation"
   },
   "copyToClipboard": "Kopier",
   "copied": "Kopieret!",
@@ -303,7 +311,8 @@
   },
   "navigation": {
     "more": "Mere",
-    "home": "Forside"
+    "home": "Forside",
+    "menu": "Navigation"
   },
   "pwa": {
     "update": {
@@ -586,6 +595,12 @@
         "deleteWarning": "Denne handling er permanent og kan ikke fortrydes. Alle dine data slettes."
       },
       "signOut": "Log ud"
+    },
+    "login": {
+      "title": "Log ind",
+      "description": "Log ind på din konto",
+      "authNotAvailable": "Godkendelse er ikke tilgængelig. Kontakt support, hvis du mener, det er en fejl.",
+      "loading": "Indlæser godkendelse..."
     }
   },
   "canvas": {
@@ -626,5 +641,16 @@
   "seo": {
     "llmsPages": "Sider",
     "llmsBlog": "Blog"
+  },
+  "adminLanding": {
+    "contactSupport": "Kontakt support",
+    "visitWebsite": "Besøg websitet",
+    "signedInAs": "Logget ind som {{user}}"
+  },
+  "featureDisabled": {
+    "description": "{{featureName}} er ikke tilgængelig. Det kan skyldes manglende konfiguration eller deaktiverede funktioner.",
+    "reviewCookies": "Gennemgå cookies",
+    "retry": "Prøv igen",
+    "helpText": "Hvis du mener, det er en fejl, kan du kontakte support eller prøve at opdatere siden."
   }
 }

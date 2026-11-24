@@ -74,7 +74,7 @@
   "checkEmail": "이메일을 확인하세요",
   "verificationSent": "계정 소유권을 증명하기 위한 확인 링크를 보냈습니다.",
   "errorTitle": "계정 연결 오류",
-  "networkError": "네트워크 오류",
+  "networkError": "네트워크 오류가 발생했습니다. 연결 상태를 확인한 후 다시 시도해 주세요.",
   "tryAgain": "다시 시도",
   "cancel": "취소",
   "confirm": "확인",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "소문자 1개",
   "passwordRequirement.number": "숫자 1개",
   "passwordRequirement.special": "특수 문자 1개 (!@#$%^&*)",
+  "passwordError.uppercase": "비밀번호에 대문자가 하나 이상 포함되어야 합니다",
+  "passwordError.lowercase": "비밀번호에 소문자가 하나 이상 포함되어야 합니다",
+  "passwordError.number": "비밀번호에 숫자가 하나 이상 포함되어야 합니다",
+  "passwordError.special": "비밀번호에 특수문자가 하나 이상 포함되어야 합니다",
   "passwordStrength.label": "비밀번호 강도",
   "passwordStrength.weak": "약함",
   "passwordStrength.fair": "보통",
@@ -214,5 +218,38 @@
     "account_title": "계정 만들기",
     "code_title": "이메일을 확인하세요",
     "progress": "{{total}}단계 중 {{current}}단계"
+  },
+  "emailLinkNotSupported": "모바일에서는 이메일 링크를 지원하지 않습니다",
+  "deleteAccountConfirm": "확인하려면 \"DELETE\"를 입력하세요",
+  "reauth": "재인증 필요",
+  "reauthDescription": "계속하려면 다시 로그인해 주세요",
+  "emailLink": {
+    "resend": "링크 다시 보내기",
+    "emailLabel": "이메일 주소",
+    "sending": "링크 보내는 중...",
+    "sendLink": "로그인 링크 보내기",
+    "helpText": "비밀번호 없이 로그인할 수 있는 보안 링크를 보내드립니다.",
+    "sentMessage": "{{email}} 주소로 로그인 링크를 보냈습니다. 이메일에 있는 링크를 클릭해 로그인을 완료해 주세요."
+  },
+  "networkStatus": {
+    "online": "온라인 상태입니다",
+    "offline": "오프라인 상태입니다",
+    "connectedVia": "연결 방식: {{connectionType}}",
+    "offlineMessage": "인증하려면 인터넷 연결이 필요합니다. 네트워크 설정을 확인해 주세요.",
+    "checkAgain": "다시 확인"
+  },
+  "auth": {
+    "fedcmNotSupported": "사용 중인 브라우저는 Google One Tap을 지원하지 않습니다",
+    "googleScriptLoadError": "Google Identity Services를 불러오지 못했습니다",
+    "googleOneTapError": "Google One Tap 인증에 실패했습니다",
+    "googleOneTapInitError": "Google One Tap을 초기화하지 못했습니다"
+  },
+  "passwordUpdate": {
+    "change": "비밀번호 변경",
+    "title": "비밀번호 변경",
+    "updating": "변경 중...",
+    "update": "비밀번호 변경",
+    "placeholder": "새 비밀번호 입력",
+    "error": "비밀번호를 변경하지 못했습니다"
   }
 }

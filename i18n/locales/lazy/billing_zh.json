@@ -20,7 +20,9 @@
   "templates": {
     "purchase": {
       "title": "立即开始",
-      "subtitle": "选择您的一次性购买选项"
+      "subtitle": "选择您的一次性购买选项",
+      "notAvailable": "Stripe 计费未配置或不可用。如果您认为这是错误，请联系支持团队。",
+      "loading": "计费加载中..."
     },
     "subscription": {
       "title": "选择您的计划",
@@ -28,14 +30,42 @@
       "billingToggle": {
         "monthly": "月度",
         "yearly": "年度",
-        "save20": "节省 20%"
+        "save20": "节省 20%",
+        "ariaLabel": "切换计费周期"
+      },
+      "notAvailable": "Stripe 计费未配置或不可用。如果您认为这是错误，请联系支持团队。",
+      "loading": "订阅加载中...",
+      "noPlans": "此计费周期暂无可用计划。",
+      "cta": {
+        "title": "有疑问吗？",
+        "subtitle": "我们的团队将帮助您选择合适的计划。",
+        "action": "联系我们"
       }
     },
     "checkout": {
       "title": "完成您的购买",
       "description": "由 Stripe 提供支持的安全结账",
       "completePurchase": "完成购买",
-      "startSubscription": "开始订阅"
+      "startSubscription": "开始订阅",
+      "notAvailable": "Stripe 计费未配置或不可用。如果您认为这是错误，请联系支持团队。",
+      "loading": "结账加载中...",
+      "noPriceId": "未选择商品。请先选择商品再继续结账。"
+    },
+    "success": {
+      "title": "支付成功！",
+      "notAvailable": "计费未配置或不可用。如果您认为这是错误，请联系支持团队。",
+      "subtitle": "感谢您的购买",
+      "subscriptionDetails": "订阅详情",
+      "plan": "计划",
+      "status": "状态",
+      "validUntil": "有效期至",
+      "endedOn": "结束于",
+      "lifetime": "永久",
+      "dateUnavailable": "日期不可用",
+      "whatsNext": "后续步骤",
+      "learnMore": "了解更多",
+      "needHelp": "需要帮助？请联系我们：",
+      "goToDashboard": "前往仪表盘"
     }
   },
   "components": {
@@ -82,6 +112,10 @@
       "current": "当前",
       "subscriptionEnds": "订阅将于 {{date}} 结束",
       "planChanged": "计划已成功更改！",
+      "subscribeToAccess": "订阅以使用高级功能",
+      "statusLabel": "状态",
+      "renewsOn": "续订于",
+      "manageSubscription": "管理订阅",
       "status": {
         "active": "活跃",
         "cancelled": "已取消",

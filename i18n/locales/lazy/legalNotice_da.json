@@ -1,0 +1,60 @@
+{
+  "title": "Juridisk meddelelse",
+  "description": "Juridisk meddelelse: udgiverens identitet, hjemsted, kontaktoplysninger og ansvarshavende redaktør, som loven kræver.",
+  "lastUpdated": "Sidst opdateret",
+  "publisher": {
+    "title": "1. Oplysninger om udgiveren",
+    "name": "Udgiverens navn",
+    "type": "Type",
+    "types": {
+      "company": "Virksomhed",
+      "individual": "Privatperson"
+    },
+    "legalStatus": "Selskabsform",
+    "shareCapital": "Selskabskapital"
+  },
+  "registration": {
+    "title": "2. Registreringsoplysninger",
+    "number": "Registreringsnummer / SIRET",
+    "vat": "Momsnummer"
+  },
+  "office": {
+    "title": "3. Hjemsted",
+    "address": "Adresse"
+  },
+  "contact": {
+    "title": "4. Kontaktoplysninger",
+    "email": "E-mail",
+    "phone": "Telefon"
+  },
+  "director": {
+    "title": "5. Ansvarshavende redaktør",
+    "name": "Navn",
+    "role": "Stilling"
+  },
+  "hosting": {
+    "title": "6. Hostingudbyder",
+    "provider": "Udbyder",
+    "address": "Adresse",
+    "contact": "Kontakt"
+  },
+  "intellectualProperty": {
+    "title": "7. Immaterielle rettigheder",
+    "content": "Alt indhold på dette websted, herunder, men ikke begrænset til, tekster, grafik, logoer, billeder, lydklip, digitale downloads, datasamlinger og software, tilhører {{publisherName}} eller dets indholdsleverandører og er beskyttet af internationale love om ophavsret.",
+    "unauthorized": "Uautoriseret brug af indhold fra dette websted kan være i strid med lovgivningen om ophavsret, varemærker og anden lovgivning."
+  },
+  "personalData": {
+    "title": "8. Personoplysninger",
+    "content": "Du kan læse om, hvordan vi indsamler, bruger og beskytter dine personoplysninger, i vores ",
+    "privacyPolicy": "Privatlivspolitik"
+  },
+  "cookies": {
+    "title": "9. Cookies",
+    "content": "Dette websted bruger cookies. Du kan læse detaljerede oplysninger om cookies, og hvordan vi bruger dem, i vores ",
+    "privacyPolicy": "Privatlivspolitik"
+  },
+  "footer": {
+    "accurate": "Oplysningerne i denne juridiske meddelelse er korrekte pr.",
+    "updated": "og kan blive opdateret for at afspejle ændringer i vores virksomhedsoplysninger."
+  }
+}

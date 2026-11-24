@@ -17,7 +17,8 @@
     "tokens": "令牌",
     "last_usage": "最后",
     "total": "总计",
-    "unavailable": "AI 聊天不可用。"
+    "unavailable": "AI 聊天不可用。",
+    "tool_call": "工具调用"
   },
   "cost": {
     "tokens": "令牌"

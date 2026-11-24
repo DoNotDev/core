@@ -1,5 +1,10 @@
 {
   "signIn": "Accedi",
+  "auth": {
+    "userMenu": "Menu utente",
+    "profile": "Profilo",
+    "title": "Autenticazione"
+  },
   "choosePlatform": "Scegli una piattaforma per accedere",
   "providers": {
     "google": "Google",
@@ -20,12 +25,13 @@
   },
   "accountLinking": {
     "title": "Collegamento Account Richiesto",
-    "message": "Questa email è già associata a metodi di accesso diversi ({{methods}}). Accedi utilizzando uno di questi metodi per collegare i tuoi account.",
+    "message": "Esiste già un account con l'email {{email}} tramite {{methods}}. Per collegare il tuo account {{newProvider}}, accedi prima con {{methods}}.",
     "instruction": "Accedi con uno dei seguenti metodi per collegare i tuoi account:",
     "explanation": "Effettuando l'accesso, i tuoi account verranno collegati automaticamente, consentendoti di utilizzare entrambi i metodi di accesso in futuro.",
     "success": "Account collegati con successo!",
     "error": "Collegamento account fallito. Riprova.",
-    "emailLabel": "Email:"
+    "emailLabel": "Email:",
+    "dismiss": "Chiudi"
   },
   "emailVerification": {
     "title": "Verifica Email",
@@ -266,11 +272,13 @@
   },
   "globalGoTo": {
     "placeholder": "Filtra le route o naviga a una pagina...",
-    "noResults": "Nessuna route trovata.",
+    "noResults": "Nessun risultato trovato.",
     "favorites": "Preferiti",
     "allPages": "Tutte le pagine",
     "addFavorite": "Aggiungi ai preferiti",
-    "removeFavorite": "Rimuovi dai preferiti"
+    "removeFavorite": "Rimuovi dai preferiti",
+    "searchPlaceholder": "Cerca pagine...",
+    "ariaLabel": "Cerca nella navigazione"
   },
   "copyToClipboard": "Copia negli appunti",
   "copied": "Copiato!",
@@ -303,7 +311,8 @@
   },
   "navigation": {
     "more": "Altro",
-    "home": "Home"
+    "home": "Home",
+    "menu": "Navigazione"
   },
   "pwa": {
     "update": {
@@ -586,6 +595,12 @@
         "deleteWarning": "Questa azione è permanente e non può essere annullata. Tutti i tuoi dati verranno eliminati."
       },
       "signOut": "Esci"
+    },
+    "login": {
+      "title": "Accesso",
+      "description": "Accedi al tuo account",
+      "authNotAvailable": "L'autenticazione non è disponibile. Se pensi che si tratti di un errore, contatta l'assistenza.",
+      "loading": "Caricamento dell'autenticazione..."
     }
   },
   "canvas": {
@@ -626,5 +641,16 @@
   "seo": {
     "llmsPages": "Pagine",
     "llmsBlog": "Blog"
+  },
+  "adminLanding": {
+    "contactSupport": "Contatta l'assistenza",
+    "visitWebsite": "Visita il sito web",
+    "signedInAs": "Accesso effettuato come {{user}}"
+  },
+  "featureDisabled": {
+    "description": "{{featureName}} non è disponibile. Potrebbe dipendere da una configurazione mancante o da funzionalità disattivate.",
+    "reviewCookies": "Gestisci i cookie",
+    "retry": "Riprova",
+    "helpText": "Se pensi che si tratti di un errore, contatta l'assistenza o aggiorna la pagina."
   }
 }

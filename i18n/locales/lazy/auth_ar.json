@@ -74,7 +74,7 @@
   "checkEmail": "تحقق من بريدك الإلكتروني",
   "verificationSent": "تم إرسال بريد التحقق",
   "errorTitle": "خطأ في ربط الحساب",
-  "networkError": "خطأ في الشبكة",
+  "networkError": "خطأ في الشبكة. يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
   "tryAgain": "حاول مرة أخرى",
   "cancel": "إلغاء",
   "confirm": "تأكيد",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "حرف صغير واحد",
   "passwordRequirement.number": "رقم واحد",
   "passwordRequirement.special": "حرف خاص واحد (!@#$%^&*)",
+  "passwordError.uppercase": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل",
+  "passwordError.lowercase": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل",
+  "passwordError.number": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل",
+  "passwordError.special": "يجب أن تحتوي كلمة المرور على حرف خاص واحد على الأقل",
   "passwordStrength.label": "قوة كلمة المرور",
   "passwordStrength.weak": "ضعيفة",
   "passwordStrength.fair": "متوسطة",
@@ -214,5 +218,38 @@
     "account_title": "أنشئ حسابك",
     "code_title": "تحقق من بريدك الإلكتروني",
     "progress": "الخطوة {{current}} من {{total}}"
+  },
+  "emailLinkNotSupported": "رابط البريد الإلكتروني غير مدعوم على الجوال",
+  "deleteAccountConfirm": "اكتب \"DELETE\" للتأكيد",
+  "reauth": "إعادة المصادقة مطلوبة",
+  "reauthDescription": "يرجى تسجيل الدخول مرة أخرى للمتابعة",
+  "emailLink": {
+    "resend": "إعادة إرسال الرابط",
+    "emailLabel": "عنوان البريد الإلكتروني",
+    "sending": "جاري إرسال الرابط...",
+    "sendLink": "إرسال رابط تسجيل الدخول",
+    "helpText": "سنرسل لك رابطاً آمناً لتسجيل الدخول دون كلمة مرور.",
+    "sentMessage": "أرسلنا رابط تسجيل الدخول إلى {{email}}. انقر على الرابط في بريدك الإلكتروني لإكمال تسجيل الدخول."
+  },
+  "networkStatus": {
+    "online": "أنت متصل بالإنترنت",
+    "offline": "أنت غير متصل بالإنترنت",
+    "connectedVia": "متصل عبر {{connectionType}}",
+    "offlineMessage": "يتطلب تسجيل الدخول اتصالاً بالإنترنت. يرجى التحقق من إعدادات الشبكة.",
+    "checkAgain": "التحقق مرة أخرى"
+  },
+  "auth": {
+    "fedcmNotSupported": "متصفحك لا يدعم Google One Tap",
+    "googleScriptLoadError": "فشل تحميل Google Identity Services",
+    "googleOneTapError": "فشلت المصادقة عبر Google One Tap",
+    "googleOneTapInitError": "فشل تهيئة Google One Tap"
+  },
+  "passwordUpdate": {
+    "change": "تغيير كلمة المرور",
+    "title": "تغيير كلمة المرور",
+    "updating": "جاري التحديث...",
+    "update": "تحديث كلمة المرور",
+    "placeholder": "أدخل كلمة المرور الجديدة",
+    "error": "تعذّر تحديث كلمة المرور"
   }
 }

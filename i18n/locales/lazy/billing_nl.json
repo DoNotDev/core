@@ -9,7 +9,9 @@
   "templates": {
     "purchase": {
       "title": "Aan de slag",
-      "subtitle": "Kies je eenmalige aankoop"
+      "subtitle": "Kies je eenmalige aankoop",
+      "notAvailable": "Facturatie via Stripe is niet geconfigureerd of niet beschikbaar. Neem contact op met support als je denkt dat dit een fout is.",
+      "loading": "Facturatie laden..."
     },
     "subscription": {
       "title": "Kies je abonnement",
@@ -17,14 +19,42 @@
       "billingToggle": {
         "monthly": "Maandelijks",
         "yearly": "Jaarlijks",
-        "save20": "Bespaar 20%"
+        "save20": "Bespaar 20%",
+        "ariaLabel": "Factureringsperiode wisselen"
+      },
+      "notAvailable": "Facturatie via Stripe is niet geconfigureerd of niet beschikbaar. Neem contact op met support als je denkt dat dit een fout is.",
+      "loading": "Abonnementen laden...",
+      "noPlans": "Geen abonnementen beschikbaar voor deze factureringsperiode.",
+      "cta": {
+        "title": "Vragen?",
+        "subtitle": "Ons team helpt je graag het juiste abonnement te kiezen.",
+        "action": "Contact opnemen"
       }
     },
     "checkout": {
       "title": "Afrekenen",
       "description": "Veilig afrekenen met Stripe",
       "completePurchase": "Afrekenen",
-      "startSubscription": "Abonnement starten"
+      "startSubscription": "Abonnement starten",
+      "notAvailable": "Facturatie via Stripe is niet geconfigureerd of niet beschikbaar. Neem contact op met support als je denkt dat dit een fout is.",
+      "loading": "Afrekenen laden...",
+      "noPriceId": "Geen product geselecteerd. Kies een product voordat je doorgaat naar afrekenen."
+    },
+    "success": {
+      "title": "Betaling geslaagd!",
+      "notAvailable": "Facturatie is niet geconfigureerd of niet beschikbaar. Neem contact op met support als je denkt dat dit een fout is.",
+      "subtitle": "Bedankt voor je aankoop",
+      "subscriptionDetails": "Abonnementsgegevens",
+      "plan": "Abonnement",
+      "status": "Status",
+      "validUntil": "Geldig tot",
+      "endedOn": "Beëindigd op",
+      "lifetime": "Levenslang",
+      "dateUnavailable": "Datum niet beschikbaar",
+      "whatsNext": "Wat nu?",
+      "learnMore": "Meer informatie",
+      "needHelp": "Hulp nodig? Mail ons op",
+      "goToDashboard": "Naar dashboard"
     }
   },
   "components": {
@@ -71,6 +101,10 @@
       "current": "Huidig",
       "subscriptionEnds": "Abonnement eindigt op {{date}}",
       "planChanged": "Abonnement gewijzigd.",
+      "subscribeToAccess": "Abonneer je om toegang te krijgen tot premiumfuncties",
+      "statusLabel": "Status",
+      "renewsOn": "Wordt verlengd op",
+      "manageSubscription": "Abonnement beheren",
       "status": {
         "active": "Actief",
         "cancelled": "Opgezegd",

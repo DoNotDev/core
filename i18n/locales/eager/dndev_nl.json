@@ -1,5 +1,10 @@
 {
   "signIn": "Inloggen",
+  "auth": {
+    "userMenu": "Gebruikersmenu",
+    "profile": "Profiel",
+    "title": "Authenticatie"
+  },
   "choosePlatform": "Kies een manier om in te loggen",
   "providers": {
     "google": "Google",
@@ -20,12 +25,13 @@
   },
   "accountLinking": {
     "title": "Accounts koppelen",
-    "message": "Dit e-mailadres hoort al bij andere inlogmethodes ({{methods}}). Log in met één van die methodes om je accounts te koppelen.",
+    "message": "Er bestaat al een account met het e-mailadres {{email}} via {{methods}}. Log eerst in met {{methods}} om je {{newProvider}}-account te koppelen.",
     "instruction": "Log in met één van onderstaande methodes om je accounts te koppelen:",
     "explanation": "Na het inloggen worden je accounts automatisch gekoppeld. Je kunt daarna beide methodes gebruiken.",
     "success": "Accounts zijn gekoppeld.",
     "error": "Koppelen mislukt. Probeer het opnieuw.",
-    "emailLabel": "E-mail:"
+    "emailLabel": "E-mail:",
+    "dismiss": "Sluiten"
   },
   "emailVerification": {
     "title": "E-mail verifiëren",
@@ -266,11 +272,13 @@
   },
   "globalGoTo": {
     "placeholder": "Zoek of ga naar een pagina...",
-    "noResults": "Geen pagina's gevonden.",
+    "noResults": "Geen resultaten gevonden.",
     "favorites": "Favorieten",
     "allPages": "Alle pagina's",
     "addFavorite": "Toevoegen aan favorieten",
-    "removeFavorite": "Verwijderen uit favorieten"
+    "removeFavorite": "Verwijderen uit favorieten",
+    "searchPlaceholder": "Pagina's zoeken...",
+    "ariaLabel": "Navigatie doorzoeken"
   },
   "copyToClipboard": "Kopiëren",
   "copied": "Gekopieerd!",
@@ -303,7 +311,8 @@
   },
   "navigation": {
     "more": "Meer",
-    "home": "Start"
+    "home": "Start",
+    "menu": "Navigatie"
   },
   "pwa": {
     "update": {
@@ -586,6 +595,12 @@
         "deleteWarning": "Deze actie is permanent en kan niet ongedaan worden gemaakt. Al je gegevens worden verwijderd."
       },
       "signOut": "Uitloggen"
+    },
+    "login": {
+      "title": "Inloggen",
+      "description": "Log in op je account",
+      "authNotAvailable": "Authenticatie is niet beschikbaar. Neem contact op met support als je denkt dat dit een fout is.",
+      "loading": "Authenticatie laden..."
     }
   },
   "canvas": {
@@ -626,5 +641,16 @@
   "seo": {
     "llmsPages": "Pagina's",
     "llmsBlog": "Blog"
+  },
+  "adminLanding": {
+    "contactSupport": "Contact met support",
+    "visitWebsite": "Website bezoeken",
+    "signedInAs": "Ingelogd als {{user}}"
+  },
+  "featureDisabled": {
+    "description": "{{featureName}} is niet beschikbaar. Dit kan komen door ontbrekende configuratie of uitgeschakelde functies.",
+    "reviewCookies": "Cookies beheren",
+    "retry": "Opnieuw proberen",
+    "helpText": "Als je denkt dat dit een fout is, neem dan contact op met support of vernieuw de pagina."
   }
 }

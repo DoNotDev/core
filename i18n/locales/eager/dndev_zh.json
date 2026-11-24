@@ -1,5 +1,10 @@
 {
   "signIn": "登录",
+  "auth": {
+    "userMenu": "用户菜单",
+    "profile": "个人资料",
+    "title": "身份验证"
+  },
   "choosePlatform": "选择登录方式",
   "providers": {
     "google": "Google",
@@ -20,12 +25,13 @@
   },
   "accountLinking": {
     "title": "需要关联账号",
-    "message": "此邮箱已绑定其他登录方式（{{methods}}）。请使用其中一种方式登录以关联账号。",
+    "message": "邮箱 {{email}} 已通过 {{methods}} 注册了账号。要关联您的 {{newProvider}} 账号，请先使用 {{methods}} 登录。",
     "instruction": "请使用以下方式之一登录以关联账号：",
     "explanation": "登录后，您的账号将自动关联，之后可以使用任意一种方式登录。",
     "success": "账号关联成功！",
     "error": "账号关联失败，请重试。",
-    "emailLabel": "邮箱："
+    "emailLabel": "邮箱：",
+    "dismiss": "关闭"
   },
   "emailVerification": {
     "title": "邮箱验证",
@@ -266,11 +272,13 @@
   },
   "globalGoTo": {
     "placeholder": "筛选路由或跳转到页面...",
-    "noResults": "未找到路由。",
+    "noResults": "未找到结果。",
     "favorites": "收藏",
     "allPages": "所有页面",
     "addFavorite": "添加到收藏",
-    "removeFavorite": "从收藏中移除"
+    "removeFavorite": "从收藏中移除",
+    "searchPlaceholder": "搜索页面...",
+    "ariaLabel": "搜索导航"
   },
   "copyToClipboard": "复制到剪贴板",
   "copied": "已复制！",
@@ -303,7 +311,8 @@
   },
   "navigation": {
     "more": "更多",
-    "home": "首页"
+    "home": "首页",
+    "menu": "导航"
   },
   "pwa": {
     "update": {
@@ -586,6 +595,12 @@
         "deleteWarning": "此操作不可撤销，您的所有数据将被永久删除。"
       },
       "signOut": "退出登录"
+    },
+    "login": {
+      "title": "登录",
+      "description": "登录您的账号",
+      "authNotAvailable": "身份验证不可用。如果您认为这是错误，请联系支持团队。",
+      "loading": "正在加载身份验证..."
     }
   },
   "canvas": {
@@ -626,5 +641,16 @@
   "seo": {
     "llmsPages": "页面",
     "llmsBlog": "博客"
+  },
+  "adminLanding": {
+    "contactSupport": "联系支持团队",
+    "visitWebsite": "访问网站",
+    "signedInAs": "已登录：{{user}}"
+  },
+  "featureDisabled": {
+    "description": "{{featureName}}不可用。可能是缺少配置或相关功能已被禁用。",
+    "reviewCookies": "查看 Cookie",
+    "retry": "重试",
+    "helpText": "如果您认为这是错误，请联系支持团队或尝试刷新页面。"
   }
 }

@@ -1,0 +1,26 @@
+{
+  "errors": {
+    "not_available": "AI를 사용할 수 없습니다.",
+    "unauthenticated": "AI 기능을 사용하려면 로그인해 주세요.",
+    "send_failed": "메시지를 보내지 못했습니다. 다시 시도해 주세요.",
+    "conversation_truncated": "모델의 컨텍스트 한도에 맞추기 위해 대화가 잘렸습니다."
+  },
+  "chat": {
+    "empty": "대화 시작하기",
+    "you": "나",
+    "assistant": "어시스턴트",
+    "thinking": "생각하는 중...",
+    "placeholder": "메시지를 입력하세요...",
+    "input_label": "채팅 메시지 입력",
+    "send": "보내기",
+    "abort": "중지",
+    "tokens": "토큰",
+    "last_usage": "마지막",
+    "total": "합계",
+    "unavailable": "AI 채팅을 사용할 수 없습니다.",
+    "tool_call": "도구 호출"
+  },
+  "cost": {
+    "tokens": "토큰"
+  }
+}

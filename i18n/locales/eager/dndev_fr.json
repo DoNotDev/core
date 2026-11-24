@@ -6,7 +6,10 @@
     "signOut": "Se déconnecter",
     "deleteAccount": {
       "label": "Supprimer le compte"
-    }
+    },
+    "userMenu": "Menu utilisateur",
+    "profile": "Profil",
+    "title": "Authentification"
   },
   "choosePlatform": "Choisissez une plateforme pour vous connecter",
   "providers": {
@@ -28,12 +31,13 @@
   },
   "accountLinking": {
     "title": "Liaison de compte requise",
-    "message": "Cet email est déjà associé à différentes méthodes de connexion ({{methods}}). Veuillez vous connecter en utilisant l'une de ces méthodes pour lier vos comptes.",
+    "message": "Un compte associé à l'adresse {{email}} existe déjà avec {{methods}}. Pour lier votre compte {{newProvider}}, connectez-vous d'abord avec {{methods}}.",
     "instruction": "Veuillez vous connecter avec l'une des méthodes suivantes pour lier vos comptes :",
     "explanation": "En vous connectant, vos comptes seront automatiquement liés, vous permettant d'utiliser l'une ou l'autre méthode de connexion à l'avenir.",
     "success": "Comptes liés avec succès !",
     "error": "Échec de la liaison des comptes. Veuillez réessayer.",
-    "emailLabel": "Email :"
+    "emailLabel": "Email :",
+    "dismiss": "Fermer"
   },
   "emailVerification": {
     "title": "Vérification de l'email",
@@ -274,7 +278,7 @@
   },
   "globalGoTo": {
     "placeholder": "Filtrer les routes ou naviguer vers une page...",
-    "noResults": "Aucune route trouvée.",
+    "noResults": "Aucun résultat trouvé.",
     "empty": "Aucune page disponible.",
     "favorites": "Favoris",
     "recent": "Récents",
@@ -286,7 +290,9 @@
     "shortcutOpen": "Ouvrir",
     "shortcutNavigate": "Naviguer",
     "shortcutSelect": "Sélectionner",
-    "shortcutClose": "Fermer"
+    "shortcutClose": "Fermer",
+    "searchPlaceholder": "Rechercher des pages...",
+    "ariaLabel": "Rechercher dans la navigation"
   },
   "copyToClipboard": "Copier dans le presse-papiers",
   "copied": "Copié !",
@@ -319,7 +325,8 @@
   },
   "navigation": {
     "more": "Plus",
-    "home": "Accueil"
+    "home": "Accueil",
+    "menu": "Navigation"
   },
   "pwa": {
     "update": {
@@ -602,6 +609,12 @@
         "deleteWarning": "Cette action est définitive et irréversible. Toutes vos données seront supprimées."
       },
       "signOut": "Se déconnecter"
+    },
+    "login": {
+      "title": "Connexion",
+      "description": "Connectez-vous à votre compte",
+      "authNotAvailable": "L'authentification n'est pas disponible. Si vous pensez qu'il s'agit d'une erreur, contactez le support.",
+      "loading": "Chargement de l'authentification..."
     }
   },
   "canvas": {
@@ -642,5 +655,16 @@
   "seo": {
     "llmsPages": "Pages",
     "llmsBlog": "Blog"
+  },
+  "adminLanding": {
+    "contactSupport": "Contacter le support",
+    "visitWebsite": "Visiter le site web",
+    "signedInAs": "Connecté en tant que {{user}}"
+  },
+  "featureDisabled": {
+    "description": "{{featureName}} n'est pas disponible. Cela peut venir d'une configuration manquante ou de fonctionnalités désactivées.",
+    "reviewCookies": "Gérer les cookies",
+    "retry": "Réessayer",
+    "helpText": "Si vous pensez qu'il s'agit d'une erreur, contactez le support ou actualisez la page."
   }
 }

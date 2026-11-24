@@ -236,13 +236,6 @@ export const SCAN_PATTERNS = {
   assets: {
     consumer: ['public/**/*'],
     fallback: ['manifest.json'],
-    modern: [
-      'logo.svg',
-      'favicon.svg',
-      'apple-touch-icon.png',
-      'android-chrome-192x192.png',
-      'android-chrome-512x512.png',
-    ],
     patterns: [
       'favicon.svg',
       'favicon.ico',

@@ -14,8 +14,8 @@
       "credentials": "Your account and authentication credentials",
       "profile": "Your profile information",
       "oauth": "All connected OAuth providers",
-      "subscriptions": "Active subscriptions (will be canceled)",
-      "whatKept": "What will be kept (anonymized):",
+      "subscriptions": "Active subscriptions (will be cancelled)",
+      "whatKept": "What will be kept (anonymised):",
       "billing": "Billing history for tax/accounting purposes",
       "invoices": "Past invoices and transaction records",
       "checkbox": "I understand this action cannot be undone"
@@ -74,7 +74,7 @@
   "checkEmail": "Check your email",
   "verificationSent": "We've sent you a verification link to prove ownership of your account.",
   "errorTitle": "Account Linking Error",
-  "networkError": "Network error",
+  "networkError": "Network error. Please check your connection and try again.",
   "tryAgain": "Try Again",
   "cancel": "Cancel",
   "confirm": "Confirm",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "One lowercase letter",
   "passwordRequirement.number": "One number",
   "passwordRequirement.special": "One special character (!@#$%^&*)",
+  "passwordError.uppercase": "Password must contain at least one uppercase letter",
+  "passwordError.lowercase": "Password must contain at least one lowercase letter",
+  "passwordError.number": "Password must contain at least one number",
+  "passwordError.special": "Password must contain at least one special character",
   "passwordStrength.label": "Password strength",
   "passwordStrength.weak": "Weak",
   "passwordStrength.fair": "Fair",
@@ -214,5 +218,38 @@
     "account_title": "Create your account",
     "code_title": "Check your email",
     "progress": "Step {{current}} of {{total}}"
+  },
+  "emailLinkNotSupported": "Email link not supported on mobile",
+  "deleteAccountConfirm": "Type \"DELETE\" to confirm",
+  "reauth": "Re-authentication Required",
+  "reauthDescription": "Please sign in again to continue",
+  "emailLink": {
+    "resend": "Resend Link",
+    "emailLabel": "Email Address",
+    "sending": "Sending Link...",
+    "sendLink": "Send Sign-In Link",
+    "helpText": "We'll send you a secure link to sign in without a password.",
+    "sentMessage": "We've sent a sign-in link to {{email}}. Click the link in your email to complete sign-in."
+  },
+  "networkStatus": {
+    "online": "You are online",
+    "offline": "You are offline",
+    "connectedVia": "Connected via {{connectionType}}",
+    "offlineMessage": "Authentication requires an internet connection. Please check your network settings.",
+    "checkAgain": "Check again"
+  },
+  "auth": {
+    "fedcmNotSupported": "Your browser does not support Google One Tap",
+    "googleScriptLoadError": "Failed to load Google Identity Services",
+    "googleOneTapError": "Google One Tap authentication failed",
+    "googleOneTapInitError": "Failed to initialise Google One Tap"
+  },
+  "passwordUpdate": {
+    "change": "Change Password",
+    "title": "Change Password",
+    "updating": "Updating...",
+    "update": "Update Password",
+    "placeholder": "Enter new password",
+    "error": "Failed to update password"
   }
 }

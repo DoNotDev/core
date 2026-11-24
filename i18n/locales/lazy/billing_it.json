@@ -9,7 +9,9 @@
   "templates": {
     "purchase": {
       "title": "Inizia",
-      "subtitle": "Scegli la tua opzione di acquisto una tantum"
+      "subtitle": "Scegli la tua opzione di acquisto una tantum",
+      "notAvailable": "La fatturazione Stripe non è configurata o non è disponibile. Se pensi che si tratti di un errore, contatta l'assistenza.",
+      "loading": "Caricamento fatturazione..."
     },
     "subscription": {
       "title": "Scegli il Tuo Piano",
@@ -17,14 +19,42 @@
       "billingToggle": {
         "monthly": "Mensile",
         "yearly": "Annuale",
-        "save20": "Risparmia 20%"
+        "save20": "Risparmia 20%",
+        "ariaLabel": "Cambia intervallo di fatturazione"
+      },
+      "notAvailable": "La fatturazione Stripe non è configurata o non è disponibile. Se pensi che si tratti di un errore, contatta l'assistenza.",
+      "loading": "Caricamento abbonamenti...",
+      "noPlans": "Nessun piano disponibile per questo periodo di fatturazione.",
+      "cta": {
+        "title": "Hai domande?",
+        "subtitle": "Il nostro team è qui per aiutarti a scegliere il piano giusto.",
+        "action": "Contattaci"
       }
     },
     "checkout": {
       "title": "Completa il Tuo Acquisto",
       "description": "Checkout sicuro alimentato da Stripe",
       "completePurchase": "Completa Acquisto",
-      "startSubscription": "Inizia Abbonamento"
+      "startSubscription": "Inizia Abbonamento",
+      "notAvailable": "La fatturazione Stripe non è configurata o non è disponibile. Se pensi che si tratti di un errore, contatta l'assistenza.",
+      "loading": "Caricamento checkout...",
+      "noPriceId": "Nessun prodotto selezionato. Scegli un prodotto prima di procedere al checkout."
+    },
+    "success": {
+      "title": "Pagamento Riuscito!",
+      "notAvailable": "La fatturazione non è configurata o non è disponibile. Se pensi che si tratti di un errore, contatta l'assistenza.",
+      "subtitle": "Grazie per il tuo acquisto",
+      "subscriptionDetails": "Dettagli Abbonamento",
+      "plan": "Piano",
+      "status": "Stato",
+      "validUntil": "Valido Fino al",
+      "endedOn": "Terminato il",
+      "lifetime": "A vita",
+      "dateUnavailable": "Data non disponibile",
+      "whatsNext": "Cosa Succede Ora?",
+      "learnMore": "Scopri di più",
+      "needHelp": "Hai bisogno di aiuto? Contattaci a",
+      "goToDashboard": "Vai alla Dashboard"
     }
   },
   "components": {
@@ -71,6 +101,10 @@
       "current": "Attuale",
       "subscriptionEnds": "L'abbonamento terminerà il {{date}}",
       "planChanged": "Piano modificato con successo!",
+      "subscribeToAccess": "Abbonati per accedere alle funzioni premium",
+      "statusLabel": "Stato",
+      "renewsOn": "Si rinnova il",
+      "manageSubscription": "Gestisci Abbonamento",
       "status": {
         "active": "Attivo",
         "cancelled": "Annullato",

@@ -36,7 +36,8 @@
   },
   "address": {
     "placeholder": "住所を入力...",
-    "noResults": "住所が見つかりません"
+    "noResults": "住所が見つかりません",
+    "apiUnavailable": "Google Placesを利用できません — 住所を手動で入力してください"
   },
   "export": "エクスポート",
   "copyToClipboard": "クリップボードにコピー",
@@ -308,7 +309,11 @@
     "privacyPolicy": "プライバシーポリシー",
     "terms": "利用規約",
     "and": "に同意し、個人データの処理に同意します。",
-    "required": "続行するには、プライバシーポリシーに同意してください"
+    "required": "続行するには、プライバシーポリシーに同意してください",
+    "display": {
+      "no": "同意していません",
+      "yes": "同意済み"
+    }
   },
   "custom": {
     "passwordMatch": "パスワードは一致する必要があります",
@@ -362,7 +367,8 @@
     "thisMonth": "今月",
     "clear": "クリア",
     "pick": "選択",
-    "time": "時間"
+    "time": "時間",
+    "clearAll": "すべてのフィルターをクリア"
   },
   "duration": {
     "15m": "15分",
@@ -376,6 +382,7 @@
     "custom": "カスタム",
     "zero": "—",
     "minutes": "{{count}}分",
+    "hours": "{{hours}}時間",
     "hoursMinutes": "{{hours}}時間{{minutes}}分"
   },
   "results": {
@@ -419,8 +426,8 @@
     "fetchFailed": "{{entity}}を読み込めませんでした"
   },
   "emptyState": {
-    "title": "見つかりませんでした",
-    "description": "まだ表示するものはありません。"
+    "title": "{{entity}}が見つかりません",
+    "description": "現在利用できる{{entity}}はありません。"
   },
   "bulkEdit": {
     "pending_one": "未保存の変更 {{count}} 件",

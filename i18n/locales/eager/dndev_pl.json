@@ -6,7 +6,10 @@
     "signOut": "Wyloguj się",
     "deleteAccount": {
       "label": "Usuń konto"
-    }
+    },
+    "userMenu": "Menu użytkownika",
+    "profile": "Profil",
+    "title": "Uwierzytelnianie"
   },
   "choosePlatform": "Wybierz platformę, aby się zalogować",
   "providers": {
@@ -28,12 +31,13 @@
   },
   "accountLinking": {
     "title": "Wymagane połączenie kont",
-    "message": "Ten adres e-mail jest już powiązany z innymi metodami logowania ({{methods}}). Zaloguj się jedną z nich, aby połączyć konta.",
+    "message": "Konto z adresem e-mail {{email}} już istnieje (logowanie: {{methods}}). Aby połączyć konto {{newProvider}}, najpierw zaloguj się, używając: {{methods}}.",
     "instruction": "Zaloguj się jedną z poniższych metod, aby połączyć konta:",
     "explanation": "Po zalogowaniu Twoje konta zostaną automatycznie połączone, dzięki czemu w przyszłości będziesz mógł korzystać z dowolnej metody logowania.",
     "success": "Konta zostały pomyślnie połączone!",
     "error": "Nie udało się połączyć kont. Spróbuj ponownie.",
-    "emailLabel": "E-mail:"
+    "emailLabel": "E-mail:",
+    "dismiss": "Zamknij"
   },
   "emailVerification": {
     "title": "Weryfikacja adresu e-mail",
@@ -274,7 +278,7 @@
   },
   "globalGoTo": {
     "placeholder": "Filtruj trasy lub przejdź do strony...",
-    "noResults": "Nie znaleziono tras.",
+    "noResults": "Nie znaleziono wyników.",
     "empty": "Brak dostępnych stron.",
     "favorites": "Ulubione",
     "recent": "Ostatnie",
@@ -286,7 +290,9 @@
     "shortcutOpen": "Otwórz",
     "shortcutNavigate": "Nawiguj",
     "shortcutSelect": "Wybierz",
-    "shortcutClose": "Zamknij"
+    "shortcutClose": "Zamknij",
+    "searchPlaceholder": "Szukaj stron...",
+    "ariaLabel": "Wyszukiwanie w nawigacji"
   },
   "copyToClipboard": "Kopiuj do schowka",
   "copied": "Skopiowano!",
@@ -319,7 +325,8 @@
   },
   "navigation": {
     "more": "Więcej",
-    "home": "Strona główna"
+    "home": "Strona główna",
+    "menu": "Nawigacja"
   },
   "pwa": {
     "update": {
@@ -602,6 +609,12 @@
         "deleteWarning": "Ta czynność jest trwała i nie można jej cofnąć. Wszystkie Twoje dane zostaną usunięte."
       },
       "signOut": "Wyloguj się"
+    },
+    "login": {
+      "title": "Logowanie",
+      "description": "Zaloguj się na swoje konto",
+      "authNotAvailable": "Uwierzytelnianie jest niedostępne. Jeśli uważasz, że to błąd, skontaktuj się z pomocą techniczną.",
+      "loading": "Ładowanie uwierzytelniania..."
     }
   },
   "canvas": {
@@ -642,5 +655,16 @@
   "seo": {
     "llmsPages": "Strony",
     "llmsBlog": "Blog"
+  },
+  "adminLanding": {
+    "contactSupport": "Skontaktuj się z pomocą techniczną",
+    "visitWebsite": "Odwiedź stronę",
+    "signedInAs": "Zalogowano jako {{user}}"
+  },
+  "featureDisabled": {
+    "description": "Funkcja {{featureName}} jest niedostępna. Przyczyną może być brak konfiguracji lub wyłączone funkcje.",
+    "reviewCookies": "Przejrzyj pliki cookie",
+    "retry": "Spróbuj ponownie",
+    "helpText": "Jeśli uważasz, że to błąd, skontaktuj się z pomocą techniczną lub spróbuj odświeżyć stronę."
   }
 }

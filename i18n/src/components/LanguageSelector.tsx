@@ -114,9 +114,7 @@ const LanguageSelector = ({
 
   const buttonProps = {
     variant,
-    'aria-label': t('common.languageSelector.changeLanguage', {
-      defaultValue: 'Change Language',
-    }),
+    'aria-label': t('common.languageSelector.changeLanguage'),
     icon: Globe,
     display,
     className,
@@ -135,12 +133,8 @@ const LanguageSelector = ({
         disabled={isLoading}
         display={display}
         className={className}
-        aria-label={t('common.languageSelector.changeLanguage', {
-          defaultValue: 'Change Language',
-        })}
-        tooltip={t('common.languageSelector.changeLanguage', {
-          defaultValue: 'Change Language',
-        })}
+        aria-label={t('common.languageSelector.changeLanguage')}
+        tooltip={t('common.languageSelector.changeLanguage')}
         icon={
           showFlags ? (
             <Flag

@@ -1,5 +1,10 @@
 {
   "signIn": "Anmelden",
+  "auth": {
+    "userMenu": "Benutzermenü",
+    "profile": "Profil",
+    "title": "Authentifizierung"
+  },
   "choosePlatform": "Wählen Sie eine Plattform zum Anmelden",
   "providers": {
     "google": "Google",
@@ -20,12 +25,13 @@
   },
   "accountLinking": {
     "title": "Kontoverknüpfung erforderlich",
-    "message": "Diese E-Mail ist bereits mit verschiedenen Anmeldemethoden ({{methods}}) verknüpft. Bitte melden Sie sich mit einer dieser Methoden an, um Ihre Konten zu verknüpfen.",
+    "message": "Zu der E-Mail-Adresse {{email}} existiert bereits ein Konto mit {{methods}}. Um Ihr {{newProvider}}-Konto zu verknüpfen, melden Sie sich bitte zuerst mit {{methods}} an.",
     "instruction": "Bitte melden Sie sich mit einer der folgenden Methoden an, um Ihre Konten zu verknüpfen:",
     "explanation": "Durch die Anmeldung werden Ihre Konten automatisch verknüpft, sodass Sie in Zukunft beide Anmeldemethoden verwenden können.",
     "success": "Konten erfolgreich verknüpft!",
     "error": "Kontoverknüpfung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-    "emailLabel": "E-Mail:"
+    "emailLabel": "E-Mail:",
+    "dismiss": "Schließen"
   },
   "emailVerification": {
     "title": "E-Mail-Bestätigung",
@@ -266,11 +272,13 @@
   },
   "globalGoTo": {
     "placeholder": "Routen filtern oder zu einer Seite navigieren...",
-    "noResults": "Keine Routen gefunden.",
+    "noResults": "Keine Ergebnisse gefunden.",
     "favorites": "Favoriten",
     "allPages": "Alle Seiten",
     "addFavorite": "Zu Favoriten hinzufügen",
-    "removeFavorite": "Aus Favoriten entfernen"
+    "removeFavorite": "Aus Favoriten entfernen",
+    "searchPlaceholder": "Seiten durchsuchen...",
+    "ariaLabel": "Navigation durchsuchen"
   },
   "copyToClipboard": "In Zwischenablage kopieren",
   "copied": "Kopiert!",
@@ -303,7 +311,8 @@
   },
   "navigation": {
     "more": "Mehr",
-    "home": "Startseite"
+    "home": "Startseite",
+    "menu": "Navigation"
   },
   "pwa": {
     "update": {
@@ -586,6 +595,12 @@
         "deleteWarning": "Diese Aktion ist dauerhaft und kann nicht rückgängig gemacht werden. Alle Ihre Daten werden gelöscht."
       },
       "signOut": "Abmelden"
+    },
+    "login": {
+      "title": "Anmeldung",
+      "description": "Melden Sie sich bei Ihrem Konto an",
+      "authNotAvailable": "Die Authentifizierung ist nicht verfügbar. Wenden Sie sich an den Support, falls Sie einen Fehler vermuten.",
+      "loading": "Authentifizierung wird geladen..."
     }
   },
   "canvas": {
@@ -626,5 +641,16 @@
   "seo": {
     "llmsPages": "Seiten",
     "llmsBlog": "Blog"
+  },
+  "adminLanding": {
+    "contactSupport": "Support kontaktieren",
+    "visitWebsite": "Website besuchen",
+    "signedInAs": "Angemeldet als {{user}}"
+  },
+  "featureDisabled": {
+    "description": "{{featureName}} ist nicht verfügbar. Mögliche Ursachen sind eine fehlende Konfiguration oder deaktivierte Funktionen.",
+    "reviewCookies": "Cookies verwalten",
+    "retry": "Erneut versuchen",
+    "helpText": "Falls Sie einen Fehler vermuten, wenden Sie sich an den Support oder laden Sie die Seite neu."
   }
 }

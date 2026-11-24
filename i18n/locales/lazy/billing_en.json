@@ -20,7 +20,9 @@
   "templates": {
     "purchase": {
       "title": "Get Started",
-      "subtitle": "Choose your one-time purchase option"
+      "subtitle": "Choose your one-time purchase option",
+      "notAvailable": "Stripe billing is not configured or available. Please contact support if you believe this is an error.",
+      "loading": "Loading billing..."
     },
     "subscription": {
       "title": "Choose Your Plan",
@@ -28,14 +30,42 @@
       "billingToggle": {
         "monthly": "Monthly",
         "yearly": "Yearly",
-        "save20": "Save 20%"
+        "save20": "Save 20%",
+        "ariaLabel": "Toggle billing interval"
+      },
+      "notAvailable": "Stripe billing is not configured or available. Please contact support if you believe this is an error.",
+      "loading": "Loading subscriptions...",
+      "noPlans": "No plans available for this billing period.",
+      "cta": {
+        "title": "Have questions?",
+        "subtitle": "Our team is here to help you choose the right plan.",
+        "action": "Contact Us"
       }
     },
     "checkout": {
       "title": "Complete Your Purchase",
       "description": "Secure checkout powered by Stripe",
       "completePurchase": "Complete Purchase",
-      "startSubscription": "Start Subscription"
+      "startSubscription": "Start Subscription",
+      "notAvailable": "Stripe billing is not configured or available. Please contact support if you believe this is an error.",
+      "loading": "Loading checkout...",
+      "noPriceId": "No product selected. Please choose a product before proceeding to checkout."
+    },
+    "success": {
+      "title": "Payment Successful!",
+      "notAvailable": "Billing is not configured or available. Please contact support if you believe this is an error.",
+      "subtitle": "Thank you for your purchase",
+      "subscriptionDetails": "Subscription Details",
+      "plan": "Plan",
+      "status": "Status",
+      "validUntil": "Valid Until",
+      "endedOn": "Ended On",
+      "lifetime": "Lifetime",
+      "dateUnavailable": "Date unavailable",
+      "whatsNext": "What's Next?",
+      "learnMore": "Learn more",
+      "needHelp": "Need help? Contact us at",
+      "goToDashboard": "Go to Dashboard"
     }
   },
   "components": {
@@ -56,7 +86,7 @@
     "redirectOverlay": {
       "checkout": {
         "title": "Redirecting to Stripe",
-        "message": "Initializing secure payment...",
+        "message": "Initialising secure payment...",
         "subtitle": "This may take a moment on first load",
         "ariaLabel": "Preparing secure checkout, please wait"
       },
@@ -82,6 +112,10 @@
       "current": "Current",
       "subscriptionEnds": "Subscription will end on {{date}}",
       "planChanged": "Plan changed successfully!",
+      "subscribeToAccess": "Subscribe to access premium features",
+      "statusLabel": "Status",
+      "renewsOn": "Renews on",
+      "manageSubscription": "Manage Subscription",
       "status": {
         "active": "Active",
         "cancelled": "Cancelled",

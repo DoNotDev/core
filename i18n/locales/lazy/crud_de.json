@@ -36,7 +36,8 @@
   },
   "address": {
     "placeholder": "Adresse eingeben...",
-    "noResults": "Keine Adressen gefunden"
+    "noResults": "Keine Adressen gefunden",
+    "apiUnavailable": "Google Places nicht verfügbar — Adresse manuell eingeben"
   },
   "export": "Exportieren",
   "copyToClipboard": "In die Zwischenablage kopieren",
@@ -308,7 +309,11 @@
     "privacyPolicy": "Datenschutzerklärung",
     "terms": "Nutzungsbedingungen",
     "and": "zu und stimme der Verarbeitung meiner personenbezogenen Daten zu.",
-    "required": "Bitte akzeptieren Sie die Datenschutzerklärung, um fortzufahren"
+    "required": "Bitte akzeptieren Sie die Datenschutzerklärung, um fortzufahren",
+    "display": {
+      "no": "Nicht zugestimmt",
+      "yes": "Zugestimmt"
+    }
   },
   "custom": {
     "passwordMatch": "Passwörter müssen übereinstimmen",
@@ -362,7 +367,8 @@
     "thisMonth": "Dieser Monat",
     "clear": "Löschen",
     "pick": "Auswählen",
-    "time": "Uhrzeit"
+    "time": "Uhrzeit",
+    "clearAll": "Alle Filter löschen"
   },
   "duration": {
     "15m": "15 Min.",
@@ -376,6 +382,7 @@
     "custom": "Benutzerdefiniert",
     "zero": "—",
     "minutes": "{{count}} Min.",
+    "hours": "{{hours}} Std.",
     "hoursMinutes": "{{hours}} Std. {{minutes}} Min."
   },
   "results": {
@@ -419,8 +426,8 @@
     "fetchFailed": "{{entity}} konnte nicht geladen werden"
   },
   "emptyState": {
-    "title": "Nichts gefunden",
-    "description": "Hier gibt es noch nichts anzuzeigen."
+    "title": "Keine Ergebnisse für {{entity}}",
+    "description": "Derzeit sind keine Einträge für {{entity}} vorhanden."
   },
   "bulkEdit": {
     "pending_one": "{{count}} ungespeicherte Änderung",

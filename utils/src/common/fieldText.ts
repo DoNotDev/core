@@ -223,14 +223,11 @@ export const FIELD_TEXT_FORMATTERS: Readonly<
     const currencyCode = price.currency || 'EUR';
     const discountPercent = price.discountPercent ?? 0;
     const vatLabel =
-      (price.vatIncluded ?? true)
-        ? ` ${t('crud:price.vatIncluded', { defaultValue: 'VAT Incl.' })}`
-        : '';
+      (price.vatIncluded ?? true) ? ` ${t('crud:price.vatIncluded')}` : '';
     if (discountPercent > 0) {
       const effective = Number(amount) * (1 - discountPercent / 100);
       const discountClue = ` ${t('crud:price.discountPercent', {
         percent: Math.round(discountPercent),
-        defaultValue: '-{{percent}}%',
       })}`;
       return `${formatCurrency(effective, currencyCode)}${vatLabel}${discountClue}`;
     }
@@ -240,19 +237,18 @@ export const FIELD_TEXT_FORMATTERS: Readonly<
     const minutes =
       typeof value === 'number' ? value : parseInt(String(value), 10);
     if (Number.isNaN(minutes)) return '';
-    if (minutes === 0) return t('crud:duration.zero', { defaultValue: '—' });
+    if (minutes === 0) return t('crud:duration.zero');
     if (minutes < 60) {
       return t('crud:duration.minutes', {
         count: minutes,
-        defaultValue: `${minutes} min`,
       });
     }
     const h = Math.floor(minutes / 60);
     const m = minutes % 60;
+    if (m === 0) return t('crud:duration.hours', { hours: h });
     return t('crud:duration.hoursMinutes', {
       hours: h,
       minutes: m,
-      defaultValue: m === 0 ? `${h}h` : `${h}h ${m}min`,
     });
   },
   gdprConsent: (value, _field, t, { locale }) => {
@@ -263,11 +259,9 @@ export const FIELD_TEXT_FORMATTERS: Readonly<
       gdprConsentVersion?: string;
     };
     if (consent.gdprConsent !== true) {
-      return t('crud:gdprConsent.display.no', { defaultValue: 'Not consented' });
+      return t('crud:gdprConsent.display.no');
     }
-    const parts = [
-      t('crud:gdprConsent.display.yes', { defaultValue: 'Consented' }),
-    ];
+    const parts = [t('crud:gdprConsent.display.yes')];
     if (consent.gdprConsentDate) {
       parts.push(new Date(consent.gdprConsentDate).toLocaleDateString(locale));
     }

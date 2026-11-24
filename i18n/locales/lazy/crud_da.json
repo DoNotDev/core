@@ -36,7 +36,8 @@
   },
   "address": {
     "placeholder": "Indtast adresse...",
-    "noResults": "Ingen adresser fundet"
+    "noResults": "Ingen adresser fundet",
+    "apiUnavailable": "Google Places er ikke tilgængelig – skriv adressen manuelt"
   },
   "export": "Eksporter",
   "noInquiries": "Ingen henvendelser fundet.",
@@ -112,7 +113,8 @@
     "thisMonth": "Denne måned",
     "clear": "Ryd",
     "pick": "Vælg",
-    "time": "Tid"
+    "time": "Tid",
+    "clearAll": "Ryd alle filtre"
   },
   "duration": {
     "15m": "15m",
@@ -126,6 +128,7 @@
     "custom": "Brugerdefineret",
     "zero": "—",
     "minutes": "{{count}} min",
+    "hours": "{{hours}}t",
     "hoursMinutes": "{{hours}}t {{minutes}}min"
   },
   "results": {
@@ -532,7 +535,11 @@
     "privacyPolicy": "privatlivspolitikken",
     "terms": "og servicevilkårene",
     "and": "og giver samtykke til behandling af mine persondata.",
-    "required": "Accepter privatlivspolitikken for at fortsætte"
+    "required": "Accepter privatlivspolitikken for at fortsætte",
+    "display": {
+      "no": "Samtykke ikke givet",
+      "yes": "Samtykke givet"
+    }
   },
   "custom": {
     "passwordMatch": "Adgangskoderne skal matche",
@@ -581,8 +588,8 @@
     "confirmSelected_other": "Slette de {{count}} valgte elementer? Dette kan ikke fortrydes."
   },
   "emptyState": {
-    "title": "Intet fundet",
-    "description": "Der er intet at vise endnu."
+    "title": "Ingen {{entity}} fundet",
+    "description": "Der er ingen {{entity}} tilgængelige i øjeblikket."
   },
   "bulkEdit": {
     "pending_one": "{{count}} ikke-gemt ændring",

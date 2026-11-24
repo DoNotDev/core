@@ -12,7 +12,7 @@
       "title": "1. Introduction",
       "welcome": "Welcome to",
       "commitment": "We are committed to protecting your privacy and ensuring you have a positive experience on our platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our development framework, tools, and services.",
-      "agreement": "you agree to the collection and use of information in accordance with this policy. If you do not agree with our policies and practices, please do not use our services."
+      "agreement": "By using {{companyName}}, you agree to the collection and use of information in accordance with this policy. If you do not agree with our policies and practices, please do not use our services."
     },
     "collection": {
       "title": "2. Information We Collect",
@@ -48,7 +48,7 @@
       "process": "Process transactions and manage your account",
       "send": "Send you important updates, security alerts, and support messages",
       "respond": "Respond to your comments, questions, and support requests",
-      "analyze": "Analyze usage patterns to enhance user experience",
+      "analyze": "Analyse usage patterns to enhance user experience",
       "detect": "Detect and prevent fraud, abuse, and security threats",
       "comply": "Comply with legal obligations and enforce our terms",
       "develop": "Develop new features and services based on user feedback"
@@ -75,7 +75,7 @@
     },
     "security": {
       "title": "5. Data Security",
-      "intro": "We implement appropriate technical and organizational measures to protect your information against unauthorized access, alteration, disclosure, or destruction. These measures include:",
+      "intro": "We implement appropriate technical and organisational measures to protect your information against unauthorised access, alteration, disclosure, or destruction. These measures include:",
       "encryption": "Encryption of data in transit and at rest",
       "assessments": "Regular security assessments and updates",
       "access": "Access controls and authentication mechanisms",
@@ -120,7 +120,7 @@
     },
     "cookies": {
       "title": "8. Cookies and Tracking Technologies",
-      "intro": "We use cookies and similar tracking technologies to enhance your experience, analyze usage, and provide personalized content. You can control cookie settings through your browser preferences.",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience, analyse usage, and provide personalised content. You can control cookie settings through your browser preferences.",
       "types": {
         "title": "8.1 Types of Cookies We Use",
         "essential": "Essential Cookies",

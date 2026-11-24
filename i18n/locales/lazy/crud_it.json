@@ -36,7 +36,8 @@
   },
   "address": {
     "placeholder": "Inserisci indirizzo...",
-    "noResults": "Nessun indirizzo trovato"
+    "noResults": "Nessun indirizzo trovato",
+    "apiUnavailable": "Google Places non disponibile — inserisci l’indirizzo manualmente"
   },
   "export": "Esporta",
   "copyToClipboard": "Copia negli appunti",
@@ -308,7 +309,11 @@
     "privacyPolicy": "politica sulla privacy",
     "terms": "termini di utilizzo",
     "and": "e acconsento al trattamento dei miei dati personali.",
-    "required": "Si prega di accettare la politica sulla privacy per continuare"
+    "required": "Si prega di accettare la politica sulla privacy per continuare",
+    "display": {
+      "no": "Consenso non prestato",
+      "yes": "Consenso prestato"
+    }
   },
   "custom": {
     "passwordMatch": "Le password devono corrispondere",
@@ -363,7 +368,8 @@
     "thisMonth": "Questo mese",
     "clear": "Cancella",
     "pick": "Seleziona",
-    "time": "Ora"
+    "time": "Ora",
+    "clearAll": "Cancella tutti i filtri"
   },
   "duration": {
     "15m": "15 min",
@@ -377,6 +383,7 @@
     "custom": "Personalizzato",
     "zero": "—",
     "minutes": "{{count}} min",
+    "hours": "{{hours}} h",
     "hoursMinutes": "{{hours}} h {{minutes}} min"
   },
   "results": {
@@ -420,8 +427,8 @@
     "fetchFailed": "Impossibile caricare {{entity}}"
   },
   "emptyState": {
-    "title": "Nessun risultato",
-    "description": "Non c’è ancora niente da mostrare."
+    "title": "Nessun risultato in {{entity}}",
+    "description": "Al momento non ci sono elementi disponibili in {{entity}}."
   },
   "bulkEdit": {
     "pending_one": "{{count}} modifica non salvata",

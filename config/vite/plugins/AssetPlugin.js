@@ -94,7 +94,7 @@ export function getManifest() {
 }
 
 export function getAllAssets() {
-  return [...assetManifest.modernFormats, ...assetManifest.fallbackFormats];
+  return [...assetManifest.assets];
 }
 
 // Named exports
@@ -138,8 +138,7 @@ const assetManifest = {
   appleTouchIcon: null,
   androidChrome: { '192': null, '512': null },
   manifest: null,
-  modernFormats: [],
-  fallbackFormats: []
+  assets: []
 };
 const assetStats = ${JSON.stringify(emptyManifest, null, 2)};
 
@@ -224,8 +223,7 @@ export const assetManifest = {
   appleTouchIcon: null,
   androidChrome: { '192': null, '512': null },
   manifest: null,
-  modernFormats: [],
-  fallbackFormats: []
+  assets: []
 };
 export const assetStats = {
   totalAssets: 0,

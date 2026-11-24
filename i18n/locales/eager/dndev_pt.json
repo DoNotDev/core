@@ -1,5 +1,10 @@
 {
   "signIn": "Entrar",
+  "auth": {
+    "userMenu": "Menu do usuário",
+    "profile": "Perfil",
+    "title": "Autenticação"
+  },
   "choosePlatform": "Escolha uma plataforma para entrar",
   "providers": {
     "google": "Google",
@@ -20,12 +25,13 @@
   },
   "accountLinking": {
     "title": "Vinculação de Conta Necessária",
-    "message": "Este e-mail já está associado a outros métodos de login ({{methods}}). Entre com um desses métodos para vincular suas contas.",
+    "message": "Já existe uma conta com o e-mail {{email}} usando {{methods}}. Para vincular sua conta {{newProvider}}, entre primeiro com {{methods}}.",
     "instruction": "Entre com um dos métodos abaixo para vincular suas contas:",
     "explanation": "Ao entrar, suas contas serão vinculadas automaticamente, permitindo que você use qualquer um dos métodos no futuro.",
     "success": "Contas vinculadas com sucesso!",
     "error": "Não foi possível vincular as contas. Tente novamente.",
-    "emailLabel": "E-mail:"
+    "emailLabel": "E-mail:",
+    "dismiss": "Fechar"
   },
   "emailVerification": {
     "title": "Verificação de E-mail",
@@ -266,11 +272,13 @@
   },
   "globalGoTo": {
     "placeholder": "Filtrar rotas ou navegar para uma página...",
-    "noResults": "Nenhuma rota encontrada.",
+    "noResults": "Nenhum resultado encontrado.",
     "favorites": "Favoritos",
     "allPages": "Todas as Páginas",
     "addFavorite": "Adicionar aos favoritos",
-    "removeFavorite": "Remover dos favoritos"
+    "removeFavorite": "Remover dos favoritos",
+    "searchPlaceholder": "Pesquisar páginas...",
+    "ariaLabel": "Pesquisar na navegação"
   },
   "copyToClipboard": "Copiar para a área de transferência",
   "copied": "Copiado!",
@@ -303,7 +311,8 @@
   },
   "navigation": {
     "more": "Mais",
-    "home": "Início"
+    "home": "Início",
+    "menu": "Navegação"
   },
   "pwa": {
     "update": {
@@ -586,6 +595,12 @@
         "deleteWarning": "Esta ação é permanente e não pode ser desfeita. Todos os seus dados serão excluídos."
       },
       "signOut": "Sair"
+    },
+    "login": {
+      "title": "Login",
+      "description": "Entre na sua conta",
+      "authNotAvailable": "A autenticação não está disponível. Se você acha que é um erro, entre em contato com o suporte.",
+      "loading": "Carregando autenticação..."
     }
   },
   "canvas": {
@@ -626,5 +641,16 @@
   "seo": {
     "llmsPages": "Páginas",
     "llmsBlog": "Blog"
+  },
+  "adminLanding": {
+    "contactSupport": "Falar com o suporte",
+    "visitWebsite": "Visitar o site",
+    "signedInAs": "Conectado como {{user}}"
+  },
+  "featureDisabled": {
+    "description": "{{featureName}} não está disponível. Isso pode ocorrer por falta de configuração ou por recursos desativados.",
+    "reviewCookies": "Gerenciar cookies",
+    "retry": "Tentar novamente",
+    "helpText": "Se você acha que é um erro, entre em contato com o suporte ou atualize a página."
   }
 }

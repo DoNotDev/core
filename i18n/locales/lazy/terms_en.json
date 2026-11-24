@@ -12,15 +12,15 @@
       "title": "1. Introduction",
       "welcome": "Welcome to",
       "govern": "These Terms of Service (\"Terms\") govern your use of our development framework, tools, and services (collectively, the \"Service\"). By accessing or using our Service, you agree to be bound by these Terms.",
-      "organization": "If you are using our Service on behalf of an organization, you represent that you have the authority to bind that organization to these Terms. If you do not agree to these Terms, please do not use our Service."
+      "organization": "If you are using our Service on behalf of an organisation, you represent that you have the authority to bind that organisation to these Terms. If you do not agree to these Terms, please do not use our Service."
     },
     "service": {
       "title": "2. Service Description",
       "description": "is a comprehensive development framework that provides tools, components, and infrastructure for building modern web applications. Our Service includes:",
       "framework": "Development framework and libraries",
       "ui": "UI components and design system",
-      "auth": "Authentication and authorization services",
-      "i18n": "Internationalization and localization tools",
+      "auth": "Authentication and authorisation services",
+      "i18n": "Internationalisation and localisation tools",
       "billing": "Billing and subscription management",
       "docs": "Documentation and support resources"
     },
@@ -32,7 +32,7 @@
       },
       "security": {
         "title": "3.2 Account Security",
-        "desc": "You are responsible for safeguarding your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account or any other breach of security."
+        "desc": "You are responsible for safeguarding your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorised use of your account or any other breach of security."
       },
       "eligibility": {
         "title": "3.3 Account Eligibility",
@@ -45,7 +45,7 @@
       "laws": "Use the Service to violate any applicable laws or regulations",
       "infringe": "Infringe upon the intellectual property rights of others",
       "harmful": "Transmit harmful, offensive, or inappropriate content",
-      "unauthorized": "Attempt to gain unauthorized access to our systems or other users' accounts",
+      "unauthorized": "Attempt to gain unauthorised access to our systems or other users' accounts",
       "spam": "Use the Service for spam, phishing, or other malicious activities",
       "disrupt": "Interfere with or disrupt the Service or servers",
       "reverse": "Reverse engineer, decompile, or disassemble our software",
@@ -61,7 +61,7 @@
       },
       "processing": {
         "title": "5.2 Payment Processing",
-        "desc": "Payments are processed through secure third-party payment processors. You authorize us to charge your payment method for all fees associated with your subscription."
+        "desc": "Payments are processed through secure third-party payment processors. You authorise us to charge your payment method for all fees associated with your subscription."
       },
       "billing": {
         "title": "5.3 Billing and Renewal",
@@ -76,15 +76,15 @@
       "title": "6. Intellectual Property Rights",
       "ours": {
         "title": "6.1 Our Intellectual Property",
-        "desc": "The Service, including all software, content, and materials, is owned by us or our licensors and is protected by intellectual property laws. We grant you a limited, non-exclusive, non-transferable license to use the Service in accordance with these Terms."
+        "desc": "The Service, including all software, content, and materials, is owned by us or our licensors and is protected by intellectual property laws. We grant you a limited, non-exclusive, non-transferable licence to use the Service in accordance with these Terms."
       },
       "yours": {
         "title": "6.2 Your Content",
-        "desc": "You retain ownership of any content you create using our Service. You grant us a license to use, store, and process your content solely to provide and improve our Service."
+        "desc": "You retain ownership of any content you create using our Service. You grant us a licence to use, store, and process your content solely to provide and improve our Service."
       },
       "opensource": {
         "title": "6.3 Open Source Components",
-        "desc": "Our Service may include open source software components. The use of such components is subject to their respective open source licenses."
+        "desc": "Our Service may include open source software components. The use of such components is subject to their respective open source licences."
       }
     },
     "privacy": {

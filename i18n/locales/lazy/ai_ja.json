@@ -1,0 +1,26 @@
+{
+  "errors": {
+    "not_available": "AIは利用できません。",
+    "unauthenticated": "AI機能を使用するにはログインしてください。",
+    "send_failed": "メッセージの送信に失敗しました。もう一度お試しください。",
+    "conversation_truncated": "モデルのコンテキスト上限に収めるため、会話は切り詰められました。"
+  },
+  "chat": {
+    "empty": "会話を始める",
+    "you": "あなた",
+    "assistant": "アシスタント",
+    "thinking": "考え中...",
+    "placeholder": "メッセージを入力...",
+    "input_label": "チャットメッセージの入力欄",
+    "send": "送信",
+    "abort": "停止",
+    "tokens": "トークン",
+    "last_usage": "直近",
+    "total": "合計",
+    "unavailable": "AIチャットは利用できません。",
+    "tool_call": "ツール呼び出し"
+  },
+  "cost": {
+    "tokens": "トークン"
+  }
+}

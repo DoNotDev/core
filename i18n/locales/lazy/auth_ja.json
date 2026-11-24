@@ -74,7 +74,7 @@
   "checkEmail": "メールを確認してください",
   "verificationSent": "アカウントの所有権を証明するための確認リンクを送信しました。",
   "errorTitle": "アカウントリンクエラー",
-  "networkError": "ネットワークエラー",
+  "networkError": "ネットワークエラーが発生しました。接続を確認して、もう一度お試しください。",
   "tryAgain": "再試行",
   "cancel": "キャンセル",
   "confirm": "確認",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "小文字1文字",
   "passwordRequirement.number": "数字1文字",
   "passwordRequirement.special": "特殊文字1文字（!@#$%^&*）",
+  "passwordError.uppercase": "パスワードには大文字を1文字以上含めてください",
+  "passwordError.lowercase": "パスワードには小文字を1文字以上含めてください",
+  "passwordError.number": "パスワードには数字を1文字以上含めてください",
+  "passwordError.special": "パスワードには記号を1文字以上含めてください",
   "passwordStrength.label": "パスワードの強度",
   "passwordStrength.weak": "弱い",
   "passwordStrength.fair": "普通",
@@ -214,5 +218,38 @@
     "account_title": "アカウントを作成",
     "code_title": "メールを確認してください",
     "progress": "ステップ {{current}}/{{total}}"
+  },
+  "emailLinkNotSupported": "モバイルではメールリンクは利用できません",
+  "deleteAccountConfirm": "確認のため「DELETE」と入力してください",
+  "reauth": "再認証が必要です",
+  "reauthDescription": "続行するには、もう一度ログインしてください",
+  "emailLink": {
+    "resend": "リンクを再送信",
+    "emailLabel": "メールアドレス",
+    "sending": "リンクを送信中...",
+    "sendLink": "ログインリンクを送信",
+    "helpText": "パスワードなしでログインできる安全なリンクをお送りします。",
+    "sentMessage": "{{email}} にログインリンクを送信しました。メール内のリンクをクリックして、ログインを完了してください。"
+  },
+  "networkStatus": {
+    "online": "オンラインです",
+    "offline": "オフラインです",
+    "connectedVia": "{{connectionType}}で接続中",
+    "offlineMessage": "認証にはインターネット接続が必要です。ネットワーク設定を確認してください。",
+    "checkAgain": "再確認"
+  },
+  "auth": {
+    "fedcmNotSupported": "お使いのブラウザはGoogle One Tapに対応していません",
+    "googleScriptLoadError": "Google Identity Servicesの読み込みに失敗しました",
+    "googleOneTapError": "Google One Tap認証に失敗しました",
+    "googleOneTapInitError": "Google One Tapの初期化に失敗しました"
+  },
+  "passwordUpdate": {
+    "change": "パスワードを変更",
+    "title": "パスワードの変更",
+    "updating": "更新中...",
+    "update": "パスワードを更新",
+    "placeholder": "新しいパスワードを入力",
+    "error": "パスワードを更新できませんでした"
   }
 }

@@ -74,7 +74,7 @@
   "checkEmail": "Controlla la tua email",
   "verificationSent": "Ti abbiamo inviato un link di verifica per dimostrare la proprietà del tuo account.",
   "errorTitle": "Errore di collegamento account",
-  "networkError": "Errore di rete",
+  "networkError": "Errore di rete. Controlla la connessione e riprova.",
   "tryAgain": "Riprova",
   "cancel": "Annulla",
   "confirm": "Conferma",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "Una lettera minuscola",
   "passwordRequirement.number": "Un numero",
   "passwordRequirement.special": "Un carattere speciale (!@#$%^&*)",
+  "passwordError.uppercase": "La password deve contenere almeno una lettera maiuscola",
+  "passwordError.lowercase": "La password deve contenere almeno una lettera minuscola",
+  "passwordError.number": "La password deve contenere almeno un numero",
+  "passwordError.special": "La password deve contenere almeno un carattere speciale",
   "passwordStrength.label": "Forza della password",
   "passwordStrength.weak": "Debole",
   "passwordStrength.fair": "Discreta",
@@ -214,5 +218,38 @@
     "account_title": "Crea il tuo account",
     "code_title": "Controlla la tua email",
     "progress": "Passaggio {{current}} di {{total}}"
+  },
+  "emailLinkNotSupported": "Link via email non supportato su dispositivi mobili",
+  "deleteAccountConfirm": "Digita \"DELETE\" per confermare",
+  "reauth": "Riautenticazione richiesta",
+  "reauthDescription": "Accedi di nuovo per continuare",
+  "emailLink": {
+    "resend": "Invia di nuovo il link",
+    "emailLabel": "Indirizzo email",
+    "sending": "Invio del link...",
+    "sendLink": "Invia link di accesso",
+    "helpText": "Ti invieremo un link sicuro per accedere senza password.",
+    "sentMessage": "Abbiamo inviato un link di accesso a {{email}}. Fai clic sul link nella tua email per completare l'accesso."
+  },
+  "networkStatus": {
+    "online": "Sei online",
+    "offline": "Sei offline",
+    "connectedVia": "Connesso tramite {{connectionType}}",
+    "offlineMessage": "L'autenticazione richiede una connessione a internet. Controlla le impostazioni di rete.",
+    "checkAgain": "Ricontrolla"
+  },
+  "auth": {
+    "fedcmNotSupported": "Il tuo browser non supporta Google One Tap",
+    "googleScriptLoadError": "Impossibile caricare Google Identity Services",
+    "googleOneTapError": "Autenticazione con Google One Tap non riuscita",
+    "googleOneTapInitError": "Impossibile inizializzare Google One Tap"
+  },
+  "passwordUpdate": {
+    "change": "Cambia password",
+    "title": "Cambia password",
+    "updating": "Aggiornamento...",
+    "update": "Aggiorna password",
+    "placeholder": "Inserisci la nuova password",
+    "error": "Impossibile aggiornare la password"
   }
 }

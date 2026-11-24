@@ -41,7 +41,7 @@
   "intellectualProperty": {
     "title": "7. Intellectual Property",
     "content": "All content on this website, including but not limited to text, graphics, logos, images, audio clips, digital downloads, data compilations, and software, is the property of {{publisherName}} or its content suppliers and is protected by international copyright laws.",
-    "unauthorized": "The unauthorized use of any content from this website may violate copyright, trademark, and other laws."
+    "unauthorized": "The unauthorised use of any content from this website may violate copyright, trademark, and other laws."
   },
   "personalData": {
     "title": "8. Personal Data",
@@ -52,5 +52,9 @@
     "title": "9. Cookies",
     "content": "This website uses cookies. For detailed information about cookies and how we use them, please refer to our ",
     "privacyPolicy": "Privacy Policy"
+  },
+  "footer": {
+    "accurate": "The information in this Legal Notice is accurate as of",
+    "updated": "and may be updated to reflect changes in our company information."
   }
 }

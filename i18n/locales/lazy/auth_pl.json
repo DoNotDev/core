@@ -74,7 +74,7 @@
   "checkEmail": "Sprawdź swoją skrzynkę e-mail",
   "verificationSent": "Wysłaliśmy Ci link weryfikacyjny, aby potwierdzić, że konto należy do Ciebie.",
   "errorTitle": "Błąd łączenia kont",
-  "networkError": "Błąd sieci",
+  "networkError": "Błąd sieci. Sprawdź połączenie i spróbuj ponownie.",
   "tryAgain": "Spróbuj ponownie",
   "cancel": "Anuluj",
   "confirm": "Potwierdź",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "Jedna mała litera",
   "passwordRequirement.number": "Jedna cyfra",
   "passwordRequirement.special": "Jeden znak specjalny (!@#$%^&*)",
+  "passwordError.uppercase": "Hasło musi zawierać co najmniej jedną wielką literę",
+  "passwordError.lowercase": "Hasło musi zawierać co najmniej jedną małą literę",
+  "passwordError.number": "Hasło musi zawierać co najmniej jedną cyfrę",
+  "passwordError.special": "Hasło musi zawierać co najmniej jeden znak specjalny",
   "passwordStrength.label": "Siła hasła",
   "passwordStrength.weak": "Słabe",
   "passwordStrength.fair": "Średnie",
@@ -214,5 +218,38 @@
     "account_title": "Utwórz konto",
     "code_title": "Sprawdź swoją skrzynkę e-mail",
     "progress": "Krok {{current}} z {{total}}"
+  },
+  "emailLinkNotSupported": "Logowanie linkiem z e-maila nie jest obsługiwane na urządzeniach mobilnych",
+  "deleteAccountConfirm": "Wpisz „DELETE”, aby potwierdzić",
+  "reauth": "Wymagane ponowne uwierzytelnienie",
+  "reauthDescription": "Zaloguj się ponownie, aby kontynuować",
+  "emailLink": {
+    "resend": "Wyślij link ponownie",
+    "emailLabel": "Adres e-mail",
+    "sending": "Wysyłanie linku...",
+    "sendLink": "Wyślij link do logowania",
+    "helpText": "Wyślemy Ci bezpieczny link, dzięki któremu zalogujesz się bez hasła.",
+    "sentMessage": "Wysłaliśmy link do logowania na adres {{email}}. Kliknij link w wiadomości e-mail, aby dokończyć logowanie."
+  },
+  "networkStatus": {
+    "online": "Jesteś online",
+    "offline": "Jesteś offline",
+    "connectedVia": "Połączono przez {{connectionType}}",
+    "offlineMessage": "Logowanie wymaga połączenia z internetem. Sprawdź ustawienia sieci.",
+    "checkAgain": "Sprawdź ponownie"
+  },
+  "auth": {
+    "fedcmNotSupported": "Twoja przeglądarka nie obsługuje Google One Tap",
+    "googleScriptLoadError": "Nie udało się załadować Google Identity Services",
+    "googleOneTapError": "Uwierzytelnianie przez Google One Tap nie powiodło się",
+    "googleOneTapInitError": "Nie udało się zainicjować Google One Tap"
+  },
+  "passwordUpdate": {
+    "change": "Zmień hasło",
+    "title": "Zmiana hasła",
+    "updating": "Aktualizowanie...",
+    "update": "Zaktualizuj hasło",
+    "placeholder": "Wpisz nowe hasło",
+    "error": "Nie udało się zaktualizować hasła"
   }
 }

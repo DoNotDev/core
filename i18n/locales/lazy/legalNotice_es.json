@@ -1,0 +1,60 @@
+{
+  "title": "Aviso Legal",
+  "description": "Aviso legal: identidad del titular, domicilio social, datos de contacto y director de la publicación, conforme a la ley.",
+  "lastUpdated": "Última actualización",
+  "publisher": {
+    "title": "1. Información del Titular",
+    "name": "Nombre del titular",
+    "type": "Tipo",
+    "types": {
+      "company": "Empresa",
+      "individual": "Persona física"
+    },
+    "legalStatus": "Forma jurídica",
+    "shareCapital": "Capital social"
+  },
+  "registration": {
+    "title": "2. Datos de Registro",
+    "number": "Número de registro / SIRET",
+    "vat": "Número de IVA"
+  },
+  "office": {
+    "title": "3. Domicilio Social",
+    "address": "Dirección"
+  },
+  "contact": {
+    "title": "4. Información de Contacto",
+    "email": "Correo electrónico",
+    "phone": "Teléfono"
+  },
+  "director": {
+    "title": "5. Director de la Publicación",
+    "name": "Nombre",
+    "role": "Cargo"
+  },
+  "hosting": {
+    "title": "6. Proveedor de Alojamiento",
+    "provider": "Proveedor",
+    "address": "Dirección",
+    "contact": "Contacto"
+  },
+  "intellectualProperty": {
+    "title": "7. Propiedad Intelectual",
+    "content": "Todo el contenido de este sitio web, incluidos, entre otros, textos, gráficos, logotipos, imágenes, clips de audio, descargas digitales, recopilaciones de datos y software, es propiedad de {{publisherName}} o de sus proveedores de contenido y está protegido por las leyes internacionales de derechos de autor.",
+    "unauthorized": "El uso no autorizado de cualquier contenido de este sitio web puede infringir las leyes de derechos de autor, de marcas y otras disposiciones legales."
+  },
+  "personalData": {
+    "title": "8. Datos Personales",
+    "content": "Para obtener información sobre cómo recopilamos, utilizamos y protegemos sus datos personales, consulte nuestra ",
+    "privacyPolicy": "Política de Privacidad"
+  },
+  "cookies": {
+    "title": "9. Cookies",
+    "content": "Este sitio web utiliza cookies. Para obtener información detallada sobre las cookies y cómo las utilizamos, consulte nuestra ",
+    "privacyPolicy": "Política de Privacidad"
+  },
+  "footer": {
+    "accurate": "La información de este Aviso Legal es exacta a fecha de",
+    "updated": "y puede actualizarse para reflejar cambios en la información de nuestra empresa."
+  }
+}

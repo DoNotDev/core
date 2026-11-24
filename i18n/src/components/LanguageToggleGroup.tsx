@@ -147,9 +147,7 @@ const LanguageToggleGroup = ({
         backgroundColor: 'var(--muted)',
       }}
       role="group"
-      aria-label={t('common.languageSelector.changeLanguage', {
-        defaultValue: 'Language selection',
-      })}
+      aria-label={t('common.languageSelector.changeLanguage')}
     >
       {displayLanguages.map((language) => {
         const isActive = language.id === currentLanguage;

@@ -6,7 +6,10 @@
     "signOut": "Sign Out",
     "deleteAccount": {
       "label": "Delete Account"
-    }
+    },
+    "userMenu": "User menu",
+    "profile": "Profile",
+    "title": "Authentication"
   },
   "choosePlatform": "Choose a platform to sign in with",
   "providers": {
@@ -28,12 +31,13 @@
   },
   "accountLinking": {
     "title": "Account Linking Required",
-    "message": "This email is already associated with different sign-in methods ({{methods}}). Please sign in using one of those methods to link your accounts.",
+    "message": "An account with the email {{email}} already exists with {{methods}}. To link your {{newProvider}} account, please sign in with {{methods}} first.",
     "instruction": "Please sign in with one of the following methods to link your accounts:",
     "explanation": "By signing in, your accounts will be automatically linked, allowing you to use either sign-in method in the future.",
     "success": "Accounts successfully linked!",
     "error": "Failed to link accounts. Please try again.",
-    "emailLabel": "Email:"
+    "emailLabel": "Email:",
+    "dismiss": "Dismiss"
   },
   "emailVerification": {
     "title": "Email Verification",
@@ -113,7 +117,7 @@
     "whyChooseDoNotDev": "Why Choose DoNotDev?",
     "openSource": "Open Source",
     "freeAndOpenSource": "Free and open-source with a vibrant community.",
-    "customizable": "Customizable",
+    "customizable": "Customisable",
     "flexibleComponents": "Flexible components to tailor your project needs.",
     "developerFocused": "Developer-Focused",
     "scalableArchitecture": "Scalable Architecture",
@@ -159,7 +163,7 @@
     "unsavedChanges": "You have unsaved changes",
     "sessionExpired": "Your session has expired",
     "networkError": "Network error occurred",
-    "unauthorized": "Unauthorized access",
+    "unauthorized": "Unauthorised access",
     "forbidden": "Access forbidden",
     "serverError": "Server error occurred",
     "notFound": {
@@ -274,19 +278,21 @@
   },
   "globalGoTo": {
     "placeholder": "Filter routes or navigate to a page...",
-    "noResults": "No routes found.",
+    "noResults": "No results found.",
     "empty": "No pages available.",
-    "favorites": "Favorites",
+    "favorites": "Favourites",
     "recent": "Recent",
     "allPages": "All Pages",
-    "addFavorite": "Add to favorites",
-    "removeFavorite": "Remove from favorites",
-    "favorite": "Add to favorites",
-    "unfavorite": "Remove from favorites",
+    "addFavorite": "Add to favourites",
+    "removeFavorite": "Remove from favourites",
+    "favorite": "Add to favourites",
+    "unfavorite": "Remove from favourites",
     "shortcutOpen": "Open",
     "shortcutNavigate": "Navigate",
     "shortcutSelect": "Select",
-    "shortcutClose": "Close"
+    "shortcutClose": "Close",
+    "searchPlaceholder": "Search pages...",
+    "ariaLabel": "Search navigation"
   },
   "copyToClipboard": "Copy to clipboard",
   "copied": "Copied!",
@@ -319,7 +325,8 @@
   },
   "navigation": {
     "more": "More",
-    "home": "Home"
+    "home": "Home",
+    "menu": "Navigation"
   },
   "pwa": {
     "update": {
@@ -407,7 +414,7 @@
     },
     "stripe-checkout": {
       "title": "Redirecting to Stripe",
-      "message": "Initializing secure payment...",
+      "message": "Initialising secure payment...",
       "subtitle": "This may take a moment on first load",
       "ariaLabel": "Preparing secure checkout, please wait"
     },
@@ -467,7 +474,7 @@
         "title": "Features",
         "feature1": {
           "title": "Lightning Fast",
-          "description": "Optimized for speed with instant page loads and real-time updates out of the box."
+          "description": "Optimised for speed with instant page loads and real-time updates out of the box."
         },
         "feature2": {
           "title": "Secure by Default",
@@ -486,7 +493,7 @@
         },
         "step2": {
           "title": "Configure",
-          "description": "Set up your workspace, invite your team, and customize your workflow."
+          "description": "Set up your workspace, invite your team, and customise your workflow."
         },
         "step3": {
           "title": "Launch",
@@ -602,6 +609,12 @@
         "deleteWarning": "This action is permanent and cannot be undone. All your data will be deleted."
       },
       "signOut": "Sign Out"
+    },
+    "login": {
+      "title": "Login",
+      "description": "Sign in to your account",
+      "authNotAvailable": "Authentication is not available. Please contact support if you believe this is an error.",
+      "loading": "Loading authentication..."
     }
   },
   "canvas": {
@@ -642,5 +655,16 @@
   "seo": {
     "llmsPages": "Pages",
     "llmsBlog": "Blog"
+  },
+  "adminLanding": {
+    "contactSupport": "Contact Support",
+    "visitWebsite": "Visit Website",
+    "signedInAs": "Signed in as {{user}}"
+  },
+  "featureDisabled": {
+    "description": "{{featureName}} is not available. This may be due to missing configuration or disabled features.",
+    "reviewCookies": "Review Cookies",
+    "retry": "Retry",
+    "helpText": "If you believe this is an error, please contact support or try refreshing the page."
   }
 }

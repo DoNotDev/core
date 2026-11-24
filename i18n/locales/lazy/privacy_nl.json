@@ -12,7 +12,7 @@
       "title": "1. Introductie",
       "welcome": "Welkom bij",
       "commitment": "We hechten aan je privacy. Dit beleid legt uit hoe we je gegevens verzamelen, gebruiken en beschermen.",
-      "agreement": "Door onze diensten te gebruiken ga je akkoord met dit beleid. Anders mag je ze niet gebruiken."
+      "agreement": "Door {{companyName}} te gebruiken ga je akkoord met dit beleid. Ben je het er niet mee eens, gebruik onze diensten dan niet."
     },
     "collection": {
       "title": "2. Gegevens die we verzamelen",

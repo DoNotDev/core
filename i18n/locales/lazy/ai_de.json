@@ -1,0 +1,26 @@
+{
+  "errors": {
+    "not_available": "KI ist nicht verfügbar.",
+    "unauthenticated": "Bitte melden Sie sich an, um KI-Funktionen zu nutzen.",
+    "send_failed": "Die Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+    "conversation_truncated": "Die Unterhaltung wurde gekürzt, um das Kontextlimit des Modells einzuhalten."
+  },
+  "chat": {
+    "empty": "Unterhaltung beginnen",
+    "you": "Sie",
+    "assistant": "Assistent",
+    "thinking": "Denkt nach...",
+    "placeholder": "Nachricht eingeben...",
+    "input_label": "Eingabefeld für Chatnachricht",
+    "send": "Senden",
+    "abort": "Stopp",
+    "tokens": "Tokens",
+    "last_usage": "Zuletzt",
+    "total": "Gesamt",
+    "unavailable": "KI-Chat ist nicht verfügbar.",
+    "tool_call": "Tool-Aufruf"
+  },
+  "cost": {
+    "tokens": "Tokens"
+  }
+}

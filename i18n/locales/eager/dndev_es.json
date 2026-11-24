@@ -1,5 +1,10 @@
 {
   "signIn": "Iniciar sesión",
+  "auth": {
+    "userMenu": "Menú de usuario",
+    "profile": "Perfil",
+    "title": "Autenticación"
+  },
   "choosePlatform": "Elija una plataforma para iniciar sesión",
   "providers": {
     "google": "Google",
@@ -20,12 +25,13 @@
   },
   "accountLinking": {
     "title": "Vinculación de cuenta requerida",
-    "message": "Este correo electrónico ya está asociado con diferentes métodos de inicio de sesión ({{methods}}). Inicie sesión usando uno de esos métodos para vincular sus cuentas.",
+    "message": "Ya existe una cuenta con el correo electrónico {{email}} mediante {{methods}}. Para vincular su cuenta de {{newProvider}}, inicie sesión primero con {{methods}}.",
     "instruction": "Inicie sesión con uno de los siguientes métodos para vincular sus cuentas:",
     "explanation": "Al iniciar sesión, sus cuentas se vincularán automáticamente, permitiéndole usar cualquiera de los métodos de inicio de sesión en el futuro.",
     "success": "¡Cuentas vinculadas con éxito!",
     "error": "Error al vincular las cuentas. Inténtelo de nuevo.",
-    "emailLabel": "Correo electrónico:"
+    "emailLabel": "Correo electrónico:",
+    "dismiss": "Cerrar"
   },
   "emailVerification": {
     "title": "Verificación de correo electrónico",
@@ -266,11 +272,13 @@
   },
   "globalGoTo": {
     "placeholder": "Filtrar rutas o navegar a una página...",
-    "noResults": "No se encontraron rutas.",
+    "noResults": "No se encontraron resultados.",
     "favorites": "Favoritos",
     "allPages": "Todas las páginas",
     "addFavorite": "Agregar a favoritos",
-    "removeFavorite": "Quitar de favoritos"
+    "removeFavorite": "Quitar de favoritos",
+    "searchPlaceholder": "Buscar páginas...",
+    "ariaLabel": "Buscar en la navegación"
   },
   "copyToClipboard": "Copiar al portapapeles",
   "copied": "¡Copiado!",
@@ -303,7 +311,8 @@
   },
   "navigation": {
     "more": "Más",
-    "home": "Inicio"
+    "home": "Inicio",
+    "menu": "Navegación"
   },
   "pwa": {
     "update": {
@@ -586,6 +595,12 @@
         "deleteWarning": "Esta acción es permanente y no se puede deshacer. Todos tus datos serán eliminados."
       },
       "signOut": "Cerrar sesión"
+    },
+    "login": {
+      "title": "Inicio de sesión",
+      "description": "Inicie sesión en su cuenta",
+      "authNotAvailable": "La autenticación no está disponible. Si cree que se trata de un error, póngase en contacto con soporte.",
+      "loading": "Cargando la autenticación..."
     }
   },
   "canvas": {
@@ -626,5 +641,16 @@
   "seo": {
     "llmsPages": "Páginas",
     "llmsBlog": "Blog"
+  },
+  "adminLanding": {
+    "contactSupport": "Contactar con soporte",
+    "visitWebsite": "Visitar el sitio web",
+    "signedInAs": "Sesión iniciada como {{user}}"
+  },
+  "featureDisabled": {
+    "description": "{{featureName}} no está disponible. Puede deberse a una configuración ausente o a funciones desactivadas.",
+    "reviewCookies": "Gestionar cookies",
+    "retry": "Reintentar",
+    "helpText": "Si cree que se trata de un error, póngase en contacto con soporte o actualice la página."
   }
 }

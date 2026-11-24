@@ -20,7 +20,9 @@
   "templates": {
     "purchase": {
       "title": "Zacznij już dziś",
-      "subtitle": "Wybierz opcję zakupu jednorazowego"
+      "subtitle": "Wybierz opcję zakupu jednorazowego",
+      "notAvailable": "Płatności Stripe nie są skonfigurowane lub są niedostępne. Skontaktuj się z pomocą techniczną, jeśli uważasz, że to błąd.",
+      "loading": "Ładowanie rozliczeń..."
     },
     "subscription": {
       "title": "Wybierz swój plan",
@@ -28,14 +30,42 @@
       "billingToggle": {
         "monthly": "Miesięcznie",
         "yearly": "Rocznie",
-        "save20": "Oszczędź 20%"
+        "save20": "Oszczędź 20%",
+        "ariaLabel": "Przełącz okres rozliczeniowy"
+      },
+      "notAvailable": "Płatności Stripe nie są skonfigurowane lub są niedostępne. Skontaktuj się z pomocą techniczną, jeśli uważasz, że to błąd.",
+      "loading": "Ładowanie subskrypcji...",
+      "noPlans": "Brak planów dostępnych w tym okresie rozliczeniowym.",
+      "cta": {
+        "title": "Masz pytania?",
+        "subtitle": "Nasz zespół pomoże Ci wybrać odpowiedni plan.",
+        "action": "Skontaktuj się z nami"
       }
     },
     "checkout": {
       "title": "Sfinalizuj zakup",
       "description": "Bezpieczna płatność obsługiwana przez Stripe",
       "completePurchase": "Sfinalizuj zakup",
-      "startSubscription": "Rozpocznij subskrypcję"
+      "startSubscription": "Rozpocznij subskrypcję",
+      "notAvailable": "Płatności Stripe nie są skonfigurowane lub są niedostępne. Skontaktuj się z pomocą techniczną, jeśli uważasz, że to błąd.",
+      "loading": "Ładowanie płatności...",
+      "noPriceId": "Nie wybrano produktu. Wybierz produkt, zanim przejdziesz do płatności."
+    },
+    "success": {
+      "title": "Płatność zakończona sukcesem!",
+      "notAvailable": "Rozliczenia nie są skonfigurowane lub są niedostępne. Skontaktuj się z pomocą techniczną, jeśli uważasz, że to błąd.",
+      "subtitle": "Dziękujemy za zakup",
+      "subscriptionDetails": "Szczegóły subskrypcji",
+      "plan": "Plan",
+      "status": "Status",
+      "validUntil": "Ważna do",
+      "endedOn": "Zakończono",
+      "lifetime": "Dożywotnio",
+      "dateUnavailable": "Data niedostępna",
+      "whatsNext": "Co dalej?",
+      "learnMore": "Dowiedz się więcej",
+      "needHelp": "Potrzebujesz pomocy? Napisz do nas na adres",
+      "goToDashboard": "Przejdź do panelu"
     }
   },
   "components": {
@@ -82,6 +112,10 @@
       "current": "Obecny",
       "subscriptionEnds": "Subskrypcja zakończy się {{date}}",
       "planChanged": "Plan został zmieniony!",
+      "subscribeToAccess": "Wykup subskrypcję, aby uzyskać dostęp do funkcji premium",
+      "statusLabel": "Status",
+      "renewsOn": "Odnawia się",
+      "manageSubscription": "Zarządzaj subskrypcją",
       "status": {
         "active": "Aktywna",
         "cancelled": "Anulowana",

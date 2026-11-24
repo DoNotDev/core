@@ -74,7 +74,7 @@
   "checkEmail": "Revise su correo electrónico",
   "verificationSent": "Le hemos enviado un enlace de verificación para demostrar la propiedad de su cuenta.",
   "errorTitle": "Error de vinculación de cuenta",
-  "networkError": "Error de red",
+  "networkError": "Error de red. Verifique su conexión e intente de nuevo.",
   "tryAgain": "Intentar de nuevo",
   "cancel": "Cancelar",
   "confirm": "Confirmar",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "Una letra minúscula",
   "passwordRequirement.number": "Un número",
   "passwordRequirement.special": "Un carácter especial (!@#$%^&*)",
+  "passwordError.uppercase": "La contraseña debe contener al menos una letra mayúscula",
+  "passwordError.lowercase": "La contraseña debe contener al menos una letra minúscula",
+  "passwordError.number": "La contraseña debe contener al menos un número",
+  "passwordError.special": "La contraseña debe contener al menos un carácter especial",
   "passwordStrength.label": "Fortaleza de la contraseña",
   "passwordStrength.weak": "Débil",
   "passwordStrength.fair": "Regular",
@@ -214,5 +218,38 @@
     "account_title": "Crea tu cuenta",
     "code_title": "Revisa tu correo",
     "progress": "Paso {{current}} de {{total}}"
+  },
+  "emailLinkNotSupported": "Enlace por correo electrónico no disponible en móvil",
+  "deleteAccountConfirm": "Escriba \"DELETE\" para confirmar",
+  "reauth": "Se requiere volver a autenticarse",
+  "reauthDescription": "Inicie sesión de nuevo para continuar",
+  "emailLink": {
+    "resend": "Reenviar enlace",
+    "emailLabel": "Correo electrónico",
+    "sending": "Enviando enlace...",
+    "sendLink": "Enviar enlace de inicio de sesión",
+    "helpText": "Le enviaremos un enlace seguro para iniciar sesión sin contraseña.",
+    "sentMessage": "Hemos enviado un enlace de inicio de sesión a {{email}}. Haga clic en el enlace de su correo electrónico para completar el inicio de sesión."
+  },
+  "networkStatus": {
+    "online": "Está en línea",
+    "offline": "Está sin conexión",
+    "connectedVia": "Conectado mediante {{connectionType}}",
+    "offlineMessage": "La autenticación requiere conexión a internet. Verifique la configuración de su red.",
+    "checkAgain": "Volver a comprobar"
+  },
+  "auth": {
+    "fedcmNotSupported": "Su navegador no es compatible con Google One Tap",
+    "googleScriptLoadError": "No se pudo cargar Google Identity Services",
+    "googleOneTapError": "Falló la autenticación con Google One Tap",
+    "googleOneTapInitError": "No se pudo inicializar Google One Tap"
+  },
+  "passwordUpdate": {
+    "change": "Cambiar contraseña",
+    "title": "Cambiar contraseña",
+    "updating": "Actualizando...",
+    "update": "Actualizar contraseña",
+    "placeholder": "Introduzca la nueva contraseña",
+    "error": "No se pudo actualizar la contraseña"
   }
 }

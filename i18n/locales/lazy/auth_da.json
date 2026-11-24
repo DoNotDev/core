@@ -74,7 +74,7 @@
   "checkEmail": "Tjek din e-mail",
   "verificationSent": "Vi har sendt et bekræftelseslink til din e-mail.",
   "errorTitle": "Fejl ved kobling af konto",
-  "networkError": "Netværksfejl",
+  "networkError": "Netværksfejl. Tjek din forbindelse og prøv igen.",
   "tryAgain": "Prøv igen",
   "cancel": "Annuller",
   "confirm": "Bekræft",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "Ét lille bogstav",
   "passwordRequirement.number": "Ét tal",
   "passwordRequirement.special": "Ét specialtegn (!@#$%^&*)",
+  "passwordError.uppercase": "Adgangskoden skal indeholde mindst ét stort bogstav",
+  "passwordError.lowercase": "Adgangskoden skal indeholde mindst ét lille bogstav",
+  "passwordError.number": "Adgangskoden skal indeholde mindst ét tal",
+  "passwordError.special": "Adgangskoden skal indeholde mindst ét specialtegn",
   "passwordStrength.label": "Styrke",
   "passwordStrength.weak": "Svag",
   "passwordStrength.fair": "Tilpas",
@@ -214,5 +218,38 @@
     "account_title": "Opret din konto",
     "code_title": "Tjek din e-mail",
     "progress": "Trin {{current}} af {{total}}"
+  },
+  "emailLinkNotSupported": "E-maillink understøttes ikke på mobil",
+  "deleteAccountConfirm": "Skriv \"DELETE\" for at bekræfte",
+  "reauth": "Ny godkendelse påkrævet",
+  "reauthDescription": "Log ind igen for at fortsætte",
+  "emailLink": {
+    "resend": "Send link igen",
+    "emailLabel": "E-mailadresse",
+    "sending": "Sender link...",
+    "sendLink": "Send loginlink",
+    "helpText": "Vi sender dig et sikkert link, så du kan logge ind uden adgangskode.",
+    "sentMessage": "Vi har sendt et loginlink til {{email}}. Klik på linket i din e-mail for at fuldføre login."
+  },
+  "networkStatus": {
+    "online": "Du er online",
+    "offline": "Du er offline",
+    "connectedVia": "Forbundet via {{connectionType}}",
+    "offlineMessage": "Login kræver en internetforbindelse. Tjek dine netværksindstillinger.",
+    "checkAgain": "Tjek igen"
+  },
+  "auth": {
+    "fedcmNotSupported": "Din browser understøtter ikke Google One Tap",
+    "googleScriptLoadError": "Google Identity Services kunne ikke indlæses",
+    "googleOneTapError": "Login med Google One Tap mislykkedes",
+    "googleOneTapInitError": "Google One Tap kunne ikke startes"
+  },
+  "passwordUpdate": {
+    "change": "Skift adgangskode",
+    "title": "Skift adgangskode",
+    "updating": "Opdaterer...",
+    "update": "Opdater adgangskode",
+    "placeholder": "Indtast ny adgangskode",
+    "error": "Adgangskoden kunne ikke opdateres"
   }
 }

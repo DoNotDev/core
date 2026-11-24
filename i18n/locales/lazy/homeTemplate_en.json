@@ -20,11 +20,11 @@
       },
       "fast": {
         "title": "Lightning Fast",
-        "description": "Optimized for performance and developer experience"
+        "description": "Optimised for performance and developer experience"
       },
       "secure": {
         "title": "Enterprise Security",
-        "description": "Built-in authentication, authorization, and security features"
+        "description": "Built-in authentication, authorisation, and security features"
       }
     },
     "cta": {

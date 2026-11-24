@@ -12,7 +12,7 @@
       "title": "1. Introduktion",
       "welcome": "Velkommen til",
       "commitment": "Vi beskytter dit privatliv. Denne politik beskriver, hvordan vi indsamler, bruger og beskytter dine oplysninger.",
-      "agreement": "Ved at bruge vores tjenester accepterer du denne politik. Ellers må du ikke bruge dem."
+      "agreement": "Ved at bruge {{companyName}} accepterer du denne politik. Ellers må du ikke bruge vores tjenester."
     },
     "collection": {
       "title": "2. Oplysninger vi indsamler",

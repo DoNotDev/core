@@ -36,7 +36,8 @@
   },
   "address": {
     "placeholder": "Voer adres in...",
-    "noResults": "Geen adressen gevonden"
+    "noResults": "Geen adressen gevonden",
+    "apiUnavailable": "Google Places niet beschikbaar — voer het adres handmatig in"
   },
   "export": "Exporteren",
   "noInquiries": "Geen berichten gevonden.",
@@ -112,7 +113,8 @@
     "thisMonth": "Deze maand",
     "clear": "Wissen",
     "pick": "Kiezen",
-    "time": "Tijd"
+    "time": "Tijd",
+    "clearAll": "Alle filters wissen"
   },
   "duration": {
     "15m": "15m",
@@ -126,6 +128,7 @@
     "custom": "Aangepast",
     "zero": "—",
     "minutes": "{{count}} min",
+    "hours": "{{hours}}u",
     "hoursMinutes": "{{hours}}u {{minutes}}min"
   },
   "results": {
@@ -532,7 +535,11 @@
     "privacyPolicy": "privacybeleid",
     "terms": "en de algemene voorwaarden",
     "and": "en geef toestemming voor verwerking van mijn gegevens.",
-    "required": "Accepteer het privacybeleid om door te gaan"
+    "required": "Accepteer het privacybeleid om door te gaan",
+    "display": {
+      "no": "Geen toestemming",
+      "yes": "Toestemming gegeven"
+    }
   },
   "custom": {
     "passwordMatch": "Wachtwoorden moeten overeenkomen",
@@ -581,8 +588,8 @@
     "confirmSelected_other": "De {{count}} geselecteerde items verwijderen? Dit kan niet ongedaan worden gemaakt."
   },
   "emptyState": {
-    "title": "Niets gevonden",
-    "description": "Er is nog niets om te tonen."
+    "title": "Geen {{entity}} gevonden",
+    "description": "Er zijn momenteel geen {{entity}} beschikbaar."
   },
   "bulkEdit": {
     "pending_one": "{{count}} niet-opgeslagen wijziging",

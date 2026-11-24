@@ -36,7 +36,8 @@
   },
   "address": {
     "placeholder": "أدخل العنوان...",
-    "noResults": "لم يتم العثور على عناوين"
+    "noResults": "لم يتم العثور على عناوين",
+    "apiUnavailable": "Google Places غير متاح — اكتب العنوان يدوياً"
   },
   "export": "تصدير",
   "copyToClipboard": "نسخ إلى الحافظة",
@@ -308,7 +309,11 @@
     "privacyPolicy": "سياسة الخصوصية",
     "terms": "شروط الاستخدام",
     "and": "وأوافق على معالجة بياناتي الشخصية.",
-    "required": "يرجى قبول سياسة الخصوصية للمتابعة"
+    "required": "يرجى قبول سياسة الخصوصية للمتابعة",
+    "display": {
+      "no": "لم تتم الموافقة",
+      "yes": "تمت الموافقة"
+    }
   },
   "custom": {
     "passwordMatch": "كلمات المرور يجب أن تتطابق",
@@ -362,7 +367,8 @@
     "thisMonth": "هذا الشهر",
     "clear": "مسح",
     "pick": "اختيار",
-    "time": "الوقت"
+    "time": "الوقت",
+    "clearAll": "مسح جميع المرشحات"
   },
   "duration": {
     "15m": "١٥ د",
@@ -376,6 +382,7 @@
     "custom": "مخصص",
     "zero": "—",
     "minutes": "{{count}} د",
+    "hours": "{{hours}} س",
     "hoursMinutes": "{{hours}} س {{minutes}} د"
   },
   "results": {
@@ -419,8 +426,8 @@
     "fetchFailed": "تعذّر تحميل {{entity}}"
   },
   "emptyState": {
-    "title": "لا توجد نتائج",
-    "description": "لا يوجد شيء لعرضه حتى الآن."
+    "title": "لا توجد نتائج في {{entity}}",
+    "description": "لا توجد عناصر متاحة حالياً في {{entity}}."
   },
   "bulkEdit": {
     "pending_one": "تعديل واحد غير محفوظ",

@@ -74,7 +74,7 @@
   "checkEmail": "Vérifiez votre email",
   "verificationSent": "Nous vous avons envoyé un lien de vérification pour prouver la propriété de votre compte.",
   "errorTitle": "Erreur de liaison de compte",
-  "networkError": "Erreur réseau",
+  "networkError": "Erreur réseau. Vérifiez votre connexion et réessayez.",
   "tryAgain": "Réessayer",
   "cancel": "Annuler",
   "confirm": "Confirmer",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "Une lettre minuscule",
   "passwordRequirement.number": "Un chiffre",
   "passwordRequirement.special": "Un caractère spécial (!@#$%^&*)",
+  "passwordError.uppercase": "Le mot de passe doit contenir au moins une lettre majuscule",
+  "passwordError.lowercase": "Le mot de passe doit contenir au moins une lettre minuscule",
+  "passwordError.number": "Le mot de passe doit contenir au moins un chiffre",
+  "passwordError.special": "Le mot de passe doit contenir au moins un caractère spécial",
   "passwordStrength.label": "Force du mot de passe",
   "passwordStrength.weak": "Faible",
   "passwordStrength.fair": "Moyen",
@@ -214,5 +218,38 @@
     "account_title": "Créez votre compte",
     "code_title": "Vérifiez vos e-mails",
     "progress": "Étape {{current}} sur {{total}}"
+  },
+  "emailLinkNotSupported": "Lien par email non pris en charge sur mobile",
+  "deleteAccountConfirm": "Saisissez « DELETE » pour confirmer",
+  "reauth": "Réauthentification requise",
+  "reauthDescription": "Veuillez vous reconnecter pour continuer",
+  "emailLink": {
+    "resend": "Renvoyer le lien",
+    "emailLabel": "Adresse email",
+    "sending": "Envoi du lien...",
+    "sendLink": "Envoyer le lien de connexion",
+    "helpText": "Nous vous enverrons un lien sécurisé pour vous connecter sans mot de passe.",
+    "sentMessage": "Nous avons envoyé un lien de connexion à {{email}}. Cliquez sur le lien dans votre email pour terminer la connexion."
+  },
+  "networkStatus": {
+    "online": "Vous êtes en ligne",
+    "offline": "Vous êtes hors ligne",
+    "connectedVia": "Connecté via {{connectionType}}",
+    "offlineMessage": "La connexion nécessite un accès à internet. Vérifiez vos paramètres réseau.",
+    "checkAgain": "Vérifier à nouveau"
+  },
+  "auth": {
+    "fedcmNotSupported": "Votre navigateur ne prend pas en charge Google One Tap",
+    "googleScriptLoadError": "Échec du chargement de Google Identity Services",
+    "googleOneTapError": "Échec de l'authentification Google One Tap",
+    "googleOneTapInitError": "Échec de l'initialisation de Google One Tap"
+  },
+  "passwordUpdate": {
+    "change": "Changer le mot de passe",
+    "title": "Changer le mot de passe",
+    "updating": "Mise à jour...",
+    "update": "Mettre à jour le mot de passe",
+    "placeholder": "Saisissez le nouveau mot de passe",
+    "error": "Échec de la mise à jour du mot de passe"
   }
 }

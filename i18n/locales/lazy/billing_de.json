@@ -9,7 +9,9 @@
   "templates": {
     "purchase": {
       "title": "Loslegen",
-      "subtitle": "Wählen Sie Ihre einmalige Kaufoption"
+      "subtitle": "Wählen Sie Ihre einmalige Kaufoption",
+      "notAvailable": "Die Stripe-Abrechnung ist nicht konfiguriert oder nicht verfügbar. Bitte kontaktieren Sie den Support, wenn Sie einen Fehler vermuten.",
+      "loading": "Abrechnung wird geladen..."
     },
     "subscription": {
       "title": "Wählen Sie Ihren Plan",
@@ -17,14 +19,42 @@
       "billingToggle": {
         "monthly": "Monatlich",
         "yearly": "Jährlich",
-        "save20": "20% sparen"
+        "save20": "20% sparen",
+        "ariaLabel": "Abrechnungszeitraum umschalten"
+      },
+      "notAvailable": "Die Stripe-Abrechnung ist nicht konfiguriert oder nicht verfügbar. Bitte kontaktieren Sie den Support, wenn Sie einen Fehler vermuten.",
+      "loading": "Abonnements werden geladen...",
+      "noPlans": "Für diesen Abrechnungszeitraum sind keine Pläne verfügbar.",
+      "cta": {
+        "title": "Fragen?",
+        "subtitle": "Unser Team hilft Ihnen gerne bei der Wahl des passenden Plans.",
+        "action": "Kontakt aufnehmen"
       }
     },
     "checkout": {
       "title": "Kauf abschließen",
       "description": "Sicherer Checkout unterstützt von Stripe",
       "completePurchase": "Kauf abschließen",
-      "startSubscription": "Abonnement starten"
+      "startSubscription": "Abonnement starten",
+      "notAvailable": "Die Stripe-Abrechnung ist nicht konfiguriert oder nicht verfügbar. Bitte kontaktieren Sie den Support, wenn Sie einen Fehler vermuten.",
+      "loading": "Checkout wird geladen...",
+      "noPriceId": "Kein Produkt ausgewählt. Bitte wählen Sie ein Produkt aus, bevor Sie mit dem Checkout fortfahren."
+    },
+    "success": {
+      "title": "Zahlung erfolgreich!",
+      "notAvailable": "Die Abrechnung ist nicht konfiguriert oder nicht verfügbar. Bitte kontaktieren Sie den Support, wenn Sie einen Fehler vermuten.",
+      "subtitle": "Vielen Dank für Ihren Kauf",
+      "subscriptionDetails": "Abonnementdetails",
+      "plan": "Plan",
+      "status": "Status",
+      "validUntil": "Gültig bis",
+      "endedOn": "Beendet am",
+      "lifetime": "Lebenslang",
+      "dateUnavailable": "Datum nicht verfügbar",
+      "whatsNext": "Wie geht es weiter?",
+      "learnMore": "Mehr erfahren",
+      "needHelp": "Brauchen Sie Hilfe? Schreiben Sie uns an",
+      "goToDashboard": "Zum Dashboard"
     }
   },
   "components": {
@@ -71,6 +101,10 @@
       "current": "Aktuell",
       "subscriptionEnds": "Das Abonnement endet am {{date}}",
       "planChanged": "Plan erfolgreich geändert!",
+      "subscribeToAccess": "Abonnieren Sie, um Premium-Funktionen zu nutzen",
+      "statusLabel": "Status",
+      "renewsOn": "Verlängerung am",
+      "manageSubscription": "Abonnement verwalten",
       "status": {
         "active": "Aktiv",
         "cancelled": "Gekündigt",

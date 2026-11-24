@@ -57,6 +57,15 @@ const LOGO_OUTPUTS = [
 ];
 
 /**
+ * Format preference of the asset manifest's `logo.optimal`: `public/logo.svg` whenever it
+ * exists, a raster logo (`logo.webp`, `logo.avif`, `logo.png`) only without it.
+ */
+const LOGO_OPTIMAL_FORMATS = ['svg', 'webp', 'avif', 'png', 'jpg', 'jpeg'];
+
+/** Format preference of `logo.fallback`: the raster logo for consumers that cannot use SVG. */
+const LOGO_FALLBACK_FORMATS = ['png', 'jpg', 'jpeg'];
+
+/**
  * Record of the icons generated from `logo.svg`, relative to the app root and committed with
  * the app (outside `public/`: never deployed). JSON, one entry per generated icon:
  * `{ "<file in public/>": { "logo": "<sha256 of logo.svg>", "sha256": "<sha256 of the icon>" } }`.
@@ -128,7 +137,6 @@ export class AssetDiscovery extends BaseDiscovery {
       assetPatterns: SCAN_PATTERNS.assets.patterns,
       frameworkPackage: FRAMEWORK_CONFIG.package,
       assetsPath: FRAMEWORK_CONFIG.assetsPath,
-      modernFormats: SCAN_PATTERNS.assets.modern,
       ...options,
     });
 
@@ -320,26 +328,24 @@ export class AssetDiscovery extends BaseDiscovery {
   }
 
   /**
-   * Get optimal asset for a given base name
+   * The first discovered `/<baseName>.<format>` in `formatPreference` order (cached assets).
+   * @param {string} baseName - File name without extension, e.g. `logo`
+   * @param {string[]} formatPreference - Extensions, most preferred first, e.g. `['svg', 'png']`
+   * @returns {string|null} Public path, or null when none is discovered
    */
   getOptimalAsset(baseName, formatPreference) {
-    const assets = this.getAssets().map((a) => a.path);
-    const preference = formatPreference || this.options.modernFormats;
-
-    for (const format of preference) {
-      const candidate = `/${baseName}.${format}`;
-      if (assets.includes(candidate)) {
-        return candidate;
-      }
-    }
-    return null;
+    return this._getOptimalAsset(
+      baseName,
+      this.getAssets().map((a) => a.path),
+      formatPreference
+    );
   }
 
   // === PRIVATE METHODS ===
 
   async _ensureDefaultAssets(appRoot) {
     // Always ensure assets are present, don't use session cache
-    this.logger.debug('Ensuring default assets with modern format support...');
+    this.logger.debug('Ensuring default assets...');
 
     const copiedAssets = [];
 
@@ -514,7 +520,6 @@ export class AssetDiscovery extends BaseDiscovery {
       format,
       size,
       sizeFormatted: this._formatBytes(size),
-      isModern: this.options.modernFormats.includes(format),
     };
   }
 
@@ -571,8 +576,11 @@ export class AssetDiscovery extends BaseDiscovery {
   }
 
   /**
-   * Asset manifest of the scanned public assets.
-   * @param {Array<{ path: string, isModern: boolean }>} assets - Scanned assets
+   * Asset manifest of the scanned public assets. `logo.optimal`: `/logo.svg` whenever it
+   * exists, else the first raster logo ({@link LOGO_OPTIMAL_FORMATS}); `logo.fallback`: the
+   * raster logo ({@link LOGO_FALLBACK_FORMATS}) or null; `assets`: the public path of every
+   * scanned asset.
+   * @param {Array<{ path: string }>} assets - Scanned assets
    * @param {{ webAppManifest: boolean }} options - Whether `public/manifest.json` exists
    * @returns {Object}
    */
@@ -584,13 +592,13 @@ export class AssetDiscovery extends BaseDiscovery {
         optimal: this._getOptimalAsset(
           'logo',
           assetPaths,
-          this.options.modernFormats
+          LOGO_OPTIMAL_FORMATS
         ),
-        fallback: this._getOptimalAsset('logo', assetPaths, [
-          'png',
-          'jpg',
-          'jpeg',
-        ]),
+        fallback: this._getOptimalAsset(
+          'logo',
+          assetPaths,
+          LOGO_FALLBACK_FORMATS
+        ),
       },
       favicon: {
         optimal: this._getOptimalAsset('favicon', assetPaths, ['svg', 'ico']),
@@ -610,8 +618,7 @@ export class AssetDiscovery extends BaseDiscovery {
       // The web app manifest: exactly /manifest.json (the file Next's PWA handler writes and
       // the framework default asset), never another *-manifest.json discovery output
       manifest: webAppManifest ? WEB_APP_MANIFEST : null,
-      modernFormats: assets.filter((a) => a.isModern).map((a) => a.path),
-      fallbackFormats: assets.filter((a) => !a.isModern).map((a) => a.path),
+      assets: assetPaths,
     };
 
     return manifest;
@@ -690,8 +697,7 @@ export class AssetDiscovery extends BaseDiscovery {
       appleTouchIcon: null,
       androidChrome: { 192: null, 512: null },
       manifest: null,
-      modernFormats: [],
-      fallbackFormats: [],
+      assets: [],
       logoSvgContent: null,
     };
   }

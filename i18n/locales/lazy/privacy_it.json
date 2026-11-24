@@ -12,7 +12,7 @@
       "title": "1. Introduzione",
       "welcome": "Benvenuto in",
       "commitment": "Ci impegniamo a proteggere la tua privacy e garantirti un'esperienza positiva sulla nostra piattaforma. Questa Informativa sulla Privacy spiega come raccogliamo, utilizziamo, divulghiamo e proteggiamo le tue informazioni quando utilizzi il nostro framework di sviluppo, strumenti e servizi.",
-      "agreement": "accetti la raccolta e l'utilizzo delle informazioni in conformità con questa politica. Se non sei d'accordo con le nostre politiche e pratiche, ti preghiamo di non utilizzare i nostri servizi."
+      "agreement": "Utilizzando {{companyName}}, accetti la raccolta e l'utilizzo delle informazioni in conformità con questa politica. Se non sei d'accordo con le nostre politiche e pratiche, ti preghiamo di non utilizzare i nostri servizi."
     },
     "collection": {
       "title": "2. Informazioni che Raccogliamo",

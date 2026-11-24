@@ -1,0 +1,26 @@
+{
+  "errors": {
+    "not_available": "AI er ikke tilgængelig.",
+    "unauthenticated": "Log ind for at bruge AI-funktioner.",
+    "send_failed": "Beskeden kunne ikke sendes. Prøv igen.",
+    "conversation_truncated": "Samtalen blev afkortet, så den passer inden for modellens kontekstgrænse."
+  },
+  "chat": {
+    "empty": "Start en samtale",
+    "you": "Dig",
+    "assistant": "Assistent",
+    "thinking": "Tænker...",
+    "placeholder": "Skriv en besked...",
+    "input_label": "Indtastningsfelt til chatbesked",
+    "send": "Send",
+    "abort": "Stop",
+    "tokens": "tokens",
+    "last_usage": "Seneste",
+    "total": "I alt",
+    "unavailable": "AI-chat er ikke tilgængelig.",
+    "tool_call": "Værktøjskald"
+  },
+  "cost": {
+    "tokens": "tokens"
+  }
+}

@@ -9,7 +9,9 @@
   "templates": {
     "purchase": {
       "title": "Kom i gang",
-      "subtitle": "Vælg din engangskøb"
+      "subtitle": "Vælg din engangskøb",
+      "notAvailable": "Stripe-fakturering er ikke konfigureret eller tilgængelig. Kontakt support, hvis du mener, at det er en fejl.",
+      "loading": "Henter fakturering..."
     },
     "subscription": {
       "title": "Vælg din pakke",
@@ -17,14 +19,42 @@
       "billingToggle": {
         "monthly": "Månedlig",
         "yearly": "Årlig",
-        "save20": "Spar 20%"
+        "save20": "Spar 20%",
+        "ariaLabel": "Skift faktureringsinterval"
+      },
+      "notAvailable": "Stripe-fakturering er ikke konfigureret eller tilgængelig. Kontakt support, hvis du mener, at det er en fejl.",
+      "loading": "Henter abonnementer...",
+      "noPlans": "Ingen pakker tilgængelige for denne faktureringsperiode.",
+      "cta": {
+        "title": "Har du spørgsmål?",
+        "subtitle": "Vores team hjælper dig gerne med at vælge den rigtige pakke.",
+        "action": "Kontakt os"
       }
     },
     "checkout": {
       "title": "Afslut købet",
       "description": "Sikker betaling med Stripe",
       "completePurchase": "Betal nu",
-      "startSubscription": "Start abonnement"
+      "startSubscription": "Start abonnement",
+      "notAvailable": "Stripe-fakturering er ikke konfigureret eller tilgængelig. Kontakt support, hvis du mener, at det er en fejl.",
+      "loading": "Henter betaling...",
+      "noPriceId": "Intet produkt valgt. Vælg et produkt, før du går videre til betaling."
+    },
+    "success": {
+      "title": "Betaling gennemført!",
+      "notAvailable": "Fakturering er ikke konfigureret eller tilgængelig. Kontakt support, hvis du mener, at det er en fejl.",
+      "subtitle": "Tak for dit køb",
+      "subscriptionDetails": "Abonnementsoplysninger",
+      "plan": "Pakke",
+      "status": "Status",
+      "validUntil": "Gyldig til",
+      "endedOn": "Udløb den",
+      "lifetime": "Livstid",
+      "dateUnavailable": "Dato ikke tilgængelig",
+      "whatsNext": "Hvad nu?",
+      "learnMore": "Læs mere",
+      "needHelp": "Brug for hjælp? Kontakt os på",
+      "goToDashboard": "Gå til dashboard"
     }
   },
   "components": {
@@ -71,6 +101,10 @@
       "current": "Nuværende",
       "subscriptionEnds": "Abonnementet udløber {{date}}",
       "planChanged": "Pakke ændret.",
+      "subscribeToAccess": "Abonnér for at få adgang til premiumfunktioner",
+      "statusLabel": "Status",
+      "renewsOn": "Fornyes den",
+      "manageSubscription": "Administrer abonnement",
       "status": {
         "active": "Aktiv",
         "cancelled": "Opsagt",

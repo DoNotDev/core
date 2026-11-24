@@ -403,7 +403,7 @@ export interface SEOConfig {
   hreflang?: boolean;
   /** Auto-generate BreadcrumbList JSON-LD: the site, the page's ancestors (`routeAncestors`: URL prefixes that are pages, PageMeta `parent`) and the page, by page title (default: true). Set to false to disable. */
   breadcrumbSchema?: boolean;
-  /** Auto-generate WebSite JSON-LD with SearchAction for sitelinks search box (default: true). Set to false to disable. */
+  /** Auto-generate WebSite JSON-LD (site name and URL, no SearchAction) (default: true). Set to false to disable. */
   websiteSchema?: boolean;
   /** Auto-generate Organization JSON-LD on homepage from app.links (default: true). Set to false to disable. */
   organizationSchema?: boolean;

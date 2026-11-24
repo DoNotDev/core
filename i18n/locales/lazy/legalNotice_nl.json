@@ -1,0 +1,60 @@
+{
+  "title": "Juridische kennisgeving",
+  "description": "Juridische kennisgeving: identiteit van de uitgever, statutaire zetel, contactgegevens en verantwoordelijke uitgever, zoals wettelijk vereist.",
+  "lastUpdated": "Laatst bijgewerkt",
+  "publisher": {
+    "title": "1. Gegevens van de uitgever",
+    "name": "Naam van de uitgever",
+    "type": "Type",
+    "types": {
+      "company": "Bedrijf",
+      "individual": "Particulier"
+    },
+    "legalStatus": "Rechtsvorm",
+    "shareCapital": "Maatschappelijk kapitaal"
+  },
+  "registration": {
+    "title": "2. Registratiegegevens",
+    "number": "Registratienummer / SIRET",
+    "vat": "Btw-nummer"
+  },
+  "office": {
+    "title": "3. Statutaire zetel",
+    "address": "Adres"
+  },
+  "contact": {
+    "title": "4. Contactgegevens",
+    "email": "E-mail",
+    "phone": "Telefoon"
+  },
+  "director": {
+    "title": "5. Verantwoordelijke uitgever",
+    "name": "Naam",
+    "role": "Functie"
+  },
+  "hosting": {
+    "title": "6. Hostingprovider",
+    "provider": "Provider",
+    "address": "Adres",
+    "contact": "Contact"
+  },
+  "intellectualProperty": {
+    "title": "7. Intellectueel eigendom",
+    "content": "Alle inhoud van deze website, waaronder maar niet beperkt tot teksten, afbeeldingen, logo's, beeldmateriaal, audiofragmenten, digitale downloads, gegevensverzamelingen en software, is eigendom van {{publisherName}} of haar contentleveranciers en wordt beschermd door internationale auteursrechtwetgeving.",
+    "unauthorized": "Ongeoorloofd gebruik van de inhoud van deze website kan een inbreuk vormen op auteursrechten, merkrechten en andere wetgeving."
+  },
+  "personalData": {
+    "title": "8. Persoonsgegevens",
+    "content": "Lees voor informatie over hoe we je persoonsgegevens verzamelen, gebruiken en beschermen ons ",
+    "privacyPolicy": "Privacybeleid"
+  },
+  "cookies": {
+    "title": "9. Cookies",
+    "content": "Deze website maakt gebruik van cookies. Lees voor uitgebreide informatie over cookies en hoe we ze gebruiken ons ",
+    "privacyPolicy": "Privacybeleid"
+  },
+  "footer": {
+    "accurate": "De informatie in deze juridische kennisgeving is juist per",
+    "updated": "en kan worden bijgewerkt om wijzigingen in de bedrijfsgegevens weer te geven."
+  }
+}

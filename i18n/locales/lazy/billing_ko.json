@@ -9,7 +9,9 @@
   "templates": {
     "purchase": {
       "title": "시작하기",
-      "subtitle": "일회성 구매 옵션을 선택하세요"
+      "subtitle": "일회성 구매 옵션을 선택하세요",
+      "notAvailable": "Stripe 결제가 구성되지 않았거나 사용할 수 없습니다. 오류라고 판단되시면 지원팀에 문의해 주세요.",
+      "loading": "결제 정보 불러오는 중..."
     },
     "subscription": {
       "title": "플랜 선택",
@@ -17,14 +19,42 @@
       "billingToggle": {
         "monthly": "월간",
         "yearly": "연간",
-        "save20": "20% 절약"
+        "save20": "20% 절약",
+        "ariaLabel": "결제 주기 전환"
+      },
+      "notAvailable": "Stripe 결제가 구성되지 않았거나 사용할 수 없습니다. 오류라고 판단되시면 지원팀에 문의해 주세요.",
+      "loading": "구독 정보 불러오는 중...",
+      "noPlans": "이 결제 주기에 이용할 수 있는 플랜이 없습니다.",
+      "cta": {
+        "title": "궁금한 점이 있으신가요?",
+        "subtitle": "저희 팀이 알맞은 플랜을 선택하실 수 있도록 도와드립니다.",
+        "action": "문의하기"
       }
     },
     "checkout": {
       "title": "구매 완료",
       "description": "Stripe로 구동되는 안전한 결제",
       "completePurchase": "구매 완료",
-      "startSubscription": "구독 시작"
+      "startSubscription": "구독 시작",
+      "notAvailable": "Stripe 결제가 구성되지 않았거나 사용할 수 없습니다. 오류라고 판단되시면 지원팀에 문의해 주세요.",
+      "loading": "결제 페이지 불러오는 중...",
+      "noPriceId": "선택된 상품이 없습니다. 결제를 진행하기 전에 상품을 선택해 주세요."
+    },
+    "success": {
+      "title": "결제가 완료되었습니다!",
+      "notAvailable": "결제 기능이 구성되지 않았거나 사용할 수 없습니다. 오류라고 판단되시면 지원팀에 문의해 주세요.",
+      "subtitle": "구매해 주셔서 감사합니다",
+      "subscriptionDetails": "구독 상세 정보",
+      "plan": "플랜",
+      "status": "상태",
+      "validUntil": "유효 기한",
+      "endedOn": "종료일",
+      "lifetime": "평생 이용",
+      "dateUnavailable": "날짜를 확인할 수 없음",
+      "whatsNext": "다음 단계",
+      "learnMore": "자세히 알아보기",
+      "needHelp": "도움이 필요하신가요? 다음 주소로 문의하세요:",
+      "goToDashboard": "대시보드로 이동"
     }
   },
   "components": {
@@ -71,6 +101,10 @@
       "current": "현재",
       "subscriptionEnds": "구독은 {{date}}에 종료됩니다",
       "planChanged": "플랜이 성공적으로 변경되었습니다!",
+      "subscribeToAccess": "프리미엄 기능을 이용하려면 구독하세요",
+      "statusLabel": "상태",
+      "renewsOn": "갱신일",
+      "manageSubscription": "구독 관리",
       "status": {
         "active": "활성",
         "cancelled": "취소됨",

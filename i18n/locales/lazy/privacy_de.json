@@ -12,7 +12,7 @@
       "title": "1. Einleitung",
       "welcome": "Willkommen bei",
       "commitment": "Wir sind verpflichtet, Ihre Privatsphäre zu schützen und sicherzustellen, dass Sie eine positive Erfahrung auf unserer Plattform haben. Diese Datenschutzerklärung erläutert, wie wir Ihre Informationen sammeln, verwenden, offenlegen und schützen, wenn Sie unser Entwicklungsframework, unsere Tools und Dienste nutzen.",
-      "agreement": "stimmen Sie der Sammlung und Verwendung von Informationen gemäß dieser Richtlinie zu. Wenn Sie unseren Richtlinien und Praktiken nicht zustimmen, nutzen Sie bitte unsere Dienste nicht."
+      "agreement": "Durch die Nutzung von {{companyName}} stimmen Sie der Sammlung und Verwendung von Informationen gemäß dieser Richtlinie zu. Wenn Sie unseren Richtlinien und Praktiken nicht zustimmen, nutzen Sie bitte unsere Dienste nicht."
     },
     "collection": {
       "title": "2. Informationen, die wir sammeln",

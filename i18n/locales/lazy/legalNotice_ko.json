@@ -1,0 +1,60 @@
+{
+  "title": "법적 고지",
+  "description": "법적 고지: 법률에 따라 공개하는 운영자 정보, 등록 사무소, 연락처 및 발행 책임자 정보.",
+  "lastUpdated": "최종 업데이트",
+  "publisher": {
+    "title": "1. 운영자 정보",
+    "name": "운영자명",
+    "type": "유형",
+    "types": {
+      "company": "법인",
+      "individual": "개인"
+    },
+    "legalStatus": "법적 형태",
+    "shareCapital": "자본금"
+  },
+  "registration": {
+    "title": "2. 등록 정보",
+    "number": "등록번호 / SIRET",
+    "vat": "부가가치세(VAT) 번호"
+  },
+  "office": {
+    "title": "3. 등록 사무소",
+    "address": "주소"
+  },
+  "contact": {
+    "title": "4. 연락처 정보",
+    "email": "이메일",
+    "phone": "전화번호"
+  },
+  "director": {
+    "title": "5. 발행 책임자",
+    "name": "성명",
+    "role": "직책"
+  },
+  "hosting": {
+    "title": "6. 호스팅 제공업체",
+    "provider": "업체명",
+    "address": "주소",
+    "contact": "연락처"
+  },
+  "intellectualProperty": {
+    "title": "7. 지적 재산권",
+    "content": "본 웹사이트의 모든 콘텐츠(텍스트, 그래픽, 로고, 이미지, 오디오 클립, 디지털 다운로드, 데이터 편집물 및 소프트웨어를 포함하되 이에 한정되지 않음)는 {{publisherName}} 또는 그 콘텐츠 공급자의 재산이며 국제 저작권법의 보호를 받습니다.",
+    "unauthorized": "본 웹사이트의 콘텐츠를 무단으로 사용하는 것은 저작권, 상표권 및 기타 법률을 위반할 수 있습니다."
+  },
+  "personalData": {
+    "title": "8. 개인정보",
+    "content": "개인정보의 수집, 이용 및 보호 방법에 대해서는 다음을 참조하십시오: ",
+    "privacyPolicy": "개인정보 보호정책"
+  },
+  "cookies": {
+    "title": "9. 쿠키",
+    "content": "본 웹사이트는 쿠키를 사용합니다. 쿠키 및 당사의 쿠키 사용 방법에 대한 자세한 내용은 다음을 참조하십시오: ",
+    "privacyPolicy": "개인정보 보호정책"
+  },
+  "footer": {
+    "accurate": "본 법적 고지의 정보는",
+    "updated": "기준으로 정확하며, 회사 정보의 변경 사항을 반영하기 위해 업데이트될 수 있습니다."
+  }
+}

@@ -12,7 +12,7 @@
       "title": "1. Wprowadzenie",
       "welcome": "Witamy w",
       "commitment": "Dokładamy starań, aby chronić Państwa prywatność i zapewnić Państwu pozytywne doświadczenia na naszej platformie. Niniejsza Polityka prywatności wyjaśnia, w jaki sposób gromadzimy, wykorzystujemy, ujawniamy i zabezpieczamy Państwa informacje podczas korzystania z naszego frameworka programistycznego, narzędzi i usług.",
-      "agreement": "wyrażają Państwo zgodę na gromadzenie i wykorzystywanie informacji zgodnie z niniejszą polityką. Jeżeli nie zgadzają się Państwo z naszymi politykami i praktykami, prosimy nie korzystać z naszych usług."
+      "agreement": "Korzystając z usług {{companyName}}, wyrażają Państwo zgodę na gromadzenie i wykorzystywanie informacji zgodnie z niniejszą polityką. Jeżeli nie zgadzają się Państwo z naszymi politykami i praktykami, prosimy nie korzystać z naszych usług."
     },
     "collection": {
       "title": "2. Informacje, które gromadzimy",

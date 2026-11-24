@@ -52,5 +52,9 @@
     "title": "9. Cookies",
     "content": "Diese Website verwendet Cookies. Ausführliche Informationen zu Cookies und deren Verwendung finden Sie in unserer ",
     "privacyPolicy": "Datenschutzerklärung"
+  },
+  "footer": {
+    "accurate": "Die Angaben in diesem Impressum sind aktuell zum",
+    "updated": "und können aktualisiert werden, um Änderungen unserer Unternehmensangaben zu berücksichtigen."
   }
 }

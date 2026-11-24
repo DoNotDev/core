@@ -9,7 +9,9 @@
   "templates": {
     "purchase": {
       "title": "Commencer",
-      "subtitle": "Choisissez votre option d'achat unique"
+      "subtitle": "Choisissez votre option d'achat unique",
+      "notAvailable": "La facturation Stripe n'est pas configurée ou disponible. Veuillez contacter le support si vous pensez qu'il s'agit d'une erreur.",
+      "loading": "Chargement de la facturation..."
     },
     "subscription": {
       "title": "Choisissez Votre Plan",
@@ -17,14 +19,42 @@
       "billingToggle": {
         "monthly": "Mensuel",
         "yearly": "Annuel",
-        "save20": "Économisez 20%"
+        "save20": "Économisez 20%",
+        "ariaLabel": "Changer la période de facturation"
+      },
+      "notAvailable": "La facturation Stripe n'est pas configurée ou disponible. Veuillez contacter le support si vous pensez qu'il s'agit d'une erreur.",
+      "loading": "Chargement des abonnements...",
+      "noPlans": "Aucun plan disponible pour cette période de facturation.",
+      "cta": {
+        "title": "Des questions ?",
+        "subtitle": "Notre équipe est là pour vous aider à choisir le bon plan.",
+        "action": "Nous Contacter"
       }
     },
     "checkout": {
       "title": "Finalisez Votre Achat",
       "description": "Paiement sécurisé propulsé par Stripe",
       "completePurchase": "Finaliser l'Achat",
-      "startSubscription": "Démarrer l'Abonnement"
+      "startSubscription": "Démarrer l'Abonnement",
+      "notAvailable": "La facturation Stripe n'est pas configurée ou disponible. Veuillez contacter le support si vous pensez qu'il s'agit d'une erreur.",
+      "loading": "Chargement du paiement...",
+      "noPriceId": "Aucun produit sélectionné. Veuillez choisir un produit avant de passer au paiement."
+    },
+    "success": {
+      "title": "Paiement Réussi !",
+      "notAvailable": "La facturation n'est pas configurée ou disponible. Veuillez contacter le support si vous pensez qu'il s'agit d'une erreur.",
+      "subtitle": "Merci pour votre achat",
+      "subscriptionDetails": "Détails de l'Abonnement",
+      "plan": "Plan",
+      "status": "Statut",
+      "validUntil": "Valable jusqu'au",
+      "endedOn": "Terminé le",
+      "lifetime": "À vie",
+      "dateUnavailable": "Date indisponible",
+      "whatsNext": "Et ensuite ?",
+      "learnMore": "En savoir plus",
+      "needHelp": "Besoin d'aide ? Contactez-nous à",
+      "goToDashboard": "Aller au Tableau de Bord"
     }
   },
   "components": {
@@ -71,6 +101,10 @@
       "current": "Actuel",
       "subscriptionEnds": "L'abonnement se terminera le {{date}}",
       "planChanged": "Plan modifié avec succès !",
+      "subscribeToAccess": "Abonnez-vous pour accéder aux fonctionnalités premium",
+      "statusLabel": "Statut",
+      "renewsOn": "Renouvellement le",
+      "manageSubscription": "Gérer l'Abonnement",
       "status": {
         "active": "Actif",
         "cancelled": "Annulé",

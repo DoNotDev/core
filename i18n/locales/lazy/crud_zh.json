@@ -36,7 +36,8 @@
   },
   "address": {
     "placeholder": "输入地址...",
-    "noResults": "未找到地址"
+    "noResults": "未找到地址",
+    "apiUnavailable": "Google Places 不可用 — 请手动输入地址"
   },
   "export": "导出",
   "noInquiries": "未找到询问。",
@@ -112,7 +113,8 @@
     "thisMonth": "本月",
     "clear": "清空",
     "pick": "选择",
-    "time": "时间"
+    "time": "时间",
+    "clearAll": "清空所有筛选"
   },
   "duration": {
     "15m": "15 分钟",
@@ -126,6 +128,7 @@
     "custom": "自定义",
     "zero": "—",
     "minutes": "{{count}} 分钟",
+    "hours": "{{hours}} 小时",
     "hoursMinutes": "{{hours}} 小时 {{minutes}} 分钟"
   },
   "results": {
@@ -532,7 +535,11 @@
     "privacyPolicy": "隐私政策",
     "terms": "使用条款",
     "and": "并同意处理我的个人数据。",
-    "required": "请接受隐私政策以继续"
+    "required": "请接受隐私政策以继续",
+    "display": {
+      "no": "未同意",
+      "yes": "已同意"
+    }
   },
   "custom": {
     "passwordMatch": "密码必须匹配",
@@ -581,8 +588,8 @@
     "confirmSelected_other": "删除所选的 {{count}} 项？此操作无法撤销。"
   },
   "emptyState": {
-    "title": "未找到结果",
-    "description": "暂时没有可显示的内容。"
+    "title": "未找到 {{entity}}",
+    "description": "当前暂无可用的 {{entity}}。"
   },
   "bulkEdit": {
     "pending_one": "{{count}} 项未保存的更改",

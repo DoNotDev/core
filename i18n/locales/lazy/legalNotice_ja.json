@@ -1,0 +1,60 @@
+{
+  "title": "法的通知",
+  "description": "法的通知：法令に基づく、発行者の身元、所在地、連絡先および発行責任者に関する情報。",
+  "lastUpdated": "最終更新",
+  "publisher": {
+    "title": "1. 発行者情報",
+    "name": "発行者名",
+    "type": "種別",
+    "types": {
+      "company": "法人",
+      "individual": "個人"
+    },
+    "legalStatus": "法人形態",
+    "shareCapital": "資本金"
+  },
+  "registration": {
+    "title": "2. 登録情報",
+    "number": "登録番号 / SIRET",
+    "vat": "VAT番号"
+  },
+  "office": {
+    "title": "3. 本店所在地",
+    "address": "住所"
+  },
+  "contact": {
+    "title": "4. 連絡先情報",
+    "email": "メールアドレス",
+    "phone": "電話番号"
+  },
+  "director": {
+    "title": "5. 発行責任者",
+    "name": "氏名",
+    "role": "役職"
+  },
+  "hosting": {
+    "title": "6. ホスティング事業者",
+    "provider": "事業者名",
+    "address": "住所",
+    "contact": "連絡先"
+  },
+  "intellectualProperty": {
+    "title": "7. 知的財産権",
+    "content": "本ウェブサイト上のすべてのコンテンツ（テキスト、グラフィック、ロゴ、画像、音声クリップ、デジタルダウンロード、データ集、ソフトウェアを含みますが、これらに限られません）は、{{publisherName}}またはそのコンテンツ提供者の財産であり、国際的な著作権法によって保護されています。",
+    "unauthorized": "本ウェブサイトのコンテンツを無断で使用することは、著作権、商標権その他の法令に違反する場合があります。"
+  },
+  "personalData": {
+    "title": "8. 個人データ",
+    "content": "個人データの収集、使用、保護の方法については、次をご参照ください：",
+    "privacyPolicy": "プライバシーポリシー"
+  },
+  "cookies": {
+    "title": "9. Cookie",
+    "content": "本ウェブサイトではCookieを使用しています。Cookieの詳細および当社での使用方法については、次をご参照ください：",
+    "privacyPolicy": "プライバシーポリシー"
+  },
+  "footer": {
+    "accurate": "本法的通知に記載の情報は",
+    "updated": "時点のものであり、会社情報の変更を反映するため、更新されることがあります。"
+  }
+}

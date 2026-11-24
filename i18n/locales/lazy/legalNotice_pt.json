@@ -52,5 +52,9 @@
     "title": "9. Cookies",
     "content": "Este site usa cookies. Para informações detalhadas sobre cookies e como os utilizamos, consulte nossa",
     "privacyPolicy": "Política de Privacidade"
+  },
+  "footer": {
+    "accurate": "As informações deste Aviso Legal estão corretas em",
+    "updated": "e podem ser atualizadas para refletir alterações nas informações da nossa empresa."
   }
 }

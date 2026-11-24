@@ -17,7 +17,8 @@
     "tokens": "tokens",
     "last_usage": "Last",
     "total": "Total",
-    "unavailable": "AI chat is not available."
+    "unavailable": "AI chat is not available.",
+    "tool_call": "Tool call"
   },
   "cost": {
     "tokens": "tokens"

@@ -22,7 +22,6 @@ export class NextAssetHandler extends BaseNextHandler {
     return {
       manifestPath: GENERATED_PATHS.next.assetManifest,
       generateManifest: true,
-      modernFormats: ['webp', 'avif', 'png', 'jpg', 'jpeg'],
     };
   }
 

@@ -12,7 +12,7 @@
       "title": "1. Introdução",
       "welcome": "Bem-vindo a",
       "commitment": "Estamos comprometidos em proteger sua privacidade e garantir que você tenha uma experiência positiva em nossa plataforma. Esta Política de Privacidade explica como coletamos, usamos, divulgamos e protegemos suas informações quando você usa nosso framework de desenvolvimento, ferramentas e serviços.",
-      "agreement": "você concorda com a coleta e uso de informações de acordo com esta política. Se você não concordar com nossas políticas e práticas, não use nossos serviços."
+      "agreement": "Ao usar {{companyName}}, você concorda com a coleta e uso de informações de acordo com esta política. Se você não concordar com nossas políticas e práticas, não use nossos serviços."
     },
     "collection": {
       "title": "2. Informações Que Coletamos",

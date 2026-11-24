@@ -9,7 +9,9 @@
   "templates": {
     "purchase": {
       "title": "始める",
-      "subtitle": "一回限りの購入オプションを選択してください"
+      "subtitle": "一回限りの購入オプションを選択してください",
+      "notAvailable": "Stripe課金が設定されていないか、利用できません。エラーと思われる場合は、サポートまでお問い合わせください。",
+      "loading": "課金情報を読み込み中..."
     },
     "subscription": {
       "title": "プランを選択",
@@ -17,14 +19,42 @@
       "billingToggle": {
         "monthly": "月額",
         "yearly": "年額",
-        "save20": "20%節約"
+        "save20": "20%節約",
+        "ariaLabel": "請求間隔を切り替え"
+      },
+      "notAvailable": "Stripe課金が設定されていないか、利用できません。エラーと思われる場合は、サポートまでお問い合わせください。",
+      "loading": "サブスクリプションを読み込み中...",
+      "noPlans": "この請求期間に利用できるプランはありません。",
+      "cta": {
+        "title": "ご質問はありますか？",
+        "subtitle": "最適なプランをお選びいただけるよう、チームがサポートします。",
+        "action": "お問い合わせ"
       }
     },
     "checkout": {
       "title": "購入を完了",
       "description": "Stripeによる安全なチェックアウト",
       "completePurchase": "購入を完了",
-      "startSubscription": "サブスクリプションを開始"
+      "startSubscription": "サブスクリプションを開始",
+      "notAvailable": "Stripe課金が設定されていないか、利用できません。エラーと思われる場合は、サポートまでお問い合わせください。",
+      "loading": "チェックアウトを読み込み中...",
+      "noPriceId": "商品が選択されていません。チェックアウトに進む前に商品を選択してください。"
+    },
+    "success": {
+      "title": "お支払いが完了しました！",
+      "notAvailable": "課金が設定されていないか、利用できません。エラーと思われる場合は、サポートまでお問い合わせください。",
+      "subtitle": "ご購入ありがとうございます",
+      "subscriptionDetails": "サブスクリプションの詳細",
+      "plan": "プラン",
+      "status": "ステータス",
+      "validUntil": "有効期限",
+      "endedOn": "終了日",
+      "lifetime": "無期限",
+      "dateUnavailable": "日付を取得できません",
+      "whatsNext": "次のステップ",
+      "learnMore": "詳しく見る",
+      "needHelp": "ご不明な点は次のアドレスまでお問い合わせください：",
+      "goToDashboard": "ダッシュボードへ移動"
     }
   },
   "components": {
@@ -71,6 +101,10 @@
       "current": "現在",
       "subscriptionEnds": "サブスクリプションは{{date}}に終了します",
       "planChanged": "プランが正常に変更されました！",
+      "subscribeToAccess": "プレミアム機能を利用するにはサブスクリプションに登録してください",
+      "statusLabel": "ステータス",
+      "renewsOn": "更新日",
+      "manageSubscription": "サブスクリプションを管理",
       "status": {
         "active": "アクティブ",
         "cancelled": "キャンセル済み",

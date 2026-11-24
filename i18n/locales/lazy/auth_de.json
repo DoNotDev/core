@@ -74,7 +74,7 @@
   "checkEmail": "Überprüfen Sie Ihre E-Mail",
   "verificationSent": "Wir haben Ihnen einen Bestätigungslink gesendet, um die Eigentümerschaft Ihres Kontos zu bestätigen.",
   "errorTitle": "Kontoverknüpfungsfehler",
-  "networkError": "Netzwerkfehler",
+  "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
   "tryAgain": "Erneut versuchen",
   "cancel": "Abbrechen",
   "confirm": "Bestätigen",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "Ein Kleinbuchstabe",
   "passwordRequirement.number": "Eine Zahl",
   "passwordRequirement.special": "Ein Sonderzeichen (!@#$%^&*)",
+  "passwordError.uppercase": "Das Passwort muss mindestens einen Großbuchstaben enthalten",
+  "passwordError.lowercase": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten",
+  "passwordError.number": "Das Passwort muss mindestens eine Zahl enthalten",
+  "passwordError.special": "Das Passwort muss mindestens ein Sonderzeichen enthalten",
   "passwordStrength.label": "Passwortstärke",
   "passwordStrength.weak": "Schwach",
   "passwordStrength.fair": "Mäßig",
@@ -214,5 +218,38 @@
     "account_title": "Konto erstellen",
     "code_title": "Prüfen Sie Ihre E-Mails",
     "progress": "Schritt {{current}} von {{total}}"
+  },
+  "emailLinkNotSupported": "E-Mail-Link wird auf Mobilgeräten nicht unterstützt",
+  "deleteAccountConfirm": "Geben Sie „DELETE“ zur Bestätigung ein",
+  "reauth": "Erneute Authentifizierung erforderlich",
+  "reauthDescription": "Bitte melden Sie sich erneut an, um fortzufahren",
+  "emailLink": {
+    "resend": "Link erneut senden",
+    "emailLabel": "E-Mail-Adresse",
+    "sending": "Link wird gesendet...",
+    "sendLink": "Anmeldelink senden",
+    "helpText": "Wir senden Ihnen einen sicheren Link, mit dem Sie sich ohne Passwort anmelden können.",
+    "sentMessage": "Wir haben einen Anmeldelink an {{email}} gesendet. Klicken Sie auf den Link in Ihrer E-Mail, um die Anmeldung abzuschließen."
+  },
+  "networkStatus": {
+    "online": "Sie sind online",
+    "offline": "Sie sind offline",
+    "connectedVia": "Verbunden über {{connectionType}}",
+    "offlineMessage": "Für die Anmeldung ist eine Internetverbindung erforderlich. Bitte überprüfen Sie Ihre Netzwerkeinstellungen.",
+    "checkAgain": "Erneut prüfen"
+  },
+  "auth": {
+    "fedcmNotSupported": "Ihr Browser unterstützt Google One Tap nicht",
+    "googleScriptLoadError": "Google Identity Services konnte nicht geladen werden",
+    "googleOneTapError": "Google One Tap-Authentifizierung fehlgeschlagen",
+    "googleOneTapInitError": "Google One Tap konnte nicht initialisiert werden"
+  },
+  "passwordUpdate": {
+    "change": "Passwort ändern",
+    "title": "Passwort ändern",
+    "updating": "Wird aktualisiert...",
+    "update": "Passwort aktualisieren",
+    "placeholder": "Neues Passwort eingeben",
+    "error": "Passwort konnte nicht aktualisiert werden"
   }
 }

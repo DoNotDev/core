@@ -74,7 +74,7 @@
   "checkEmail": "Bekijk je e-mail",
   "verificationSent": "We hebben je een verificatielink gestuurd.",
   "errorTitle": "Fout bij koppelen van account",
-  "networkError": "Netwerkfout",
+  "networkError": "Netwerkfout. Controleer je verbinding en probeer het opnieuw.",
   "tryAgain": "Opnieuw proberen",
   "cancel": "Annuleren",
   "confirm": "Bevestigen",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "Één kleine letter",
   "passwordRequirement.number": "Één cijfer",
   "passwordRequirement.special": "Één speciaal teken (!@#$%^&*)",
+  "passwordError.uppercase": "Wachtwoord moet minimaal één hoofdletter bevatten",
+  "passwordError.lowercase": "Wachtwoord moet minimaal één kleine letter bevatten",
+  "passwordError.number": "Wachtwoord moet minimaal één cijfer bevatten",
+  "passwordError.special": "Wachtwoord moet minimaal één speciaal teken bevatten",
   "passwordStrength.label": "Sterkte",
   "passwordStrength.weak": "Zwak",
   "passwordStrength.fair": "Redelijk",
@@ -214,5 +218,38 @@
     "account_title": "Maak je account aan",
     "code_title": "Controleer je e-mail",
     "progress": "Stap {{current}} van {{total}}"
+  },
+  "emailLinkNotSupported": "E-maillink wordt niet ondersteund op mobiel",
+  "deleteAccountConfirm": "Typ \"DELETE\" om te bevestigen",
+  "reauth": "Opnieuw inloggen vereist",
+  "reauthDescription": "Log opnieuw in om door te gaan",
+  "emailLink": {
+    "resend": "Link opnieuw verzenden",
+    "emailLabel": "E-mailadres",
+    "sending": "Link wordt verzonden...",
+    "sendLink": "Inloglink versturen",
+    "helpText": "We sturen je een veilige link waarmee je zonder wachtwoord kunt inloggen.",
+    "sentMessage": "We hebben een inloglink naar {{email}} gestuurd. Klik op de link in je e-mail om het inloggen af te ronden."
+  },
+  "networkStatus": {
+    "online": "Je bent online",
+    "offline": "Je bent offline",
+    "connectedVia": "Verbonden via {{connectionType}}",
+    "offlineMessage": "Inloggen vereist een internetverbinding. Controleer je netwerkinstellingen.",
+    "checkAgain": "Opnieuw controleren"
+  },
+  "auth": {
+    "fedcmNotSupported": "Je browser ondersteunt Google One Tap niet",
+    "googleScriptLoadError": "Google Identity Services kon niet worden geladen",
+    "googleOneTapError": "Inloggen met Google One Tap mislukt",
+    "googleOneTapInitError": "Google One Tap kon niet worden geïnitialiseerd"
+  },
+  "passwordUpdate": {
+    "change": "Wachtwoord wijzigen",
+    "title": "Wachtwoord wijzigen",
+    "updating": "Bijwerken...",
+    "update": "Wachtwoord bijwerken",
+    "placeholder": "Voer een nieuw wachtwoord in",
+    "error": "Het wachtwoord kon niet worden bijgewerkt"
   }
 }

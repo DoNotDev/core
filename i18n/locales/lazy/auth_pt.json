@@ -74,7 +74,7 @@
   "checkEmail": "Verifique seu email",
   "verificationSent": "Enviamos um link de verificação para você para provar que é o proprietário da conta.",
   "errorTitle": "Erro de Vinculação de Conta",
-  "networkError": "Erro de rede",
+  "networkError": "Erro de rede. Verifique sua conexão e tente novamente.",
   "tryAgain": "Tentar novamente",
   "cancel": "Cancelar",
   "confirm": "Confirmar",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "Uma letra minúscula",
   "passwordRequirement.number": "Um número",
   "passwordRequirement.special": "Um caractere especial (!@#$%^&*)",
+  "passwordError.uppercase": "A senha deve conter pelo menos uma letra maiúscula",
+  "passwordError.lowercase": "A senha deve conter pelo menos uma letra minúscula",
+  "passwordError.number": "A senha deve conter pelo menos um número",
+  "passwordError.special": "A senha deve conter pelo menos um caractere especial",
   "passwordStrength.label": "Força da senha",
   "passwordStrength.weak": "Fraca",
   "passwordStrength.fair": "Razoável",
@@ -214,5 +218,38 @@
     "account_title": "Crie sua conta",
     "code_title": "Verifique seu e-mail",
     "progress": "Etapa {{current}} de {{total}}"
+  },
+  "emailLinkNotSupported": "Link por email indisponível no celular",
+  "deleteAccountConfirm": "Digite \"DELETE\" para confirmar",
+  "reauth": "Reautenticação necessária",
+  "reauthDescription": "Entre novamente para continuar",
+  "emailLink": {
+    "resend": "Reenviar link",
+    "emailLabel": "Endereço de email",
+    "sending": "Enviando link...",
+    "sendLink": "Enviar link de acesso",
+    "helpText": "Enviaremos um link seguro para você entrar sem senha.",
+    "sentMessage": "Enviamos um link de acesso para {{email}}. Clique no link no seu email para concluir o acesso."
+  },
+  "networkStatus": {
+    "online": "Você está online",
+    "offline": "Você está offline",
+    "connectedVia": "Conectado via {{connectionType}}",
+    "offlineMessage": "A autenticação requer conexão com a internet. Verifique as configurações da sua rede.",
+    "checkAgain": "Verificar novamente"
+  },
+  "auth": {
+    "fedcmNotSupported": "Seu navegador não é compatível com Google One Tap",
+    "googleScriptLoadError": "Falha ao carregar o Google Identity Services",
+    "googleOneTapError": "Falha na autenticação com Google One Tap",
+    "googleOneTapInitError": "Falha ao inicializar o Google One Tap"
+  },
+  "passwordUpdate": {
+    "change": "Alterar senha",
+    "title": "Alterar senha",
+    "updating": "Atualizando...",
+    "update": "Atualizar senha",
+    "placeholder": "Digite a nova senha",
+    "error": "Falha ao atualizar a senha"
   }
 }

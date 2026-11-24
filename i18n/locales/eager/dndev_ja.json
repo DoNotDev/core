@@ -1,5 +1,10 @@
 {
   "signIn": "ログイン",
+  "auth": {
+    "userMenu": "ユーザーメニュー",
+    "profile": "プロフィール",
+    "title": "認証"
+  },
   "choosePlatform": "ログインするプラットフォームを選択してください",
   "providers": {
     "google": "Google",
@@ -20,12 +25,13 @@
   },
   "accountLinking": {
     "title": "アカウントのリンクが必要です",
-    "message": "このメールアドレスは既に異なるログイン方法（{{methods}}）に関連付けられています。アカウントをリンクするには、そのいずれかの方法でログインしてください。",
+    "message": "メールアドレス {{email}} は、既に {{methods}} で登録されています。{{newProvider}} のアカウントをリンクするには、先に {{methods}} でログインしてください。",
     "instruction": "アカウントをリンクするには、以下のいずれかの方法でログインしてください：",
     "explanation": "ログインすると、アカウントが自動的にリンクされ、今後どちらのログイン方法も使用できるようになります。",
     "success": "アカウントのリンクに成功しました！",
     "error": "アカウントのリンクに失敗しました。もう一度お試しください。",
-    "emailLabel": "メールアドレス："
+    "emailLabel": "メールアドレス：",
+    "dismiss": "閉じる"
   },
   "emailVerification": {
     "title": "メールアドレスの確認",
@@ -266,11 +272,13 @@
   },
   "globalGoTo": {
     "placeholder": "ルートをフィルタリングまたはページに移動...",
-    "noResults": "ルートが見つかりませんでした。",
+    "noResults": "結果が見つかりませんでした。",
     "favorites": "お気に入り",
     "allPages": "すべてのページ",
     "addFavorite": "お気に入りに追加",
-    "removeFavorite": "お気に入りから削除"
+    "removeFavorite": "お気に入りから削除",
+    "searchPlaceholder": "ページを検索...",
+    "ariaLabel": "ナビゲーションを検索"
   },
   "copyToClipboard": "クリップボードにコピー",
   "copied": "コピーしました！",
@@ -303,7 +311,8 @@
   },
   "navigation": {
     "more": "もっと見る",
-    "home": "ホーム"
+    "home": "ホーム",
+    "menu": "ナビゲーション"
   },
   "pwa": {
     "update": {
@@ -586,6 +595,12 @@
         "deleteWarning": "この操作は永続的で元に戻せません。すべてのデータが削除されます。"
       },
       "signOut": "ログアウト"
+    },
+    "login": {
+      "title": "ログイン",
+      "description": "アカウントにログイン",
+      "authNotAvailable": "認証を利用できません。エラーと思われる場合は、サポートにお問い合わせください。",
+      "loading": "認証を読み込み中..."
     }
   },
   "canvas": {
@@ -626,5 +641,16 @@
   "seo": {
     "llmsPages": "ページ",
     "llmsBlog": "ブログ"
+  },
+  "adminLanding": {
+    "contactSupport": "サポートに問い合わせ",
+    "visitWebsite": "ウェブサイトにアクセス",
+    "signedInAs": "{{user}} としてログイン中"
+  },
+  "featureDisabled": {
+    "description": "{{featureName}}は利用できません。設定が不足しているか、機能が無効になっている可能性があります。",
+    "reviewCookies": "Cookieを確認",
+    "retry": "再試行",
+    "helpText": "エラーと思われる場合は、サポートにお問い合わせいただくか、ページを再読み込みしてください。"
   }
 }

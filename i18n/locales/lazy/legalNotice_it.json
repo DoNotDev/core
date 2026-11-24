@@ -1,0 +1,60 @@
+{
+  "title": "Note Legali",
+  "description": "Note legali: identità dell'editore, sede legale, recapiti e direttore responsabile della pubblicazione, come richiesto dalla legge.",
+  "lastUpdated": "Ultimo aggiornamento",
+  "publisher": {
+    "title": "1. Informazioni sull'Editore",
+    "name": "Nome dell'editore",
+    "type": "Tipo",
+    "types": {
+      "company": "Società",
+      "individual": "Persona fisica"
+    },
+    "legalStatus": "Forma giuridica",
+    "shareCapital": "Capitale sociale"
+  },
+  "registration": {
+    "title": "2. Dati di Registrazione",
+    "number": "Numero di registrazione / SIRET",
+    "vat": "Partita IVA"
+  },
+  "office": {
+    "title": "3. Sede Legale",
+    "address": "Indirizzo"
+  },
+  "contact": {
+    "title": "4. Informazioni di Contatto",
+    "email": "Email",
+    "phone": "Telefono"
+  },
+  "director": {
+    "title": "5. Direttore Responsabile",
+    "name": "Nome",
+    "role": "Ruolo"
+  },
+  "hosting": {
+    "title": "6. Fornitore di Hosting",
+    "provider": "Fornitore",
+    "address": "Indirizzo",
+    "contact": "Contatto"
+  },
+  "intellectualProperty": {
+    "title": "7. Proprietà Intellettuale",
+    "content": "Tutti i contenuti di questo sito web, inclusi, a titolo esemplificativo, testi, grafica, loghi, immagini, clip audio, download digitali, raccolte di dati e software, sono di proprietà di {{publisherName}} o dei suoi fornitori di contenuti e sono protetti dalle leggi internazionali sul diritto d'autore.",
+    "unauthorized": "L'uso non autorizzato di qualsiasi contenuto di questo sito web può violare le leggi sul diritto d'autore, sui marchi e altre disposizioni di legge."
+  },
+  "personalData": {
+    "title": "8. Dati Personali",
+    "content": "Per informazioni su come raccogliamo, utilizziamo e proteggiamo i tuoi dati personali, consulta la nostra ",
+    "privacyPolicy": "Informativa sulla Privacy"
+  },
+  "cookies": {
+    "title": "9. Cookie",
+    "content": "Questo sito web utilizza i cookie. Per informazioni dettagliate sui cookie e su come li utilizziamo, consulta la nostra ",
+    "privacyPolicy": "Informativa sulla Privacy"
+  },
+  "footer": {
+    "accurate": "Le informazioni contenute in queste Note Legali sono accurate al",
+    "updated": "e possono essere aggiornate per riflettere le modifiche ai dati della nostra azienda."
+  }
+}

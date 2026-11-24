@@ -27,7 +27,7 @@
     "copyEmail": "Copy email",
     "copyPhone": "Copy phone",
     "copyIban": "Copy IBAN",
-    "replySubject": "Re: Your inquiry",
+    "replySubject": "Re: Your enquiry",
     "markResponded": "Mark responded",
     "selectOptions": "Select options...",
     "use": "Use this address",
@@ -37,10 +37,11 @@
   },
   "address": {
     "placeholder": "Enter address...",
-    "noResults": "No addresses found"
+    "noResults": "No addresses found",
+    "apiUnavailable": "Google Places unavailable — type address manually"
   },
   "export": "Export",
-  "noInquiries": "No inquiries found.",
+  "noInquiries": "No enquiries found.",
   "customer": "Customer",
   "noCustomer": "No customer linked",
   "status": {
@@ -65,7 +66,7 @@
     "unsavedChangesLeave": "You have unsaved changes. Are you sure you want to leave?",
     "sessionExpired": "Your session has expired",
     "networkError": "Network error occurred",
-    "unauthorized": "Unauthorized access",
+    "unauthorized": "Unauthorised access",
     "forbidden": "Access forbidden",
     "serverError": "Server error occurred",
     "notFound": {
@@ -113,7 +114,8 @@
     "thisMonth": "This Month",
     "clear": "Clear",
     "pick": "Pick",
-    "time": "Time"
+    "time": "Time",
+    "clearAll": "Clear all filters"
   },
   "duration": {
     "15m": "15m",
@@ -127,6 +129,7 @@
     "custom": "Custom",
     "zero": "—",
     "minutes": "{{count}} min",
+    "hours": "{{hours}}h",
     "hoursMinutes": "{{hours}}h {{minutes}}min"
   },
   "results": {
@@ -224,21 +227,21 @@
   "globalGoTo": {
     "placeholder": "Filter routes or navigate to a page...",
     "noResults": "No routes found.",
-    "favorites": "Favorites",
+    "favorites": "Favourites",
     "allPages": "All Pages",
-    "addFavorite": "Add to favorites",
-    "removeFavorite": "Remove from favorites"
+    "addFavorite": "Add to favourites",
+    "removeFavorite": "Remove from favourites"
   },
   "favorites": {
-    "title": "Favorites",
-    "add": "Add to favorites",
-    "remove": "Remove from favorites",
+    "title": "Favourites",
+    "add": "Add to favourites",
+    "remove": "Remove from favourites",
     "saved": "Saved",
     "save": "Save",
     "showAll": "Show All",
-    "showFavorites": "Show Favorites",
-    "myFavorites": "My Favorites",
-    "noFavorites": "No favorites yet"
+    "showFavorites": "Show Favourites",
+    "myFavorites": "My Favourites",
+    "noFavorites": "No favourites yet"
   },
   "copyToClipboard": "Copy to clipboard",
   "copied": "Copied!",
@@ -533,14 +536,18 @@
     "privacyPolicy": "privacy policy",
     "terms": "terms of use",
     "and": "and consent to the processing of my personal data.",
-    "required": "Please accept the privacy policy to continue"
+    "required": "Please accept the privacy policy to continue",
+    "display": {
+      "no": "Not consented",
+      "yes": "Consented"
+    }
   },
   "custom": {
     "passwordMatch": "Passwords must match",
     "phoneNumber": "Please enter a valid phone number",
-    "postalCode": "Please enter a valid postal code",
+    "postalCode": "Please enter a valid postcode",
     "currency": "Please enter a valid amount",
-    "color": "Please enter a valid color code"
+    "color": "Please enter a valid colour code"
   },
   "errors": {
     "fieldUpdate": "Failed to update {{field}}",
@@ -581,8 +588,8 @@
     "confirmSelected_other": "Delete the {{count}} selected items? This cannot be undone."
   },
   "emptyState": {
-    "title": "Nothing found",
-    "description": "There is nothing to show yet."
+    "title": "No {{entity}} found",
+    "description": "No {{entity}} available at this time."
   },
   "bulkEdit": {
     "pending_one": "{{count}} unsaved change",

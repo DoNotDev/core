@@ -1,0 +1,26 @@
+{
+  "errors": {
+    "not_available": "AI is niet beschikbaar.",
+    "unauthenticated": "Log in om AI-functies te gebruiken.",
+    "send_failed": "Het bericht kon niet worden verzonden. Probeer het opnieuw.",
+    "conversation_truncated": "Het gesprek is ingekort om binnen de contextlimiet van het model te blijven."
+  },
+  "chat": {
+    "empty": "Start een gesprek",
+    "you": "Jij",
+    "assistant": "Assistent",
+    "thinking": "Aan het denken...",
+    "placeholder": "Typ een bericht...",
+    "input_label": "Invoerveld voor chatbericht",
+    "send": "Verzenden",
+    "abort": "Stoppen",
+    "tokens": "tokens",
+    "last_usage": "Laatste",
+    "total": "Totaal",
+    "unavailable": "AI-chat is niet beschikbaar.",
+    "tool_call": "Toolaanroep"
+  },
+  "cost": {
+    "tokens": "tokens"
+  }
+}

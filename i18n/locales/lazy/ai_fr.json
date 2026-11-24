@@ -1,0 +1,26 @@
+{
+  "errors": {
+    "not_available": "L'IA n'est pas disponible.",
+    "unauthenticated": "Veuillez vous connecter pour utiliser les fonctionnalités d'IA.",
+    "send_failed": "Échec de l'envoi du message. Veuillez réessayer.",
+    "conversation_truncated": "La conversation a été tronquée pour respecter la limite de contexte du modèle."
+  },
+  "chat": {
+    "empty": "Démarrer une conversation",
+    "you": "Vous",
+    "assistant": "Assistant",
+    "thinking": "Réflexion en cours...",
+    "placeholder": "Saisissez un message...",
+    "input_label": "Champ de saisie du message de chat",
+    "send": "Envoyer",
+    "abort": "Arrêter",
+    "tokens": "jetons",
+    "last_usage": "Dernier",
+    "total": "Total",
+    "unavailable": "Le chat IA n'est pas disponible.",
+    "tool_call": "Appel d'outil"
+  },
+  "cost": {
+    "tokens": "jetons"
+  }
+}

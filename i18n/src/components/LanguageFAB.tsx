@@ -120,8 +120,7 @@ const LanguageFAB = ({
     }
   }, [otherLanguage, changeLanguage]);
 
-  const label =
-    ariaLabel || t('common.languageSelector.changeLanguage', 'Change language');
+  const label = ariaLabel || t('common.languageSelector.changeLanguage');
 
   const trigger = (
     <Tag

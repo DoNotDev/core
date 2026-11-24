@@ -118,13 +118,9 @@ export interface UseTranslationResult {
  *
  * @example
  * ```tsx
- * // Interpolation and fallbacks
+ * // Interpolation
  * const { t } = useTranslation('user');
- * return (
- *   <span>
- *     {t('greeting', { name: 'John', defaultValue: 'Hello {{name}}' })}
- *   </span>
- * ); // → 'Hello John'
+ * return <span>{t('greeting', { name: 'John' })}</span>; // → 'Hello John'
  * ```
  *
  * @example

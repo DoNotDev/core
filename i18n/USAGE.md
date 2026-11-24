@@ -367,8 +367,8 @@ function MyComponent() {
       {/* Simple translation */}
       <h1>{t('common:app.title')}</h1>
 
-      {/* With fallback text */}
-      <p>{t('common:messages.welcome', 'Hello!', { name: 'John' })}</p>
+      {/* With interpolation */}
+      <p>{t('common:messages.welcome', { name: 'John' })}</p>
 
       {/* Navigation */}
       <nav>
@@ -485,7 +485,7 @@ function RobustComponent() {
           <p>Using default language content...</p>
         </div>
       ) : (
-        <h1>{t('welcome', 'Welcome')}</h1>
+        <h1>{t('welcome')}</h1>
       )}
     </div>
   );
@@ -648,11 +648,11 @@ export default defineViteConfig({
 }
 ```
 
-### Provide Fallback Text
+### No Fallback Text
 
 ```typescript
-// Always provide fallback for better UX
-t('feature:new.key', 'Default text if translation missing');
+// The key lives in the locale file; no default text in code
+t('feature:new.key');
 ```
 
 ### Keep Translations Close to Features
@@ -713,7 +713,6 @@ The system shows the key instead of crashing:
 
 ```typescript
 t('missing.key'); // Shows "[missing.key]"
-t('missing.key', 'Backup'); // Shows "Backup"
 ```
 
 ### Framework Translation Issues

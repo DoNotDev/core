@@ -52,5 +52,9 @@
     "title": "9. Pliki cookie",
     "content": "Ta strona internetowa korzysta z plików cookie. Szczegółowe informacje o plikach cookie i sposobie ich wykorzystania znajdą Państwo w naszej ",
     "privacyPolicy": "Polityce prywatności"
+  },
+  "footer": {
+    "accurate": "Informacje zawarte w niniejszych Informacjach prawnych są aktualne na dzień",
+    "updated": "i mogą zostać zaktualizowane w związku ze zmianami danych naszej firmy."
   }
 }

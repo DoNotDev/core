@@ -12,7 +12,7 @@
       "title": "1. Introduction",
       "welcome": "Bienvenue chez",
       "commitment": "Nous nous engageons à protéger votre vie privée et à vous assurer une expérience positive sur notre plateforme. Cette Politique de Confidentialité explique comment nous collectons, utilisons, divulguons et protégeons vos informations lorsque vous utilisez notre framework de développement, nos outils et nos services.",
-      "agreement": "vous acceptez la collecte et l'utilisation d'informations conformément à cette politique. Si vous n'êtes pas d'accord avec nos politiques et pratiques, veuillez ne pas utiliser nos services."
+      "agreement": "En utilisant {{companyName}}, vous acceptez la collecte et l'utilisation d'informations conformément à cette politique. Si vous n'êtes pas d'accord avec nos politiques et pratiques, veuillez ne pas utiliser nos services."
     },
     "collection": {
       "title": "2. Informations que nous collectons",

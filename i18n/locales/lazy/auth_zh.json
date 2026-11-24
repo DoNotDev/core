@@ -74,7 +74,7 @@
   "checkEmail": "查看您的电子邮箱",
   "verificationSent": "我们已向您发送了验证链接以证明您对账户的所有权。",
   "errorTitle": "账户关联错误",
-  "networkError": "网络错误",
+  "networkError": "网络错误。请检查您的网络连接后重试。",
   "tryAgain": "重试",
   "cancel": "取消",
   "confirm": "确认",
@@ -111,6 +111,10 @@
   "passwordRequirement.lowercase": "一个小写字母",
   "passwordRequirement.number": "一个数字",
   "passwordRequirement.special": "一个特殊字符 (!@#$%^&*)",
+  "passwordError.uppercase": "密码必须至少包含一个大写字母",
+  "passwordError.lowercase": "密码必须至少包含一个小写字母",
+  "passwordError.number": "密码必须至少包含一个数字",
+  "passwordError.special": "密码必须至少包含一个特殊字符",
   "passwordStrength.label": "密码强度",
   "passwordStrength.weak": "弱",
   "passwordStrength.fair": "一般",
@@ -214,5 +218,38 @@
     "account_title": "创建您的账户",
     "code_title": "查收您的邮件",
     "progress": "第 {{current}} 步，共 {{total}} 步"
+  },
+  "emailLinkNotSupported": "移动端不支持邮件链接",
+  "deleteAccountConfirm": "请输入“DELETE”以确认",
+  "reauth": "需要重新验证身份",
+  "reauthDescription": "请重新登录以继续",
+  "emailLink": {
+    "resend": "重新发送链接",
+    "emailLabel": "电子邮箱地址",
+    "sending": "发送链接中...",
+    "sendLink": "发送登录链接",
+    "helpText": "我们将向您发送一个安全链接，无需密码即可登录。",
+    "sentMessage": "我们已向 {{email}} 发送登录链接。请点击邮件中的链接完成登录。"
+  },
+  "networkStatus": {
+    "online": "您当前在线",
+    "offline": "您当前处于离线状态",
+    "connectedVia": "已通过 {{connectionType}} 连接",
+    "offlineMessage": "身份验证需要网络连接，请检查您的网络设置。",
+    "checkAgain": "重新检查"
+  },
+  "auth": {
+    "fedcmNotSupported": "您的浏览器不支持 Google One Tap",
+    "googleScriptLoadError": "加载 Google Identity Services 失败",
+    "googleOneTapError": "Google One Tap 身份验证失败",
+    "googleOneTapInitError": "初始化 Google One Tap 失败"
+  },
+  "passwordUpdate": {
+    "change": "修改密码",
+    "title": "修改密码",
+    "updating": "更新中...",
+    "update": "更新密码",
+    "placeholder": "输入新密码",
+    "error": "密码更新失败"
   }
 }

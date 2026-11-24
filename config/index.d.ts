@@ -649,10 +649,10 @@ export interface ScanPatterns {
     framework: string[];
   };
   assets: {
-    public: string[];
+    consumer: string[];
     fallback: string[];
-    modern: string[];
     patterns: string[];
+    fonts: string[];
     framework: string[];
   };
   globalIgnore: string[];

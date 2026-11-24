@@ -1,0 +1,26 @@
+{
+  "errors": {
+    "not_available": "La IA no está disponible.",
+    "unauthenticated": "Inicie sesión para usar las funciones de IA.",
+    "send_failed": "No se pudo enviar el mensaje. Inténtelo de nuevo.",
+    "conversation_truncated": "La conversación se ha truncado para ajustarse al límite de contexto del modelo."
+  },
+  "chat": {
+    "empty": "Iniciar una conversación",
+    "you": "Usted",
+    "assistant": "Asistente",
+    "thinking": "Pensando...",
+    "placeholder": "Escriba un mensaje...",
+    "input_label": "Campo de entrada del mensaje del chat",
+    "send": "Enviar",
+    "abort": "Detener",
+    "tokens": "tokens",
+    "last_usage": "Último",
+    "total": "Total",
+    "unavailable": "El chat de IA no está disponible.",
+    "tool_call": "Llamada a herramienta"
+  },
+  "cost": {
+    "tokens": "tokens"
+  }
+}
