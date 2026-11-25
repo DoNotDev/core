@@ -4,7 +4,8 @@
  * @fileoverview SEO head tags shared by AutoMetaTags and the Vite prerender
  * @description One source for the `<head>` of a page: the route identity (PageMeta +
  * i18n, {@link routeSeo} / {@link routeHeadTags}), an entity record's identity
- * ({@link recordHeadTags}), the site tags of every page ({@link siteHeadTags}) and the
+ * ({@link recordHeadTags}), the site tags of every page ({@link siteHeadTags}: canonical,
+ * `og:url`, `og:site_name`, `og:locale` from {@link ogLocale}, hreflang) and the
  * BreadcrumbList JSON-LD ({@link buildBreadcrumbJsonLd}, over the page's ancestor chain
  * `routeAncestors`) and the favicon set
  * ({@link resolveFaviconFiles} / {@link faviconHeadTags}). AutoMetaTags renders these
@@ -16,7 +17,7 @@
  * plugins) imports the same functions from `config/utils/headTags.js`, which
  * `bun run bpr` compiles from this file: edit this file, never the `.js`.
  *
- * @version 0.3.0
+ * @version 0.4.0
  * @since 0.3.2
  * @author AMBROISE PARK Consulting
  */
@@ -170,21 +171,45 @@ export function recordHeadTags(seo: RecordSeo): HeadTag[] {
 }
 
 /**
- * Site tags of every page with a URL: canonical and `og:url` (with an app URL),
- * `og:site_name`, and the hreflang alternates (one per language, then `x-default` = the
- * default language URL; the sitemap's `languageUrls`).
+ * Open Graph locale (`og:locale`, `ll_TT`) of a BCP 47 language tag: its own region when
+ * it has one (`fr-BE` → `fr_BE`), else the likely region of the language
+ * (`Intl.Locale#maximize`: `fr` → `fr_FR`, `en` → `en_US`, `de` → `de_DE`, `pl` → `pl_PL`).
+ * No two-letter region (`eo` → `001`, `es-419`): none.
  *
- * @param site - The page URL (null without an app URL), site name and hreflang alternates
- *   (null: none, one language or `seo.hreflang: false`)
- * @returns Tags
+ * @param language - BCP 47 language tag (`routing.languages` entry)
+ * @returns `ll_TT`, or null when the tag has no two-letter region
+ * @throws {RangeError} On a malformed language tag (`Intl.Locale`)
  *
  * @version 0.1.0
+ * @since 0.3.8
+ * @author AMBROISE PARK Consulting
+ */
+export function ogLocale(language: string): string | null {
+  const tag = new Intl.Locale(language);
+  const { language: lang, region } = tag.region ? tag : tag.maximize();
+  return region && /^[A-Z]{2}$/.test(region) ? `${lang}_${region}` : null;
+}
+
+/**
+ * Site tags of every page: canonical and `og:url` (with an app URL), `og:site_name`,
+ * `og:locale` (the page language, {@link ogLocale}), and with hreflang alternates one
+ * `og:locale:alternate` per other language, then the hreflang alternates (one per
+ * language, then `x-default` = the default language URL; the sitemap's `languageUrls`).
+ * A language without an Open Graph locale emits no locale tag.
+ *
+ * @param site - The page URL (null without an app URL), site name, page language (null:
+ *   none, the 404 document), hreflang alternates (null: none, one language or
+ *   `seo.hreflang: false`) and default language
+ * @returns Tags
+ *
+ * @version 0.2.0
  * @since 0.3.2
  * @author AMBROISE PARK Consulting
  */
 export function siteHeadTags(site: {
   url: string | null;
   siteName: string;
+  language: string | null;
   alternates: Record<string, string> | null;
   defaultLanguage: string;
 }): HeadTag[] {
@@ -194,6 +219,15 @@ export function siteHeadTags(site: {
     tags.push(meta('property', 'og:url', site.url));
   }
   tags.push(meta('property', 'og:site_name', site.siteName));
+  const pageLocale = site.language ? ogLocale(site.language) : null;
+  if (pageLocale) tags.push(meta('property', 'og:locale', pageLocale));
+  if (site.language && site.alternates) {
+    for (const language of Object.keys(site.alternates)) {
+      if (language === site.language) continue;
+      const alternate = ogLocale(language);
+      if (alternate) tags.push(meta('property', 'og:locale:alternate', alternate));
+    }
+  }
   if (site.alternates) {
     for (const [language, href] of Object.entries(site.alternates)) {
       tags.push({ tag: 'link', attributes: { rel: 'alternate', hreflang: language, href } });

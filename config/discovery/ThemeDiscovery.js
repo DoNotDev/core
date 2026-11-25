@@ -96,13 +96,27 @@ export class ThemeDiscovery extends BaseDiscovery {
     await this._processFrameworkFiles(frameworkFiles);
 
     // Process consumer files (themes + variables only)
-    const appCss = await this._processConsumerFiles(consumerFiles);
+    const { contents: appCss, themeCount: appThemeCount } =
+      await this._processConsumerFiles(consumerFiles);
+
+    const frameworkTokenCss = this._readFrameworkTokenCss();
+
+    // Framework themes (components styles/themes.css: `.dark`) are offered only to
+    // an app whose CSS declares no theme: an app that declares themes owns its list
+    // (it opts in to the framework dark with a `.dark` block carrying --theme-label).
+    if (appThemeCount === 0) {
+      this.cssExtractor.extractThemes(
+        frameworkTokenCss,
+        FRAMEWORK_TOKENS_EXPORT,
+        this.discovered
+      );
+    }
 
     const themes = this._serializeThemes();
 
     // The font plan's input (fonts/buildFontPlan.js, built once per build by the
     // bundler adapter): framework token CSS + the app's CSS files
-    const fontCss = { framework: this._readFrameworkTokenCss(), app: appCss };
+    const fontCss = { framework: frameworkTokenCss, app: appCss };
 
     // Aggregate summary shown by plugin's logStats, not here
     this.logger.debug(
@@ -226,11 +240,13 @@ export class ThemeDiscovery extends BaseDiscovery {
 
   /**
    * @param {string[]} consumerFiles
-   * @returns {Promise<Array<{ file: string, css: string }>>} Every file read (path relative
-   *   to the app root, CSS text): the font plan's app CSS
+   * @returns {Promise<{ contents: Array<{ file: string, css: string }>, themeCount: number }>}
+   *   `contents`: every file read (path relative to the app root, CSS text), the font
+   *   plan's app CSS. `themeCount`: theme blocks (--theme-label) the app declares.
    */
   async _processConsumerFiles(consumerFiles) {
     const contents = [];
+    let themeCount = 0;
     for (const file of consumerFiles) {
       try {
         // Read as text (CSS/TS theme files, not JSON)
@@ -241,11 +257,11 @@ export class ThemeDiscovery extends BaseDiscovery {
           css: content,
         });
 
-        this.cssExtractor.extractThemes(
+        themeCount += this.cssExtractor.extractThemes(
           content,
           normalizedFile,
           this.discovered
-        );
+        ).length;
         this.cssExtractor.extractVariables(
           content,
           this.discovered,
@@ -261,7 +277,7 @@ export class ThemeDiscovery extends BaseDiscovery {
         );
       }
     }
-    return contents;
+    return { contents, themeCount };
   }
 
   /**

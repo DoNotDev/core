@@ -39,7 +39,6 @@
     "noResults": "Nenhum endereço encontrado",
     "apiUnavailable": "Google Places indisponível — digite o endereço manualmente"
   },
-  "export": "Exportar",
   "noInquiries": "Nenhuma consulta encontrada.",
   "customer": "Cliente",
   "noCustomer": "Nenhum cliente vinculado",
@@ -68,14 +67,8 @@
     "unauthorized": "Acesso não autorizado",
     "forbidden": "Acesso proibido",
     "serverError": "Erro de servidor ocorreu",
-    "notFound": {
-      "title": "Página Não Encontrada",
-      "description": "A página que você procura não existe ou foi movida.",
-      "suggestions": "Você pode estar procurando por:",
-      "goHome": "Ir para o início",
-      "goBack": "Voltar"
-    },
     "bulkPartialError_one": "Não foi possível guardar {{count}} linha",
+    "bulkPartialError_many": "Não foi possível guardar {{count}} linhas",
     "bulkPartialError_other": "Não foi possível guardar {{count}} linhas",
     "unknownFields": "Salvo, mas estes campos não existem e não foram salvos: {{fields}}. Contate o suporte."
   },
@@ -83,16 +76,20 @@
     "showing": "Mostrando {{from}} a {{to}} de {{total}} itens",
     "previous": "Anterior",
     "next": "Próximo",
-    "page": "Página {{page}} de {{total}}",
-    "itemsPerPagePlaceholder": "Itens por página:"
+    "page": "Página {{page}} de {{total}}"
   },
   "filters": {
-    "title": "Procurar {{entity}} - Filtros",
+    "title": "Filtros",
     "apply": "Aplicar Filtros",
     "clear": "Limpar Filtros",
     "noResults": "Nenhum resultado corresponde aos seus filtros",
-    "selected": "{{count}} selecionado",
-    "selected_other": "{{count}} selecionados"
+    "selected_one": "{{count}} selecionado",
+    "selected_many": "{{count}} selecionados",
+    "selected_other": "{{count}} selecionados",
+    "button": "Filtros",
+    "buttonActive_one": "Filtros ({{count}} ativo)",
+    "buttonActive_many": "Filtros ({{count}} ativos)",
+    "buttonActive_other": "Filtros ({{count}} ativos)"
   },
   "filter": {
     "placeholder": "Filtrar...",
@@ -115,7 +112,8 @@
     "clear": "Limpar",
     "pick": "Escolher",
     "time": "Horário",
-    "clearAll": "Limpar todos os filtros"
+    "clearAll": "Limpar todos os filtros",
+    "contains": "Contém…"
   },
   "duration": {
     "15m": "15 min",
@@ -135,102 +133,10 @@
   "results": {
     "title": {
       "fetching": "Buscando...",
-      "count_one": "Encontrado {{count}} resultado",
-      "count_other": "Encontrados {{count}} resultados"
+      "count_one": "{{count}} resultado",
+      "count_many": "{{count}} resultados",
+      "count_other": "{{count}} resultados"
     }
-  },
-  "settings": {
-    "title": "Configurações",
-    "theme": "Tema",
-    "language": "Idioma",
-    "clearCache": {
-      "title": "Limpar Cache",
-      "localStorage": "Armazenamento Local",
-      "sessionStorage": "Armazenamento da Sessão",
-      "applicationCache": "Cache da Aplicação",
-      "serviceWorker": "Service Worker",
-      "cookies": "Cookies",
-      "indexedDB": "IndexedDB",
-      "webSQL": "WebSQL",
-      "memoryCache": "Cache de Memória",
-      "button": "Limpar Cache",
-      "clearing": "Limpando...",
-      "error": "Erro ao limpar cache",
-      "success": "Cache limpo com sucesso: {{items}}",
-      "noItemsCleared": "Nenhum item de cache foi limpo"
-    }
-  },
-  "common": {
-    "app": {
-      "name": "DoNotDev App"
-    },
-    "defaultTitle": "Página",
-    "defaultDescription": "Descrição da página",
-    "locale": "pt_BR",
-    "themeSelector": {
-      "changeTheme": "Alterar Tema",
-      "tooltipWithTransition": "Alterar Tema: {{current}} → {{next}}",
-      "tooltipWithCurrent": "Alterar Tema: {{current}}",
-      "tooltipWithNext": "Alterar Tema: Mudar para {{next}}"
-    },
-    "languageSelector": {
-      "changeLanguage": "Alterar Idioma"
-    }
-  },
-  "footer": {
-    "landing": {
-      "company": {
-        "defaultName": "Empresa",
-        "description": "Construa produtos melhores mais rapidamente com nossa plataforma de desenvolvimento abrangente."
-      },
-      "social": {
-        "twitter": "Twitter",
-        "github": "GitHub",
-        "discord": "Discord"
-      },
-      "sections": {
-        "product": {
-          "title": "Produto",
-          "features": "Funcionalidades",
-          "pricing": "Preços",
-          "docs": "Documentação",
-          "updates": "Atualizações"
-        },
-        "support": {
-          "title": "Suporte",
-          "help": "Ajuda",
-          "contact": "Contato",
-          "status": "Status",
-          "community": "Comunidade"
-        }
-      }
-    },
-    "legal": {
-      "allRightsReserved": "Todos os direitos reservados.",
-      "cookieSettings": "Configurações de Cookie",
-      "legalNotice": "Aviso Legal",
-      "privacyPolicy": "Política de Privacidade",
-      "termsOfService": "Termos de Serviço",
-      "builtWith": "Feito com ❤️ & DoNotDev ©",
-      "collapse": "Recolher rodapé",
-      "expand": "Expandir rodapé"
-    }
-  },
-  "search": {
-    "ariaLabel": "Pesquisar",
-    "label": "Pesquisar"
-  },
-  "goTo": {
-    "ariaLabel": "Ir para página",
-    "label": "Ir para"
-  },
-  "globalGoTo": {
-    "placeholder": "Filtrar rotas ou navegar para uma página...",
-    "noResults": "Nenhuma rota encontrada.",
-    "favorites": "Favoritos",
-    "allPages": "Todas as Páginas",
-    "addFavorite": "Adicionar aos favoritos",
-    "removeFavorite": "Remover dos favoritos"
   },
   "favorites": {
     "title": "Favoritos",
@@ -246,22 +152,6 @@
   "copyToClipboard": "Copiar para área de transferência",
   "copied": "Copiado!",
   "copyPassword": "Copiar senha",
-  "table": {
-    "searchPlaceholder": "Pesquisar...",
-    "filters": "Filtros",
-    "selectAllRows": "Selecionar todas as linhas",
-    "selectRow": "Selecionar linha {{index}}",
-    "showingResults": "Mostrando {{from}} a {{to}} de {{total}} resultados",
-    "previous": "Anterior",
-    "next": "Próximo",
-    "page": "Página {{current}} de {{total}}"
-  },
-  "language": {
-    "selectLanguage": "Selecionar Idioma",
-    "searchLanguages": "Pesquisar idiomas...",
-    "noLanguagesFound": "Nenhum idioma encontrado",
-    "changeLanguage": "Alterar Idioma"
-  },
   "draft": {
     "restored": "Rascunho restaurado",
     "restoredDescription": "As suas alterações não guardadas foram recuperadas",
@@ -289,44 +179,6 @@
     "saveFailed": "Não foi possível salvar. Tente novamente.",
     "uploadFailed": "Falha no envio do arquivo. Tente novamente.",
     "reuploadFiles": "Alguns arquivos não foram enviados. Envie-os novamente e salve."
-  },
-  "navigation": {
-    "more": "Mais",
-    "home": "Início"
-  },
-  "pwa": {
-    "update": {
-      "title": "Atualização disponível",
-      "description": "Uma nova versão está pronta. Atualize para recarregar.",
-      "button": "Atualizar",
-      "altText": "Atualizar aplicação"
-    }
-  },
-  "code": {
-    "copyCode": "Copiar código",
-    "copied": "Copiado!",
-    "copyCodeToClipboard": "Copiar código para área de transferência"
-  },
-  "video": {
-    "clickToWatch": "Clique para assistir ao vídeo",
-    "watchVideo": "Assistir Vídeo"
-  },
-  "inspector": {
-    "pageSource": "Código-fonte da Página",
-    "inspectPageSourceCode": "Inspecionar código-fonte da página"
-  },
-  "routeError": {
-    "title": "Algo deu errado",
-    "description": "Encontramos um erro ao carregar esta página.",
-    "dataSafe": "Não se preocupe, seus dados estão seguros.",
-    "errorId": "ID do Erro",
-    "errorMessage": "Mensagem de Erro",
-    "copied": "Copiado",
-    "copyDetails": "Copiar Detalhes",
-    "tryAgain": "Tentar Novamente",
-    "goHome": "Ir para o Início",
-    "goBack": "Voltar",
-    "contactSupport": "Se o problema persistir, entre em contato com o suporte."
   },
   "fields": {
     "array": "Array",
@@ -390,8 +242,7 @@
     "format": "Digite uma data válida",
     "future": "{{field}} deve ser no futuro",
     "past": "{{field}} deve ser no passado",
-    "today": "{{field}} deve ser hoje",
-    "calendarLoadError": "Não foi possível carregar o calendário. Digite a data no campo."
+    "today": "{{field}} deve ser hoje"
   },
   "select": {
     "required": "Selecione um {{field}}",
@@ -400,6 +251,8 @@
     "max": "Selecione no máximo {{max}} opções"
   },
   "boolean": {
+    "yes": "Sim",
+    "no": "Não",
     "required": "{{field}} deve ser selecionado"
   },
   "fieldArray": {
@@ -550,12 +403,7 @@
     "color": "Digite um código de cor válido"
   },
   "errors": {
-    "fieldUpdate": "Falha ao atualizar {{field}}",
-    "hiddenField": "Erro ao renderizar campo oculto {{field}}",
     "unsupportedFieldType": "Tipo de campo não suportado: {{type}}",
-    "fieldRendering": "Erro ao renderizar campo {{field}}",
-    "fallingBackToTextField": "Usando campo de texto para tipo não suportado {{type}}",
-    "invalidFieldProps": "Configuração inválida para campo {{field}}",
     "notFound": "Não foi possível encontrar {{entity}}",
     "fetchFailed": "Falha ao carregar {{entity}}"
   },
@@ -563,8 +411,12 @@
     "viewAs": "Visualizar como",
     "preview": "Visualizar"
   },
+  "reference": {
+    "placeholder": "Selecionar {{label}}"
+  },
   "price": {
-    "vatIncluded": "ICMS Inc.",
+    "columnTitle": "{{label}} ($t(crud:price.vatIncluded))",
+    "vatIncluded": "impostos incl.",
     "currency": "Moeda",
     "discountLabel": "Desconto (%)",
     "discountPercent": "-{{percent}}%"
@@ -584,8 +436,10 @@
     "confirm": "Tem certeza de que deseja deletar este item?",
     "loading": "Deletando...",
     "titleSelected_one": "Excluir {{count}} item",
+    "titleSelected_many": "Excluir {{count}} itens",
     "titleSelected_other": "Excluir {{count}} itens",
     "confirmSelected_one": "Excluir o item selecionado? Esta ação não pode ser desfeita.",
+    "confirmSelected_many": "Excluir os {{count}} itens selecionados? Esta ação não pode ser desfeita.",
     "confirmSelected_other": "Excluir os {{count}} itens selecionados? Esta ação não pode ser desfeita."
   },
   "emptyState": {
@@ -594,14 +448,12 @@
   },
   "bulkEdit": {
     "pending_one": "{{count}} alteração não salva",
+    "pending_many": "{{count}} alterações não salvas",
     "pending_other": "{{count}} alterações não salvas",
     "discard": "Descartar alterações",
-    "selected": "{{count}} selecionado(s)",
-    "field": "Campo",
-    "value": "Valor",
-    "apply": "Aplicar à seleção",
     "deleteSelected": "Excluir seleção ({{count}})",
     "failed_one": "{{count}} linha não guardada: continua na lista, tente novamente",
+    "failed_many": "{{count}} linhas não guardadas: continuam na lista, tente novamente",
     "failed_other": "{{count}} linhas não guardadas: continuam na lista, tente novamente"
   },
   "childRows": {
@@ -609,6 +461,7 @@
     "required": "{{field}} é obrigatório",
     "invalidValue": "{{field}} não é válido",
     "invalidRows_one": "{{count}} linha a corrigir antes de salvar",
+    "invalidRows_many": "{{count}} linhas a corrigir antes de salvar",
     "invalidRows_other": "{{count}} linhas a corrigir antes de salvar",
     "notSaved": "As linhas editadas não foram salvas com este registro.",
     "pickTitle": "Adicionar {{entity}}",
@@ -625,5 +478,12 @@
     "moved": "{{name}} movido para a posição {{position}} de {{count}}.",
     "dropped": "{{name}} solto na posição {{position}} de {{count}}.",
     "cancelled": "Movimento de {{name}} cancelado."
+  },
+  "list": {
+    "count_one": "{{count}} {{nameLower}}",
+    "count_many": "{{count}} {{namesLower}}",
+    "count_other": "{{count}} {{namesLower}}",
+    "empty": "Ainda não há {{namesLower}}",
+    "noResultsFor": "Nenhum resultado para “{{query}}”"
   }
 }

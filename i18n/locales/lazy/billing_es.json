@@ -1,4 +1,15 @@
 {
+  "errors": {
+    "unauthenticated": "Inicie sesión para continuar con el pago.",
+    "checkout_failed": "No se pudo iniciar el pago. Inténtelo de nuevo o contacte con el soporte si el problema persiste.",
+    "cancel_failed": "No se pudo cancelar la suscripción. Inténtelo de nuevo o contacte con el soporte.",
+    "change_plan_failed": "No se pudo cambiar de plan. Inténtelo de nuevo o contacte con el soporte.",
+    "refresh_failed": "No se pudo actualizar el estado de la suscripción. Inténtelo de nuevo.",
+    "portal_failed": "No se pudo abrir el portal del cliente. Inténtelo de nuevo o contacte con el soporte.",
+    "not_available": "La facturación no está disponible.",
+    "server_error": "El servidor devolvió un error. Inténtelo de nuevo.",
+    "no_checkout_url": "No se recibió ninguna URL de pago. Inténtelo de nuevo."
+  },
   "security": {
     "title": "Procesamiento de Pago Seguro",
     "description": "Su información de pago se procesa de forma segura por Stripe, un procesador de pagos certificado PCI DSS Level 1.",

@@ -15,9 +15,14 @@
  * @author AMBROISE PARK Consulting
  */
 
-import type { EntityField } from '@donotdev/types';
+import type {
+  EntityField,
+  FieldOption,
+  FieldOptionVariant,
+} from '@donotdev/types';
 
 import { formatCurrency } from './currencyFormat';
+import { formatTimeZoneFor } from './timeZone';
 
 /**
  * Translation function used for field text. Pass an i18next `t` bound to the entity
@@ -76,6 +81,53 @@ export function isEmptyFieldValue(value: unknown): boolean {
 }
 
 /**
+ * The price a `price` field value shows: `amount × (1 − discountPercent / 100)` when
+ * `discountPercent` (a number or numeric text) is above 0, clamped to 100 (never a
+ * negative price), else `amount`. One computation for the price text (`fieldText`), the
+ * CRUD price display, the list sort (EntityList's `sortValue` on price columns) and the
+ * Functions aggregate (`sum` / `avg` of a price field). Accepts the stored value:
+ * `{ amount, discountPercent? }` (`FieldTypeToValue['price']`, `@donotdev/types`;
+ * `amount` may be a numeric string) or a legacy bare number.
+ *
+ * @param value - Price field value
+ * @returns The effective price, or null when there is no numeric amount
+ *
+ * @version 0.1.0
+ * @since 0.3.8
+ */
+export function effectivePrice(value: unknown): number | null {
+  const price = typeof value === 'number' ? { amount: value } : value;
+  if (price === null || typeof price !== 'object') return null;
+  const { amount } = price as { amount?: unknown };
+  if (isEmptyFieldValue(amount)) return null;
+  const base = Number(amount);
+  if (!Number.isFinite(base)) return null;
+  const discount = priceDiscountPercent(price);
+  return discount > 0 ? base * (1 - discount / 100) : base;
+}
+
+/**
+ * The discount a `price` field value applies, as {@link effectivePrice} applies it:
+ * `discountPercent` (a number or numeric text) clamped to 0-100; 0 when there is none
+ * (missing, empty, not a finite number) or the value is not a price object. Formatters
+ * show the discount clue ("-15%") when this is above 0.
+ *
+ * @param value - Price field value
+ * @returns The applied discount in percent, 0 for none
+ *
+ * @version 0.1.0
+ * @since 0.3.8
+ */
+export function priceDiscountPercent(value: unknown): number {
+  if (value === null || typeof value !== 'object') return 0;
+  const { discountPercent } = value as { discountPercent?: unknown };
+  const percent = isEmptyFieldValue(discountPercent)
+    ? NaN
+    : Number(discountPercent);
+  return Number.isFinite(percent) ? Math.min(100, Math.max(0, percent)) : 0;
+}
+
+/**
  * Translates a label with `namespace:key` support (option labels, field labels).
  * `ns:status.*` keys try the `t` default namespaces first (entity overrides), then `ns`.
  *
@@ -123,11 +175,128 @@ export function stripHtmlTags(value: string): string {
     .trim();
 }
 
-type FieldOption = { value: unknown; label: string };
-
 function optionsOf(field: EntityField): FieldOption[] | undefined {
   const options = field.validation?.options;
   return Array.isArray(options) ? (options as FieldOption[]) : undefined;
+}
+
+/**
+ * Badge colour of the built-in and common status values, for `select` fields whose
+ * option declares no `variant`. Values not listed show as plain text.
+ *
+ * @version 0.1.0
+ * @since 0.3.8
+ */
+export const STATUS_OPTION_VARIANTS: Readonly<Record<string, FieldOptionVariant>> = {
+  draft: 'muted',
+  published: 'success',
+  available: 'success',
+  active: 'success',
+  deleted: 'destructive',
+  archived: 'destructive',
+};
+
+/**
+ * Badge colour of a `select` value: its option's `variant`, else the built-in status
+ * colour ({@link STATUS_OPTION_VARIANTS}), else none (plain text).
+ *
+ * @param value - Field value
+ * @param field - Entity field (its `validation.options`)
+ * @returns The variant, or undefined for a value shown as plain text
+ *
+ * @example
+ * ```ts
+ * fieldOptionVariant('draft', statusField); // 'muted'
+ * fieldOptionVariant('shipped', { ...field, validation: { options: [{ value: 'shipped', label: 'Shipped', variant: 'success' }] } }); // 'success'
+ * ```
+ *
+ * @version 0.1.0
+ * @since 0.3.8
+ */
+export function fieldOptionVariant(
+  value: unknown,
+  field: EntityField
+): FieldOptionVariant | undefined {
+  const declared = optionsOf(field)?.find((opt) => opt.value === value)?.variant;
+  if (declared) return declared;
+  return typeof value === 'string' && Object.hasOwn(STATUS_OPTION_VARIANTS, value)
+    ? STATUS_OPTION_VARIANTS[value]
+    : undefined;
+}
+
+/**
+ * Whether a `price` field's prices include VAT, as the field declares it:
+ * `options.fieldSpecific.vatIncluded: true` (VAT-inclusive, "TTC"), `false` or absent
+ * (no VAT claim: pre-tax or undeclared). The column title, the default of each value
+ * and the form's VAT toggle default follow it.
+ *
+ * @param field - Entity field
+ * @returns `true` only when the field declares VAT-inclusive prices
+ *
+ * @example
+ * ```ts
+ * fieldVatIncluded({ type: 'price', options: { fieldSpecific: { vatIncluded: true } } }); // true
+ * ```
+ *
+ * @version 0.1.0
+ * @since 0.3.8
+ */
+export function fieldVatIncluded(field: EntityField): boolean {
+  const fieldSpecific = field.options?.fieldSpecific as
+    | { vatIncluded?: unknown }
+    | undefined;
+  return fieldSpecific?.vatIncluded === true;
+}
+
+/**
+ * Whether one price value includes VAT: the value's own `vatIncluded` when it states
+ * one, else the field's declaration ({@link fieldVatIncluded}).
+ *
+ * @param value - Price field value (`{ amount, vatIncluded?, ... }` or a legacy number)
+ * @param field - Entity field
+ * @returns Whether the value's amount includes VAT
+ *
+ * @version 0.1.0
+ * @since 0.3.8
+ */
+export function priceVatIncluded(value: unknown, field: EntityField): boolean {
+  const own =
+    value !== null && typeof value === 'object'
+      ? (value as { vatIncluded?: unknown }).vatIncluded
+      : undefined;
+  return typeof own === 'boolean' ? own : fieldVatIncluded(field);
+}
+
+/**
+ * Title of a list column showing `field`: its label, with the note its cells leave
+ * out. Price cells show the amount only, so the column of a price field declaring
+ * VAT-inclusive prices ({@link fieldVatIncluded}) reads "Price (VAT incl.)"
+ * (`crud:price.columnTitle`); any other price column and other fields keep their label.
+ *
+ * @param label - The field's translated label (`translateFieldLabel`)
+ * @param field - Entity field
+ * @param t - Translation function (entity namespace first, then `crud`)
+ * @returns The column title
+ *
+ * @example
+ * ```ts
+ * // price: { type: 'price', options: { fieldSpecific: { vatIncluded: true } } }
+ * fieldColumnTitle('Price', entity.fields.price, t); // "Price (VAT incl.)"
+ * // priceExclVat: { type: 'price' } (or vatIncluded: false)
+ * fieldColumnTitle('Price', entity.fields.priceExclVat, t); // "Price"
+ * ```
+ *
+ * @version 0.2.0
+ * @since 0.3.8
+ */
+export function fieldColumnTitle(
+  label: string,
+  field: EntityField,
+  t: FieldTextTranslate
+): string {
+  return field.type === 'price' && fieldVatIncluded(field)
+    ? t('crud:price.columnTitle', { label })
+    : label;
 }
 
 function optionLabel(
@@ -143,10 +312,66 @@ function toDate(value: unknown): Date {
   return value instanceof Date ? value : new Date(value as string | number);
 }
 
+/**
+ * A date value as text, in the app's zone (`getAppTimeZone`): the same text on the
+ * server and in the browser. A calendar date (`YYYY-MM-DD`) reads as written
+ * (`formatTimeZoneFor`).
+ */
+function formatDateValue(
+  value: unknown,
+  locale: string | undefined,
+  options: Intl.DateTimeFormatOptions
+): string {
+  return toDate(value).toLocaleString(locale, {
+    ...options,
+    timeZone: formatTimeZoneFor(value),
+  });
+}
+
+// Medium date + short time: no seconds (an admin reads minutes)
+const DATE_TIME_FORMAT: Intl.DateTimeFormatOptions = {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+};
+// toLocaleDateString / toLocaleTimeString defaults: numeric date, time with seconds
+const DATE_FORMAT: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+};
+const TIME_FORMAT: Intl.DateTimeFormatOptions = {
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+};
 const dateTime: FieldTextFormatter = (value, _field, _t, { locale }) =>
-  toDate(value).toLocaleString(locale);
+  formatDateValue(value, locale, DATE_TIME_FORMAT);
+
+/** `HH:mm` or `HH:mm:ss[.sss]`: a wall-clock time (a `time` field's value, `<input type="time">`). */
+const WALL_CLOCK_TIME = /^([01]\d|2[0-3]):([0-5]\d)(?::([0-5]\d)(?:\.\d+)?)?$/;
+
+/**
+ * A `time` value as text. A wall-clock time (`HH:mm`, `HH:mm:ss`) is a time of day, not
+ * an instant: shown as written, in the reader's language ("14:30", "2:30 PM"), never
+ * shifted by a zone; seconds only when stored. Anything else (an instant) is a date
+ * value: its time in the app's zone.
+ */
+const timeOfDay: FieldTextFormatter = (value, _field, _t, { locale }) => {
+  const wall = typeof value === 'string' ? WALL_CLOCK_TIME.exec(value) : null;
+  if (!wall) return formatDateValue(value, locale, TIME_FORMAT);
+  const [, hour, minute, second] = wall;
+  return new Date(
+    Date.UTC(1970, 0, 1, Number(hour), Number(minute), Number(second ?? 0))
+  ).toLocaleTimeString(locale, {
+    hour: 'numeric',
+    minute: 'numeric',
+    ...(second !== undefined && { second: 'numeric' }),
+    timeZone: 'UTC',
+  });
+};
 const raw: FieldTextFormatter = (value) => String(value);
-const yesNo: FieldTextFormatter = (value) => (value ? 'Yes' : 'No');
+const yesNo: FieldTextFormatter = (value, _field, t) =>
+  t(value ? 'crud:boolean.yes' : 'crud:boolean.no');
 const localeNumber: FieldTextFormatter = (value, _field, _t, { locale }) =>
   typeof value === 'number' ? value.toLocaleString(locale) : String(value);
 
@@ -164,9 +389,8 @@ export const FIELD_TEXT_FORMATTERS: Readonly<
   timestamp: dateTime,
   'datetime-local': dateTime,
   date: (value, _field, _t, { locale }) =>
-    toDate(value).toLocaleDateString(locale),
-  time: (value, _field, _t, { locale }) =>
-    toDate(value).toLocaleTimeString(locale),
+    formatDateValue(value, locale, DATE_FORMAT),
+  time: timeOfDay,
   week: raw,
   month: raw,
 
@@ -192,25 +416,30 @@ export const FIELD_TEXT_FORMATTERS: Readonly<
         return translateEntityLabel(fieldSpecific.uncheckedLabel, t);
       }
     }
-    return value ? 'Yes' : 'No';
+    return yesNo(value, field, t, {});
   },
 
   // Numeric
   year: raw,
   number: localeNumber,
   range: localeNumber,
-  currency: (value, field) => {
+  currency: (value, field, _t, { locale }) => {
     if (Number.isNaN(Number(value))) return '';
     const fieldSpecific = field.options?.fieldSpecific as
       | { currency?: string }
       | undefined;
-    return formatCurrency(Number(value), fieldSpecific?.currency || 'EUR');
+    return formatCurrency(
+      Number(value),
+      fieldSpecific?.currency || 'EUR',
+      {},
+      locale
+    );
   },
-  price: (value, _field, t) => {
+  price: (value, field, t, { locale }) => {
     // Legacy rows store the price as a bare number
     const price =
       typeof value === 'number'
-        ? { amount: value, currency: 'EUR', vatIncluded: true, discountPercent: 0 }
+        ? { amount: value, currency: 'EUR', discountPercent: 0 }
         : (value as {
             amount?: unknown;
             currency?: string;
@@ -218,20 +447,20 @@ export const FIELD_TEXT_FORMATTERS: Readonly<
             discountPercent?: number;
           } | null);
     if (!price || typeof price !== 'object') return '';
-    const amount = price.amount;
-    if (isEmptyFieldValue(amount) || Number.isNaN(Number(amount))) return '';
+    const effective = effectivePrice(price);
+    if (effective === null) return '';
     const currencyCode = price.currency || 'EUR';
-    const discountPercent = price.discountPercent ?? 0;
-    const vatLabel =
-      (price.vatIncluded ?? true) ? ` ${t('crud:price.vatIncluded')}` : '';
+    const discountPercent = priceDiscountPercent(price);
+    const vatLabel = priceVatIncluded(price, field)
+      ? ` ${t('crud:price.vatIncluded')}`
+      : '';
     if (discountPercent > 0) {
-      const effective = Number(amount) * (1 - discountPercent / 100);
       const discountClue = ` ${t('crud:price.discountPercent', {
         percent: Math.round(discountPercent),
       })}`;
-      return `${formatCurrency(effective, currencyCode)}${vatLabel}${discountClue}`;
+      return `${formatCurrency(effective, currencyCode, {}, locale)}${vatLabel}${discountClue}`;
     }
-    return `${formatCurrency(Number(amount), currencyCode)}${vatLabel}`;
+    return `${formatCurrency(effective, currencyCode, {}, locale)}${vatLabel}`;
   },
   duration: (value, _field, t) => {
     const minutes =
@@ -263,7 +492,7 @@ export const FIELD_TEXT_FORMATTERS: Readonly<
     }
     const parts = [t('crud:gdprConsent.display.yes')];
     if (consent.gdprConsentDate) {
-      parts.push(new Date(consent.gdprConsentDate).toLocaleDateString(locale));
+      parts.push(formatDateValue(consent.gdprConsentDate, locale, DATE_FORMAT));
     }
     if (consent.gdprConsentVersion) parts.push(`v${consent.gdprConsentVersion}`);
     return parts.join(' · ');

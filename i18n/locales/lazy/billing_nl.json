@@ -1,4 +1,15 @@
 {
+  "errors": {
+    "unauthenticated": "Log in om verder te gaan met afrekenen.",
+    "checkout_failed": "Afrekenen kan niet worden gestart. Probeer het opnieuw of neem contact op met support als het probleem aanhoudt.",
+    "cancel_failed": "Het abonnement kan niet worden opgezegd. Probeer het opnieuw of neem contact op met support.",
+    "change_plan_failed": "Het abonnement kan niet worden gewijzigd. Probeer het opnieuw of neem contact op met support.",
+    "refresh_failed": "De abonnementsstatus kan niet worden vernieuwd. Probeer het opnieuw.",
+    "portal_failed": "Het klantenportaal kan niet worden geopend. Probeer het opnieuw of neem contact op met support.",
+    "not_available": "Facturering is niet beschikbaar.",
+    "server_error": "De server gaf een fout terug. Probeer het opnieuw.",
+    "no_checkout_url": "Geen afreken-URL ontvangen. Probeer het opnieuw."
+  },
   "security": {
     "title": "Veilige betaling",
     "description": "Je betalingsgegevens worden veilig verwerkt door Stripe.",

@@ -39,7 +39,6 @@
     "noResults": "Ingen adresser fundet",
     "apiUnavailable": "Google Places er ikke tilgængelig – skriv adressen manuelt"
   },
-  "export": "Eksporter",
   "noInquiries": "Ingen henvendelser fundet.",
   "customer": "Kunde",
   "noCustomer": "Ingen kunde tilknyttet",
@@ -68,13 +67,6 @@
     "unauthorized": "Ingen adgang",
     "forbidden": "Adgang nægtet",
     "serverError": "Serverfejl",
-    "notFound": {
-      "title": "Siden findes ikke",
-      "description": "Siden findes ikke eller er flyttet.",
-      "suggestions": "Måske leder du efter:",
-      "goHome": "Til forsiden",
-      "goBack": "Tilbage"
-    },
     "bulkPartialError_one": "{{count}} række kunne ikke gemmes",
     "bulkPartialError_other": "{{count}} rækker kunne ikke gemmes",
     "unknownFields": "Gemt, men disse felter findes ikke og blev ikke gemt: {{fields}}. Kontakt support."
@@ -83,15 +75,18 @@
     "showing": "{{from}}–{{to}} af {{total}}",
     "previous": "Forrige",
     "next": "Næste",
-    "page": "Side {{page}} af {{total}}",
-    "itemsPerPagePlaceholder": "Pr. side:"
+    "page": "Side {{page}} af {{total}}"
   },
   "filters": {
-    "title": "Gennemse {{entity}} – filtre",
+    "title": "Filtre",
     "apply": "Anvend filtre",
     "clear": "Ryd filtre",
     "noResults": "Ingen resultater matcher",
-    "selected": "{{count}} valgt"
+    "selected_one": "{{count}} valgt",
+    "selected_other": "{{count}} valgt",
+    "button": "Filtre",
+    "buttonActive_one": "Filtre ({{count}} aktivt)",
+    "buttonActive_other": "Filtre ({{count}} aktive)"
   },
   "filter": {
     "placeholder": "Filter...",
@@ -114,7 +109,8 @@
     "clear": "Ryd",
     "pick": "Vælg",
     "time": "Tid",
-    "clearAll": "Ryd alle filtre"
+    "clearAll": "Ryd alle filtre",
+    "contains": "Indeholder…"
   },
   "duration": {
     "15m": "15m",
@@ -134,102 +130,9 @@
   "results": {
     "title": {
       "fetching": "Henter...",
-      "count_one": "{{count}} fundet",
-      "count_other": "{{count}} fundet"
+      "count_one": "{{count}} resultat",
+      "count_other": "{{count}} resultater"
     }
-  },
-  "settings": {
-    "title": "Indstillinger",
-    "theme": "Tema",
-    "language": "Sprog",
-    "clearCache": {
-      "title": "Ryd cache",
-      "localStorage": "Lokal lagring",
-      "sessionStorage": "Session",
-      "applicationCache": "App-cache",
-      "serviceWorker": "Service Worker",
-      "cookies": "Cookies",
-      "indexedDB": "IndexedDB",
-      "webSQL": "WebSQL",
-      "memoryCache": "Hukommelse",
-      "button": "Ryd cache",
-      "clearing": "Rydder...",
-      "error": "Kunne ikke rydde cache",
-      "success": "Cache ryddet: {{items}}",
-      "noItemsCleared": "Intet blev ryddet"
-    }
-  },
-  "common": {
-    "app": {
-      "name": "DoNotDev App"
-    },
-    "defaultTitle": "Side",
-    "defaultDescription": "Sidebeskrivelse",
-    "locale": "da_DK",
-    "themeSelector": {
-      "changeTheme": "Skift tema",
-      "tooltipWithTransition": "Tema: {{current}} → {{next}}",
-      "tooltipWithCurrent": "Tema: {{current}}",
-      "tooltipWithNext": "Skift til {{next}}"
-    },
-    "languageSelector": {
-      "changeLanguage": "Skift sprog"
-    }
-  },
-  "footer": {
-    "landing": {
-      "company": {
-        "defaultName": "Virksomhed",
-        "description": "Byg bedre produkter hurtigere med vores platform."
-      },
-      "social": {
-        "twitter": "Twitter",
-        "github": "GitHub",
-        "discord": "Discord"
-      },
-      "sections": {
-        "product": {
-          "title": "Produkt",
-          "features": "Funktioner",
-          "pricing": "Priser",
-          "docs": "Dokumentation",
-          "updates": "Opdateringer"
-        },
-        "support": {
-          "title": "Support",
-          "help": "Hjælp",
-          "contact": "Kontakt",
-          "status": "Status",
-          "community": "Fællesskab"
-        }
-      }
-    },
-    "legal": {
-      "allRightsReserved": "Alle rettigheder forbeholdes.",
-      "cookieSettings": "Cookie-indstillinger",
-      "legalNotice": "Juridisk information",
-      "privacyPolicy": "Privatlivspolitik",
-      "termsOfService": "Servicevilkår",
-      "builtWith": "Lavet med ❤️ og DoNotDev ©",
-      "collapse": "Luk footer",
-      "expand": "Udvid footer"
-    }
-  },
-  "search": {
-    "ariaLabel": "Søg",
-    "label": "Søg"
-  },
-  "goTo": {
-    "ariaLabel": "Gå til side",
-    "label": "Gå til"
-  },
-  "globalGoTo": {
-    "placeholder": "Søg eller gå til en side...",
-    "noResults": "Ingen sider fundet.",
-    "favorites": "Favoritter",
-    "allPages": "Alle sider",
-    "addFavorite": "Tilføj til favoritter",
-    "removeFavorite": "Fjern fra favoritter"
   },
   "favorites": {
     "title": "Favoritter",
@@ -245,22 +148,6 @@
   "copyToClipboard": "Kopier",
   "copied": "Kopieret!",
   "copyPassword": "Kopier adgangskode",
-  "table": {
-    "searchPlaceholder": "Søg...",
-    "filters": "Filtre",
-    "selectAllRows": "Vælg alle",
-    "selectRow": "Vælg række {{index}}",
-    "showingResults": "{{from}}–{{to}} af {{total}}",
-    "previous": "Forrige",
-    "next": "Næste",
-    "page": "Side {{current}} af {{total}}"
-  },
-  "language": {
-    "selectLanguage": "Vælg sprog",
-    "searchLanguages": "Søg sprog...",
-    "noLanguagesFound": "Ingen sprog fundet",
-    "changeLanguage": "Skift sprog"
-  },
   "draft": {
     "restored": "Kladde gendannet",
     "restoredDescription": "Dine ikke-gemte ændringer blev gendannet",
@@ -288,44 +175,6 @@
     "saveFailed": "Kunne ikke gemme. Prøv igen.",
     "uploadFailed": "Upload af fil mislykkedes. Prøv igen.",
     "reuploadFiles": "Nogle filer blev ikke uploadet. Upload dem igen, og gem derefter."
-  },
-  "navigation": {
-    "more": "Mere",
-    "home": "Forside"
-  },
-  "pwa": {
-    "update": {
-      "title": "Opdatering tilgængelig",
-      "description": "Ny version klar. Genindlæs for at opdatere.",
-      "button": "Opdater",
-      "altText": "Opdater app"
-    }
-  },
-  "code": {
-    "copyCode": "Kopier kode",
-    "copied": "Kopieret!",
-    "copyCodeToClipboard": "Kopier kode"
-  },
-  "video": {
-    "clickToWatch": "Klik for at se video",
-    "watchVideo": "Se video"
-  },
-  "inspector": {
-    "pageSource": "Sidekilde",
-    "inspectPageSourceCode": "Inspicer sidekilde"
-  },
-  "routeError": {
-    "title": "Noget gik galt",
-    "description": "Der opstod en fejl under indlæsning.",
-    "dataSafe": "Dine data er uændrede.",
-    "errorId": "Fejl-ID",
-    "errorMessage": "Fejlbesked",
-    "copied": "Kopieret",
-    "copyDetails": "Kopier detaljer",
-    "tryAgain": "Prøv igen",
-    "goHome": "Til forsiden",
-    "goBack": "Tilbage",
-    "contactSupport": "Kontakt support hvis problemet fortsætter."
   },
   "fields": {
     "array": "Liste",
@@ -389,8 +238,7 @@
     "format": "Indtast en gyldig dato",
     "future": "{{field}} skal være i fremtiden",
     "past": "{{field}} skal være i fortiden",
-    "today": "{{field}} skal være i dag",
-    "calendarLoadError": "Kalenderen kunne ikke indlæses. Indtast datoen i feltet."
+    "today": "{{field}} skal være i dag"
   },
   "select": {
     "required": "Vælg en {{field}}",
@@ -399,6 +247,8 @@
     "max": "Vælg højst {{max}}"
   },
   "boolean": {
+    "yes": "Ja",
+    "no": "Nej",
     "required": "{{field}} skal vælges"
   },
   "fieldArray": {
@@ -549,12 +399,7 @@
     "color": "Indtast en gyldig farvekode"
   },
   "errors": {
-    "fieldUpdate": "Kunne ikke opdatere {{field}}",
-    "hiddenField": "Fejl ved felt {{field}}",
     "unsupportedFieldType": "Felttypen {{type}} understøttes ikke",
-    "fieldRendering": "Fejl ved felt {{field}}",
-    "fallingBackToTextField": "Bruger tekstfelt i stedet for {{type}}",
-    "invalidFieldProps": "Ugyldig indstilling for {{field}}",
     "notFound": "{{entity}} blev ikke fundet",
     "fetchFailed": "Kunne ikke hente {{entity}}"
   },
@@ -562,7 +407,11 @@
     "viewAs": "Vis som",
     "preview": "Forhåndsvisning"
   },
+  "reference": {
+    "placeholder": "Vælg {{label}}"
+  },
   "price": {
+    "columnTitle": "{{label}} ($t(crud:price.vatIncluded))",
     "vatIncluded": "inkl. moms",
     "currency": "Valuta",
     "discountLabel": "Rabat (%)",
@@ -595,10 +444,6 @@
     "pending_one": "{{count}} ikke-gemt ændring",
     "pending_other": "{{count}} ikke-gemte ændringer",
     "discard": "Kassér ændringer",
-    "selected": "{{count}} valgt",
-    "field": "Felt",
-    "value": "Værdi",
-    "apply": "Anvend på valgte",
     "deleteSelected": "Slet valgte ({{count}})",
     "failed_one": "{{count}} række ikke gemt: den bliver i listen, prøv igen",
     "failed_other": "{{count}} rækker ikke gemt: de bliver i listen, prøv igen"
@@ -624,5 +469,11 @@
     "moved": "{{name}} flyttet til position {{position}} af {{count}}.",
     "dropped": "{{name}} sluppet på position {{position}} af {{count}}.",
     "cancelled": "Flytning af {{name}} annulleret."
+  },
+  "list": {
+    "count_one": "{{count}} {{nameLower}}",
+    "count_other": "{{count}} {{namesLower}}",
+    "empty": "Ingen {{namesLower}} endnu",
+    "noResultsFor": "Ingen resultater for “{{query}}”"
   }
 }

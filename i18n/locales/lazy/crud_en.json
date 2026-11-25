@@ -40,7 +40,6 @@
     "noResults": "No addresses found",
     "apiUnavailable": "Google Places unavailable — type address manually"
   },
-  "export": "Export",
   "noInquiries": "No enquiries found.",
   "customer": "Customer",
   "noCustomer": "No customer linked",
@@ -69,13 +68,6 @@
     "unauthorized": "Unauthorised access",
     "forbidden": "Access forbidden",
     "serverError": "Server error occurred",
-    "notFound": {
-      "title": "Page Not Found",
-      "description": "The page you're looking for doesn't exist or has been moved.",
-      "suggestions": "You might be looking for:",
-      "goHome": "Go Home",
-      "goBack": "Go Back"
-    },
     "bulkPartialError_one": "{{count}} row could not be saved",
     "bulkPartialError_other": "{{count}} rows could not be saved",
     "unknownFields": "Saved, but these fields do not exist and were not saved: {{fields}}. Contact support."
@@ -84,15 +76,18 @@
     "showing": "Showing {{from}} to {{to}} of {{total}} entries",
     "previous": "Previous",
     "next": "Next",
-    "page": "Page {{page}} of {{total}}",
-    "itemsPerPagePlaceholder": "Items per page:"
+    "page": "Page {{page}} of {{total}}"
   },
   "filters": {
-    "title": "Browse {{entity}} - Filters",
+    "title": "Filters",
     "apply": "Apply Filters",
     "clear": "Clear Filters",
     "noResults": "No results match your filters",
-    "selected": "{{count}} selected"
+    "selected_one": "{{count}} selected",
+    "selected_other": "{{count}} selected",
+    "button": "Filters",
+    "buttonActive_one": "Filters ({{count}} active)",
+    "buttonActive_other": "Filters ({{count}} active)"
   },
   "filter": {
     "placeholder": "Filter...",
@@ -115,7 +110,8 @@
     "clear": "Clear",
     "pick": "Pick",
     "time": "Time",
-    "clearAll": "Clear all filters"
+    "clearAll": "Clear all filters",
+    "contains": "Contains…"
   },
   "duration": {
     "15m": "15m",
@@ -135,102 +131,9 @@
   "results": {
     "title": {
       "fetching": "Fetching...",
-      "count_one": "Found {{count}} occurrence",
-      "count_other": "Found {{count}} occurrences"
+      "count_one": "{{count}} result",
+      "count_other": "{{count}} results"
     }
-  },
-  "settings": {
-    "title": "Settings",
-    "theme": "Theme",
-    "language": "Language",
-    "clearCache": {
-      "title": "Clear Cache",
-      "localStorage": "Local Storage",
-      "sessionStorage": "Session Storage",
-      "applicationCache": "Application Cache",
-      "serviceWorker": "Service Worker",
-      "cookies": "Cookies",
-      "indexedDB": "IndexedDB",
-      "webSQL": "WebSQL",
-      "memoryCache": "Memory Cache",
-      "button": "Clear Cache",
-      "clearing": "Clearing...",
-      "error": "Error clearing cache",
-      "success": "Cache cleared successfully: {{items}}",
-      "noItemsCleared": "No cache items were cleared"
-    }
-  },
-  "common": {
-    "app": {
-      "name": "DoNotDev App"
-    },
-    "defaultTitle": "Page",
-    "defaultDescription": "Page description",
-    "locale": "en_US",
-    "themeSelector": {
-      "changeTheme": "Change Theme",
-      "tooltipWithTransition": "Change Theme: {{current}} → {{next}}",
-      "tooltipWithCurrent": "Change Theme: {{current}}",
-      "tooltipWithNext": "Change Theme: Switch to {{next}}"
-    },
-    "languageSelector": {
-      "changeLanguage": "Change Language"
-    }
-  },
-  "footer": {
-    "landing": {
-      "company": {
-        "defaultName": "Company",
-        "description": "Build better products faster with our comprehensive development platform."
-      },
-      "social": {
-        "twitter": "Twitter",
-        "github": "GitHub",
-        "discord": "Discord"
-      },
-      "sections": {
-        "product": {
-          "title": "Product",
-          "features": "Features",
-          "pricing": "Pricing",
-          "docs": "Docs",
-          "updates": "Updates"
-        },
-        "support": {
-          "title": "Support",
-          "help": "Help",
-          "contact": "Contact",
-          "status": "Status",
-          "community": "Community"
-        }
-      }
-    },
-    "legal": {
-      "allRightsReserved": "All rights reserved.",
-      "cookieSettings": "Cookie Settings",
-      "legalNotice": "Legal Notice",
-      "privacyPolicy": "Privacy Policy",
-      "termsOfService": "Terms of Service",
-      "builtWith": "Made with ❤️ & DoNotDev ©",
-      "collapse": "Collapse footer",
-      "expand": "Expand footer"
-    }
-  },
-  "search": {
-    "ariaLabel": "Search",
-    "label": "Search"
-  },
-  "goTo": {
-    "ariaLabel": "Go to page",
-    "label": "Go to"
-  },
-  "globalGoTo": {
-    "placeholder": "Filter routes or navigate to a page...",
-    "noResults": "No routes found.",
-    "favorites": "Favourites",
-    "allPages": "All Pages",
-    "addFavorite": "Add to favourites",
-    "removeFavorite": "Remove from favourites"
   },
   "favorites": {
     "title": "Favourites",
@@ -246,22 +149,6 @@
   "copyToClipboard": "Copy to clipboard",
   "copied": "Copied!",
   "copyPassword": "Copy password",
-  "table": {
-    "searchPlaceholder": "Search...",
-    "filters": "Filters",
-    "selectAllRows": "Select all rows",
-    "selectRow": "Select row {{index}}",
-    "showingResults": "Showing {{from}} to {{to}} of {{total}} results",
-    "previous": "Previous",
-    "next": "Next",
-    "page": "Page {{current}} of {{total}}"
-  },
-  "language": {
-    "selectLanguage": "Select Language",
-    "searchLanguages": "Search languages...",
-    "noLanguagesFound": "No languages found",
-    "changeLanguage": "Change Language"
-  },
   "draft": {
     "restored": "Draft restored",
     "restoredDescription": "Your unsaved changes were recovered",
@@ -289,44 +176,6 @@
     "saveFailed": "Could not save. Try again.",
     "uploadFailed": "File upload failed. Try again.",
     "reuploadFiles": "Some files were not uploaded. Upload them again, then save."
-  },
-  "navigation": {
-    "more": "More",
-    "home": "Home"
-  },
-  "pwa": {
-    "update": {
-      "title": "Update available",
-      "description": "A new version is ready. Refresh to update.",
-      "button": "Update",
-      "altText": "Update application"
-    }
-  },
-  "code": {
-    "copyCode": "Copy code",
-    "copied": "Copied!",
-    "copyCodeToClipboard": "Copy code to clipboard"
-  },
-  "video": {
-    "clickToWatch": "Click to watch video",
-    "watchVideo": "Watch Video"
-  },
-  "inspector": {
-    "pageSource": "Page Source",
-    "inspectPageSourceCode": "Inspect page source code"
-  },
-  "routeError": {
-    "title": "Something went wrong",
-    "description": "We encountered an error while loading this page.",
-    "dataSafe": "Don't worry, your data is safe.",
-    "errorId": "Error ID",
-    "errorMessage": "Error Message",
-    "copied": "Copied",
-    "copyDetails": "Copy Details",
-    "tryAgain": "Try Again",
-    "goHome": "Go Home",
-    "goBack": "Go Back",
-    "contactSupport": "If the problem persists, please contact support."
   },
   "fields": {
     "array": "Array",
@@ -390,8 +239,7 @@
     "format": "Please enter a valid date",
     "future": "{{field}} must be in the future",
     "past": "{{field}} must be in the past",
-    "today": "{{field}} must be today",
-    "calendarLoadError": "The calendar could not load. Please type the date in the field."
+    "today": "{{field}} must be today"
   },
   "select": {
     "required": "Please select a {{field}}",
@@ -400,6 +248,8 @@
     "max": "Please select no more than {{max}} options"
   },
   "boolean": {
+    "yes": "Yes",
+    "no": "No",
     "required": "{{field}} must be selected"
   },
   "fieldArray": {
@@ -550,12 +400,7 @@
     "color": "Please enter a valid colour code"
   },
   "errors": {
-    "fieldUpdate": "Failed to update {{field}}",
-    "hiddenField": "Error rendering hidden field {{field}}",
     "unsupportedFieldType": "Unsupported field type: {{type}}",
-    "fieldRendering": "Error rendering field {{field}}",
-    "fallingBackToTextField": "Using text field for unsupported type {{type}}",
-    "invalidFieldProps": "Invalid configuration for field {{field}}",
     "notFound": "{{entity}} not found",
     "fetchFailed": "Failed to load {{entity}}"
   },
@@ -563,8 +408,12 @@
     "viewAs": "View as",
     "preview": "Preview"
   },
+  "reference": {
+    "placeholder": "Select {{label}}"
+  },
   "price": {
-    "vatIncluded": "VAT Incl.",
+    "columnTitle": "{{label}} ($t(crud:price.vatIncluded))",
+    "vatIncluded": "VAT incl.",
     "currency": "Currency",
     "discountLabel": "Discount (%)",
     "discountPercent": "-{{percent}}%"
@@ -595,10 +444,6 @@
     "pending_one": "{{count}} unsaved change",
     "pending_other": "{{count}} unsaved changes",
     "discard": "Discard changes",
-    "selected": "{{count}} selected",
-    "field": "Field",
-    "value": "Value",
-    "apply": "Apply to selected",
     "deleteSelected": "Delete selected ({{count}})",
     "failed_one": "{{count}} row was not saved: it stays in the list, try again",
     "failed_other": "{{count}} rows were not saved: they stay in the list, try again"
@@ -624,5 +469,11 @@
     "moved": "{{name}} moved to position {{position}} of {{count}}.",
     "dropped": "{{name}} dropped at position {{position}} of {{count}}.",
     "cancelled": "Moving {{name}} cancelled."
+  },
+  "list": {
+    "count_one": "{{count}} {{nameLower}}",
+    "count_other": "{{count}} {{namesLower}}",
+    "empty": "No {{namesLower}} yet",
+    "noResultsFor": "No results for “{{query}}”"
   }
 }

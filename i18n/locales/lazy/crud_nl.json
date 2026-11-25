@@ -39,7 +39,6 @@
     "noResults": "Geen adressen gevonden",
     "apiUnavailable": "Google Places niet beschikbaar — voer het adres handmatig in"
   },
-  "export": "Exporteren",
   "noInquiries": "Geen berichten gevonden.",
   "customer": "Klant",
   "noCustomer": "Geen klant gekoppeld",
@@ -68,13 +67,6 @@
     "unauthorized": "Geen toegang",
     "forbidden": "Toegang geweigerd",
     "serverError": "Serverfout",
-    "notFound": {
-      "title": "Pagina niet gevonden",
-      "description": "Deze pagina bestaat niet of is verplaatst.",
-      "suggestions": "Misschien bedoel je:",
-      "goHome": "Naar start",
-      "goBack": "Terug"
-    },
     "bulkPartialError_one": "{{count}} rij kon niet worden opgeslagen",
     "bulkPartialError_other": "{{count}} rijen konden niet worden opgeslagen",
     "unknownFields": "Opgeslagen, maar deze velden bestaan niet en zijn niet opgeslagen: {{fields}}. Neem contact op met support."
@@ -83,15 +75,18 @@
     "showing": "{{from}} tot {{to}} van {{total}}",
     "previous": "Vorige",
     "next": "Volgende",
-    "page": "Pagina {{page}} van {{total}}",
-    "itemsPerPagePlaceholder": "Per pagina:"
+    "page": "Pagina {{page}} van {{total}}"
   },
   "filters": {
-    "title": "Doorzoek {{entity}} – filters",
+    "title": "Filters",
     "apply": "Filters toepassen",
     "clear": "Filters wissen",
     "noResults": "Geen resultaten met deze filters",
-    "selected": "{{count}} geselecteerd"
+    "selected_one": "{{count}} geselecteerd",
+    "selected_other": "{{count}} geselecteerd",
+    "button": "Filters",
+    "buttonActive_one": "Filters ({{count}} actief)",
+    "buttonActive_other": "Filters ({{count}} actief)"
   },
   "filter": {
     "placeholder": "Filter...",
@@ -114,7 +109,8 @@
     "clear": "Wissen",
     "pick": "Kiezen",
     "time": "Tijd",
-    "clearAll": "Alle filters wissen"
+    "clearAll": "Alle filters wissen",
+    "contains": "Bevat…"
   },
   "duration": {
     "15m": "15m",
@@ -134,102 +130,9 @@
   "results": {
     "title": {
       "fetching": "Laden...",
-      "count_one": "{{count}} gevonden",
-      "count_other": "{{count}} gevonden"
+      "count_one": "{{count}} resultaat",
+      "count_other": "{{count}} resultaten"
     }
-  },
-  "settings": {
-    "title": "Instellingen",
-    "theme": "Thema",
-    "language": "Taal",
-    "clearCache": {
-      "title": "Cache legen",
-      "localStorage": "Lokale opslag",
-      "sessionStorage": "Sessie",
-      "applicationCache": "App-cache",
-      "serviceWorker": "Service Worker",
-      "cookies": "Cookies",
-      "indexedDB": "IndexedDB",
-      "webSQL": "WebSQL",
-      "memoryCache": "Geheugen",
-      "button": "Cache legen",
-      "clearing": "Bezig met legen...",
-      "error": "Cache legen mislukt",
-      "success": "Cache geleegd: {{items}}",
-      "noItemsCleared": "Niets geleegd"
-    }
-  },
-  "common": {
-    "app": {
-      "name": "DoNotDev App"
-    },
-    "defaultTitle": "Pagina",
-    "defaultDescription": "Paginabeschrijving",
-    "locale": "nl_NL",
-    "themeSelector": {
-      "changeTheme": "Thema wijzigen",
-      "tooltipWithTransition": "Thema: {{current}} → {{next}}",
-      "tooltipWithCurrent": "Thema: {{current}}",
-      "tooltipWithNext": "Wissel naar {{next}}"
-    },
-    "languageSelector": {
-      "changeLanguage": "Taal wijzigen"
-    }
-  },
-  "footer": {
-    "landing": {
-      "company": {
-        "defaultName": "Bedrijf",
-        "description": "Bouw sneller betere producten met ons platform."
-      },
-      "social": {
-        "twitter": "Twitter",
-        "github": "GitHub",
-        "discord": "Discord"
-      },
-      "sections": {
-        "product": {
-          "title": "Product",
-          "features": "Functies",
-          "pricing": "Prijzen",
-          "docs": "Documentatie",
-          "updates": "Updates"
-        },
-        "support": {
-          "title": "Support",
-          "help": "Help",
-          "contact": "Contact",
-          "status": "Status",
-          "community": "Community"
-        }
-      }
-    },
-    "legal": {
-      "allRightsReserved": "Alle rechten voorbehouden.",
-      "cookieSettings": "Cookie-instellingen",
-      "legalNotice": "Juridische informatie",
-      "privacyPolicy": "Privacybeleid",
-      "termsOfService": "Algemene voorwaarden",
-      "builtWith": "Gemaakt met ❤️ en DoNotDev ©",
-      "collapse": "Footer inklappen",
-      "expand": "Footer uitklappen"
-    }
-  },
-  "search": {
-    "ariaLabel": "Zoeken",
-    "label": "Zoeken"
-  },
-  "goTo": {
-    "ariaLabel": "Ga naar pagina",
-    "label": "Ga naar"
-  },
-  "globalGoTo": {
-    "placeholder": "Zoek of ga naar een pagina...",
-    "noResults": "Geen pagina's gevonden.",
-    "favorites": "Favorieten",
-    "allPages": "Alle pagina's",
-    "addFavorite": "Toevoegen aan favorieten",
-    "removeFavorite": "Verwijderen uit favorieten"
   },
   "favorites": {
     "title": "Favorieten",
@@ -245,22 +148,6 @@
   "copyToClipboard": "Kopiëren",
   "copied": "Gekopieerd!",
   "copyPassword": "Wachtwoord kopiëren",
-  "table": {
-    "searchPlaceholder": "Zoeken...",
-    "filters": "Filters",
-    "selectAllRows": "Alles selecteren",
-    "selectRow": "Rij {{index}} selecteren",
-    "showingResults": "{{from}} tot {{to}} van {{total}}",
-    "previous": "Vorige",
-    "next": "Volgende",
-    "page": "Pagina {{current}} van {{total}}"
-  },
-  "language": {
-    "selectLanguage": "Taal kiezen",
-    "searchLanguages": "Taal zoeken...",
-    "noLanguagesFound": "Geen talen gevonden",
-    "changeLanguage": "Taal wijzigen"
-  },
   "draft": {
     "restored": "Concept hersteld",
     "restoredDescription": "Je niet-opgeslagen wijzigingen zijn hersteld",
@@ -288,44 +175,6 @@
     "saveFailed": "Opslaan mislukt. Probeer het opnieuw.",
     "uploadFailed": "Bestand uploaden mislukt. Probeer het opnieuw.",
     "reuploadFiles": "Sommige bestanden zijn niet geüpload. Upload ze opnieuw en sla daarna op."
-  },
-  "navigation": {
-    "more": "Meer",
-    "home": "Start"
-  },
-  "pwa": {
-    "update": {
-      "title": "Nieuwe versie beschikbaar",
-      "description": "Ververs de pagina om te updaten.",
-      "button": "Updaten",
-      "altText": "App updaten"
-    }
-  },
-  "code": {
-    "copyCode": "Code kopiëren",
-    "copied": "Gekopieerd!",
-    "copyCodeToClipboard": "Code kopiëren"
-  },
-  "video": {
-    "clickToWatch": "Klik om te bekijken",
-    "watchVideo": "Bekijk video"
-  },
-  "inspector": {
-    "pageSource": "Pagina bron",
-    "inspectPageSourceCode": "Broncode bekijken"
-  },
-  "routeError": {
-    "title": "Er ging iets mis",
-    "description": "Deze pagina kon niet worden geladen.",
-    "dataSafe": "Je gegevens zijn veilig.",
-    "errorId": "Fout-ID",
-    "errorMessage": "Foutmelding",
-    "copied": "Gekopieerd",
-    "copyDetails": "Details kopiëren",
-    "tryAgain": "Opnieuw proberen",
-    "goHome": "Naar start",
-    "goBack": "Terug",
-    "contactSupport": "Neem contact op met support als het probleem blijft."
   },
   "fields": {
     "array": "Lijst",
@@ -389,8 +238,7 @@
     "format": "Voer een geldige datum in",
     "future": "{{field}} moet in de toekomst liggen",
     "past": "{{field}} moet in het verleden liggen",
-    "today": "{{field}} moet vandaag zijn",
-    "calendarLoadError": "De kalender kon niet worden geladen. Voer de datum in het veld in."
+    "today": "{{field}} moet vandaag zijn"
   },
   "select": {
     "required": "Selecteer een {{field}}",
@@ -399,6 +247,8 @@
     "max": "Selecteer maximaal {{max}}"
   },
   "boolean": {
+    "yes": "Ja",
+    "no": "Nee",
     "required": "{{field}} moet worden geselecteerd"
   },
   "fieldArray": {
@@ -549,12 +399,7 @@
     "color": "Voer een geldige kleurcode in"
   },
   "errors": {
-    "fieldUpdate": "{{field}} bijwerken mislukt",
-    "hiddenField": "Fout bij veld {{field}}",
     "unsupportedFieldType": "Veldtype {{type}} wordt niet ondersteund",
-    "fieldRendering": "Fout bij veld {{field}}",
-    "fallingBackToTextField": "Tekstveld i.p.v. {{type}}",
-    "invalidFieldProps": "Ongeldige instelling voor {{field}}",
     "notFound": "{{entity}} niet gevonden",
     "fetchFailed": "{{entity}} laden mislukt"
   },
@@ -562,7 +407,11 @@
     "viewAs": "Weergeven als",
     "preview": "Voorvertoning"
   },
+  "reference": {
+    "placeholder": "{{label}} selecteren"
+  },
   "price": {
+    "columnTitle": "{{label}} ($t(crud:price.vatIncluded))",
     "vatIncluded": "incl. btw",
     "currency": "Valuta",
     "discountLabel": "Korting (%)",
@@ -595,10 +444,6 @@
     "pending_one": "{{count}} niet-opgeslagen wijziging",
     "pending_other": "{{count}} niet-opgeslagen wijzigingen",
     "discard": "Wijzigingen verwerpen",
-    "selected": "{{count}} geselecteerd",
-    "field": "Veld",
-    "value": "Waarde",
-    "apply": "Toepassen op selectie",
     "deleteSelected": "Selectie verwijderen ({{count}})",
     "failed_one": "{{count}} rij niet opgeslagen: blijft in de lijst, probeer opnieuw",
     "failed_other": "{{count}} rijen niet opgeslagen: blijven in de lijst, probeer opnieuw"
@@ -624,5 +469,11 @@
     "moved": "{{name}} verplaatst naar positie {{position}} van {{count}}.",
     "dropped": "{{name}} neergezet op positie {{position}} van {{count}}.",
     "cancelled": "Verplaatsen van {{name}} geannuleerd."
+  },
+  "list": {
+    "count_one": "{{count}} {{nameLower}}",
+    "count_other": "{{count}} {{namesLower}}",
+    "empty": "Nog geen {{namesLower}}",
+    "noResultsFor": "Geen resultaten voor “{{query}}”"
   }
 }

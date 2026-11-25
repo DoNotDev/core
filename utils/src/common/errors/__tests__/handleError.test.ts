@@ -5,6 +5,7 @@ import {
   withErrorHandling,
   showNotification,
 } from '../handleError';
+import { wrapCrudError } from '../../adapters/errorUtils';
 
 describe('handleError', () => {
   it('returns a DoNotDevError', () => {
@@ -94,5 +95,49 @@ describe('showNotification', () => {
   it('accepts severity parameter', () => {
     const id = showNotification('test', 'warning');
     expect(typeof id).toBe('string');
+  });
+});
+
+describe('handleError logging', () => {
+  it('logs the original message as cause when the user message replaces it', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const result = handleError(
+      new Error('[dndev] Direct adapter cannot access "products"'),
+      { userMessage: 'Query failed', reportToSentry: false }
+    );
+    expect(result.message).toBe('Query failed');
+    expect(spy).toHaveBeenCalledWith(
+      expect.stringContaining('Query failed'),
+      expect.objectContaining({
+        cause: '[dndev] Direct adapter cannot access "products"',
+      })
+    );
+    spy.mockRestore();
+  });
+
+  it("logs an adapter error's original message as cause", () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const adapterError = wrapCrudError(
+      new Error('Missing or insufficient permissions.'),
+      'FirestoreAdapter',
+      'query',
+      'products'
+    );
+    handleError(adapterError, { userMessage: 'Query failed', reportToSentry: false });
+    expect(spy).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({ cause: 'Missing or insufficient permissions.' })
+    );
+    spy.mockRestore();
+  });
+
+  it('logs no cause when the message is the original one', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    handleError(new Error('Specific failure reading products'), {
+      reportToSentry: false,
+    });
+    const info = spy.mock.calls[0]?.[1] as Record<string, unknown>;
+    expect(info).not.toHaveProperty('cause');
+    spy.mockRestore();
   });
 });

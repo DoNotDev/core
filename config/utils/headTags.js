@@ -200,6 +200,11 @@ function recordHeadTags(seo) {
   if (breadcrumb) tags.push(jsonLdTag(breadcrumb));
   return tags;
 }
+function ogLocale(language) {
+  const tag = new Intl.Locale(language);
+  const { language: lang, region } = tag.region ? tag : tag.maximize();
+  return region && /^[A-Z]{2}$/.test(region) ? `${lang}_${region}` : null;
+}
 function siteHeadTags(site) {
   const tags = [];
   if (site.url) {
@@ -210,6 +215,16 @@ function siteHeadTags(site) {
     tags.push(meta('property', 'og:url', site.url));
   }
   tags.push(meta('property', 'og:site_name', site.siteName));
+  const pageLocale = site.language ? ogLocale(site.language) : null;
+  if (pageLocale) tags.push(meta('property', 'og:locale', pageLocale));
+  if (site.language && site.alternates) {
+    for (const language of Object.keys(site.alternates)) {
+      if (language === site.language) continue;
+      const alternate = ogLocale(language);
+      if (alternate)
+        tags.push(meta('property', 'og:locale:alternate', alternate));
+    }
+  }
   if (site.alternates) {
     for (const [language, href] of Object.entries(site.alternates)) {
       tags.push({
@@ -488,6 +503,7 @@ export {
   faviconHeadTags,
   fontPreloadHeadTags,
   jsonScriptText,
+  ogLocale,
   readI18nSeoMeta,
   recordHeadTags,
   resolveFaviconFiles,

@@ -1,6 +1,12 @@
 {
   "signIn": "Inloggen",
   "auth": {
+    "signIn": "Inloggen",
+    "loading": "Laden...",
+    "signOut": "Uitloggen",
+    "deleteAccount": {
+      "label": "Account verwijderen"
+    },
     "userMenu": "Gebruikersmenu",
     "profile": "Profiel",
     "title": "Authenticatie"
@@ -141,7 +147,8 @@
     "select": "Selecteren",
     "upload": "Uploaden",
     "download": "Downloaden",
-    "close": "Sluiten"
+    "close": "Sluiten",
+    "open": "Openen"
   },
   "guard": {
     "signInRequired": "Log in om toegang te krijgen tot deze pagina"
@@ -176,14 +183,19 @@
     "showing": "{{from}} tot {{to}} van {{total}}",
     "previous": "Vorige",
     "next": "Volgende",
-    "page": "Pagina {{page}} van {{total}}"
+    "page": "Pagina {{page}} van {{total}}",
+    "itemsPerPage": "Per pagina:",
+    "all": "Alle",
+    "pageNumber": "Pagina {{page}}",
+    "label": "Paginering"
   },
   "filters": {
     "title": "Filters",
     "apply": "Toepassen",
     "clear": "Wissen",
     "noResults": "Geen resultaten",
-    "selected": "{{count}} geselecteerd"
+    "selected_one": "{{count}} geselecteerd",
+    "selected_other": "{{count}} geselecteerd"
   },
   "settings": {
     "title": "Instellingen",
@@ -273,10 +285,18 @@
   "globalGoTo": {
     "placeholder": "Zoek of ga naar een pagina...",
     "noResults": "Geen resultaten gevonden.",
+    "empty": "Geen pagina's beschikbaar.",
     "favorites": "Favorieten",
+    "recent": "Recent",
     "allPages": "Alle pagina's",
     "addFavorite": "Toevoegen aan favorieten",
     "removeFavorite": "Verwijderen uit favorieten",
+    "favorite": "Toevoegen aan favorieten",
+    "unfavorite": "Verwijderen uit favorieten",
+    "shortcutOpen": "Openen",
+    "shortcutNavigate": "Navigeren",
+    "shortcutSelect": "Selecteren",
+    "shortcutClose": "Sluiten",
     "searchPlaceholder": "Pagina's zoeken...",
     "ariaLabel": "Navigatie doorzoeken"
   },
@@ -291,13 +311,21 @@
     "showingResults": "{{from}} tot {{to}} van {{total}}",
     "previous": "Vorige",
     "next": "Volgende",
-    "page": "Pagina {{current}} van {{total}}"
+    "page": "Pagina {{current}} van {{total}}",
+    "export": "Exporteren",
+    "selected": "{{count}} geselecteerd",
+    "field": "Veld",
+    "value": "Waarde",
+    "apply": "Toepassen op selectie",
+    "clearSelection": "Selectie wissen",
+    "empty": "Geen gegevens"
   },
   "language": {
     "selectLanguage": "Taal kiezen",
     "searchLanguages": "Taal zoeken...",
     "noLanguagesFound": "Geen talen gevonden",
-    "changeLanguage": "Taal wijzigen"
+    "changeLanguage": "Taal wijzigen",
+    "selector": "Taalkeuze"
   },
   "form": {
     "submit": "Versturen",
@@ -312,7 +340,14 @@
   "navigation": {
     "more": "Meer",
     "home": "Start",
-    "menu": "Navigatie"
+    "menu": "Navigatie",
+    "main": "Hoofdmenu",
+    "site": "Sitenavigatie",
+    "resizeSidebar": "Zijbalk vergroten of verkleinen. Dubbelklik of Enter om in of uit te klappen. Home om in te klappen, End om aan de inhoud aan te passen.",
+    "open": "Navigatie openen",
+    "breadcrumb": "Kruimelpad",
+    "headerMenu": "Menu",
+    "loadingProgress": "Voortgang van het laden van de pagina"
   },
   "pwa": {
     "update": {
@@ -354,11 +389,14 @@
   "code": {
     "copyCode": "Code kopiëren",
     "copied": "Gekopieerd!",
-    "copyCodeToClipboard": "Code kopiëren"
+    "copyCodeToClipboard": "Code kopiëren",
+    "loading": "Code laden"
   },
   "video": {
     "clickToWatch": "Klik om te bekijken",
-    "watchVideo": "Bekijk video"
+    "watchVideo": "Bekijk video",
+    "title": "Video",
+    "loading": "Video laden"
   },
   "inspector": {
     "pageSource": "Pagina bron",
@@ -368,7 +406,9 @@
     "navigation": "Navigatie",
     "codeInspector": "Code-inspector",
     "debugPanel": "Debugpanel",
-    "close": "Paneel sluiten"
+    "close": "Paneel sluiten",
+    "title": "Paneel",
+    "content": "Inhoud van het paneel"
   },
   "routeError": {
     "title": "Er ging iets mis",
@@ -672,6 +712,128 @@
     "slide": "Dia {{current}} van {{total}}",
     "goToSlide": "Ga naar dia {{index}}",
     "empty": "Geen items om weer te geven",
-    "loading": "Carrousel laden"
+    "loading": "Carrousel laden",
+    "roleDescription": "carrousel",
+    "slideRoleDescription": "dia"
+  },
+  "datePicker": {
+    "openCalendar": "Kalender openen",
+    "calendarLoadError": "De kalender kon niet worden geladen. Voer de datum in het veld in.",
+    "date": "Datum",
+    "dateTime": "Datum en tijd"
+  },
+  "dialog": {
+    "title": "Dialoogvenster",
+    "content": "Inhoud van dialoogvenster"
+  },
+  "toast": {
+    "region": "Meldingen ({hotkey})",
+    "label": "Melding"
+  },
+  "command": {
+    "title": "Opdrachtpalet",
+    "description": "Zoeken en navigeren met sneltoetsen",
+    "item": "Opdracht"
+  },
+  "combobox": {
+    "createOption": "\"{{value}}\" aanmaken"
+  },
+  "copiedToClipboard": "Gekopieerd naar klembord",
+  "infiniteScroll": {
+    "loadingMore": "Meer laden...",
+    "scrollForMore": "Scroll omlaag om meer te laden..."
+  },
+  "range": {
+    "min": "Min.",
+    "max": "Max."
+  },
+  "password": {
+    "show": "Wachtwoord tonen",
+    "hide": "Wachtwoord verbergen"
+  },
+  "pin": {
+    "show": "Pincode tonen",
+    "hide": "Pincode verbergen"
+  },
+  "stepper": {
+    "label": "Stappen",
+    "goToStep": "Ga naar stap {{number}}: {{title}}",
+    "stepOf": "Stap {{current}} van {{total}}"
+  },
+  "colorPicker": {
+    "label": "Kleurkiezer",
+    "custom": "Aangepast",
+    "customColor": "Aangepaste kleur",
+    "colors": {
+      "black": "Zwart",
+      "white": "Wit",
+      "gray": "Grijs",
+      "lightGray": "Lichtgrijs",
+      "red": "Rood",
+      "orange": "Oranje",
+      "amber": "Amber",
+      "yellow": "Geel",
+      "lime": "Limoen",
+      "green": "Groen",
+      "teal": "Blauwgroen",
+      "cyan": "Cyaan",
+      "blue": "Blauw",
+      "purple": "Paars",
+      "pink": "Roze",
+      "rose": "Framboos",
+      "deepPurple": "Donkerpaars",
+      "indigo": "Indigo",
+      "lightBlue": "Lichtblauw",
+      "lightGreen": "Lichtgroen",
+      "deepOrange": "Donkeroranje",
+      "pastelRose": "Pastelframboos",
+      "pastelPink": "Pastelroze",
+      "pastelPurple": "Pastelpaars",
+      "pastelIndigo": "Pastelindigo",
+      "pastelBlue": "Pastelblauw",
+      "pastelCyan": "Pastelcyaan",
+      "pastelTeal": "Pastelblauwgroen",
+      "pastelGreen": "Pastelgroen",
+      "pastelLime": "Pastellimoen",
+      "pastelYellow": "Pastelgeel",
+      "pastelOrange": "Pasteloranje",
+      "pastelRed": "Pastelrood",
+      "pastelGray": "Pastelgrijs",
+      "pastelStone": "Pastelsteengrijs",
+      "pastelFuchsia": "Pastelfuchsia",
+      "pastelSky": "Pastelhemelsblauw"
+    }
+  },
+  "dropdownMenu": {
+    "submenu": "Submenu",
+    "item": "Menu-item"
+  },
+  "skipLink": {
+    "label": "Overslaanlinks"
+  },
+  "crawl": {
+    "label": "Geanimeerde scrollende tekst",
+    "start": "Geanimeerde introductie starten",
+    "resume": "Animatie hervatten"
+  },
+  "stackedCards": {
+    "label": "Gestapelde kaarten"
+  },
+  "jsonViewer": {
+    "expandAll": "Alles uitklappen",
+    "collapseAll": "Alles inklappen",
+    "copy": "Kopiëren"
+  },
+  "techStack": {
+    "label": "Technologiestack"
+  },
+  "callToAction": {
+    "label": "Oproep tot actie"
+  },
+  "featureFallback": {
+    "title": "{{featureName}} niet beschikbaar",
+    "message": "{{featureName}} is niet beschikbaar",
+    "action": "{{featureName}} (niet beschikbaar)",
+    "help": "Voor deze functie moet {{featureName}} zijn geconfigureerd."
   }
 }

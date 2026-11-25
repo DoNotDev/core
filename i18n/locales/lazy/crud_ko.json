@@ -39,8 +39,9 @@
     "noResults": "주소를 찾을 수 없습니다",
     "apiUnavailable": "Google Places를 사용할 수 없습니다 — 주소를 직접 입력하세요"
   },
-  "export": "내보내기",
   "copyToClipboard": "클립보드에 복사",
+  "copied": "복사됨!",
+  "copyPassword": "비밀번호 복사",
   "noInquiries": "문의사항을 찾을 수 없습니다.",
   "customer": "고객",
   "noCustomer": "연결된 고객 없음",
@@ -112,8 +113,7 @@
     "format": "유효한 날짜를 입력해 주세요",
     "future": "{{field}}은(는) 미래여야 합니다",
     "past": "{{field}}은(는) 과거여야 합니다",
-    "today": "{{field}}은(는) 오늘이어야 합니다",
-    "calendarLoadError": "달력을 불러오지 못했습니다. 입력란에 날짜를 입력해 주세요."
+    "today": "{{field}}은(는) 오늘이어야 합니다"
   },
   "select": {
     "required": "{{field}}을(를) 선택해 주세요",
@@ -122,6 +122,8 @@
     "max": "최대 {{max}}개의 옵션만 선택할 수 있습니다"
   },
   "boolean": {
+    "yes": "예",
+    "no": "아니요",
     "required": "{{field}}을(를) 선택해야 합니다"
   },
   "fieldArray": {
@@ -337,15 +339,17 @@
     "showing": "{{from}}부터 {{to}}까지 (총 {{total}}개 중)",
     "previous": "이전",
     "next": "다음",
-    "page": "{{page}} / {{total}}페이지",
-    "itemsPerPagePlaceholder": "페이지당 항목 수:"
+    "page": "{{page}} / {{total}}페이지"
   },
   "filters": {
-    "title": "{{entity}} 찾아보기 - 필터",
+    "title": "필터",
     "apply": "필터 적용",
     "clear": "필터 지우기",
     "noResults": "필터와 일치하는 결과가 없습니다",
-    "selected": "{{count}}개 선택됨"
+    "selected_other": "{{count}}개 선택됨",
+    "button": "필터",
+    "buttonActive_one": "필터 ({{count}}개 적용됨)",
+    "buttonActive_other": "필터 ({{count}}개 적용됨)"
   },
   "filter": {
     "placeholder": "필터...",
@@ -368,7 +372,8 @@
     "clear": "지우기",
     "pick": "선택",
     "time": "시간",
-    "clearAll": "모든 필터 지우기"
+    "clearAll": "모든 필터 지우기",
+    "contains": "포함…"
   },
   "duration": {
     "15m": "15분",
@@ -396,7 +401,11 @@
     "viewAs": "다음으로 보기",
     "preview": "미리보기"
   },
+  "reference": {
+    "placeholder": "{{label}} 선택"
+  },
   "price": {
+    "columnTitle": "{{label}} ($t(crud:price.vatIncluded))",
     "vatIncluded": "부가세 포함",
     "currency": "통화",
     "discountLabel": "할인 (%)",
@@ -422,6 +431,7 @@
     "confirmSelected_other": "선택한 {{count}}개 항목을 삭제할까요? 되돌릴 수 없습니다."
   },
   "errors": {
+    "unsupportedFieldType": "지원되지 않는 필드 유형: {{type}}",
     "notFound": "{{entity}}을(를) 찾을 수 없습니다",
     "fetchFailed": "{{entity}}을(를) 불러오지 못했습니다"
   },
@@ -433,10 +443,6 @@
     "pending_one": "저장되지 않은 변경 {{count}}개",
     "pending_other": "저장되지 않은 변경 {{count}}개",
     "discard": "변경 취소",
-    "selected": "{{count}}개 선택됨",
-    "field": "필드",
-    "value": "값",
-    "apply": "선택 항목에 적용",
     "deleteSelected": "선택 항목 삭제 ({{count}})",
     "failed_one": "{{count}}개 행이 저장되지 않았습니다. 목록에 남아 있으니 다시 시도하세요",
     "failed_other": "{{count}}개 행이 저장되지 않았습니다. 목록에 남아 있으니 다시 시도하세요"
@@ -462,5 +468,11 @@
     "moved": "{{name}}을(를) {{count}}개 중 {{position}}번째로 옮겼습니다.",
     "dropped": "{{name}}을(를) {{count}}개 중 {{position}}번째에 놓았습니다.",
     "cancelled": "{{name}} 이동을 취소했습니다."
+  },
+  "list": {
+    "count_one": "{{names}} {{count}}개",
+    "count_other": "{{names}} {{count}}개",
+    "empty": "아직 항목이 없습니다",
+    "noResultsFor": "“{{query}}”에 대한 결과가 없습니다"
   }
 }

@@ -104,6 +104,7 @@
 
 import {
   BACKEND_GENERATED_FIELD_NAMES,
+  BASE_FIELD_VISIBILITY,
   BUILT_IN_STATUSES,
   DEFAULT_STATUS,
   HIDDEN_STATUSES,
@@ -245,7 +246,7 @@ export const baseFields = {
   status: {
     name: 'status',
     type: 'select',
-    visibility: 'admin',
+    visibility: BASE_FIELD_VISIBILITY.status,
     label: 'crud:fields.status',
     // REQUIRED: Status must be editable to be included in forms. `as const`: Editable
     // admits any role string (`string & {}`), which widens the literal otherwise.
@@ -258,7 +259,7 @@ export const baseFields = {
   id: {
     name: 'id',
     type: 'text',
-    visibility: 'hidden',
+    visibility: BASE_FIELD_VISIBILITY.id,
     label: 'crud:fields.id',
     validation: {
       required: true,
@@ -267,28 +268,28 @@ export const baseFields = {
   createdAt: {
     name: 'createdAt',
     type: 'timestamp',
-    visibility: 'technical',
+    visibility: BASE_FIELD_VISIBILITY.createdAt,
     label: 'crud:fields.createdAt',
     validation: {},
   },
   updatedAt: {
     name: 'updatedAt',
     type: 'timestamp',
-    visibility: 'technical',
+    visibility: BASE_FIELD_VISIBILITY.updatedAt,
     label: 'crud:fields.updatedAt',
     validation: {},
   },
   createdById: {
     name: 'createdById',
     type: 'reference',
-    visibility: 'technical',
+    visibility: BASE_FIELD_VISIBILITY.createdById,
     label: 'crud:fields.createdById',
     validation: {},
   },
   updatedById: {
     name: 'updatedById',
     type: 'reference',
-    visibility: 'technical',
+    visibility: BASE_FIELD_VISIBILITY.updatedById,
     label: 'crud:fields.updatedById',
     validation: {},
   },

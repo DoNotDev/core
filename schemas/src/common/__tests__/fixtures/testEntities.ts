@@ -1064,6 +1064,11 @@ export const cellEditEntity = defineEntity({
     computed: { name: 'computed', label: 'computed', type: 'text', visibility: 'user', editable: 'computed' },
     technical: { name: 'technical', label: 'technical', type: 'text', visibility: 'technical' },
     technicalAdmin: { name: 'technicalAdmin', label: 'technicalAdmin', type: 'text', visibility: 'technical', editable: 'admin' },
+    // Dates (C1): a calendar date, date-times, a generated timestamp (read-only)
+    deliveryDate: { name: 'deliveryDate', label: 'deliveryDate', type: 'date', visibility: 'user' },
+    startsAt: { name: 'startsAt', label: 'startsAt', type: 'datetime-local', visibility: 'user' },
+    paidAt: { name: 'paidAt', label: 'paidAt', type: 'timestamp', visibility: 'user' },
+    placedAt: { name: 'placedAt', label: 'placedAt', type: 'timestamp', visibility: 'user', editable: 'generated' },
   },
 });
 

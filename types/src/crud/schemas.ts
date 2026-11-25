@@ -339,6 +339,53 @@ export interface UIFieldOptions<T extends string = FieldType> {
 }
 
 /**
+ * Colour of a `select` option shown as a badge (the `Badge` variants of
+ * `@donotdev/components`).
+ *
+ * @version 0.1.0
+ * @since 0.3.8
+ */
+export type FieldOptionVariant =
+  | 'default'
+  | 'muted'
+  | 'primary'
+  | 'secondary'
+  | 'accent'
+  | 'success'
+  | 'warning'
+  | 'destructive'
+  | 'outline';
+
+/**
+ * One option of a `select` / `multiselect` / `radio` / `combobox` field
+ * (`validation.options`).
+ *
+ * @example
+ * ```typescript
+ * options: [
+ *   { value: 'pending', label: 'status.pending', variant: 'warning' },
+ *   { value: 'shipped', label: 'status.shipped', variant: 'success' },
+ * ]
+ * ```
+ *
+ * @version 0.1.0
+ * @since 0.3.8
+ */
+export interface FieldOption {
+  /** Stored value */
+  value: string;
+  /** Label or i18n key (`'status.pending'`, `'crud:status.draft'`) */
+  label: string;
+  /**
+   * Badge colour of the value in lists and detail views (`select` fields). Without
+   * it, the built-in statuses get theirs (`STATUS_OPTION_VARIANTS`, `@donotdev/core`:
+   * draft muted, published / available / active success, deleted / archived
+   * destructive) and other values show as plain text.
+   */
+  variant?: FieldOptionVariant;
+}
+
+/**
  * Picture type for image fields
  * Represents uploaded image with full and thumbnail URLs
  */
@@ -600,14 +647,8 @@ export interface ValidationRules<T extends string = FieldType> {
    */
   options?: T extends 'select' | 'multiselect' | 'radio' | 'combobox'
     ?
-        | Array<{
-            value: string;
-            label: string;
-          }>
-        | ((formValues?: Record<string, any>) => Array<{
-            value: string;
-            label: string;
-          }>)
+        | Array<FieldOption>
+        | ((formValues?: Record<string, any>) => Array<FieldOption>)
     : never;
 
   /**

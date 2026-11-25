@@ -167,7 +167,8 @@ describe('deriveEntitySeo formatting (same text as the CRUD card)', () => {
       },
       APARTMENT_FR
     );
-    expect(seo.description).toBe('1\u202f250\u00a0€ Disponible · Calme, lumineux');
+    // Money: the currency's standard fraction digits (EUR: 2)
+    expect(seo.description).toBe('1\u202f250,00\u00a0€ Disponible · Calme, lumineux');
   });
 
   it('prefers a long-text field over the card text', () => {

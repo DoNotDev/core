@@ -1,4 +1,15 @@
 {
+  "errors": {
+    "unauthenticated": "Accedi per procedere al pagamento.",
+    "checkout_failed": "Impossibile avviare il pagamento. Riprova o contatta l'assistenza se il problema persiste.",
+    "cancel_failed": "Impossibile annullare l'abbonamento. Riprova o contatta l'assistenza.",
+    "change_plan_failed": "Impossibile cambiare piano. Riprova o contatta l'assistenza.",
+    "refresh_failed": "Impossibile aggiornare lo stato dell'abbonamento. Riprova.",
+    "portal_failed": "Impossibile aprire il portale clienti. Riprova o contatta l'assistenza.",
+    "not_available": "La fatturazione non è disponibile.",
+    "server_error": "Il server ha restituito un errore. Riprova.",
+    "no_checkout_url": "Nessun URL di pagamento ricevuto. Riprova."
+  },
   "security": {
     "title": "Elaborazione Pagamenti Sicura",
     "description": "Le tue informazioni di pagamento vengono elaborate in modo sicuro da Stripe, un processore di pagamento certificato PCI DSS Level 1.",

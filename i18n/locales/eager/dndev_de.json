@@ -1,6 +1,12 @@
 {
   "signIn": "Anmelden",
   "auth": {
+    "signIn": "Anmelden",
+    "loading": "Lädt...",
+    "signOut": "Abmelden",
+    "deleteAccount": {
+      "label": "Konto löschen"
+    },
     "userMenu": "Benutzermenü",
     "profile": "Profil",
     "title": "Authentifizierung"
@@ -141,7 +147,8 @@
     "select": "Auswählen",
     "upload": "Hochladen",
     "download": "Herunterladen",
-    "close": "Schließen"
+    "close": "Schließen",
+    "open": "Öffnen"
   },
   "guard": {
     "signInRequired": "Bitte melden Sie sich an, um auf diese Seite zuzugreifen"
@@ -176,14 +183,19 @@
     "showing": "Zeige {{from}} bis {{to}} von {{total}} Einträgen",
     "previous": "Zurück",
     "next": "Weiter",
-    "page": "Seite {{page}} von {{total}}"
+    "page": "Seite {{page}} von {{total}}",
+    "itemsPerPage": "Elemente pro Seite:",
+    "all": "Alle",
+    "pageNumber": "Seite {{page}}",
+    "label": "Seitennavigation"
   },
   "filters": {
     "title": "Filter",
     "apply": "Filter anwenden",
     "clear": "Filter löschen",
     "noResults": "Keine Ergebnisse entsprechen Ihren Filtern",
-    "selected": "{{count}} ausgewählt"
+    "selected_one": "{{count}} ausgewählt",
+    "selected_other": "{{count}} ausgewählt"
   },
   "settings": {
     "title": "Einstellungen",
@@ -273,10 +285,18 @@
   "globalGoTo": {
     "placeholder": "Routen filtern oder zu einer Seite navigieren...",
     "noResults": "Keine Ergebnisse gefunden.",
+    "empty": "Keine Seiten verfügbar.",
     "favorites": "Favoriten",
+    "recent": "Zuletzt verwendet",
     "allPages": "Alle Seiten",
     "addFavorite": "Zu Favoriten hinzufügen",
     "removeFavorite": "Aus Favoriten entfernen",
+    "favorite": "Zu Favoriten hinzufügen",
+    "unfavorite": "Aus Favoriten entfernen",
+    "shortcutOpen": "Öffnen",
+    "shortcutNavigate": "Navigieren",
+    "shortcutSelect": "Auswählen",
+    "shortcutClose": "Schließen",
     "searchPlaceholder": "Seiten durchsuchen...",
     "ariaLabel": "Navigation durchsuchen"
   },
@@ -291,13 +311,21 @@
     "showingResults": "Zeige {{from}} bis {{to}} von {{total}} Ergebnissen",
     "previous": "Zurück",
     "next": "Weiter",
-    "page": "Seite {{current}} von {{total}}"
+    "page": "Seite {{current}} von {{total}}",
+    "export": "Exportieren",
+    "selected": "{{count}} ausgewählt",
+    "field": "Feld",
+    "value": "Wert",
+    "apply": "Auf Auswahl anwenden",
+    "clearSelection": "Auswahl aufheben",
+    "empty": "Keine Daten"
   },
   "language": {
     "selectLanguage": "Sprache auswählen",
     "searchLanguages": "Sprachen suchen...",
     "noLanguagesFound": "Keine Sprachen gefunden",
-    "changeLanguage": "Sprache ändern"
+    "changeLanguage": "Sprache ändern",
+    "selector": "Sprachauswahl"
   },
   "form": {
     "submit": "Absenden",
@@ -312,7 +340,14 @@
   "navigation": {
     "more": "Mehr",
     "home": "Startseite",
-    "menu": "Navigation"
+    "menu": "Navigation",
+    "main": "Hauptmenü",
+    "site": "Website-Navigation",
+    "resizeSidebar": "Seitenleiste anpassen. Doppelklick oder Eingabetaste zum Ein- und Ausklappen. Pos1 zum Einklappen, Ende zum Anpassen an den Inhalt.",
+    "open": "Navigation öffnen",
+    "breadcrumb": "Pfadnavigation",
+    "headerMenu": "Menü",
+    "loadingProgress": "Ladefortschritt der Seite"
   },
   "pwa": {
     "update": {
@@ -354,11 +389,14 @@
   "code": {
     "copyCode": "Code kopieren",
     "copied": "Kopiert!",
-    "copyCodeToClipboard": "Code in Zwischenablage kopieren"
+    "copyCodeToClipboard": "Code in Zwischenablage kopieren",
+    "loading": "Code wird geladen"
   },
   "video": {
     "clickToWatch": "Klicken Sie, um das Video anzusehen",
-    "watchVideo": "Video ansehen"
+    "watchVideo": "Video ansehen",
+    "title": "Video",
+    "loading": "Video wird geladen"
   },
   "inspector": {
     "pageSource": "Seitenquelle",
@@ -368,7 +406,9 @@
     "navigation": "Navigation",
     "codeInspector": "Code-Inspektor",
     "debugPanel": "Debug-Panel",
-    "close": "Panel schließen"
+    "close": "Panel schließen",
+    "title": "Bereich",
+    "content": "Inhalt des Bereichs"
   },
   "routeError": {
     "title": "Etwas ist schief gelaufen",
@@ -672,6 +712,128 @@
     "slide": "Folie {{current}} von {{total}}",
     "goToSlide": "Zu Folie {{index}} wechseln",
     "empty": "Keine Elemente zum Anzeigen",
-    "loading": "Karussell wird geladen"
+    "loading": "Karussell wird geladen",
+    "roleDescription": "Karussell",
+    "slideRoleDescription": "Folie"
+  },
+  "datePicker": {
+    "openCalendar": "Kalender öffnen",
+    "calendarLoadError": "Der Kalender konnte nicht geladen werden. Bitte geben Sie das Datum im Feld ein.",
+    "date": "Datum",
+    "dateTime": "Datum und Uhrzeit"
+  },
+  "dialog": {
+    "title": "Dialog",
+    "content": "Dialoginhalt"
+  },
+  "toast": {
+    "region": "Benachrichtigungen ({hotkey})",
+    "label": "Benachrichtigung"
+  },
+  "command": {
+    "title": "Befehlspalette",
+    "description": "Mit Tastenkürzeln suchen und navigieren",
+    "item": "Befehl"
+  },
+  "combobox": {
+    "createOption": "„{{value}}“ erstellen"
+  },
+  "copiedToClipboard": "In die Zwischenablage kopiert",
+  "infiniteScroll": {
+    "loadingMore": "Weitere werden geladen...",
+    "scrollForMore": "Nach unten scrollen, um mehr zu laden..."
+  },
+  "range": {
+    "min": "Min.",
+    "max": "Max."
+  },
+  "password": {
+    "show": "Passwort anzeigen",
+    "hide": "Passwort verbergen"
+  },
+  "pin": {
+    "show": "PIN anzeigen",
+    "hide": "PIN verbergen"
+  },
+  "stepper": {
+    "label": "Schritte",
+    "goToStep": "Zu Schritt {{number}}: {{title}}",
+    "stepOf": "Schritt {{current}} von {{total}}"
+  },
+  "colorPicker": {
+    "label": "Farbauswahl",
+    "custom": "Eigene",
+    "customColor": "Eigene Farbe",
+    "colors": {
+      "black": "Schwarz",
+      "white": "Weiß",
+      "gray": "Grau",
+      "lightGray": "Hellgrau",
+      "red": "Rot",
+      "orange": "Orange",
+      "amber": "Bernstein",
+      "yellow": "Gelb",
+      "lime": "Limette",
+      "green": "Grün",
+      "teal": "Blaugrün",
+      "cyan": "Cyan",
+      "blue": "Blau",
+      "purple": "Lila",
+      "pink": "Pink",
+      "rose": "Himbeerrot",
+      "deepPurple": "Dunkellila",
+      "indigo": "Indigo",
+      "lightBlue": "Hellblau",
+      "lightGreen": "Hellgrün",
+      "deepOrange": "Dunkelorange",
+      "pastelRose": "Pastell-Himbeerrot",
+      "pastelPink": "Pastell-Pink",
+      "pastelPurple": "Pastell-Lila",
+      "pastelIndigo": "Pastell-Indigo",
+      "pastelBlue": "Pastell-Blau",
+      "pastelCyan": "Pastell-Cyan",
+      "pastelTeal": "Pastell-Blaugrün",
+      "pastelGreen": "Pastell-Grün",
+      "pastelLime": "Pastell-Limette",
+      "pastelYellow": "Pastell-Gelb",
+      "pastelOrange": "Pastell-Orange",
+      "pastelRed": "Pastell-Rot",
+      "pastelGray": "Pastell-Grau",
+      "pastelStone": "Pastell-Steingrau",
+      "pastelFuchsia": "Pastell-Fuchsia",
+      "pastelSky": "Pastell-Himmelblau"
+    }
+  },
+  "dropdownMenu": {
+    "submenu": "Untermenü",
+    "item": "Menüeintrag"
+  },
+  "skipLink": {
+    "label": "Sprunglinks"
+  },
+  "crawl": {
+    "label": "Animierter Lauftext",
+    "start": "Animierte Einleitung starten",
+    "resume": "Animation fortsetzen"
+  },
+  "stackedCards": {
+    "label": "Gestapelte Karten"
+  },
+  "jsonViewer": {
+    "expandAll": "Alle ausklappen",
+    "collapseAll": "Alle einklappen",
+    "copy": "Kopieren"
+  },
+  "techStack": {
+    "label": "Technologie-Stack"
+  },
+  "callToAction": {
+    "label": "Handlungsaufforderung"
+  },
+  "featureFallback": {
+    "title": "{{featureName}} nicht verfügbar",
+    "message": "{{featureName}} ist nicht verfügbar",
+    "action": "{{featureName}} (nicht verfügbar)",
+    "help": "Diese Funktion erfordert, dass {{featureName}} konfiguriert ist."
   }
 }

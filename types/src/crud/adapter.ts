@@ -46,7 +46,11 @@ import type {
 export interface ICrudAdapter {
   /**
    * When true, this adapter enforces field-level security server-side.
-   * Only server-side adapters may access entities with restricted field visibility.
+   * Only server-side adapters (or `dbLevelSecurity` ones) may access entities with
+   * restricted field visibility: an app field with a visibility other than 'guest'.
+   * The base fields `defineEntity` adds (`BASE_FIELD_VISIBILITY`: id, status, createdAt,
+   * updatedAt, createdById, updatedById) do not count at their default visibility: on a
+   * direct adapter they are readable by whoever can read the document.
    * Defaults to false (direct/client-side adapters).
    */
   readonly serverSideOnly?: boolean;
@@ -78,6 +82,10 @@ export interface ICrudAdapter {
    * When true, field-level and row-level security is enforced at the database layer
    * (e.g. Supabase RLS + column grants). The framework visibility gate is bypassed
    * because the DB rejects unauthorized reads before any data leaves the server.
+   * Without it (and without `serverSideOnly`), the adapter is direct: entities whose own
+   * fields are all 'guest' are served, and their base system fields (id, status,
+   * createdAt, updatedAt, createdById, updatedById) are readable by whoever can read
+   * the document, whatever their `technical` / `hidden` / `admin` visibility.
    *
    * **Supabase:** requires RLS enabled on every table + column-level grants per role.
    * **Firestore:** Rules are row-level only — field-level filtering needs FunctionsAdapter.

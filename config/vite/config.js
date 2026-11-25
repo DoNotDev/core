@@ -20,6 +20,7 @@ import {
   createOptimizeDepsConfig,
 } from './resolveConfig.js';
 import { createLogger } from '../utils/debugLog.js';
+import { resolveAppTimeZone } from '../utils/timeZone.js';
 
 /**
  * Create Vite configuration optimized for DNDev applications
@@ -200,6 +201,14 @@ export function defineViteConfig(userOptions = {}) {
         restOptions,
       } = normalized;
 
+      // The app's time zone (every date the app shows is in it): the app's i18n.timeZone,
+      // validated, else the framework default (DEFAULT_APP_TIME_ZONE). Carried by discovery
+      // to the generated i18n config, so getAppTimeZone() always has a value.
+      const appI18nOptions = {
+        ...i18nOptions,
+        timeZone: resolveAppTimeZone(i18nOptions.timeZone),
+      };
+
       // Create logger with normalized debug/verbose values
       const logger = createLogger('vite-config', debug, verbose);
 
@@ -243,7 +252,7 @@ export function defineViteConfig(userOptions = {}) {
         isPreview,
         routes: routeOptions,
         themes: themeOptions,
-        i18n: i18nOptions,
+        i18n: appI18nOptions,
         assets: assetOptions,
         features: featureOptions,
         seo: seoOptions,

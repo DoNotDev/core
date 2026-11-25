@@ -89,3 +89,32 @@ describe('formatCurrency', () => {
     expect(result).toContain('99');
   });
 });
+
+// Money reads in the UI language with the currency's standard fraction digits
+// (Intl spacing: U+00A0 / U+202F, normalized to plain spaces here)
+describe('formatCurrency in the UI locale', () => {
+  const plain = (text: string) => text.replace(/[\u00a0\u202f]/g, ' ');
+
+  it('formats EUR with 2 fraction digits in the reader\'s language', () => {
+    expect(plain(formatCurrency(15.5, 'EUR', {}, 'fr'))).toBe('15,50 €');
+    expect(plain(formatCurrency(15.5, 'EUR', {}, 'en'))).toBe('€15.50');
+    expect(plain(formatCurrency(15.5, 'EUR', {}, 'de'))).toBe('15,50 €');
+  });
+
+  it('formats KRW with no fraction digits', () => {
+    expect(plain(formatCurrency(15000, 'KRW', {}, 'en'))).toBe('₩15,000');
+    expect(plain(formatCurrency(15000, 'KRW', {}, 'fr'))).toBe('15 000 ₩');
+    expect(plain(formatCurrency(15000.4, 'KRW', {}, 'de'))).toBe('15.000 ₩');
+  });
+
+  it('keeps the currency locale without a UI locale, with standard digits', () => {
+    expect(plain(formatCurrency(15.5, 'EUR'))).toBe('15,50 €');
+    expect(formatCurrency(12345, 'USD')).toBe('$12,345.00');
+  });
+
+  it('lets options override the fraction digits', () => {
+    expect(
+      plain(formatCurrency(15.5, 'EUR', { maximumFractionDigits: 0 }, 'fr'))
+    ).toBe('16 €');
+  });
+});

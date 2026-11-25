@@ -147,7 +147,8 @@
     "select": "Wybierz",
     "upload": "Prześlij",
     "download": "Pobierz",
-    "close": "Zamknij"
+    "close": "Zamknij",
+    "open": "Otwórz"
   },
   "guard": {
     "signInRequired": "Zaloguj się, aby uzyskać dostęp do tej strony"
@@ -182,14 +183,21 @@
     "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wpisów",
     "previous": "Poprzednia",
     "next": "Następna",
-    "page": "Strona {{page}} z {{total}}"
+    "page": "Strona {{page}} z {{total}}",
+    "itemsPerPage": "Elementów na stronę:",
+    "all": "Wszystkie",
+    "pageNumber": "Strona {{page}}",
+    "label": "Paginacja"
   },
   "filters": {
     "title": "Filtry",
     "apply": "Zastosuj filtry",
     "clear": "Wyczyść filtry",
     "noResults": "Żadne wyniki nie pasują do filtrów",
-    "selected": "Wybrano: {{count}}"
+    "selected_one": "Wybrano: {{count}}",
+    "selected_few": "Wybrano: {{count}}",
+    "selected_many": "Wybrano: {{count}}",
+    "selected_other": "Wybrano: {{count}}"
   },
   "settings": {
     "title": "Ustawienia",
@@ -305,13 +313,21 @@
     "showingResults": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
     "previous": "Poprzednia",
     "next": "Następna",
-    "page": "Strona {{current}} z {{total}}"
+    "page": "Strona {{current}} z {{total}}",
+    "export": "Eksportuj",
+    "selected": "Wybrano: {{count}}",
+    "field": "Pole",
+    "value": "Wartość",
+    "apply": "Zastosuj do zaznaczonych",
+    "clearSelection": "Wyczyść zaznaczenie",
+    "empty": "Brak danych"
   },
   "language": {
     "selectLanguage": "Wybierz język",
     "searchLanguages": "Szukaj języków...",
     "noLanguagesFound": "Nie znaleziono języków",
-    "changeLanguage": "Zmień język"
+    "changeLanguage": "Zmień język",
+    "selector": "Wybór języka"
   },
   "form": {
     "submit": "Wyślij",
@@ -326,7 +342,14 @@
   "navigation": {
     "more": "Więcej",
     "home": "Strona główna",
-    "menu": "Nawigacja"
+    "menu": "Nawigacja",
+    "main": "Menu główne",
+    "site": "Nawigacja witryny",
+    "resizeSidebar": "Zmień szerokość paska bocznego. Kliknij dwukrotnie lub naciśnij Enter, aby zwinąć lub rozwinąć. Home, aby zwinąć, End, aby dopasować do zawartości.",
+    "open": "Otwórz nawigację",
+    "breadcrumb": "Ścieżka nawigacji",
+    "headerMenu": "Menu",
+    "loadingProgress": "Postęp wczytywania strony"
   },
   "pwa": {
     "update": {
@@ -368,11 +391,14 @@
   "code": {
     "copyCode": "Kopiuj kod",
     "copied": "Skopiowano!",
-    "copyCodeToClipboard": "Kopiuj kod do schowka"
+    "copyCodeToClipboard": "Kopiuj kod do schowka",
+    "loading": "Ładowanie kodu"
   },
   "video": {
     "clickToWatch": "Kliknij, aby obejrzeć wideo",
-    "watchVideo": "Obejrzyj wideo"
+    "watchVideo": "Obejrzyj wideo",
+    "title": "Wideo",
+    "loading": "Wczytywanie wideo"
   },
   "inspector": {
     "pageSource": "Źródło strony",
@@ -382,7 +408,9 @@
     "navigation": "Nawigacja",
     "codeInspector": "Inspektor kodu",
     "debugPanel": "Panel debugowania",
-    "close": "Zamknij panel"
+    "close": "Zamknij panel",
+    "title": "Panel",
+    "content": "Zawartość panelu"
   },
   "routeError": {
     "title": "Coś poszło nie tak",
@@ -686,6 +714,128 @@
     "slide": "Slajd {{current}} z {{total}}",
     "goToSlide": "Przejdź do slajdu {{index}}",
     "empty": "Brak elementów do wyświetlenia",
-    "loading": "Wczytywanie karuzeli"
+    "loading": "Wczytywanie karuzeli",
+    "roleDescription": "karuzela",
+    "slideRoleDescription": "slajd"
+  },
+  "datePicker": {
+    "openCalendar": "Otwórz kalendarz",
+    "calendarLoadError": "Nie udało się załadować kalendarza. Wpisz datę w polu.",
+    "date": "Data",
+    "dateTime": "Data i godzina"
+  },
+  "dialog": {
+    "title": "Okno dialogowe",
+    "content": "Zawartość okna dialogowego"
+  },
+  "toast": {
+    "region": "Powiadomienia ({hotkey})",
+    "label": "Powiadomienie"
+  },
+  "command": {
+    "title": "Paleta poleceń",
+    "description": "Wyszukuj i nawiguj za pomocą skrótów klawiszowych",
+    "item": "Polecenie"
+  },
+  "combobox": {
+    "createOption": "Utwórz „{{value}}”"
+  },
+  "copiedToClipboard": "Skopiowano do schowka",
+  "infiniteScroll": {
+    "loadingMore": "Wczytywanie kolejnych...",
+    "scrollForMore": "Przewiń w dół, aby wczytać więcej..."
+  },
+  "range": {
+    "min": "Min.",
+    "max": "Maks."
+  },
+  "password": {
+    "show": "Pokaż hasło",
+    "hide": "Ukryj hasło"
+  },
+  "pin": {
+    "show": "Pokaż PIN",
+    "hide": "Ukryj PIN"
+  },
+  "stepper": {
+    "label": "Kroki",
+    "goToStep": "Przejdź do kroku {{number}}: {{title}}",
+    "stepOf": "Krok {{current}} z {{total}}"
+  },
+  "colorPicker": {
+    "label": "Wybór koloru",
+    "custom": "Własny",
+    "customColor": "Własny kolor",
+    "colors": {
+      "black": "Czarny",
+      "white": "Biały",
+      "gray": "Szary",
+      "lightGray": "Jasnoszary",
+      "red": "Czerwony",
+      "orange": "Pomarańczowy",
+      "amber": "Bursztynowy",
+      "yellow": "Żółty",
+      "lime": "Limonkowy",
+      "green": "Zielony",
+      "teal": "Morski",
+      "cyan": "Cyjan",
+      "blue": "Niebieski",
+      "purple": "Fioletowy",
+      "pink": "Różowy",
+      "rose": "Malinowy",
+      "deepPurple": "Ciemnofioletowy",
+      "indigo": "Indygo",
+      "lightBlue": "Jasnoniebieski",
+      "lightGreen": "Jasnozielony",
+      "deepOrange": "Ciemnopomarańczowy",
+      "pastelRose": "Pastelowy malinowy",
+      "pastelPink": "Pastelowy różowy",
+      "pastelPurple": "Pastelowy fioletowy",
+      "pastelIndigo": "Pastelowe indygo",
+      "pastelBlue": "Pastelowy niebieski",
+      "pastelCyan": "Pastelowy cyjan",
+      "pastelTeal": "Pastelowy morski",
+      "pastelGreen": "Pastelowy zielony",
+      "pastelLime": "Pastelowy limonkowy",
+      "pastelYellow": "Pastelowy żółty",
+      "pastelOrange": "Pastelowy pomarańczowy",
+      "pastelRed": "Pastelowy czerwony",
+      "pastelGray": "Pastelowy szary",
+      "pastelStone": "Pastelowy kamienny",
+      "pastelFuchsia": "Pastelowa fuksja",
+      "pastelSky": "Pastelowy błękitny"
+    }
+  },
+  "dropdownMenu": {
+    "submenu": "Podmenu",
+    "item": "Element menu"
+  },
+  "skipLink": {
+    "label": "Linki pomijania"
+  },
+  "crawl": {
+    "label": "Animowany przewijany tekst",
+    "start": "Uruchom animowane wprowadzenie",
+    "resume": "Wznów animację"
+  },
+  "stackedCards": {
+    "label": "Ułożone karty"
+  },
+  "jsonViewer": {
+    "expandAll": "Rozwiń wszystko",
+    "collapseAll": "Zwiń wszystko",
+    "copy": "Kopiuj"
+  },
+  "techStack": {
+    "label": "Stos technologiczny"
+  },
+  "callToAction": {
+    "label": "Wezwanie do działania"
+  },
+  "featureFallback": {
+    "title": "{{featureName}} niedostępne",
+    "message": "{{featureName}} nie jest dostępne",
+    "action": "{{featureName}} (niedostępne)",
+    "help": "Ta funkcja wymaga skonfigurowania {{featureName}}."
   }
 }

@@ -147,7 +147,8 @@
     "select": "Select",
     "upload": "Upload",
     "download": "Download",
-    "close": "Close"
+    "close": "Close",
+    "open": "Open"
   },
   "guard": {
     "signInRequired": "Please sign in to access this page"
@@ -182,14 +183,19 @@
     "showing": "Showing {{from}} to {{to}} of {{total}} entries",
     "previous": "Previous",
     "next": "Next",
-    "page": "Page {{page}} of {{total}}"
+    "page": "Page {{page}} of {{total}}",
+    "itemsPerPage": "Items per page:",
+    "all": "All",
+    "pageNumber": "Page {{page}}",
+    "label": "Pagination"
   },
   "filters": {
     "title": "Filters",
     "apply": "Apply Filters",
     "clear": "Clear Filters",
     "noResults": "No results match your filters",
-    "selected": "{{count}} selected"
+    "selected_one": "{{count}} selected",
+    "selected_other": "{{count}} selected"
   },
   "settings": {
     "title": "Settings",
@@ -305,13 +311,21 @@
     "showingResults": "Showing {{from}} to {{to}} of {{total}} results",
     "previous": "Previous",
     "next": "Next",
-    "page": "Page {{current}} of {{total}}"
+    "page": "Page {{current}} of {{total}}",
+    "export": "Export",
+    "selected": "{{count}} selected",
+    "field": "Field",
+    "value": "Value",
+    "apply": "Apply to selected",
+    "clearSelection": "Clear selection",
+    "empty": "No data"
   },
   "language": {
     "selectLanguage": "Select Language",
     "searchLanguages": "Search languages...",
     "noLanguagesFound": "No languages found",
-    "changeLanguage": "Change Language"
+    "changeLanguage": "Change Language",
+    "selector": "Language selector"
   },
   "form": {
     "submit": "Submit",
@@ -326,7 +340,14 @@
   "navigation": {
     "more": "More",
     "home": "Home",
-    "menu": "Navigation"
+    "menu": "Navigation",
+    "main": "Main menu",
+    "site": "Site navigation",
+    "resizeSidebar": "Resize sidebar. Double-click or Enter to toggle. Home to collapse, End to fit content.",
+    "open": "Open navigation",
+    "breadcrumb": "Breadcrumb",
+    "headerMenu": "Menu",
+    "loadingProgress": "Page loading progress"
   },
   "pwa": {
     "update": {
@@ -368,11 +389,14 @@
   "code": {
     "copyCode": "Copy code",
     "copied": "Copied!",
-    "copyCodeToClipboard": "Copy code to clipboard"
+    "copyCodeToClipboard": "Copy code to clipboard",
+    "loading": "Loading code"
   },
   "video": {
     "clickToWatch": "Click to watch video",
-    "watchVideo": "Watch Video"
+    "watchVideo": "Watch Video",
+    "title": "Video",
+    "loading": "Loading video"
   },
   "inspector": {
     "pageSource": "Page Source",
@@ -382,7 +406,9 @@
     "navigation": "Navigation",
     "codeInspector": "Code Inspector",
     "debugPanel": "Debug Panel",
-    "close": "Close sheet"
+    "close": "Close sheet",
+    "title": "Panel",
+    "content": "Panel content"
   },
   "routeError": {
     "title": "Something went wrong",
@@ -686,6 +712,128 @@
     "slide": "Slide {{current}} of {{total}}",
     "goToSlide": "Go to slide {{index}}",
     "empty": "No items to display",
-    "loading": "Loading carousel"
+    "loading": "Loading carousel",
+    "roleDescription": "carousel",
+    "slideRoleDescription": "slide"
+  },
+  "datePicker": {
+    "openCalendar": "Open calendar",
+    "calendarLoadError": "The calendar could not load. Please type the date in the field.",
+    "date": "Date",
+    "dateTime": "Date and time"
+  },
+  "dialog": {
+    "title": "Dialog",
+    "content": "Dialog content"
+  },
+  "toast": {
+    "region": "Notifications ({hotkey})",
+    "label": "Notification"
+  },
+  "command": {
+    "title": "Command palette",
+    "description": "Search and navigate using keyboard shortcuts",
+    "item": "Command item"
+  },
+  "combobox": {
+    "createOption": "Create \"{{value}}\""
+  },
+  "copiedToClipboard": "Copied to clipboard",
+  "infiniteScroll": {
+    "loadingMore": "Loading more...",
+    "scrollForMore": "Scroll down to load more..."
+  },
+  "range": {
+    "min": "Min",
+    "max": "Max"
+  },
+  "password": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
+  "pin": {
+    "show": "Show PIN",
+    "hide": "Hide PIN"
+  },
+  "stepper": {
+    "label": "Steps",
+    "goToStep": "Go to step {{number}}: {{title}}",
+    "stepOf": "Step {{current}} of {{total}}"
+  },
+  "colorPicker": {
+    "label": "Color picker",
+    "custom": "Custom",
+    "customColor": "Custom color",
+    "colors": {
+      "black": "Black",
+      "white": "White",
+      "gray": "Gray",
+      "lightGray": "Light gray",
+      "red": "Red",
+      "orange": "Orange",
+      "amber": "Amber",
+      "yellow": "Yellow",
+      "lime": "Lime",
+      "green": "Green",
+      "teal": "Teal",
+      "cyan": "Cyan",
+      "blue": "Blue",
+      "purple": "Purple",
+      "pink": "Pink",
+      "rose": "Rose",
+      "deepPurple": "Deep purple",
+      "indigo": "Indigo",
+      "lightBlue": "Light blue",
+      "lightGreen": "Light green",
+      "deepOrange": "Deep orange",
+      "pastelRose": "Pastel rose",
+      "pastelPink": "Pastel pink",
+      "pastelPurple": "Pastel purple",
+      "pastelIndigo": "Pastel indigo",
+      "pastelBlue": "Pastel blue",
+      "pastelCyan": "Pastel cyan",
+      "pastelTeal": "Pastel teal",
+      "pastelGreen": "Pastel green",
+      "pastelLime": "Pastel lime",
+      "pastelYellow": "Pastel yellow",
+      "pastelOrange": "Pastel orange",
+      "pastelRed": "Pastel red",
+      "pastelGray": "Pastel gray",
+      "pastelStone": "Pastel stone",
+      "pastelFuchsia": "Pastel fuchsia",
+      "pastelSky": "Pastel sky"
+    }
+  },
+  "dropdownMenu": {
+    "submenu": "Submenu",
+    "item": "Menu item"
+  },
+  "skipLink": {
+    "label": "Skip links"
+  },
+  "crawl": {
+    "label": "Animated text crawl",
+    "start": "Start animated introduction",
+    "resume": "Resume animation"
+  },
+  "stackedCards": {
+    "label": "Stacked cards"
+  },
+  "jsonViewer": {
+    "expandAll": "Expand All",
+    "collapseAll": "Collapse All",
+    "copy": "Copy"
+  },
+  "techStack": {
+    "label": "Technology stack"
+  },
+  "callToAction": {
+    "label": "Call to action"
+  },
+  "featureFallback": {
+    "title": "{{featureName}} unavailable",
+    "message": "{{featureName}} is not available",
+    "action": "{{featureName}} (unavailable)",
+    "help": "This feature requires {{featureName}} to be configured."
   }
 }

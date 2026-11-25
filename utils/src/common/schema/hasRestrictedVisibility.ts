@@ -2,7 +2,8 @@
 
 /**
  * @fileoverview Restricted visibility detection utility
- * @description Checks if any field in a schema has visibility more restrictive than 'guest'.
+ * @description Checks if any field in a schema has visibility more restrictive than 'guest',
+ * the base fields `defineEntity` adds at their default visibility excepted.
  * Used by CrudService to gate direct adapter access for non-public entities.
  *
  * @version 0.1.0
@@ -12,6 +13,7 @@
 
 import type * as v from 'valibot';
 
+import { BASE_FIELD_VISIBILITY } from '@donotdev/types';
 import type { dndevSchema } from '@donotdev/types';
 
 /** Non-null object, viewed as a string-keyed record for schema introspection. */
@@ -52,10 +54,21 @@ function _extractEntries(schema: unknown): Record<string, unknown> | undefined {
   return undefined;
 }
 
+/** Base field names `defineEntity` adds to every entity, with their default visibility. */
+const BASE_FIELD_DEFAULTS: Readonly<Record<string, string>> = BASE_FIELD_VISIBILITY;
+
 /**
  * Returns true if any field in the schema declares a visibility level more
  * restrictive than 'guest' (i.e. 'user', 'owner', 'admin', 'super', 'technical', 'hidden').
  * Used by CrudService to gate direct adapter access for non-public entities.
+ *
+ * The base fields `defineEntity` adds to every entity (`BASE_FIELD_VISIBILITY`: id, status,
+ * createdAt, updatedAt, createdById, updatedById) do not count at their default visibility:
+ * on a direct adapter they are readable by whoever can read the document, like any field.
+ * - `id` never counts: it is the document id, known to every reader.
+ * - Another base field counts when the app declares a visibility other than its default
+ *   and other than 'guest' (e.g. `status: { visibility: 'technical' }`): an app-declared
+ *   restriction is honoured, never silently dropped.
  *
  * Handles wrapped schemas (pipe, nullable, optional, union) by traversing the
  * schema tree to find the underlying object entries. Returns false for schemas
@@ -65,14 +78,14 @@ function _extractEntries(schema: unknown): Record<string, unknown> | undefined {
  * @returns true if any field has restricted visibility
  *
  * @example
- * // Public entity — all fields guest visibility
+ * // Public entity — app fields guest visibility (base fields at their defaults)
  * hasRestrictedVisibility(PublicPostSchema) // false
  *
  * @example
  * // Private entity — email field is 'user' visibility
  * hasRestrictedVisibility(UserProfileSchema) // true
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.0.1
  */
 export function hasRestrictedVisibility(
@@ -81,13 +94,20 @@ export function hasRestrictedVisibility(
 ): boolean {
   const entries = _extractEntries(schema);
   if (!entries) return false;
-  for (const field of Object.values(entries)) {
+  for (const [name, field] of Object.entries(entries)) {
+    // The document id is known to whoever reads the document, whatever its visibility
+    if (name === 'id') continue;
     // why: entries values are untyped schema objects; read `visibility` exactly as before (`?.` on any value)
     const vis =
       field == null
         ? undefined
         : (field as { visibility?: unknown }).visibility;
-    if (vis !== undefined && vis !== 'guest') return true;
+    if (vis === undefined || vis === 'guest') continue;
+    // A base field at its default visibility is the framework's, not the app's restriction
+    if (Object.hasOwn(BASE_FIELD_DEFAULTS, name) && BASE_FIELD_DEFAULTS[name] === vis) {
+      continue;
+    }
+    return true;
   }
   return false;
 }

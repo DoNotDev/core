@@ -50,6 +50,11 @@ describe('Next config: Turbopack only', () => {
     expect(finalConfig({ compiler }).compiler).toBe(compiler);
   });
 
+  it('turns off the X-Powered-By header; an app\'s own poweredByHeader wins', () => {
+    expect(finalConfig({}).poweredByHeader).toBe(false);
+    expect(finalConfig({ poweredByHeader: true }).poweredByHeader).toBe(true);
+  });
+
   it('a static export (output: export) has no rewrites, redirects or headers', () => {
     const config = finalConfig({ output: 'export' });
     expect(config.output).toBe('export');

@@ -39,8 +39,9 @@
     "noResults": "لم يتم العثور على عناوين",
     "apiUnavailable": "Google Places غير متاح — اكتب العنوان يدوياً"
   },
-  "export": "تصدير",
   "copyToClipboard": "نسخ إلى الحافظة",
+  "copied": "تم النسخ!",
+  "copyPassword": "نسخ كلمة المرور",
   "noInquiries": "لم يتم العثور على استفسارات.",
   "customer": "العميل",
   "noCustomer": "لا يوجد عميل مرتبط",
@@ -112,8 +113,7 @@
     "format": "يرجى إدخال تاريخ صالح",
     "future": "{{field}} يجب أن يكون في المستقبل",
     "past": "{{field}} يجب أن يكون في الماضي",
-    "today": "{{field}} يجب أن يكون اليوم",
-    "calendarLoadError": "تعذّر تحميل التقويم. يرجى كتابة التاريخ في الحقل."
+    "today": "{{field}} يجب أن يكون اليوم"
   },
   "select": {
     "required": "يرجى اختيار {{field}}",
@@ -122,6 +122,8 @@
     "max": "يرجى اختيار {{max}} خيارات كحد أقصى"
   },
   "boolean": {
+    "yes": "نعم",
+    "no": "لا",
     "required": "{{field}} يجب أن يكون محدداً"
   },
   "fieldArray": {
@@ -272,8 +274,12 @@
     "unauthorized": "وصول غير مصرح به",
     "forbidden": "الوصول محظور",
     "serverError": "حدث خطأ في الخادم",
-    "bulkPartialError_one": "تعذّر حفظ {{count}} صف",
-    "bulkPartialError_other": "تعذّر حفظ {{count}} صفوف",
+    "bulkPartialError_zero": "لم يتعذّر حفظ أي صف",
+    "bulkPartialError_one": "تعذّر حفظ صف واحد",
+    "bulkPartialError_two": "تعذّر حفظ صفّين",
+    "bulkPartialError_few": "تعذّر حفظ {{count}} صفوف",
+    "bulkPartialError_many": "تعذّر حفظ {{count}} صفًا",
+    "bulkPartialError_other": "تعذّر حفظ {{count}} صف",
     "unknownFields": "تم الحفظ، لكن هذه الحقول غير موجودة ولم يتم حفظها: {{fields}}. تواصل مع الدعم."
   },
   "draft": {
@@ -337,15 +343,26 @@
     "showing": "عرض {{from}} إلى {{to}} من {{total}} إدخالات",
     "previous": "السابق",
     "next": "التالي",
-    "page": "الصفحة {{page}} من {{total}}",
-    "itemsPerPagePlaceholder": "عناصر لكل صفحة:"
+    "page": "الصفحة {{page}} من {{total}}"
   },
   "filters": {
-    "title": "تصفح {{entity}} - المرشحات",
+    "title": "المرشحات",
     "apply": "تطبيق المرشحات",
     "clear": "مسح المرشحات",
     "noResults": "لا توجد نتائج تطابق مرشحاتك",
-    "selected": "{{count}} محدد"
+    "selected_zero": "تم تحديد {{count}}",
+    "selected_one": "تم تحديد {{count}}",
+    "selected_two": "تم تحديد {{count}}",
+    "selected_few": "تم تحديد {{count}}",
+    "selected_many": "تم تحديد {{count}}",
+    "selected_other": "تم تحديد {{count}}",
+    "button": "المرشحات",
+    "buttonActive_zero": "المرشحات (النشطة: {{count}})",
+    "buttonActive_one": "المرشحات (النشطة: {{count}})",
+    "buttonActive_two": "المرشحات (النشطة: {{count}})",
+    "buttonActive_few": "المرشحات (النشطة: {{count}})",
+    "buttonActive_many": "المرشحات (النشطة: {{count}})",
+    "buttonActive_other": "المرشحات (النشطة: {{count}})"
   },
   "filter": {
     "placeholder": "تصفية...",
@@ -368,7 +385,8 @@
     "clear": "مسح",
     "pick": "اختيار",
     "time": "الوقت",
-    "clearAll": "مسح جميع المرشحات"
+    "clearAll": "مسح جميع المرشحات",
+    "contains": "يحتوي على…"
   },
   "duration": {
     "15m": "١٥ د",
@@ -388,15 +406,23 @@
   "results": {
     "title": {
       "fetching": "جاري الجلب...",
-      "count_one": "تم العثور على {{count}} نتيجة",
-      "count_other": "تم العثور على {{count}} نتائج"
+      "count_zero": "لا توجد نتائج",
+      "count_one": "نتيجة واحدة",
+      "count_two": "نتيجتان",
+      "count_few": "{{count}} نتائج",
+      "count_many": "{{count}} نتيجة",
+      "count_other": "{{count}} نتيجة"
     }
   },
   "visibility": {
     "viewAs": "عرض كـ",
     "preview": "معاينة"
   },
+  "reference": {
+    "placeholder": "اختر {{label}}"
+  },
   "price": {
+    "columnTitle": "{{label}} ($t(crud:price.vatIncluded))",
     "vatIncluded": "شامل الضريبة",
     "currency": "العملة",
     "discountLabel": "الخصم (%)",
@@ -416,12 +442,21 @@
     "title": "حذف العنصر",
     "confirm": "هل تريد بالتأكيد حذف هذا العنصر؟",
     "loading": "جارٍ الحذف...",
+    "titleSelected_zero": "لا توجد عناصر للحذف",
     "titleSelected_one": "حذف عنصر واحد",
-    "titleSelected_other": "حذف {{count}} عناصر",
+    "titleSelected_two": "حذف عنصرين",
+    "titleSelected_few": "حذف {{count}} عناصر",
+    "titleSelected_many": "حذف {{count}} عنصرًا",
+    "titleSelected_other": "حذف {{count}} عنصر",
+    "confirmSelected_zero": "هل تريد حذف العناصر المحددة ({{count}})؟ لا يمكن التراجع عن ذلك.",
     "confirmSelected_one": "هل تريد حذف العنصر المحدد؟ لا يمكن التراجع عن ذلك.",
+    "confirmSelected_two": "هل تريد حذف العنصرين المحددين؟ لا يمكن التراجع عن ذلك.",
+    "confirmSelected_few": "هل تريد حذف العناصر المحددة ({{count}})؟ لا يمكن التراجع عن ذلك.",
+    "confirmSelected_many": "هل تريد حذف العناصر المحددة ({{count}})؟ لا يمكن التراجع عن ذلك.",
     "confirmSelected_other": "هل تريد حذف العناصر المحددة ({{count}})؟ لا يمكن التراجع عن ذلك."
   },
   "errors": {
+    "unsupportedFieldType": "نوع حقل غير مدعوم: {{type}}",
     "notFound": "تعذّر العثور على {{entity}}",
     "fetchFailed": "تعذّر تحميل {{entity}}"
   },
@@ -430,23 +465,31 @@
     "description": "لا توجد عناصر متاحة حالياً في {{entity}}."
   },
   "bulkEdit": {
+    "pending_zero": "لا توجد تعديلات غير محفوظة",
     "pending_one": "تعديل واحد غير محفوظ",
-    "pending_other": "{{count}} تعديلات غير محفوظة",
+    "pending_two": "تعديلان غير محفوظين",
+    "pending_few": "{{count}} تعديلات غير محفوظة",
+    "pending_many": "{{count}} تعديلًا غير محفوظ",
+    "pending_other": "{{count}} تعديل غير محفوظ",
     "discard": "تجاهل التعديلات",
-    "selected": "تم تحديد {{count}}",
-    "field": "الحقل",
-    "value": "القيمة",
-    "apply": "تطبيق على المحدد",
     "deleteSelected": "حذف المحدد ({{count}})",
-    "failed_one": "لم يُحفظ {{count}} صف: يبقى في القائمة، أعد المحاولة",
-    "failed_other": "لم تُحفظ {{count}} صفوف: تبقى في القائمة، أعد المحاولة"
+    "failed_zero": "لم يتعذّر حفظ أي صف",
+    "failed_one": "لم يُحفظ صف واحد: يبقى في القائمة، أعد المحاولة",
+    "failed_two": "لم يُحفظ صفّان: يبقيان في القائمة، أعد المحاولة",
+    "failed_few": "لم تُحفظ {{count}} صفوف: تبقى في القائمة، أعد المحاولة",
+    "failed_many": "لم يُحفظ {{count}} صفًا: تبقى في القائمة، أعد المحاولة",
+    "failed_other": "لم يُحفظ {{count}} صف: تبقى في القائمة، أعد المحاولة"
   },
   "childRows": {
     "createFirst": "أنشئ المسودة قبل إضافة {{entity}}.",
     "required": "{{field}} مطلوب",
     "invalidValue": "{{field}} غير صالح",
+    "invalidRows_zero": "لا توجد صفوف تحتاج إلى تصحيح",
     "invalidRows_one": "صف واحد يحتاج إلى تصحيح قبل الحفظ",
-    "invalidRows_other": "{{count}} صفوف تحتاج إلى تصحيح قبل الحفظ",
+    "invalidRows_two": "صفّان يحتاجان إلى تصحيح قبل الحفظ",
+    "invalidRows_few": "{{count}} صفوف تحتاج إلى تصحيح قبل الحفظ",
+    "invalidRows_many": "صفوف تحتاج إلى تصحيح قبل الحفظ: {{count}}",
+    "invalidRows_other": "صفوف تحتاج إلى تصحيح قبل الحفظ: {{count}}",
     "notSaved": "لم تُحفظ الصفوف المعدّلة مع هذا السجل.",
     "pickTitle": "إضافة {{entity}}",
     "pickConfirm": "إضافة المحدد ({{count}})",
@@ -462,5 +505,15 @@
     "moved": "تم نقل {{name}} إلى الموضع {{position}} من {{count}}.",
     "dropped": "تم إفلات {{name}} في الموضع {{position}} من {{count}}.",
     "cancelled": "تم إلغاء نقل {{name}}."
+  },
+  "list": {
+    "count_zero": "{{names}}: {{count}}",
+    "count_one": "{{names}}: {{count}}",
+    "count_two": "{{names}}: {{count}}",
+    "count_few": "{{names}}: {{count}}",
+    "count_many": "{{names}}: {{count}}",
+    "count_other": "{{names}}: {{count}}",
+    "empty": "لا توجد عناصر بعد",
+    "noResultsFor": "لا توجد نتائج لـ «{{query}}»"
   }
 }

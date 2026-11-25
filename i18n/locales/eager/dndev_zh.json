@@ -1,6 +1,12 @@
 {
   "signIn": "登录",
   "auth": {
+    "signIn": "登录",
+    "loading": "加载中...",
+    "signOut": "退出登录",
+    "deleteAccount": {
+      "label": "删除账号"
+    },
     "userMenu": "用户菜单",
     "profile": "个人资料",
     "title": "身份验证"
@@ -141,7 +147,8 @@
     "select": "选择",
     "upload": "上传",
     "download": "下载",
-    "close": "关闭"
+    "close": "关闭",
+    "open": "打开"
   },
   "guard": {
     "signInRequired": "请登录以访问此页面"
@@ -176,14 +183,18 @@
     "showing": "显示第 {{from}} 至 {{to}} 条，共 {{total}} 条",
     "previous": "上一页",
     "next": "下一页",
-    "page": "第 {{page}} 页，共 {{total}} 页"
+    "page": "第 {{page}} 页，共 {{total}} 页",
+    "itemsPerPage": "每页显示：",
+    "all": "全部",
+    "pageNumber": "第 {{page}} 页",
+    "label": "分页"
   },
   "filters": {
     "title": "筛选",
     "apply": "应用筛选",
     "clear": "清除筛选",
     "noResults": "无匹配结果",
-    "selected": "已选 {{count}} 项"
+    "selected_other": "已选 {{count}} 项"
   },
   "settings": {
     "title": "设置",
@@ -273,10 +284,18 @@
   "globalGoTo": {
     "placeholder": "筛选路由或跳转到页面...",
     "noResults": "未找到结果。",
+    "empty": "没有可用的页面。",
     "favorites": "收藏",
+    "recent": "最近",
     "allPages": "所有页面",
     "addFavorite": "添加到收藏",
     "removeFavorite": "从收藏中移除",
+    "favorite": "添加到收藏",
+    "unfavorite": "从收藏中移除",
+    "shortcutOpen": "打开",
+    "shortcutNavigate": "导航",
+    "shortcutSelect": "选择",
+    "shortcutClose": "关闭",
     "searchPlaceholder": "搜索页面...",
     "ariaLabel": "搜索导航"
   },
@@ -291,13 +310,21 @@
     "showingResults": "显示第 {{from}} 至 {{to}} 条，共 {{total}} 条",
     "previous": "上一页",
     "next": "下一页",
-    "page": "第 {{current}} 页，共 {{total}} 页"
+    "page": "第 {{current}} 页，共 {{total}} 页",
+    "export": "导出",
+    "selected": "已选择 {{count}} 项",
+    "field": "字段",
+    "value": "值",
+    "apply": "应用到所选项",
+    "clearSelection": "取消选择",
+    "empty": "暂无数据"
   },
   "language": {
     "selectLanguage": "选择语言",
     "searchLanguages": "搜索语言...",
     "noLanguagesFound": "未找到语言",
-    "changeLanguage": "切换语言"
+    "changeLanguage": "切换语言",
+    "selector": "语言选择器"
   },
   "form": {
     "submit": "提交",
@@ -312,7 +339,14 @@
   "navigation": {
     "more": "更多",
     "home": "首页",
-    "menu": "导航"
+    "menu": "导航",
+    "main": "主菜单",
+    "site": "网站导航",
+    "resizeSidebar": "调整侧边栏大小。双击或按 Enter 键折叠或展开，按 Home 键折叠，按 End 键适应内容。",
+    "open": "打开导航",
+    "breadcrumb": "面包屑导航",
+    "headerMenu": "菜单",
+    "loadingProgress": "页面加载进度"
   },
   "pwa": {
     "update": {
@@ -354,11 +388,14 @@
   "code": {
     "copyCode": "复制代码",
     "copied": "已复制！",
-    "copyCodeToClipboard": "复制代码到剪贴板"
+    "copyCodeToClipboard": "复制代码到剪贴板",
+    "loading": "正在加载代码"
   },
   "video": {
     "clickToWatch": "点击观看视频",
-    "watchVideo": "观看视频"
+    "watchVideo": "观看视频",
+    "title": "视频",
+    "loading": "正在加载视频"
   },
   "inspector": {
     "pageSource": "页面源码",
@@ -368,7 +405,9 @@
     "navigation": "导航",
     "codeInspector": "代码检查器",
     "debugPanel": "调试面板",
-    "close": "关闭面板"
+    "close": "关闭面板",
+    "title": "面板",
+    "content": "面板内容"
   },
   "routeError": {
     "title": "出错了",
@@ -672,6 +711,128 @@
     "slide": "第 {{current}} 张，共 {{total}} 张",
     "goToSlide": "转到第 {{index}} 张幻灯片",
     "empty": "没有可显示的内容",
-    "loading": "轮播加载中"
+    "loading": "轮播加载中",
+    "roleDescription": "轮播",
+    "slideRoleDescription": "幻灯片"
+  },
+  "datePicker": {
+    "openCalendar": "打开日历",
+    "calendarLoadError": "无法加载日历。请在输入框中输入日期。",
+    "date": "日期",
+    "dateTime": "日期和时间"
+  },
+  "dialog": {
+    "title": "对话框",
+    "content": "对话框内容"
+  },
+  "toast": {
+    "region": "通知（{hotkey}）",
+    "label": "通知"
+  },
+  "command": {
+    "title": "命令面板",
+    "description": "使用键盘快捷键搜索和导航",
+    "item": "命令"
+  },
+  "combobox": {
+    "createOption": "创建“{{value}}”"
+  },
+  "copiedToClipboard": "已复制到剪贴板",
+  "infiniteScroll": {
+    "loadingMore": "正在加载更多...",
+    "scrollForMore": "向下滚动以加载更多..."
+  },
+  "range": {
+    "min": "最小值",
+    "max": "最大值"
+  },
+  "password": {
+    "show": "显示密码",
+    "hide": "隐藏密码"
+  },
+  "pin": {
+    "show": "显示 PIN",
+    "hide": "隐藏 PIN"
+  },
+  "stepper": {
+    "label": "步骤",
+    "goToStep": "转到第 {{number}} 步：{{title}}",
+    "stepOf": "第 {{current}} 步，共 {{total}} 步"
+  },
+  "colorPicker": {
+    "label": "颜色选择器",
+    "custom": "自定义",
+    "customColor": "自定义颜色",
+    "colors": {
+      "black": "黑色",
+      "white": "白色",
+      "gray": "灰色",
+      "lightGray": "浅灰色",
+      "red": "红色",
+      "orange": "橙色",
+      "amber": "琥珀色",
+      "yellow": "黄色",
+      "lime": "青柠色",
+      "green": "绿色",
+      "teal": "青绿色",
+      "cyan": "青色",
+      "blue": "蓝色",
+      "purple": "紫色",
+      "pink": "粉色",
+      "rose": "玫瑰色",
+      "deepPurple": "深紫色",
+      "indigo": "靛蓝色",
+      "lightBlue": "浅蓝色",
+      "lightGreen": "浅绿色",
+      "deepOrange": "深橙色",
+      "pastelRose": "淡玫瑰色",
+      "pastelPink": "淡粉色",
+      "pastelPurple": "淡紫色",
+      "pastelIndigo": "淡靛蓝色",
+      "pastelBlue": "淡蓝色",
+      "pastelCyan": "淡青色",
+      "pastelTeal": "淡青绿色",
+      "pastelGreen": "淡绿色",
+      "pastelLime": "淡青柠色",
+      "pastelYellow": "淡黄色",
+      "pastelOrange": "淡橙色",
+      "pastelRed": "淡红色",
+      "pastelGray": "淡灰色",
+      "pastelStone": "淡岩石色",
+      "pastelFuchsia": "淡紫红色",
+      "pastelSky": "淡天蓝色"
+    }
+  },
+  "dropdownMenu": {
+    "submenu": "子菜单",
+    "item": "菜单项"
+  },
+  "skipLink": {
+    "label": "跳转链接"
+  },
+  "crawl": {
+    "label": "动画滚动文字",
+    "start": "开始动画介绍",
+    "resume": "继续动画"
+  },
+  "stackedCards": {
+    "label": "堆叠卡片"
+  },
+  "jsonViewer": {
+    "expandAll": "全部展开",
+    "collapseAll": "全部折叠",
+    "copy": "复制"
+  },
+  "techStack": {
+    "label": "技术栈"
+  },
+  "callToAction": {
+    "label": "行动号召"
+  },
+  "featureFallback": {
+    "title": "{{featureName}} 不可用",
+    "message": "{{featureName}} 当前不可用",
+    "action": "{{featureName}}（不可用）",
+    "help": "此功能需要先配置 {{featureName}}。"
   }
 }

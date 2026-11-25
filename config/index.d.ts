@@ -212,6 +212,19 @@ export interface RouteDiscoveryOptions extends BaseDiscoveryOptions {
  * @author AMBROISE PARK Consulting
  */
 export interface I18nOptions extends BaseDiscoveryOptions {
+  /**
+   * The app's time zone (IANA name: `'Europe/Paris'`, `'UTC'`). Default `'Europe/Paris'`
+   * (`DEFAULT_APP_TIME_ZONE`, `config/utils/timeZone.js`); set it to override it per app.
+   * Every date and time the framework formats (field values, `formatDate`, the date
+   * pickers, the list date editors) and every picked date-time stored as UTC is in this
+   * zone, on the server render and in the browser alike, whatever the machine's own zone.
+   * A value that is not a known IANA zone fails the build and the dev server
+   * (`[dndev-i18n] i18n.timeZone ...`). Read at runtime with `getAppTimeZone()`
+   * (`@donotdev/core`).
+   * @default 'Europe/Paris'
+   * @since 0.3.8
+   */
+  timeZone?: string;
   useVirtualMapping?: boolean;
   fallbackLanguage?: string;
   namespaces?: string[];

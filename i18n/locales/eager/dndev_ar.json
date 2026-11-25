@@ -1,6 +1,12 @@
 {
   "signIn": "تسجيل الدخول",
   "auth": {
+    "signIn": "تسجيل الدخول",
+    "loading": "جاري التحميل...",
+    "signOut": "تسجيل الخروج",
+    "deleteAccount": {
+      "label": "حذف الحساب"
+    },
     "userMenu": "قائمة المستخدم",
     "profile": "الملف الشخصي",
     "title": "المصادقة"
@@ -141,7 +147,8 @@
     "select": "اختيار",
     "upload": "رفع",
     "download": "تحميل",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "open": "فتح"
   },
   "guard": {
     "signInRequired": "يرجى تسجيل الدخول للوصول إلى هذه الصفحة"
@@ -176,14 +183,23 @@
     "showing": "عرض {{from}} إلى {{to}} من {{total}} إدخال",
     "previous": "السابق",
     "next": "التالي",
-    "page": "صفحة {{page}} من {{total}}"
+    "page": "صفحة {{page}} من {{total}}",
+    "itemsPerPage": "عناصر لكل صفحة:",
+    "all": "الكل",
+    "pageNumber": "الصفحة {{page}}",
+    "label": "ترقيم الصفحات"
   },
   "filters": {
     "title": "المرشحات",
     "apply": "تطبيق المرشحات",
     "clear": "مسح المرشحات",
     "noResults": "لا توجد نتائج تطابق مرشحاتك",
-    "selected": "{{count}} محدد"
+    "selected_zero": "تم تحديد {{count}}",
+    "selected_one": "تم تحديد {{count}}",
+    "selected_two": "تم تحديد {{count}}",
+    "selected_few": "تم تحديد {{count}}",
+    "selected_many": "تم تحديد {{count}}",
+    "selected_other": "تم تحديد {{count}}"
   },
   "settings": {
     "title": "الإعدادات",
@@ -273,10 +289,18 @@
   "globalGoTo": {
     "placeholder": "تصفية المسارات أو الانتقال إلى صفحة...",
     "noResults": "لم يتم العثور على نتائج.",
+    "empty": "لا توجد صفحات متاحة.",
     "favorites": "المفضلة",
+    "recent": "الأخيرة",
     "allPages": "جميع الصفحات",
     "addFavorite": "إضافة إلى المفضلة",
     "removeFavorite": "إزالة من المفضلة",
+    "favorite": "إضافة إلى المفضلة",
+    "unfavorite": "إزالة من المفضلة",
+    "shortcutOpen": "فتح",
+    "shortcutNavigate": "تنقل",
+    "shortcutSelect": "اختيار",
+    "shortcutClose": "إغلاق",
     "searchPlaceholder": "البحث في الصفحات...",
     "ariaLabel": "البحث في التنقل"
   },
@@ -291,13 +315,21 @@
     "showingResults": "عرض {{from}} إلى {{to}} من {{total}} نتيجة",
     "previous": "السابق",
     "next": "التالي",
-    "page": "الصفحة {{current}} من {{total}}"
+    "page": "الصفحة {{current}} من {{total}}",
+    "export": "تصدير",
+    "selected": "تم تحديد {{count}}",
+    "field": "الحقل",
+    "value": "القيمة",
+    "apply": "تطبيق على المحدد",
+    "clearSelection": "إلغاء التحديد",
+    "empty": "لا توجد بيانات"
   },
   "language": {
     "selectLanguage": "اختر اللغة",
     "searchLanguages": "البحث عن لغة...",
     "noLanguagesFound": "لم يتم العثور على لغات",
-    "changeLanguage": "تغيير اللغة"
+    "changeLanguage": "تغيير اللغة",
+    "selector": "محدد اللغة"
   },
   "form": {
     "submit": "إرسال",
@@ -312,7 +344,14 @@
   "navigation": {
     "more": "المزيد",
     "home": "الرئيسية",
-    "menu": "التنقل"
+    "menu": "التنقل",
+    "main": "القائمة الرئيسية",
+    "site": "تنقل الموقع",
+    "resizeSidebar": "تغيير حجم الشريط الجانبي. انقر نقرًا مزدوجًا أو اضغط Enter للطي أو التوسيع. Home للطي، End للملاءمة مع المحتوى.",
+    "open": "فتح التنقل",
+    "breadcrumb": "مسار التنقل",
+    "headerMenu": "القائمة",
+    "loadingProgress": "تقدم تحميل الصفحة"
   },
   "pwa": {
     "update": {
@@ -354,11 +393,14 @@
   "code": {
     "copyCode": "نسخ الكود",
     "copied": "تم النسخ!",
-    "copyCodeToClipboard": "نسخ الكود إلى الحافظة"
+    "copyCodeToClipboard": "نسخ الكود إلى الحافظة",
+    "loading": "جارٍ تحميل الشيفرة"
   },
   "video": {
     "clickToWatch": "انقر لمشاهدة الفيديو",
-    "watchVideo": "مشاهدة الفيديو"
+    "watchVideo": "مشاهدة الفيديو",
+    "title": "فيديو",
+    "loading": "جارٍ تحميل الفيديو"
   },
   "inspector": {
     "pageSource": "كود المصدر",
@@ -368,7 +410,9 @@
     "navigation": "التنقل",
     "codeInspector": "فاحص الكود",
     "debugPanel": "لوحة التصحيح",
-    "close": "إغلاق اللوحة"
+    "close": "إغلاق اللوحة",
+    "title": "لوحة",
+    "content": "محتوى اللوحة"
   },
   "routeError": {
     "title": "حدث خطأ ما",
@@ -672,6 +716,128 @@
     "slide": "الشريحة {{current}} من {{total}}",
     "goToSlide": "الانتقال إلى الشريحة {{index}}",
     "empty": "لا توجد عناصر للعرض",
-    "loading": "جارٍ تحميل الشريط المتحرك"
+    "loading": "جارٍ تحميل الشريط المتحرك",
+    "roleDescription": "عرض دوّار",
+    "slideRoleDescription": "شريحة"
+  },
+  "datePicker": {
+    "openCalendar": "فتح التقويم",
+    "calendarLoadError": "تعذّر تحميل التقويم. يرجى كتابة التاريخ في الحقل.",
+    "date": "التاريخ",
+    "dateTime": "التاريخ والوقت"
+  },
+  "dialog": {
+    "title": "نافذة حوار",
+    "content": "محتوى نافذة الحوار"
+  },
+  "toast": {
+    "region": "الإشعارات ({hotkey})",
+    "label": "إشعار"
+  },
+  "command": {
+    "title": "لوحة الأوامر",
+    "description": "ابحث وتنقّل باستخدام اختصارات لوحة المفاتيح",
+    "item": "أمر"
+  },
+  "combobox": {
+    "createOption": "إنشاء «{{value}}»"
+  },
+  "copiedToClipboard": "تم النسخ إلى الحافظة",
+  "infiniteScroll": {
+    "loadingMore": "جارٍ تحميل المزيد...",
+    "scrollForMore": "مرّر لأسفل لتحميل المزيد..."
+  },
+  "range": {
+    "min": "الحد الأدنى",
+    "max": "الحد الأقصى"
+  },
+  "password": {
+    "show": "إظهار كلمة المرور",
+    "hide": "إخفاء كلمة المرور"
+  },
+  "pin": {
+    "show": "إظهار الرمز",
+    "hide": "إخفاء الرمز"
+  },
+  "stepper": {
+    "label": "الخطوات",
+    "goToStep": "الانتقال إلى الخطوة {{number}}: {{title}}",
+    "stepOf": "الخطوة {{current}} من {{total}}"
+  },
+  "colorPicker": {
+    "label": "منتقي الألوان",
+    "custom": "مخصص",
+    "customColor": "لون مخصص",
+    "colors": {
+      "black": "أسود",
+      "white": "أبيض",
+      "gray": "رمادي",
+      "lightGray": "رمادي فاتح",
+      "red": "أحمر",
+      "orange": "برتقالي",
+      "amber": "كهرماني",
+      "yellow": "أصفر",
+      "lime": "ليموني",
+      "green": "أخضر",
+      "teal": "أزرق مخضر",
+      "cyan": "سيان",
+      "blue": "أزرق",
+      "purple": "بنفسجي",
+      "pink": "وردي",
+      "rose": "توتي",
+      "deepPurple": "بنفسجي داكن",
+      "indigo": "نيلي",
+      "lightBlue": "أزرق فاتح",
+      "lightGreen": "أخضر فاتح",
+      "deepOrange": "برتقالي داكن",
+      "pastelRose": "توتي باستيل",
+      "pastelPink": "وردي باستيل",
+      "pastelPurple": "بنفسجي باستيل",
+      "pastelIndigo": "نيلي باستيل",
+      "pastelBlue": "أزرق باستيل",
+      "pastelCyan": "سيان باستيل",
+      "pastelTeal": "أزرق مخضر باستيل",
+      "pastelGreen": "أخضر باستيل",
+      "pastelLime": "ليموني باستيل",
+      "pastelYellow": "أصفر باستيل",
+      "pastelOrange": "برتقالي باستيل",
+      "pastelRed": "أحمر باستيل",
+      "pastelGray": "رمادي باستيل",
+      "pastelStone": "حجري باستيل",
+      "pastelFuchsia": "فوشيا باستيل",
+      "pastelSky": "أزرق سماوي باستيل"
+    }
+  },
+  "dropdownMenu": {
+    "submenu": "قائمة فرعية",
+    "item": "عنصر القائمة"
+  },
+  "skipLink": {
+    "label": "روابط التخطي"
+  },
+  "crawl": {
+    "label": "نص متحرك",
+    "start": "بدء المقدمة المتحركة",
+    "resume": "استئناف الحركة"
+  },
+  "stackedCards": {
+    "label": "بطاقات متراصة"
+  },
+  "jsonViewer": {
+    "expandAll": "توسيع الكل",
+    "collapseAll": "طي الكل",
+    "copy": "نسخ"
+  },
+  "techStack": {
+    "label": "التقنيات المستخدمة"
+  },
+  "callToAction": {
+    "label": "دعوة إلى اتخاذ إجراء"
+  },
+  "featureFallback": {
+    "title": "{{featureName}} غير متاح",
+    "message": "{{featureName}} غير متاح حاليًا",
+    "action": "{{featureName}} (غير متاح)",
+    "help": "تتطلب هذه الميزة إعداد {{featureName}}."
   }
 }

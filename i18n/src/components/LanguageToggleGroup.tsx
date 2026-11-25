@@ -143,7 +143,7 @@ const LanguageToggleGroup = ({
       className={className}
       style={{
         padding: 'var(--gap-sm)',
-        borderRadius: 'var(--radius-lg)',
+        borderRadius: 'var(--radius-interactive)',
         backgroundColor: 'var(--muted)',
       }}
       role="group"

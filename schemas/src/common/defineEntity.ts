@@ -561,6 +561,9 @@ function setDefaultFormConfig(entity: BusinessEntity): FormConfig {
  * - Automatically added: `id`, `createdAt`, `updatedAt`, `createdById`, `updatedById`, `status`
  * - Default: `visibility: 'technical'`, read-only in edit forms
  * - Customizable: Can override `editable`, `label`, `hint`, `validation` (merged with defaults)
+ * - Direct adapter (neither `serverSideOnly` nor `dbLevelSecurity`): these base fields are
+ *   readable by whoever can read the document and, at their default visibility, do not make
+ *   the entity restricted (`hasRestrictedVisibility`); an app field that is not `guest` does
  *
  * **Access Configuration:**
  * - Defaults: `{ read: 'guest', create: 'admin', update: 'admin', delete: 'admin' }`
@@ -574,7 +577,8 @@ function setDefaultFormConfig(entity: BusinessEntity): FormConfig {
  * - `draft` and `deleted` statuses hidden from non-admin users (server-side filtering)
  * - `validation.required` on other fields only enforced when status !== 'draft'
  * - Extend options: `status: { validation: { options: [{ value: 'sold', label: 'sold' }] } }`
- * - Hide field: `status: { visibility: 'technical' }` if you don't want it in forms
+ * - Hide field: `status: { visibility: 'technical' }` if you don't want it in forms (a
+ *   non-default restriction: the entity then needs a server-side or `dbLevelSecurity` adapter)
  *
  * **Field values (fail loud):**
  * - Every field resolves its value at definition (`describeEntity`): `validation.schema`

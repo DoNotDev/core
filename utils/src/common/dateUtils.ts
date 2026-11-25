@@ -12,6 +12,8 @@
 
 import type { DateValue } from '@donotdev/types';
 
+import { formatTimeZoneFor } from './timeZone';
+
 /**
  * Convert compact date format (YYYYMMDD:HHMM) to ISO string
  * Format: 20251225:0000 → 2025-12-25T00:00:00.000Z
@@ -384,24 +386,30 @@ function getPresetOptions(
 /**
  * Format date to localized string with preset or custom options
  * Uses native Intl.DateTimeFormat for proper locale-aware formatting.
+ * The time zone is the app's (`getAppTimeZone`, build option `i18n.timeZone`), so the
+ * server and the browser print the same text for the same instant; a calendar date
+ * (`'2025-05-05'`) reads as written. `format.timeZone` overrides it for one call.
  *
- * @version 0.1.0
- * @since 0.0.1
- * @author AMBROISE PARK Consulting
  * @param date - Date value (ISO string, Date object, timestamp, FirestoreTimestamp, or null/undefined)
- * @param locale - Locale string (e.g., "en", "fr", "de"). Defaults to "en"
+ * @param locale - Locale string, the UI language (i18next `language`: "en", "fr", "de")
  * @param format - Preset name or custom options. Defaults to "long"
  * @returns Localized formatted date string, or empty string if date is invalid
+ * @throws When the app's time zone is not loaded (`getAppTimeZone`) and the value is not a calendar date
  *
  * @example
+ * // i18n.timeZone: 'Europe/Paris'
  * formatDate('2025-05-05T00:00:00.000Z', 'en', 'full')    // "Monday, May 5, 2025"
- * formatDate('2025-05-05T00:00:00.000Z', 'fr', 'long')    // "5 mai 2025"
- * formatDate('2025-05-05T14:30:00.000Z', 'en', 'datetime') // "May 5, 2025, 02:30 PM"
+ * formatDate('2025-05-05', 'fr', 'long')                  // "5 mai 2025"
+ * formatDate('2025-05-05T14:30:00.000Z', 'en', 'datetime') // "May 5, 2025, 04:30 PM"
  * formatDate(new Date(), 'de', { month: 'short', day: 'numeric' }) // "5. Mai"
+ *
+ * @version 0.2.0
+ * @since 0.0.1
+ * @author AMBROISE PARK Consulting
  */
 export function formatDate(
   date: DateValue | number | string | null | undefined,
-  locale: string = 'en',
+  locale: string,
   format: DateFormatPreset | DateFormatOptions = 'long'
 ): string {
   if (!date) return '';
@@ -428,7 +436,10 @@ export function formatDate(
   const options =
     typeof format === 'string' ? getPresetOptions(format) : format;
 
-  return new Intl.DateTimeFormat(locale, options).format(dateObj);
+  return new Intl.DateTimeFormat(locale, {
+    ...options,
+    timeZone: options.timeZone ?? formatTimeZoneFor(date),
+  }).format(dateObj);
 }
 
 /**

@@ -57,6 +57,7 @@ const i18nTemplates = {
       eagerNamespaces,
       supportedLanguages,
       fallbackLanguage,
+      timeZone,
       stats,
       content = {},
       files = [],
@@ -85,6 +86,8 @@ const i18nTemplates = {
       languages: supportedLanguages,
       eager: isDevMode ? allNamespaces : eagerNamespaces,
       fallback: fallbackLanguage,
+      // The app's time zone: getAppTimeZone() (@donotdev/core) reads it
+      timeZone,
       content: eagerContent,
       storage: {
         type: 'localStorage',
@@ -272,6 +275,7 @@ export default {
       languages: [fallbackLang],
       eager: [],
       fallback: fallbackLang,
+      timeZone: discoveryOptions.timeZone,
       content: {},
       storage: {
         type: 'localStorage',

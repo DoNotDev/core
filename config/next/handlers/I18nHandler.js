@@ -124,6 +124,7 @@ export class NextI18nHandler extends BaseNextHandler {
       supportedLanguages,
       eagerNamespaces,
       fallbackLanguage,
+      timeZone,
       content,
     } = i18nData;
 
@@ -136,6 +137,8 @@ const i18nConfig = {
   languages: ${JSON.stringify(supportedLanguages, null, 2)},
   eager: ${JSON.stringify(eagerNamespaces, null, 2)},
   fallback: '${fallbackLanguage}',
+  // The app's time zone (i18n.timeZone): getAppTimeZone() reads it, server and browser
+  timeZone: ${JSON.stringify(timeZone)},
   content: ${JSON.stringify(content || {}, null, 2)},
   storage: {
     type: 'localStorage',

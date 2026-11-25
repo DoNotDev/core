@@ -39,8 +39,9 @@
     "noResults": "Keine Adressen gefunden",
     "apiUnavailable": "Google Places nicht verfügbar — Adresse manuell eingeben"
   },
-  "export": "Exportieren",
   "copyToClipboard": "In die Zwischenablage kopieren",
+  "copied": "Kopiert!",
+  "copyPassword": "Passwort kopieren",
   "noInquiries": "Keine Anfragen gefunden.",
   "customer": "Kunde",
   "noCustomer": "Kein Kunde verknüpft",
@@ -112,8 +113,7 @@
     "format": "Bitte geben Sie ein gültiges Datum ein",
     "future": "{{field}} muss in der Zukunft liegen",
     "past": "{{field}} muss in der Vergangenheit liegen",
-    "today": "{{field}} muss heute sein",
-    "calendarLoadError": "Der Kalender konnte nicht geladen werden. Bitte geben Sie das Datum im Feld ein."
+    "today": "{{field}} muss heute sein"
   },
   "select": {
     "required": "Bitte wählen Sie ein {{field}} aus",
@@ -122,6 +122,8 @@
     "max": "Bitte wählen Sie höchstens {{max}} Optionen aus"
   },
   "boolean": {
+    "yes": "Ja",
+    "no": "Nein",
     "required": "{{field}} muss ausgewählt werden"
   },
   "fieldArray": {
@@ -337,15 +339,18 @@
     "showing": "Zeige {{from}} bis {{to}} von {{total}} Einträgen",
     "previous": "Vorherige",
     "next": "Nächste",
-    "page": "Seite {{page}} von {{total}}",
-    "itemsPerPagePlaceholder": "Elemente pro Seite:"
+    "page": "Seite {{page}} von {{total}}"
   },
   "filters": {
-    "title": "{{entity}} durchsuchen - Filter",
+    "title": "Filter",
     "apply": "Filter anwenden",
     "clear": "Filter löschen",
     "noResults": "Keine Ergebnisse entsprechen Ihren Filtern",
-    "selected": "{{count}} ausgewählt"
+    "selected_one": "{{count}} ausgewählt",
+    "selected_other": "{{count}} ausgewählt",
+    "button": "Filter",
+    "buttonActive_one": "Filter ({{count}} aktiv)",
+    "buttonActive_other": "Filter ({{count}} aktiv)"
   },
   "filter": {
     "placeholder": "Filtern...",
@@ -368,7 +373,8 @@
     "clear": "Löschen",
     "pick": "Auswählen",
     "time": "Uhrzeit",
-    "clearAll": "Alle Filter löschen"
+    "clearAll": "Alle Filter löschen",
+    "contains": "Enthält…"
   },
   "duration": {
     "15m": "15 Min.",
@@ -388,15 +394,19 @@
   "results": {
     "title": {
       "fetching": "Laden...",
-      "count_one": "{{count}} Vorkommen gefunden",
-      "count_other": "{{count}} Vorkommen gefunden"
+      "count_one": "{{count}} Ergebnis",
+      "count_other": "{{count}} Ergebnisse"
     }
   },
   "visibility": {
     "viewAs": "Anzeigen als",
     "preview": "Vorschau"
   },
+  "reference": {
+    "placeholder": "{{label}} auswählen"
+  },
   "price": {
+    "columnTitle": "{{label}} ($t(crud:price.vatIncluded))",
     "vatIncluded": "inkl. MwSt.",
     "currency": "Währung",
     "discountLabel": "Rabatt (%)",
@@ -422,6 +432,7 @@
     "confirmSelected_other": "Die {{count}} ausgewählten Elemente löschen? Dies kann nicht rückgängig gemacht werden."
   },
   "errors": {
+    "unsupportedFieldType": "Nicht unterstützter Feldtyp: {{type}}",
     "notFound": "{{entity}} nicht gefunden",
     "fetchFailed": "{{entity}} konnte nicht geladen werden"
   },
@@ -433,10 +444,6 @@
     "pending_one": "{{count}} ungespeicherte Änderung",
     "pending_other": "{{count}} ungespeicherte Änderungen",
     "discard": "Änderungen verwerfen",
-    "selected": "{{count}} ausgewählt",
-    "field": "Feld",
-    "value": "Wert",
-    "apply": "Auf Auswahl anwenden",
     "deleteSelected": "Auswahl löschen ({{count}})",
     "failed_one": "{{count}} Zeile nicht gespeichert: Sie bleibt in der Liste, bitte erneut versuchen",
     "failed_other": "{{count}} Zeilen nicht gespeichert: Sie bleiben in der Liste, bitte erneut versuchen"
@@ -462,5 +469,11 @@
     "moved": "{{name}} auf Position {{position}} von {{count}} verschoben.",
     "dropped": "{{name}} auf Position {{position}} von {{count}} abgelegt.",
     "cancelled": "Verschieben von {{name}} abgebrochen."
+  },
+  "list": {
+    "count_one": "{{count}} {{name}}",
+    "count_other": "{{count}} {{names}}",
+    "empty": "Noch keine {{names}}",
+    "noResultsFor": "Keine Ergebnisse für „{{query}}“"
   }
 }

@@ -94,15 +94,11 @@ Works automatically - no configuration needed:
 **Framework translations (automatically included):**
 
 ```
-packages/features/i18n/src/locales/
-├── eager/                   # Always available (core UI elements)
-│   ├── dndev_en.json       # Framework UI translations (English)
-│   └── dndev_fr.json       # Framework UI translations (French)
-└── lazy/                    # Loaded when needed
-    ├── terms_en.json        # Terms of service (English)
-    ├── terms_fr.json        # Terms of service (French)
-    ├── privacy_en.json      # Privacy policy (English)
-    └── privacy_fr.json      # Privacy policy (French)
+packages/core/i18n/locales/
+├── eager/                   # Always available
+│   └── dndev_<lang>.json    # Framework UI: buttons, messages, component labels
+└── lazy/                    # Loaded with the feature that reads them
+    └── <namespace>_<lang>.json
 ```
 
 **Your app's locales:**
@@ -130,28 +126,27 @@ src/
 
 **Available framework namespaces:**
 
-- `dndev` - Core framework UI translations (buttons, forms, errors, etc.) - **Always available (eager)**
-- `terms` - Terms of service templates - **Loaded when needed (lazy)**
-- `privacy` - Privacy policy templates - **Loaded when needed (lazy)**
+- `dndev` - Core framework UI translations (buttons, messages, errors, the default labels of `@donotdev/components` and `@donotdev/ui`) - **Always available (eager)**
+- Lazy (loaded when needed): `ai`, `auth`, `billing`, `blog`, `cookies`, `crud`, `homeTemplate`, `legalNotice`, `oauth`, `privacy`, `terms`
 
 **Framework translations are automatically discovered from:**
 
 ```
-packages/features/i18n/src/locales/
-├── eager/                   # Always available (core UI elements)
-│   ├── dndev_en.json       # Framework UI translations (English)
-│   └── dndev_fr.json       # Framework UI translations (French)
-└── lazy/                    # Loaded when needed (legal documents)
-    ├── terms_en.json        # Terms of service (English)
-    ├── terms_fr.json        # Terms of service (French)
-    ├── privacy_en.json      # Privacy policy (English)
-    └── privacy_fr.json      # Privacy policy (French)
+packages/core/i18n/locales/
+├── eager/dndev_<lang>.json
+└── lazy/<namespace>_<lang>.json   # the 11 lazy namespaces above
 ```
+
+**Rules for framework locale files:**
+
+- 13 languages: `ar da de en es fr it ja ko nl pl pt zh`. Every namespace has the same keys in all 13 (a missing key falls back to English).
+- Plurals use the i18next suffixes with every CLDR category of the language (`_one` / `_other` in English; `_one` / `_many` / `_other` in French, Spanish, Italian, Portuguese; `_one` / `_few` / `_many` / `_other` in Polish; `_zero` / `_one` / `_two` / `_few` / `_many` / `_other` in Arabic; `_other` in Japanese, Korean, Chinese).
+- A text shared by two keys is written once and nested: `$t(crud:price.vatIncluded)`. Nested keys take their namespace prefix (`crud:`): without it, i18next looks in the default namespace (`dndev`).
 
 **Why this structure?**
 
 - **`dndev` (eager)**: Core UI elements like buttons, forms, and error messages are always needed
-- **`terms`/`privacy` (lazy)**: Legal documents are only loaded when someone actually reads them
+- **Lazy namespaces**: Feature texts (CRUD, auth, billing, legal documents...) are only loaded with the feature that shows them
 
 **Consumer Override Capability:**
 You can override any framework translation by adding a file with the same name to your locales folder:

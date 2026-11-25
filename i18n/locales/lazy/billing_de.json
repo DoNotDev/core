@@ -1,4 +1,15 @@
 {
+  "errors": {
+    "unauthenticated": "Bitte melden Sie sich an, um mit dem Bezahlvorgang fortzufahren.",
+    "checkout_failed": "Der Bezahlvorgang konnte nicht gestartet werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support, falls das Problem weiterhin besteht.",
+    "cancel_failed": "Das Abonnement konnte nicht gekündigt werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
+    "change_plan_failed": "Der Tarif konnte nicht geändert werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
+    "refresh_failed": "Der Abonnementstatus konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+    "portal_failed": "Das Kundenportal konnte nicht geöffnet werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
+    "not_available": "Die Abrechnung ist nicht verfügbar.",
+    "server_error": "Der Server hat einen Fehler zurückgegeben. Bitte versuchen Sie es erneut.",
+    "no_checkout_url": "Keine Bezahl-URL erhalten. Bitte versuchen Sie es erneut."
+  },
   "security": {
     "title": "Sichere Zahlungsabwicklung",
     "description": "Ihre Zahlungsinformationen werden sicher von Stripe verarbeitet, einem PCI DSS Level 1 zertifizierten Zahlungsdienstleister.",

@@ -1,4 +1,15 @@
 {
+  "errors": {
+    "unauthenticated": "Log ind for at fortsætte til betaling.",
+    "checkout_failed": "Betalingen kunne ikke startes. Prøv igen, eller kontakt support, hvis problemet fortsætter.",
+    "cancel_failed": "Abonnementet kunne ikke opsiges. Prøv igen, eller kontakt support.",
+    "change_plan_failed": "Abonnementet kunne ikke ændres. Prøv igen, eller kontakt support.",
+    "refresh_failed": "Abonnementsstatus kunne ikke opdateres. Prøv igen.",
+    "portal_failed": "Kundeportalen kunne ikke åbnes. Prøv igen, eller kontakt support.",
+    "not_available": "Fakturering er ikke tilgængelig.",
+    "server_error": "Serveren returnerede en fejl. Prøv igen.",
+    "no_checkout_url": "Der blev ikke modtaget nogen betalings-URL. Prøv igen."
+  },
   "security": {
     "title": "Sikker betaling",
     "description": "Dine betalingsoplysninger behandles sikkert af Stripe.",

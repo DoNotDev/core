@@ -92,6 +92,8 @@ export default defineViteConfig({
 
 **Done.** Routes, themes, and translations are automatically detected from your `src/` directory.
 
+**Time zone (`i18n.timeZone`, default `'Europe/Paris'`, override per app, Vite and Next alike).** The app's one time zone, an IANA name (`'Europe/Paris'`, `'UTC'`). An app in Paris time sets nothing; another app overrides it in `defineViteConfig` / `defineNextConfig` (`defineNextConfig({ appConfig, i18n: { timeZone: 'Asia/Seoul' } })`). The default is written once, `DEFAULT_APP_TIME_ZONE` (`config/utils/timeZone.js`). Every date and time the framework shows is in this zone, on the server render and in the browser alike (no hydration mismatch, whatever the machine's zone: Vercel servers run in UTC): field values (`formatValue`, `formatFieldText`), `formatDate`, the `DatePicker` / `DateTimePicker` fields and the list date editors, which also store a picked date-time as the UTC instant of that wall time in that zone. A calendar date (`date` field, `YYYY-MM-DD`) reads as written. A value that is not a known IANA zone fails the build and the dev server: `[dndev-i18n] i18n.timeZone ... is not a known IANA time zone`. App code reads it with `getAppTimeZone()` (`@donotdev/core`) instead of a hand-written zone constant.
+
 ---
 
 ## 3. Optional Vite Options
@@ -109,13 +111,14 @@ export default defineViteConfig({
   themes: { debug: true },
   i18n: { debug: true },
 
-  // i18n — language set is discovered from *_<lang>.json filenames.
+  // i18n — timeZone overrides the default Europe/Paris (section 2). The language set is discovered from *_<lang>.json filenames.
   // `only` restricts what the app uses without touching the files:
   // languages outside the list are dropped from supportedLanguages,
   // the mapping and the inlined content (nothing bundled, no chunks,
   // and a single language hides the LanguageSelector). Same option on
   // defineNextConfig. Remove it to get the other languages back.
   i18n: {
+    timeZone: 'Asia/Seoul',
     fallbackLanguage: 'ko',
     only: ['ko'],
   },
@@ -156,6 +159,7 @@ One framework policy (`@donotdev/core` `config/headerPolicy.js`) defines every r
 - Security headers on every path: CSP, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `X-XSS-Protection`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` (no geolocation, microphone or camera).
 - CSP baseline (`'self'`, inline styles, `https:` images, `data:` fonts, `frame-src 'none'`, `object-src 'none'`; `script-src` is `'self'` on Vite and `'self' 'unsafe-inline'` on Next, which emits inline bootstrap scripts) + the backend's sources from the app's `package.json`: `@donotdev/supabase` → `connect-src https://*.supabase.co wss://*.supabase.co`; `@donotdev/firebase` → Google auth and Firebase origins. CAPTCHA on (the app sets `VITE_TURNSTILE_SITE_KEY` / `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, non-empty) adds `https://challenges.cloudflare.com` to `script-src` and `frame-src` (Turnstile); no key = no Turnstile source, `frame-src 'none'`. The key is read from the build's env (Vite `loadEnv`, Next `process.env`), so a Vite / static-export app's committed vercel.json follows it: regenerate it after setting or removing the key, and give the host's build the same key, or the CI header check fails.
 - `X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex` when `seo: false` (private app).
+- No `X-Powered-By: Next.js` (Next sends it by default): `defineNextConfig` sets `poweredByHeader: false`; an app's own `poweredByHeader` in `defineNextConfig` wins. Vite sends no such header.
 - Cache classes: hashed build assets 1 year `immutable` (Vite `/assets/*`; Next sets `/_next/static` itself), public images (`jpg jpeg png svg webp ico`) 1 day, `*.json` 1 hour. HTML gets no rule (Next: `revalidate`; static hosts revalidate it). PWA on: `/manifest.json` 1 hour, `/sw.js` `no-cache`.
 
 **App deltas** go in `appConfig.headers` (same option on Vite and Next):

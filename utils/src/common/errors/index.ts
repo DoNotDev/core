@@ -12,6 +12,7 @@
 
 export * from './doNotDevError';
 export * from './handleError';
+export * from './loadErrorReason';
 export * from './internal/errorDetection';
 export * from './internal/errorMapper';
 export * from './internal/sentryCapture';

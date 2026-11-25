@@ -163,9 +163,10 @@ export function createHeadersConfig({ policyRules, originalHeaders }) {
  * Build the final Next.js config
  *
  * Assembles transpilePackages, Turbopack resolveAlias (CSS, blog content, missing optional
- * deps), rewrites/redirects/headers and environment variables. Next 16 builds with
- * Turbopack: the framework sets no webpack or `compiler` config (an app's own `webpack` and
- * `compiler` pass through untouched in `restNextConfig`).
+ * deps), rewrites/redirects/headers and environment variables. `poweredByHeader` defaults
+ * to `false` (no `X-Powered-By: Next.js` header); an app's own value in `restNextConfig`
+ * wins. Next 16 builds with Turbopack: the framework sets no webpack or `compiler` config
+ * (an app's own `webpack` and `compiler` pass through untouched in `restNextConfig`).
  * The discovery handlers contribute no config of their own: they generate their files in
  * `runDiscoveries`, and their rewrites reach `rewritesConfig` (`createRewritesConfig`, every
  * handler's `getAPIRewrites`, none for `output: 'export'`).
@@ -227,6 +228,10 @@ export function buildFinalConfig({
     // React Compiler — top-level key in Next 16 (not experimental). Placed before
     // the restNextConfig spread so an app's own next config still wins.
     ...(reactCompiler ? { reactCompiler } : {}),
+
+    // No `X-Powered-By: Next.js` response header (Next sends it by default). Before the
+    // restNextConfig spread: an app's own `poweredByHeader` still wins.
+    poweredByHeader: false,
 
     // PostCSS configuration removed - Next.js 16 requires postcss.config.js file
     // TODO: Generate postcss.config.js if needed

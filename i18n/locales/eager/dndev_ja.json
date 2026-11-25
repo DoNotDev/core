@@ -1,6 +1,12 @@
 {
   "signIn": "ログイン",
   "auth": {
+    "signIn": "ログイン",
+    "loading": "読み込み中...",
+    "signOut": "ログアウト",
+    "deleteAccount": {
+      "label": "アカウントを削除"
+    },
     "userMenu": "ユーザーメニュー",
     "profile": "プロフィール",
     "title": "認証"
@@ -141,7 +147,8 @@
     "select": "選択",
     "upload": "アップロード",
     "download": "ダウンロード",
-    "close": "閉じる"
+    "close": "閉じる",
+    "open": "開く"
   },
   "guard": {
     "signInRequired": "このページにアクセスするにはログインしてください"
@@ -176,14 +183,18 @@
     "showing": "{{total}}件中{{from}}〜{{to}}件を表示",
     "previous": "前へ",
     "next": "次へ",
-    "page": "{{page}}/{{total}}ページ"
+    "page": "{{page}}/{{total}}ページ",
+    "itemsPerPage": "ページあたりの項目数:",
+    "all": "すべて",
+    "pageNumber": "{{page}} ページ",
+    "label": "ページネーション"
   },
   "filters": {
     "title": "フィルター",
     "apply": "フィルターを適用",
     "clear": "フィルターをクリア",
     "noResults": "フィルターに一致する結果がありません",
-    "selected": "{{count}}件選択中"
+    "selected_other": "{{count}}件選択中"
   },
   "settings": {
     "title": "設定",
@@ -273,10 +284,18 @@
   "globalGoTo": {
     "placeholder": "ルートをフィルタリングまたはページに移動...",
     "noResults": "結果が見つかりませんでした。",
+    "empty": "利用できるページがありません。",
     "favorites": "お気に入り",
+    "recent": "最近",
     "allPages": "すべてのページ",
     "addFavorite": "お気に入りに追加",
     "removeFavorite": "お気に入りから削除",
+    "favorite": "お気に入りに追加",
+    "unfavorite": "お気に入りから削除",
+    "shortcutOpen": "開く",
+    "shortcutNavigate": "移動",
+    "shortcutSelect": "選択",
+    "shortcutClose": "閉じる",
     "searchPlaceholder": "ページを検索...",
     "ariaLabel": "ナビゲーションを検索"
   },
@@ -291,13 +310,21 @@
     "showingResults": "{{total}}件中{{from}}〜{{to}}件を表示",
     "previous": "前へ",
     "next": "次へ",
-    "page": "{{current}}/{{total}}ページ"
+    "page": "{{current}}/{{total}}ページ",
+    "export": "エクスポート",
+    "selected": "{{count}} 件選択中",
+    "field": "フィールド",
+    "value": "値",
+    "apply": "選択した行に適用",
+    "clearSelection": "選択を解除",
+    "empty": "データがありません"
   },
   "language": {
     "selectLanguage": "言語を選択",
     "searchLanguages": "言語を検索...",
     "noLanguagesFound": "言語が見つかりませんでした",
-    "changeLanguage": "言語を変更"
+    "changeLanguage": "言語を変更",
+    "selector": "言語の選択"
   },
   "form": {
     "submit": "送信",
@@ -312,7 +339,14 @@
   "navigation": {
     "more": "もっと見る",
     "home": "ホーム",
-    "menu": "ナビゲーション"
+    "menu": "ナビゲーション",
+    "main": "メインメニュー",
+    "site": "サイトナビゲーション",
+    "resizeSidebar": "サイドバーのサイズを変更。ダブルクリックまたは Enter で開閉、Home で折りたたみ、End で内容に合わせます。",
+    "open": "ナビゲーションを開く",
+    "breadcrumb": "パンくずリスト",
+    "headerMenu": "メニュー",
+    "loadingProgress": "ページの読み込み状況"
   },
   "pwa": {
     "update": {
@@ -354,11 +388,14 @@
   "code": {
     "copyCode": "コードをコピー",
     "copied": "コピーしました！",
-    "copyCodeToClipboard": "コードをクリップボードにコピー"
+    "copyCodeToClipboard": "コードをクリップボードにコピー",
+    "loading": "コードを読み込み中"
   },
   "video": {
     "clickToWatch": "動画を視聴するにはクリック",
-    "watchVideo": "動画を視聴"
+    "watchVideo": "動画を視聴",
+    "title": "動画",
+    "loading": "動画を読み込み中"
   },
   "inspector": {
     "pageSource": "ページソース",
@@ -368,7 +405,9 @@
     "navigation": "ナビゲーション",
     "codeInspector": "コードインスペクター",
     "debugPanel": "デバッグパネル",
-    "close": "パネルを閉じる"
+    "close": "パネルを閉じる",
+    "title": "パネル",
+    "content": "パネルの内容"
   },
   "routeError": {
     "title": "エラーが発生しました",
@@ -672,6 +711,128 @@
     "slide": "スライド {{current}} / {{total}}",
     "goToSlide": "スライド {{index}} に移動",
     "empty": "表示する項目がありません",
-    "loading": "カルーセルを読み込み中"
+    "loading": "カルーセルを読み込み中",
+    "roleDescription": "カルーセル",
+    "slideRoleDescription": "スライド"
+  },
+  "datePicker": {
+    "openCalendar": "カレンダーを開く",
+    "calendarLoadError": "カレンダーを読み込めませんでした。日付を入力欄に入力してください。",
+    "date": "日付",
+    "dateTime": "日付と時刻"
+  },
+  "dialog": {
+    "title": "ダイアログ",
+    "content": "ダイアログの内容"
+  },
+  "toast": {
+    "region": "通知（{hotkey}）",
+    "label": "通知"
+  },
+  "command": {
+    "title": "コマンドパレット",
+    "description": "キーボードショートカットで検索・移動",
+    "item": "コマンド"
+  },
+  "combobox": {
+    "createOption": "「{{value}}」を作成"
+  },
+  "copiedToClipboard": "クリップボードにコピーしました",
+  "infiniteScroll": {
+    "loadingMore": "さらに読み込み中...",
+    "scrollForMore": "下にスクロールしてさらに読み込む..."
+  },
+  "range": {
+    "min": "最小",
+    "max": "最大"
+  },
+  "password": {
+    "show": "パスワードを表示",
+    "hide": "パスワードを隠す"
+  },
+  "pin": {
+    "show": "PIN を表示",
+    "hide": "PIN を隠す"
+  },
+  "stepper": {
+    "label": "ステップ",
+    "goToStep": "ステップ {{number}}（{{title}}）に移動",
+    "stepOf": "ステップ {{current}}/{{total}}"
+  },
+  "colorPicker": {
+    "label": "カラーピッカー",
+    "custom": "カスタム",
+    "customColor": "カスタムカラー",
+    "colors": {
+      "black": "黒",
+      "white": "白",
+      "gray": "グレー",
+      "lightGray": "ライトグレー",
+      "red": "赤",
+      "orange": "オレンジ",
+      "amber": "アンバー",
+      "yellow": "黄",
+      "lime": "ライム",
+      "green": "緑",
+      "teal": "ティール",
+      "cyan": "シアン",
+      "blue": "青",
+      "purple": "紫",
+      "pink": "ピンク",
+      "rose": "ローズ",
+      "deepPurple": "ディープパープル",
+      "indigo": "インディゴ",
+      "lightBlue": "ライトブルー",
+      "lightGreen": "ライトグリーン",
+      "deepOrange": "ディープオレンジ",
+      "pastelRose": "パステルローズ",
+      "pastelPink": "パステルピンク",
+      "pastelPurple": "パステルパープル",
+      "pastelIndigo": "パステルインディゴ",
+      "pastelBlue": "パステルブルー",
+      "pastelCyan": "パステルシアン",
+      "pastelTeal": "パステルティール",
+      "pastelGreen": "パステルグリーン",
+      "pastelLime": "パステルライム",
+      "pastelYellow": "パステルイエロー",
+      "pastelOrange": "パステルオレンジ",
+      "pastelRed": "パステルレッド",
+      "pastelGray": "パステルグレー",
+      "pastelStone": "パステルストーン",
+      "pastelFuchsia": "パステルフューシャ",
+      "pastelSky": "パステルスカイ"
+    }
+  },
+  "dropdownMenu": {
+    "submenu": "サブメニュー",
+    "item": "メニュー項目"
+  },
+  "skipLink": {
+    "label": "スキップリンク"
+  },
+  "crawl": {
+    "label": "アニメーション付きスクロールテキスト",
+    "start": "アニメーションの紹介を開始",
+    "resume": "アニメーションを再開"
+  },
+  "stackedCards": {
+    "label": "重なったカード"
+  },
+  "jsonViewer": {
+    "expandAll": "すべて展開",
+    "collapseAll": "すべて折りたたむ",
+    "copy": "コピー"
+  },
+  "techStack": {
+    "label": "技術スタック"
+  },
+  "callToAction": {
+    "label": "行動喚起"
+  },
+  "featureFallback": {
+    "title": "{{featureName}} は利用できません",
+    "message": "{{featureName}} は現在利用できません",
+    "action": "{{featureName}}（利用不可）",
+    "help": "この機能を使うには {{featureName}} の設定が必要です。"
   }
 }

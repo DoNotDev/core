@@ -106,6 +106,10 @@ export interface HandleErrorOptions {
  *
  * Handles errors from any source, converting them to standardized DoNotDevError
  * objects, logging appropriately, and optionally adding to UI notification system.
+ * When the user message (or a mapped default) replaces the original message, the log
+ * line carries the original as `cause` (all environments), so the real error is never
+ * reduced to e.g. 'Query failed'; an adapter error (`wrapCrudError`: 'Request failed.')
+ * logs its `details.originalMessage` as `cause`.
  *
  * @param error - The original error from any source
  * @param optionsOrMessage - Optional configuration or user-friendly message
@@ -189,11 +193,25 @@ export function handleError(
     const isDevelopment =
       isDev() || (typeof window !== 'undefined' && window.__DNDEV_DEBUG);
 
+    // The underlying error's message when the user message (or a mapped default) replaced
+    // it, or the cause an adapter kept in `details.originalMessage` behind its generic
+    // 'Request failed.' (wrapCrudError): the log keeps the real cause, the returned error
+    // keeps the user-facing message.
+    const wrappedMessage = standardError.details?.originalMessage;
+    const cause =
+      error instanceof Error && error.message !== standardError.message
+        ? error.message
+        : typeof wrappedMessage === 'string' &&
+            wrappedMessage !== standardError.message
+          ? wrappedMessage
+          : undefined;
+
     // Basic info to log in all environments
     const logInfo = {
       code: standardError.code,
       message: standardError.message,
       source: errorSource,
+      ...(cause !== undefined && { cause }),
     };
 
     // Choose appropriate console method based on severity

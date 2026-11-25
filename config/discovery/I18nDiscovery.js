@@ -449,6 +449,8 @@ export class I18nDiscovery extends BaseDiscovery {
       allNamespaces: [...result.allNamespaces].sort(),
       supportedLanguages: finalLanguages,
       fallbackLanguage: this.options.fallbackLanguage,
+      // The app's time zone (build option i18n.timeZone, validated by define*Config)
+      timeZone: this.options.timeZone,
       flagCodes,
       files: result.files,
     };
@@ -462,6 +464,7 @@ export class I18nDiscovery extends BaseDiscovery {
       allNamespaces: ['common'],
       supportedLanguages: [this.options.fallbackLanguage],
       fallbackLanguage: this.options.fallbackLanguage,
+      timeZone: this.options.timeZone,
       flagCodes: [languageFlagCode(this.options.fallbackLanguage)],
       files: [],
 

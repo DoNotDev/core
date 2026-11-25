@@ -39,8 +39,9 @@
     "noResults": "No se encontraron direcciones",
     "apiUnavailable": "Google Places no disponible — escriba la dirección manualmente"
   },
-  "export": "Exportar",
   "copyToClipboard": "Copiar al portapapeles",
+  "copied": "¡Copiado!",
+  "copyPassword": "Copiar contraseña",
   "noInquiries": "No se encontraron consultas.",
   "customer": "Cliente",
   "noCustomer": "Ningún cliente vinculado",
@@ -112,8 +113,7 @@
     "format": "Ingrese una fecha válida",
     "future": "{{field}} debe estar en el futuro",
     "past": "{{field}} debe estar en el pasado",
-    "today": "{{field}} debe ser hoy",
-    "calendarLoadError": "No se pudo cargar el calendario. Ingrese la fecha en el campo."
+    "today": "{{field}} debe ser hoy"
   },
   "select": {
     "required": "Seleccione un {{field}}",
@@ -122,6 +122,8 @@
     "max": "Seleccione como máximo {{max}} opciones"
   },
   "boolean": {
+    "yes": "Sí",
+    "no": "No",
     "required": "{{field}} debe estar seleccionado"
   },
   "fieldArray": {
@@ -273,6 +275,7 @@
     "forbidden": "Acceso prohibido",
     "serverError": "Error del servidor ocurrido",
     "bulkPartialError_one": "No se pudo guardar {{count}} fila",
+    "bulkPartialError_many": "No se pudieron guardar {{count}} filas",
     "bulkPartialError_other": "No se pudieron guardar {{count}} filas",
     "unknownFields": "Guardado, pero estos campos no existen y no se guardaron: {{fields}}. Contacte con soporte."
   },
@@ -337,16 +340,20 @@
     "showing": "Mostrando {{from}} a {{to}} de {{total}} entradas",
     "previous": "Anterior",
     "next": "Siguiente",
-    "page": "Página {{page}} de {{total}}",
-    "itemsPerPagePlaceholder": "Elementos por página:"
+    "page": "Página {{page}} de {{total}}"
   },
   "filters": {
-    "title": "Explorar {{entity}} - Filtros",
+    "title": "Filtros",
     "apply": "Aplicar filtros",
     "clear": "Limpiar filtros",
     "noResults": "Ningún resultado coincide con sus filtros",
-    "selected": "{{count}} seleccionado",
-    "selected_other": "{{count}} seleccionados"
+    "selected_one": "{{count}} seleccionado",
+    "selected_many": "{{count}} seleccionados",
+    "selected_other": "{{count}} seleccionados",
+    "button": "Filtros",
+    "buttonActive_one": "Filtros ({{count}} activo)",
+    "buttonActive_many": "Filtros ({{count}} activos)",
+    "buttonActive_other": "Filtros ({{count}} activos)"
   },
   "filter": {
     "placeholder": "Filtrar...",
@@ -369,7 +376,8 @@
     "clear": "Limpiar",
     "pick": "Seleccionar",
     "time": "Hora",
-    "clearAll": "Limpiar todos los filtros"
+    "clearAll": "Limpiar todos los filtros",
+    "contains": "Contiene…"
   },
   "duration": {
     "15m": "15 min",
@@ -389,15 +397,20 @@
   "results": {
     "title": {
       "fetching": "Cargando...",
-      "count_one": "{{count}} ocurrencia encontrada",
-      "count_other": "{{count}} ocurrencias encontradas"
+      "count_one": "{{count}} resultado",
+      "count_many": "{{count}} resultados",
+      "count_other": "{{count}} resultados"
     }
   },
   "visibility": {
     "viewAs": "Ver como",
     "preview": "Vista previa"
   },
+  "reference": {
+    "placeholder": "Seleccionar {{label}}"
+  },
   "price": {
+    "columnTitle": "{{label}} ($t(crud:price.vatIncluded))",
     "vatIncluded": "IVA incl.",
     "currency": "Moneda",
     "discountLabel": "Descuento (%)",
@@ -418,11 +431,14 @@
     "confirm": "¿Seguro que quieres eliminar este elemento?",
     "loading": "Eliminando...",
     "titleSelected_one": "Eliminar {{count}} elemento",
+    "titleSelected_many": "Eliminar {{count}} elementos",
     "titleSelected_other": "Eliminar {{count}} elementos",
     "confirmSelected_one": "¿Eliminar el elemento seleccionado? Esta acción no se puede deshacer.",
+    "confirmSelected_many": "¿Eliminar los {{count}} elementos seleccionados? Esta acción no se puede deshacer.",
     "confirmSelected_other": "¿Eliminar los {{count}} elementos seleccionados? Esta acción no se puede deshacer."
   },
   "errors": {
+    "unsupportedFieldType": "Tipo de campo no admitido: {{type}}",
     "notFound": "No se encontró {{entity}}",
     "fetchFailed": "No se pudo cargar {{entity}}"
   },
@@ -432,14 +448,12 @@
   },
   "bulkEdit": {
     "pending_one": "{{count}} cambio sin guardar",
+    "pending_many": "{{count}} cambios sin guardar",
     "pending_other": "{{count}} cambios sin guardar",
     "discard": "Descartar cambios",
-    "selected": "{{count}} seleccionado(s)",
-    "field": "Campo",
-    "value": "Valor",
-    "apply": "Aplicar a la selección",
     "deleteSelected": "Eliminar selección ({{count}})",
     "failed_one": "{{count}} fila sin guardar: sigue en la lista, inténtelo de nuevo",
+    "failed_many": "{{count}} filas sin guardar: siguen en la lista, inténtelo de nuevo",
     "failed_other": "{{count}} filas sin guardar: siguen en la lista, inténtelo de nuevo"
   },
   "childRows": {
@@ -447,6 +461,7 @@
     "required": "{{field}} es obligatorio",
     "invalidValue": "{{field}} no es válido",
     "invalidRows_one": "{{count}} fila por corregir antes de guardar",
+    "invalidRows_many": "{{count}} filas por corregir antes de guardar",
     "invalidRows_other": "{{count}} filas por corregir antes de guardar",
     "notSaved": "Las filas editadas no se guardaron con este registro.",
     "pickTitle": "Añadir {{entity}}",
@@ -463,5 +478,12 @@
     "moved": "{{name}} movido a la posición {{position}} de {{count}}.",
     "dropped": "{{name}} soltado en la posición {{position}} de {{count}}.",
     "cancelled": "Movimiento de {{name}} cancelado."
+  },
+  "list": {
+    "count_one": "{{count}} {{nameLower}}",
+    "count_many": "{{count}} {{namesLower}}",
+    "count_other": "{{count}} {{namesLower}}",
+    "empty": "Todavía no hay {{namesLower}}",
+    "noResultsFor": "Sin resultados para «{{query}}»"
   }
 }

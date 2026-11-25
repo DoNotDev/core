@@ -96,6 +96,17 @@ export interface EntityListProps extends EntityBrowseBaseProps {
    */
   editable?: boolean;
   /**
+   * Offer deleting checked rows (the "Delete N" action of the selection bar). Set
+   * `false` for an entity whose records are never deleted from a list (e.g. archived
+   * from their editor instead): in-place editing stays, and so does row selection,
+   * for bulk edit (checked rows take one value at once); only the delete action is
+   * gone. `editable={false}` already has no selection and no delete. Web only: the
+   * Expo `EntityList` throws when given.
+   * @default true
+   * @since 0.3.8
+   */
+  deletable?: boolean;
+  /**
    * Nested list of one parent's children (e.g. the products of a brand on the
    * brand page): lists only rows whose `field` equals `value`, hides that column
    * and filter, and the add button opens the create form with `field` prefilled
@@ -487,4 +498,17 @@ export interface EntityDisplayRendererProps<
    * ```
    */
   preview?: Partial<T>;
+  /**
+   * List route of the entity: the header's Edit button opens `${basePath}/${id}/edit`,
+   * Delete returns here. Same convention as `EntityList`.
+   * @default `/${entity.collection}`
+   */
+  basePath?: string;
+  /**
+   * Hide the header's Edit / Delete buttons (the page renders its own actions).
+   * Without it, they show to viewers with the entity's `access.update` /
+   * `access.delete` role.
+   * @default false
+   */
+  hideActions?: boolean;
 }

@@ -1,6 +1,12 @@
 {
   "signIn": "로그인",
   "auth": {
+    "signIn": "로그인",
+    "loading": "로딩 중...",
+    "signOut": "로그아웃",
+    "deleteAccount": {
+      "label": "계정 삭제"
+    },
     "userMenu": "사용자 메뉴",
     "profile": "프로필",
     "title": "인증"
@@ -141,7 +147,8 @@
     "select": "선택",
     "upload": "업로드",
     "download": "다운로드",
-    "close": "닫기"
+    "close": "닫기",
+    "open": "열기"
   },
   "guard": {
     "signInRequired": "이 페이지에 접근하려면 로그인해 주세요"
@@ -176,14 +183,18 @@
     "showing": "{{total}}개 중 {{from}}~{{to}}개 표시",
     "previous": "이전",
     "next": "다음",
-    "page": "{{page}}/{{total}} 페이지"
+    "page": "{{page}}/{{total}} 페이지",
+    "itemsPerPage": "페이지당 항목 수:",
+    "all": "전체",
+    "pageNumber": "{{page}}페이지",
+    "label": "페이지 탐색"
   },
   "filters": {
     "title": "필터",
     "apply": "필터 적용",
     "clear": "필터 지우기",
     "noResults": "필터와 일치하는 결과가 없습니다",
-    "selected": "{{count}}개 선택됨"
+    "selected_other": "{{count}}개 선택됨"
   },
   "settings": {
     "title": "설정",
@@ -273,10 +284,18 @@
   "globalGoTo": {
     "placeholder": "경로 필터링 또는 페이지로 이동...",
     "noResults": "검색 결과가 없습니다.",
+    "empty": "사용 가능한 페이지가 없습니다.",
     "favorites": "즐겨찾기",
+    "recent": "최근",
     "allPages": "모든 페이지",
     "addFavorite": "즐겨찾기에 추가",
     "removeFavorite": "즐겨찾기에서 제거",
+    "favorite": "즐겨찾기에 추가",
+    "unfavorite": "즐겨찾기에서 제거",
+    "shortcutOpen": "열기",
+    "shortcutNavigate": "이동",
+    "shortcutSelect": "선택",
+    "shortcutClose": "닫기",
     "searchPlaceholder": "페이지 검색...",
     "ariaLabel": "내비게이션 검색"
   },
@@ -291,13 +310,21 @@
     "showingResults": "{{total}}개 결과 중 {{from}}~{{to}}개 표시",
     "previous": "이전",
     "next": "다음",
-    "page": "{{current}}/{{total}} 페이지"
+    "page": "{{current}}/{{total}} 페이지",
+    "export": "내보내기",
+    "selected": "{{count}}개 선택됨",
+    "field": "필드",
+    "value": "값",
+    "apply": "선택 항목에 적용",
+    "clearSelection": "선택 해제",
+    "empty": "데이터 없음"
   },
   "language": {
     "selectLanguage": "언어 선택",
     "searchLanguages": "언어 검색...",
     "noLanguagesFound": "언어를 찾을 수 없습니다",
-    "changeLanguage": "언어 변경"
+    "changeLanguage": "언어 변경",
+    "selector": "언어 선택기"
   },
   "form": {
     "submit": "제출",
@@ -312,7 +339,14 @@
   "navigation": {
     "more": "더보기",
     "home": "홈",
-    "menu": "내비게이션"
+    "menu": "내비게이션",
+    "main": "주 메뉴",
+    "site": "사이트 탐색",
+    "resizeSidebar": "사이드바 크기 조정. 두 번 클릭하거나 Enter 키로 접거나 펼칩니다. Home 키로 접고 End 키로 내용에 맞춥니다.",
+    "open": "탐색 열기",
+    "breadcrumb": "탐색 경로",
+    "headerMenu": "메뉴",
+    "loadingProgress": "페이지 로딩 진행률"
   },
   "pwa": {
     "update": {
@@ -354,11 +388,14 @@
   "code": {
     "copyCode": "코드 복사",
     "copied": "복사됨!",
-    "copyCodeToClipboard": "코드를 클립보드에 복사"
+    "copyCodeToClipboard": "코드를 클립보드에 복사",
+    "loading": "코드 불러오는 중"
   },
   "video": {
     "clickToWatch": "동영상을 보려면 클릭",
-    "watchVideo": "동영상 보기"
+    "watchVideo": "동영상 보기",
+    "title": "동영상",
+    "loading": "동영상 불러오는 중"
   },
   "inspector": {
     "pageSource": "페이지 소스",
@@ -368,7 +405,9 @@
     "navigation": "내비게이션",
     "codeInspector": "코드 검사기",
     "debugPanel": "디버그 패널",
-    "close": "패널 닫기"
+    "close": "패널 닫기",
+    "title": "패널",
+    "content": "패널 내용"
   },
   "routeError": {
     "title": "문제가 발생했습니다",
@@ -672,6 +711,128 @@
     "slide": "슬라이드 {{current}} / {{total}}",
     "goToSlide": "슬라이드 {{index}}(으)로 이동",
     "empty": "표시할 항목이 없습니다",
-    "loading": "캐러셀 불러오는 중"
+    "loading": "캐러셀 불러오는 중",
+    "roleDescription": "캐러셀",
+    "slideRoleDescription": "슬라이드"
+  },
+  "datePicker": {
+    "openCalendar": "달력 열기",
+    "calendarLoadError": "달력을 불러오지 못했습니다. 입력란에 날짜를 입력해 주세요.",
+    "date": "날짜",
+    "dateTime": "날짜 및 시간"
+  },
+  "dialog": {
+    "title": "대화 상자",
+    "content": "대화 상자 내용"
+  },
+  "toast": {
+    "region": "알림 ({hotkey})",
+    "label": "알림"
+  },
+  "command": {
+    "title": "명령 팔레트",
+    "description": "키보드 단축키로 검색하고 이동하세요",
+    "item": "명령"
+  },
+  "combobox": {
+    "createOption": "'{{value}}' 만들기"
+  },
+  "copiedToClipboard": "클립보드에 복사됨",
+  "infiniteScroll": {
+    "loadingMore": "더 불러오는 중...",
+    "scrollForMore": "아래로 스크롤하여 더 불러오기..."
+  },
+  "range": {
+    "min": "최소",
+    "max": "최대"
+  },
+  "password": {
+    "show": "비밀번호 표시",
+    "hide": "비밀번호 숨기기"
+  },
+  "pin": {
+    "show": "PIN 표시",
+    "hide": "PIN 숨기기"
+  },
+  "stepper": {
+    "label": "단계",
+    "goToStep": "{{number}}단계로 이동: {{title}}",
+    "stepOf": "{{total}}단계 중 {{current}}단계"
+  },
+  "colorPicker": {
+    "label": "색상 선택기",
+    "custom": "사용자 지정",
+    "customColor": "사용자 지정 색상",
+    "colors": {
+      "black": "검정",
+      "white": "흰색",
+      "gray": "회색",
+      "lightGray": "연회색",
+      "red": "빨강",
+      "orange": "주황",
+      "amber": "호박색",
+      "yellow": "노랑",
+      "lime": "라임",
+      "green": "초록",
+      "teal": "청록",
+      "cyan": "시안",
+      "blue": "파랑",
+      "purple": "보라",
+      "pink": "분홍",
+      "rose": "장미색",
+      "deepPurple": "진보라",
+      "indigo": "남색",
+      "lightBlue": "연파랑",
+      "lightGreen": "연초록",
+      "deepOrange": "진주황",
+      "pastelRose": "파스텔 장미색",
+      "pastelPink": "파스텔 분홍",
+      "pastelPurple": "파스텔 보라",
+      "pastelIndigo": "파스텔 남색",
+      "pastelBlue": "파스텔 파랑",
+      "pastelCyan": "파스텔 시안",
+      "pastelTeal": "파스텔 청록",
+      "pastelGreen": "파스텔 초록",
+      "pastelLime": "파스텔 라임",
+      "pastelYellow": "파스텔 노랑",
+      "pastelOrange": "파스텔 주황",
+      "pastelRed": "파스텔 빨강",
+      "pastelGray": "파스텔 회색",
+      "pastelStone": "파스텔 스톤",
+      "pastelFuchsia": "파스텔 자홍",
+      "pastelSky": "파스텔 하늘색"
+    }
+  },
+  "dropdownMenu": {
+    "submenu": "하위 메뉴",
+    "item": "메뉴 항목"
+  },
+  "skipLink": {
+    "label": "건너뛰기 링크"
+  },
+  "crawl": {
+    "label": "애니메이션 스크롤 텍스트",
+    "start": "애니메이션 소개 시작",
+    "resume": "애니메이션 다시 시작"
+  },
+  "stackedCards": {
+    "label": "쌓인 카드"
+  },
+  "jsonViewer": {
+    "expandAll": "모두 펼치기",
+    "collapseAll": "모두 접기",
+    "copy": "복사"
+  },
+  "techStack": {
+    "label": "기술 스택"
+  },
+  "callToAction": {
+    "label": "행동 유도"
+  },
+  "featureFallback": {
+    "title": "{{featureName}} 사용 불가",
+    "message": "{{featureName}}을(를) 사용할 수 없습니다",
+    "action": "{{featureName}} (사용 불가)",
+    "help": "이 기능을 사용하려면 {{featureName}}을(를) 구성해야 합니다."
   }
 }

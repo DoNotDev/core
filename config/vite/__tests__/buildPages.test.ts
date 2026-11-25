@@ -282,6 +282,17 @@ describe('buildPrerenderedPages: static pages', () => {
     );
   });
 
+  it('writes og:locale in the page language, the other languages as og:locale:alternate', async () => {
+    const { pages } = await buildPrerenderedPages(options({ staticRoutes: statics, records: [] }));
+    const en = head(page(pages, '/en/about.html'));
+    expect(en).toContain('<meta property="og:locale" content="en_US" data-rh="true" />');
+    expect(en).toContain('<meta property="og:locale:alternate" content="fr_FR" data-rh="true" />');
+    expect(en.match(/og:locale:alternate/g)).toHaveLength(1);
+    const fr = head(page(pages, '/about.html'));
+    expect(fr).toContain('<meta property="og:locale" content="fr_FR" data-rh="true" />');
+    expect(fr).toContain('<meta property="og:locale:alternate" content="en_US" data-rh="true" />');
+  });
+
   it('without an app URL: no canonical, as AutoMetaTags; hreflang off: no alternates', async () => {
     const noUrl = await buildPrerenderedPages(
       options({ staticRoutes: statics, records: [], baseUrl: '', hreflang: false })
@@ -289,6 +300,8 @@ describe('buildPrerenderedPages: static pages', () => {
     const tags = head(page(noUrl.pages, '/about.html'));
     expect(tags).not.toContain('rel="canonical"');
     expect(tags).not.toContain('hreflang');
+    expect(tags).toContain('<meta property="og:locale" content="fr_FR" data-rh="true" />');
+    expect(tags).not.toContain('og:locale:alternate');
     expect(tags).toContain('<meta property="og:image" content="/og-image.png" data-rh="true" />');
   });
 });

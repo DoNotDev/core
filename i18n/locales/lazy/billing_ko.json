@@ -1,4 +1,15 @@
 {
+  "errors": {
+    "unauthenticated": "결제를 계속하려면 로그인하세요.",
+    "checkout_failed": "결제를 시작할 수 없습니다. 다시 시도하거나 문제가 계속되면 지원팀에 문의하세요.",
+    "cancel_failed": "구독을 취소할 수 없습니다. 다시 시도하거나 지원팀에 문의하세요.",
+    "change_plan_failed": "요금제를 변경할 수 없습니다. 다시 시도하거나 지원팀에 문의하세요.",
+    "refresh_failed": "구독 상태를 새로 고칠 수 없습니다. 다시 시도하세요.",
+    "portal_failed": "고객 포털을 열 수 없습니다. 다시 시도하거나 지원팀에 문의하세요.",
+    "not_available": "결제 기능을 사용할 수 없습니다.",
+    "server_error": "서버에서 오류가 반환되었습니다. 다시 시도하세요.",
+    "no_checkout_url": "결제 URL을 받지 못했습니다. 다시 시도하세요."
+  },
   "security": {
     "title": "보안 결제 처리",
     "description": "결제 정보는 PCI DSS Level 1 인증 결제 처리업체인 Stripe에서 안전하게 처리됩니다.",

@@ -20,6 +20,12 @@
  * - super: Super admins only (see all non-technical fields)
  * - technical: System fields (shown as read-only in edit forms, admins+ only)
  * - hidden: Never exposed to client (passwords, tokens, API keys)
+ *
+ * `technical` / `hidden` are enforced by server-side adapters (`serverSideOnly`) or the
+ * database (`dbLevelSecurity`). On a direct adapter the base system fields
+ * (`BASE_FIELD_VISIBILITY`: id, status, createdAt, updatedAt, createdById, updatedById)
+ * are readable by whoever can read the document; an app field with any visibility other
+ * than `guest` makes the entity refused on a direct adapter.
  * - owner: Visible only when request.auth.uid matches one of entity.ownership.ownerFields on the document
  */
 export const VISIBILITY = {
@@ -173,6 +179,32 @@ export const BACKEND_GENERATED_FIELD_NAMES = [
   'createdById', // Server extracts from auth context
   'updatedById', // Server extracts from auth context
 ] as const;
+
+/**
+ * Default visibility of the base fields `defineEntity` adds to every entity
+ * (`baseFields` in the core schemas reads its visibilities from here). Lives in types so
+ * `hasRestrictedVisibility` (utils, a layer below schemas) tells the framework's own
+ * system fields from an app's restricted fields.
+ *
+ * On a direct adapter (neither `serverSideOnly` nor `dbLevelSecurity`) these fields are
+ * readable by whoever can read the document: `technical` / `hidden` / `admin` here hide
+ * them in the UI, they do not protect them.
+ *
+ * @category Field Families
+ * @constant BASE_FIELD_VISIBILITY
+ *
+ * @version 0.1.0
+ * @since 0.3.8
+ * @author AMBROISE PARK Consulting
+ */
+export const BASE_FIELD_VISIBILITY = {
+  status: VISIBILITY.ADMIN,
+  id: VISIBILITY.HIDDEN,
+  createdAt: VISIBILITY.TECHNICAL,
+  updatedAt: VISIBILITY.TECHNICAL,
+  createdById: VISIBILITY.TECHNICAL,
+  updatedById: VISIBILITY.TECHNICAL,
+} as const;
 
 /**
  * Supported field types for entities (runtime constants)

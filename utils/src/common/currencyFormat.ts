@@ -100,35 +100,42 @@ export function getCurrencySymbol(currencyCode: string): string {
 }
 
 /**
- * Format currency value with proper locale based on currency code
+ * Formats an amount of money in the reader's language: `locale` (the UI language) sets
+ * the number format and the symbol position, the currency its standard fraction digits
+ * (EUR, USD 2; KRW, JPY 0; BHD 3), so `15.5` EUR reads "15,50 €" in French and
+ * "€15.50" in English. Without `locale`, the currency's own locale
+ * ({@link getCurrencyLocale}): pass the UI language wherever a person reads the amount.
  *
  * @param value - Numeric value to format
  * @param currencyCode - ISO 4217 currency code
- * @param options - Additional Intl.NumberFormat options
- * @returns Formatted currency string
+ * @param options - Additional Intl.NumberFormat options (override the fraction digits)
+ * @param locale - BCP 47 locale of the reader (i18next language, e.g. 'fr', 'en')
+ * @returns Formatted currency string, '' for a missing or NaN value
  *
  * @example
  * ```typescript
- * formatCurrency(12345, 'EUR') // → "12 345 €"
- * formatCurrency(12345, 'USD') // → "$12,345"
+ * formatCurrency(15.5, 'EUR', {}, 'fr') // → "15,50 €"
+ * formatCurrency(15.5, 'EUR', {}, 'en') // → "€15.50"
+ * formatCurrency(15000, 'KRW', {}, 'en') // → "₩15,000"
+ * formatCurrency(15.5, 'EUR') // → "15,50 €" (EUR's locale, fr-FR)
  * ```
+ *
+ * @version 0.2.0
+ * @since 0.0.1
  */
 export function formatCurrency(
   value: number | null | undefined,
   currencyCode: string,
-  options: Intl.NumberFormatOptions = {}
+  options: Intl.NumberFormatOptions = {},
+  locale?: string
 ): string {
   if (value === null || value === undefined || isNaN(value)) {
     return '';
   }
 
-  const locale = getCurrencyLocale(currencyCode);
-
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat(locale ?? getCurrencyLocale(currencyCode), {
     style: 'currency',
     currency: currencyCode,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
     currencyDisplay: 'symbol',
     ...options,
   }).format(value);

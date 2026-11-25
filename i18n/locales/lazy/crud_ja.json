@@ -39,8 +39,9 @@
     "noResults": "住所が見つかりません",
     "apiUnavailable": "Google Placesを利用できません — 住所を手動で入力してください"
   },
-  "export": "エクスポート",
   "copyToClipboard": "クリップボードにコピー",
+  "copied": "コピーしました！",
+  "copyPassword": "パスワードをコピー",
   "noInquiries": "お問い合わせが見つかりませんでした。",
   "customer": "顧客",
   "noCustomer": "顧客がリンクされていません",
@@ -112,8 +113,7 @@
     "format": "有効な日付を入力してください",
     "future": "{{field}}は未来である必要があります",
     "past": "{{field}}は過去である必要があります",
-    "today": "{{field}}は今日である必要があります",
-    "calendarLoadError": "カレンダーを読み込めませんでした。日付を入力欄に入力してください。"
+    "today": "{{field}}は今日である必要があります"
   },
   "select": {
     "required": "{{field}}を選択してください",
@@ -122,6 +122,8 @@
     "max": "{{max}}個を超えるオプションを選択することはできません"
   },
   "boolean": {
+    "yes": "はい",
+    "no": "いいえ",
     "required": "{{field}}を選択する必要があります"
   },
   "fieldArray": {
@@ -337,15 +339,17 @@
     "showing": "{{from}}から{{to}}まで（全{{total}}件中）",
     "previous": "前へ",
     "next": "次へ",
-    "page": "{{page}} / {{total}}ページ",
-    "itemsPerPagePlaceholder": "ページあたりの項目数:"
+    "page": "{{page}} / {{total}}ページ"
   },
   "filters": {
-    "title": "{{entity}}を閲覧 - フィルター",
+    "title": "フィルター",
     "apply": "フィルターを適用",
     "clear": "フィルターをクリア",
     "noResults": "フィルターに一致する結果がありません",
-    "selected": "{{count}}件選択"
+    "selected_other": "{{count}}件選択",
+    "button": "フィルター",
+    "buttonActive_one": "フィルター（{{count}}件適用中）",
+    "buttonActive_other": "フィルター（{{count}}件適用中）"
   },
   "filter": {
     "placeholder": "フィルター...",
@@ -368,7 +372,8 @@
     "clear": "クリア",
     "pick": "選択",
     "time": "時間",
-    "clearAll": "すべてのフィルターをクリア"
+    "clearAll": "すべてのフィルターをクリア",
+    "contains": "含む…"
   },
   "duration": {
     "15m": "15分",
@@ -396,7 +401,11 @@
     "viewAs": "表示モード",
     "preview": "プレビュー"
   },
+  "reference": {
+    "placeholder": "{{label}}を選択"
+  },
   "price": {
+    "columnTitle": "{{label}}（$t(crud:price.vatIncluded)）",
     "vatIncluded": "税込",
     "currency": "通貨",
     "discountLabel": "割引 (%)",
@@ -422,6 +431,7 @@
     "confirmSelected_other": "選択した {{count}} 件を削除しますか？元に戻せません。"
   },
   "errors": {
+    "unsupportedFieldType": "サポートされていないフィールドタイプ：{{type}}",
     "notFound": "{{entity}}が見つかりません",
     "fetchFailed": "{{entity}}を読み込めませんでした"
   },
@@ -433,10 +443,6 @@
     "pending_one": "未保存の変更 {{count}} 件",
     "pending_other": "未保存の変更 {{count}} 件",
     "discard": "変更を破棄",
-    "selected": "{{count}} 件選択中",
-    "field": "フィールド",
-    "value": "値",
-    "apply": "選択した行に適用",
     "deleteSelected": "選択した項目を削除 ({{count}})",
     "failed_one": "{{count}} 行が保存されていません。一覧に残っています。もう一度お試しください",
     "failed_other": "{{count}} 行が保存されていません。一覧に残っています。もう一度お試しください"
@@ -462,5 +468,11 @@
     "moved": "{{name}} を {{count}} 件中 {{position}} 番目に移動しました。",
     "dropped": "{{name}} を {{count}} 件中 {{position}} 番目に置きました。",
     "cancelled": "{{name}} の移動を取り消しました。"
+  },
+  "list": {
+    "count_one": "{{names}} {{count}}件",
+    "count_other": "{{names}} {{count}}件",
+    "empty": "{{names}}はまだありません",
+    "noResultsFor": "「{{query}}」に一致する結果はありません"
   }
 }

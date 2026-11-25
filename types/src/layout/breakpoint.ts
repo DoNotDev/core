@@ -24,9 +24,10 @@ export type Breakpoint = 'mobile' | 'tablet' | 'laptop' | 'desktop';
 /**
  * Breakpoint pixel values
  *
- * Standard breakpoint thresholds used for responsive design.
- * These values match the CSS variables in layout-variables.css
- * and are used by the theme store and layout system.
+ * Standard breakpoint thresholds used for responsive design: the one source, read by
+ * the theme store and layout system. CSS has no breakpoint tokens (it cannot read a
+ * variable in `@media`): each media query repeats the literal with a comment naming
+ * `BREAKPOINT_THRESHOLDS`.
  */
 /**
  * Breakpoint threshold values for calculation

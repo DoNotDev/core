@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { afterAll, beforeAll, describe, it, expect } from 'vitest';
 
 import {
   compactToISOString,
@@ -134,6 +134,16 @@ describe('getWeekFromISOString', () => {
 });
 
 describe('formatDate', () => {
+  // The app's time zone (i18n.timeZone, default Europe/Paris): formatDate reads it
+  const previousConfig = globalThis._DNDEV_CONFIG_;
+  beforeAll(() => {
+    // why: only the i18n key getAppTimeZone reads
+    globalThis._DNDEV_CONFIG_ = { i18n: { timeZone: 'UTC' } } as unknown as typeof globalThis._DNDEV_CONFIG_;
+  });
+  afterAll(() => {
+    globalThis._DNDEV_CONFIG_ = previousConfig;
+  });
+
   it('formats with default long preset', () => {
     const result = formatDate('2025-05-05T00:00:00.000Z', 'en');
     expect(result).toContain('2025');
@@ -141,11 +151,11 @@ describe('formatDate', () => {
   });
 
   it('returns empty string for null', () => {
-    expect(formatDate(null)).toBe('');
+    expect(formatDate(null, 'en')).toBe('');
   });
 
   it('returns empty string for invalid date', () => {
-    expect(formatDate('not-a-date')).toBe('');
+    expect(formatDate('not-a-date', 'en')).toBe('');
   });
 
   it('handles Date objects', () => {

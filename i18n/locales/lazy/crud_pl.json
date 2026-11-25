@@ -40,7 +40,6 @@
     "noResults": "Nie znaleziono adresów",
     "apiUnavailable": "Google Places jest niedostępne — wpisz adres ręcznie"
   },
-  "export": "Eksportuj",
   "noInquiries": "Nie znaleziono zapytań.",
   "customer": "Klient",
   "noCustomer": "Brak powiązanego klienta",
@@ -69,13 +68,6 @@
     "unauthorized": "Brak autoryzacji",
     "forbidden": "Dostęp zabroniony",
     "serverError": "Wystąpił błąd serwera",
-    "notFound": {
-      "title": "Nie znaleziono strony",
-      "description": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
-      "suggestions": "Być może szukasz:",
-      "goHome": "Strona główna",
-      "goBack": "Wróć"
-    },
     "bulkPartialError_one": "Nie udało się zapisać {{count}} wiersza",
     "bulkPartialError_few": "Nie udało się zapisać {{count}} wierszy",
     "bulkPartialError_many": "Nie udało się zapisać {{count}} wierszy",
@@ -86,15 +78,22 @@
     "showing": "Wyświetlanie {{from}}–{{to}} z {{total}} wpisów",
     "previous": "Poprzednia",
     "next": "Następna",
-    "page": "Strona {{page}} z {{total}}",
-    "itemsPerPagePlaceholder": "Elementów na stronę:"
+    "page": "Strona {{page}} z {{total}}"
   },
   "filters": {
-    "title": "Przeglądaj: {{entity}} — filtry",
+    "title": "Filtry",
     "apply": "Zastosuj filtry",
     "clear": "Wyczyść filtry",
     "noResults": "Żadne wyniki nie pasują do filtrów",
-    "selected": "Wybrano: {{count}}"
+    "selected_one": "Wybrano: {{count}}",
+    "selected_few": "Wybrano: {{count}}",
+    "selected_many": "Wybrano: {{count}}",
+    "selected_other": "Wybrano: {{count}}",
+    "button": "Filtry",
+    "buttonActive_one": "Filtry (aktywne: {{count}})",
+    "buttonActive_few": "Filtry (aktywne: {{count}})",
+    "buttonActive_many": "Filtry (aktywne: {{count}})",
+    "buttonActive_other": "Filtry (aktywne: {{count}})"
   },
   "filter": {
     "placeholder": "Filtruj...",
@@ -117,7 +116,8 @@
     "clear": "Wyczyść",
     "pick": "Wybierz",
     "time": "Godzina",
-    "clearAll": "Wyczyść wszystkie filtry"
+    "clearAll": "Wyczyść wszystkie filtry",
+    "contains": "Zawiera…"
   },
   "duration": {
     "15m": "15 min",
@@ -137,104 +137,11 @@
   "results": {
     "title": {
       "fetching": "Pobieranie...",
-      "count_one": "Znaleziono {{count}} wystąpienie",
-      "count_few": "Znaleziono {{count}} wystąpienia",
-      "count_many": "Znaleziono {{count}} wystąpień",
-      "count_other": "Znaleziono {{count}} wystąpienia"
+      "count_one": "Wyniki: {{count}}",
+      "count_few": "Wyniki: {{count}}",
+      "count_many": "Wyniki: {{count}}",
+      "count_other": "Wyniki: {{count}}"
     }
-  },
-  "settings": {
-    "title": "Ustawienia",
-    "theme": "Motyw",
-    "language": "Język",
-    "clearCache": {
-      "title": "Wyczyść pamięć podręczną",
-      "localStorage": "Local Storage",
-      "sessionStorage": "Session Storage",
-      "applicationCache": "Pamięć podręczna aplikacji",
-      "serviceWorker": "Service Worker",
-      "cookies": "Pliki cookie",
-      "indexedDB": "IndexedDB",
-      "webSQL": "WebSQL",
-      "memoryCache": "Pamięć podręczna w pamięci",
-      "button": "Wyczyść pamięć podręczną",
-      "clearing": "Czyszczenie...",
-      "error": "Błąd podczas czyszczenia pamięci podręcznej",
-      "success": "Pamięć podręczna wyczyszczona pomyślnie: {{items}}",
-      "noItemsCleared": "Nie wyczyszczono żadnych elementów pamięci podręcznej"
-    }
-  },
-  "common": {
-    "app": {
-      "name": "Aplikacja DoNotDev"
-    },
-    "defaultTitle": "Strona",
-    "defaultDescription": "Opis strony",
-    "locale": "pl_PL",
-    "themeSelector": {
-      "changeTheme": "Zmień motyw",
-      "tooltipWithTransition": "Zmień motyw: {{current}} → {{next}}",
-      "tooltipWithCurrent": "Zmień motyw: {{current}}",
-      "tooltipWithNext": "Zmień motyw: przełącz na {{next}}"
-    },
-    "languageSelector": {
-      "changeLanguage": "Zmień język"
-    }
-  },
-  "footer": {
-    "landing": {
-      "company": {
-        "defaultName": "Firma",
-        "description": "Twórz lepsze produkty szybciej dzięki naszej kompleksowej platformie deweloperskiej."
-      },
-      "social": {
-        "twitter": "Twitter",
-        "github": "GitHub",
-        "discord": "Discord"
-      },
-      "sections": {
-        "product": {
-          "title": "Produkt",
-          "features": "Funkcje",
-          "pricing": "Cennik",
-          "docs": "Dokumentacja",
-          "updates": "Aktualizacje"
-        },
-        "support": {
-          "title": "Wsparcie",
-          "help": "Pomoc",
-          "contact": "Kontakt",
-          "status": "Status",
-          "community": "Społeczność"
-        }
-      }
-    },
-    "legal": {
-      "allRightsReserved": "Wszelkie prawa zastrzeżone.",
-      "cookieSettings": "Ustawienia plików cookie",
-      "legalNotice": "Nota prawna",
-      "privacyPolicy": "Polityka prywatności",
-      "termsOfService": "Regulamin",
-      "builtWith": "Stworzone z ❤️ & DoNotDev ©",
-      "collapse": "Zwiń stopkę",
-      "expand": "Rozwiń stopkę"
-    }
-  },
-  "search": {
-    "ariaLabel": "Szukaj",
-    "label": "Szukaj"
-  },
-  "goTo": {
-    "ariaLabel": "Przejdź do strony",
-    "label": "Przejdź do"
-  },
-  "globalGoTo": {
-    "placeholder": "Filtruj trasy lub przejdź do strony...",
-    "noResults": "Nie znaleziono tras.",
-    "favorites": "Ulubione",
-    "allPages": "Wszystkie strony",
-    "addFavorite": "Dodaj do ulubionych",
-    "removeFavorite": "Usuń z ulubionych"
   },
   "favorites": {
     "title": "Ulubione",
@@ -250,22 +157,6 @@
   "copyToClipboard": "Kopiuj do schowka",
   "copied": "Skopiowano!",
   "copyPassword": "Kopiuj hasło",
-  "table": {
-    "searchPlaceholder": "Szukaj...",
-    "filters": "Filtry",
-    "selectAllRows": "Zaznacz wszystkie wiersze",
-    "selectRow": "Zaznacz wiersz {{index}}",
-    "showingResults": "Wyświetlanie {{from}}–{{to}} z {{total}} wyników",
-    "previous": "Poprzednia",
-    "next": "Następna",
-    "page": "Strona {{current}} z {{total}}"
-  },
-  "language": {
-    "selectLanguage": "Wybierz język",
-    "searchLanguages": "Szukaj języków...",
-    "noLanguagesFound": "Nie znaleziono języków",
-    "changeLanguage": "Zmień język"
-  },
   "draft": {
     "restored": "Przywrócono wersję roboczą",
     "restoredDescription": "Niezapisane zmiany zostały odzyskane",
@@ -293,44 +184,6 @@
     "saveFailed": "Nie udało się zapisać. Spróbuj ponownie.",
     "uploadFailed": "Nie udało się przesłać pliku. Spróbuj ponownie.",
     "reuploadFiles": "Niektóre pliki nie zostały przesłane. Prześlij je ponownie, a następnie zapisz."
-  },
-  "navigation": {
-    "more": "Więcej",
-    "home": "Strona główna"
-  },
-  "pwa": {
-    "update": {
-      "title": "Dostępna aktualizacja",
-      "description": "Nowa wersja jest gotowa. Odśwież, aby zaktualizować.",
-      "button": "Zaktualizuj",
-      "altText": "Zaktualizuj aplikację"
-    }
-  },
-  "code": {
-    "copyCode": "Kopiuj kod",
-    "copied": "Skopiowano!",
-    "copyCodeToClipboard": "Kopiuj kod do schowka"
-  },
-  "video": {
-    "clickToWatch": "Kliknij, aby obejrzeć wideo",
-    "watchVideo": "Obejrzyj wideo"
-  },
-  "inspector": {
-    "pageSource": "Źródło strony",
-    "inspectPageSourceCode": "Przeglądaj kod źródłowy strony"
-  },
-  "routeError": {
-    "title": "Coś poszło nie tak",
-    "description": "Podczas ładowania tej strony wystąpił błąd.",
-    "dataSafe": "Spokojnie, Twoje dane są bezpieczne.",
-    "errorId": "Identyfikator błędu",
-    "errorMessage": "Komunikat błędu",
-    "copied": "Skopiowano",
-    "copyDetails": "Kopiuj szczegóły",
-    "tryAgain": "Spróbuj ponownie",
-    "goHome": "Strona główna",
-    "goBack": "Wróć",
-    "contactSupport": "Jeśli problem nie ustąpi, skontaktuj się z pomocą techniczną."
   },
   "fields": {
     "array": "Tablica",
@@ -394,8 +247,7 @@
     "format": "Wprowadź prawidłową datę",
     "future": "Data w polu {{field}} musi być w przyszłości",
     "past": "Data w polu {{field}} musi być w przeszłości",
-    "today": "Data w polu {{field}} musi być dzisiejsza",
-    "calendarLoadError": "Nie udało się załadować kalendarza. Wpisz datę w polu."
+    "today": "Data w polu {{field}} musi być dzisiejsza"
   },
   "select": {
     "required": "Wybierz wartość w polu {{field}}",
@@ -404,6 +256,8 @@
     "max": "Wybierz nie więcej niż {{max}} opcji"
   },
   "boolean": {
+    "yes": "Tak",
+    "no": "Nie",
     "required": "Pole {{field}} musi być zaznaczone"
   },
   "fieldArray": {
@@ -554,12 +408,7 @@
     "color": "Wprowadź prawidłowy kod koloru"
   },
   "errors": {
-    "fieldUpdate": "Nie udało się zaktualizować pola {{field}}",
-    "hiddenField": "Błąd renderowania ukrytego pola {{field}}",
     "unsupportedFieldType": "Nieobsługiwany typ pola: {{type}}",
-    "fieldRendering": "Błąd renderowania pola {{field}}",
-    "fallingBackToTextField": "Użyto pola tekstowego dla nieobsługiwanego typu {{type}}",
-    "invalidFieldProps": "Nieprawidłowa konfiguracja pola {{field}}",
     "notFound": "Nie znaleziono: {{entity}}",
     "fetchFailed": "Nie udało się wczytać: {{entity}}"
   },
@@ -567,7 +416,11 @@
     "viewAs": "Wyświetl jako",
     "preview": "Podgląd"
   },
+  "reference": {
+    "placeholder": "Wybierz: {{label}}"
+  },
   "price": {
+    "columnTitle": "{{label}} ($t(crud:price.vatIncluded))",
     "vatIncluded": "z VAT",
     "currency": "Waluta",
     "discountLabel": "Rabat (%)",
@@ -605,10 +458,6 @@
     "pending_many": "{{count}} niezapisanych zmian",
     "pending_other": "{{count}} niezapisanej zmiany",
     "discard": "Odrzuć zmiany",
-    "selected": "Wybrano: {{count}}",
-    "field": "Pole",
-    "value": "Wartość",
-    "apply": "Zastosuj do zaznaczonych",
     "deleteSelected": "Usuń zaznaczone ({{count}})",
     "failed_one": "Nie zapisano {{count}} wiersza: pozostaje na liście, spróbuj ponownie",
     "failed_few": "Nie zapisano {{count}} wierszy: pozostają na liście, spróbuj ponownie",
@@ -638,5 +487,13 @@
     "moved": "{{name}} przeniesiono na pozycję {{position}} z {{count}}.",
     "dropped": "{{name}} upuszczono na pozycji {{position}} z {{count}}.",
     "cancelled": "Anulowano przenoszenie {{name}}."
+  },
+  "list": {
+    "empty": "Brak elementów",
+    "noResultsFor": "Brak wyników dla „{{query}}”",
+    "count_one": "{{names}}: {{count}}",
+    "count_few": "{{names}}: {{count}}",
+    "count_many": "{{names}}: {{count}}",
+    "count_other": "{{names}}: {{count}}"
   }
 }

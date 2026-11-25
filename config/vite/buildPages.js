@@ -6,7 +6,8 @@
  *   (`SPA_SHELL_FILE`); `dist/index.html` becomes the prerendered home page.
  * - One page per public static route and language (`/about` → `about.html`, `/en/about`
  *   → `en/about.html`): its route identity (`routeSeo` / `routeHeadTags`, the functions
- *   AutoMetaTags renders with), site tags and hreflang.
+ *   AutoMetaTags renders with), site tags (`siteHeadTags`: og:locale in the page language)
+ *   and hreflang.
  * - One page per public record of each entity route and language (`listPublicPages`, the
  *   Next records, read with the entity's read schema `entityReadSchemas`;
  *   `entityRecordSeo`, the Next entity page identity, with its BreadcrumbList).
@@ -22,7 +23,7 @@
  * runner (TypeScript sources in a workspace, built packages from node_modules), under the
  * `react-server` condition the Next server graph uses.
  *
- * @version 0.2.0
+ * @version 0.3.0
  * @since 0.3.2
  * @author AMBROISE PARK Consulting
  */
@@ -151,7 +152,8 @@ function onceReader(crud) {
 /**
  * The prerendered pages: static routes and entity records, one per language (default
  * language at the root, others under `/<lang>`). Each page: its identity tags, the site
- * tags (canonical, og:url, og:site_name, hreflang) and the embedded `PrerenderedHead`.
+ * tags (canonical, og:url, og:site_name, og:locale and og:locale:alternate, hreflang) and
+ * the embedded `PrerenderedHead`.
  * Record URLs a static route serves (the static page wins, as on Next) and values no
  * file name can hold are skipped.
  *
@@ -219,6 +221,7 @@ export async function buildPrerenderedPages({
         ...core.siteHeadTags({
           url: baseUrl ? url : null,
           siteName,
+          language,
           alternates,
           defaultLanguage: routing.defaultLanguage,
         }),
@@ -514,6 +517,7 @@ export async function writeBuildPages({
       languages: i18n.supportedLanguages,
       eager: i18n.eagerNamespaces,
       fallback: i18n.fallbackLanguage,
+      timeZone: i18n.timeZone,
       content: i18n.content,
     },
   };

@@ -147,7 +147,8 @@
     "select": "Sélectionner",
     "upload": "Télécharger",
     "download": "Télécharger",
-    "close": "Fermer"
+    "close": "Fermer",
+    "open": "Ouvrir"
   },
   "guard": {
     "signInRequired": "Veuillez vous connecter pour accéder à cette page"
@@ -182,14 +183,20 @@
     "showing": "Affichage de {{from}} à {{to}} sur {{total}} entrées",
     "previous": "Précédent",
     "next": "Suivant",
-    "page": "Page {{page}} sur {{total}}"
+    "page": "Page {{page}} sur {{total}}",
+    "itemsPerPage": "Éléments par page :",
+    "all": "Tout",
+    "pageNumber": "Page {{page}}",
+    "label": "Pagination"
   },
   "filters": {
     "title": "Filtres",
     "apply": "Appliquer les filtres",
     "clear": "Effacer les filtres",
     "noResults": "Aucun résultat ne correspond à vos filtres",
-    "selected": "{{count}} sélectionné"
+    "selected_one": "{{count}} sélectionné",
+    "selected_many": "{{count}} sélectionnés",
+    "selected_other": "{{count}} sélectionnés"
   },
   "settings": {
     "title": "Paramètres",
@@ -305,13 +312,21 @@
     "showingResults": "Affichage de {{from}} à {{to}} sur {{total}} résultats",
     "previous": "Précédent",
     "next": "Suivant",
-    "page": "Page {{current}} sur {{total}}"
+    "page": "Page {{current}} sur {{total}}",
+    "export": "Exporter",
+    "selected": "{{count}} sélectionné(s)",
+    "field": "Champ",
+    "value": "Valeur",
+    "apply": "Appliquer à la sélection",
+    "clearSelection": "Tout désélectionner",
+    "empty": "Aucune donnée"
   },
   "language": {
     "selectLanguage": "Sélectionner la langue",
     "searchLanguages": "Rechercher une langue...",
     "noLanguagesFound": "Aucune langue trouvée",
-    "changeLanguage": "Changer la langue"
+    "changeLanguage": "Changer la langue",
+    "selector": "Sélecteur de langue"
   },
   "form": {
     "submit": "Soumettre",
@@ -326,7 +341,14 @@
   "navigation": {
     "more": "Plus",
     "home": "Accueil",
-    "menu": "Navigation"
+    "menu": "Navigation",
+    "main": "Menu principal",
+    "site": "Navigation du site",
+    "resizeSidebar": "Redimensionner la barre latérale. Double-clic ou Entrée pour la replier ou la déplier. Début pour la replier, Fin pour l'ajuster au contenu.",
+    "open": "Ouvrir la navigation",
+    "breadcrumb": "Fil d'Ariane",
+    "headerMenu": "Menu",
+    "loadingProgress": "Progression du chargement de la page"
   },
   "pwa": {
     "update": {
@@ -368,11 +390,14 @@
   "code": {
     "copyCode": "Copier le code",
     "copied": "Copié !",
-    "copyCodeToClipboard": "Copier le code dans le presse-papiers"
+    "copyCodeToClipboard": "Copier le code dans le presse-papiers",
+    "loading": "Chargement du code"
   },
   "video": {
     "clickToWatch": "Cliquez pour regarder la vidéo",
-    "watchVideo": "Regarder la vidéo"
+    "watchVideo": "Regarder la vidéo",
+    "title": "Vidéo",
+    "loading": "Chargement de la vidéo"
   },
   "inspector": {
     "pageSource": "Code source de la page",
@@ -382,7 +407,9 @@
     "navigation": "Navigation",
     "codeInspector": "Inspecteur de code",
     "debugPanel": "Panneau de débogage",
-    "close": "Fermer le panneau"
+    "close": "Fermer le panneau",
+    "title": "Panneau",
+    "content": "Contenu du panneau"
   },
   "routeError": {
     "title": "Une erreur s'est produite",
@@ -686,6 +713,128 @@
     "slide": "Diapositive {{current}} sur {{total}}",
     "goToSlide": "Aller à la diapositive {{index}}",
     "empty": "Aucun élément à afficher",
-    "loading": "Chargement du carrousel"
+    "loading": "Chargement du carrousel",
+    "roleDescription": "carrousel",
+    "slideRoleDescription": "diapositive"
+  },
+  "datePicker": {
+    "openCalendar": "Ouvrir le calendrier",
+    "calendarLoadError": "Le calendrier n'a pas pu se charger. Veuillez saisir la date dans le champ.",
+    "date": "Date",
+    "dateTime": "Date et heure"
+  },
+  "dialog": {
+    "title": "Boîte de dialogue",
+    "content": "Contenu de la boîte de dialogue"
+  },
+  "toast": {
+    "region": "Notifications ({hotkey})",
+    "label": "Notification"
+  },
+  "command": {
+    "title": "Palette de commandes",
+    "description": "Recherchez et naviguez avec les raccourcis clavier",
+    "item": "Commande"
+  },
+  "combobox": {
+    "createOption": "Créer « {{value}} »"
+  },
+  "copiedToClipboard": "Copié dans le presse-papiers",
+  "infiniteScroll": {
+    "loadingMore": "Chargement de la suite...",
+    "scrollForMore": "Faites défiler pour charger la suite..."
+  },
+  "range": {
+    "min": "Min",
+    "max": "Max"
+  },
+  "password": {
+    "show": "Afficher le mot de passe",
+    "hide": "Masquer le mot de passe"
+  },
+  "pin": {
+    "show": "Afficher le code",
+    "hide": "Masquer le code"
+  },
+  "stepper": {
+    "label": "Étapes",
+    "goToStep": "Aller à l'étape {{number}} : {{title}}",
+    "stepOf": "Étape {{current}} sur {{total}}"
+  },
+  "colorPicker": {
+    "label": "Sélecteur de couleur",
+    "custom": "Personnalisée",
+    "customColor": "Couleur personnalisée",
+    "colors": {
+      "black": "Noir",
+      "white": "Blanc",
+      "gray": "Gris",
+      "lightGray": "Gris clair",
+      "red": "Rouge",
+      "orange": "Orange",
+      "amber": "Ambre",
+      "yellow": "Jaune",
+      "lime": "Citron vert",
+      "green": "Vert",
+      "teal": "Bleu sarcelle",
+      "cyan": "Cyan",
+      "blue": "Bleu",
+      "purple": "Violet",
+      "pink": "Rose",
+      "rose": "Framboise",
+      "deepPurple": "Violet foncé",
+      "indigo": "Indigo",
+      "lightBlue": "Bleu clair",
+      "lightGreen": "Vert clair",
+      "deepOrange": "Orange foncé",
+      "pastelRose": "Framboise pastel",
+      "pastelPink": "Rose pastel",
+      "pastelPurple": "Violet pastel",
+      "pastelIndigo": "Indigo pastel",
+      "pastelBlue": "Bleu pastel",
+      "pastelCyan": "Cyan pastel",
+      "pastelTeal": "Bleu sarcelle pastel",
+      "pastelGreen": "Vert pastel",
+      "pastelLime": "Citron vert pastel",
+      "pastelYellow": "Jaune pastel",
+      "pastelOrange": "Orange pastel",
+      "pastelRed": "Rouge pastel",
+      "pastelGray": "Gris pastel",
+      "pastelStone": "Pierre pastel",
+      "pastelFuchsia": "Fuchsia pastel",
+      "pastelSky": "Bleu ciel pastel"
+    }
+  },
+  "dropdownMenu": {
+    "submenu": "Sous-menu",
+    "item": "Élément de menu"
+  },
+  "skipLink": {
+    "label": "Liens d'évitement"
+  },
+  "crawl": {
+    "label": "Texte défilant animé",
+    "start": "Lancer l'introduction animée",
+    "resume": "Reprendre l'animation"
+  },
+  "stackedCards": {
+    "label": "Cartes empilées"
+  },
+  "jsonViewer": {
+    "expandAll": "Tout déplier",
+    "collapseAll": "Tout replier",
+    "copy": "Copier"
+  },
+  "techStack": {
+    "label": "Technologies utilisées"
+  },
+  "callToAction": {
+    "label": "Appel à l’action"
+  },
+  "featureFallback": {
+    "title": "{{featureName}} indisponible",
+    "message": "{{featureName}} n’est pas disponible",
+    "action": "{{featureName}} (indisponible)",
+    "help": "Cette fonctionnalité nécessite que {{featureName}} soit configuré."
   }
 }

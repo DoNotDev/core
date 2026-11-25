@@ -1,4 +1,15 @@
 {
+  "errors": {
+    "unauthenticated": "Connectez-vous pour poursuivre le paiement.",
+    "checkout_failed": "Impossible de lancer le paiement. Réessayez ou contactez le support si le problème persiste.",
+    "cancel_failed": "Impossible d'annuler l'abonnement. Réessayez ou contactez le support.",
+    "change_plan_failed": "Impossible de changer d'offre. Réessayez ou contactez le support.",
+    "refresh_failed": "Impossible d'actualiser le statut de l'abonnement. Réessayez.",
+    "portal_failed": "Impossible d'ouvrir l'espace client. Réessayez ou contactez le support.",
+    "not_available": "La facturation n'est pas disponible.",
+    "server_error": "Le serveur a renvoyé une erreur. Réessayez.",
+    "no_checkout_url": "Aucune URL de paiement reçue. Réessayez."
+  },
   "security": {
     "title": "Traitement de Paiement Sécurisé",
     "description": "Vos informations de paiement sont traitées de manière sécurisée par Stripe, un processeur de paiement certifié PCI DSS Level 1.",

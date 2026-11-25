@@ -1,6 +1,12 @@
 {
   "signIn": "Log ind",
   "auth": {
+    "signIn": "Log ind",
+    "loading": "Henter...",
+    "signOut": "Log ud",
+    "deleteAccount": {
+      "label": "Slet konto"
+    },
     "userMenu": "Brugermenu",
     "profile": "Profil",
     "title": "Godkendelse"
@@ -141,7 +147,8 @@
     "select": "Vælg",
     "upload": "Upload",
     "download": "Hent",
-    "close": "Luk"
+    "close": "Luk",
+    "open": "Åbn"
   },
   "guard": {
     "signInRequired": "Log ind for at få adgang til denne side"
@@ -176,14 +183,19 @@
     "showing": "Viser {{from}}–{{to}} af {{total}}",
     "previous": "Forrige",
     "next": "Næste",
-    "page": "Side {{page}} af {{total}}"
+    "page": "Side {{page}} af {{total}}",
+    "itemsPerPage": "Pr. side:",
+    "all": "Alle",
+    "pageNumber": "Side {{page}}",
+    "label": "Sidenavigation"
   },
   "filters": {
     "title": "Filtre",
     "apply": "Brug filtre",
     "clear": "Ryd filtre",
     "noResults": "Ingen resultater matcher",
-    "selected": "{{count}} valgt"
+    "selected_one": "{{count}} valgt",
+    "selected_other": "{{count}} valgt"
   },
   "settings": {
     "title": "Indstillinger",
@@ -273,10 +285,18 @@
   "globalGoTo": {
     "placeholder": "Søg i sider eller gå til...",
     "noResults": "Ingen resultater fundet.",
+    "empty": "Ingen sider tilgængelige.",
     "favorites": "Favoritter",
+    "recent": "Seneste",
     "allPages": "Alle sider",
     "addFavorite": "Tilføj til favoritter",
     "removeFavorite": "Fjern fra favoritter",
+    "favorite": "Tilføj til favoritter",
+    "unfavorite": "Fjern fra favoritter",
+    "shortcutOpen": "Åbn",
+    "shortcutNavigate": "Naviger",
+    "shortcutSelect": "Vælg",
+    "shortcutClose": "Luk",
     "searchPlaceholder": "Søg i sider...",
     "ariaLabel": "Søg i navigation"
   },
@@ -291,13 +311,21 @@
     "showingResults": "Viser {{from}}–{{to}} af {{total}}",
     "previous": "Forrige",
     "next": "Næste",
-    "page": "Side {{current}} af {{total}}"
+    "page": "Side {{current}} af {{total}}",
+    "export": "Eksporter",
+    "selected": "{{count}} valgt",
+    "field": "Felt",
+    "value": "Værdi",
+    "apply": "Anvend på valgte",
+    "clearSelection": "Ryd markering",
+    "empty": "Ingen data"
   },
   "language": {
     "selectLanguage": "Vælg sprog",
     "searchLanguages": "Søg sprog...",
     "noLanguagesFound": "Ingen sprog fundet",
-    "changeLanguage": "Skift sprog"
+    "changeLanguage": "Skift sprog",
+    "selector": "Sprogvælger"
   },
   "form": {
     "submit": "Send",
@@ -312,7 +340,14 @@
   "navigation": {
     "more": "Mere",
     "home": "Forside",
-    "menu": "Navigation"
+    "menu": "Navigation",
+    "main": "Hovedmenu",
+    "site": "Webstedsnavigation",
+    "resizeSidebar": "Tilpas sidepanelets bredde. Dobbeltklik eller Enter for at folde ind eller ud. Home for at folde ind, End for at tilpasse til indholdet.",
+    "open": "Åbn navigation",
+    "breadcrumb": "Brødkrummesti",
+    "headerMenu": "Menu",
+    "loadingProgress": "Indlæsning af siden"
   },
   "pwa": {
     "update": {
@@ -354,11 +389,14 @@
   "code": {
     "copyCode": "Kopier kode",
     "copied": "Kopieret!",
-    "copyCodeToClipboard": "Kopier kode"
+    "copyCodeToClipboard": "Kopier kode",
+    "loading": "Indlæser kode"
   },
   "video": {
     "clickToWatch": "Klik for at se",
-    "watchVideo": "Se video"
+    "watchVideo": "Se video",
+    "title": "Video",
+    "loading": "Henter video"
   },
   "inspector": {
     "pageSource": "Sidekilde",
@@ -368,7 +406,9 @@
     "navigation": "Navigation",
     "codeInspector": "Kodeinspector",
     "debugPanel": "Fejlsøgningspanel",
-    "close": "Luk panel"
+    "close": "Luk panel",
+    "title": "Panel",
+    "content": "Panelets indhold"
   },
   "routeError": {
     "title": "Noget gik galt",
@@ -672,6 +712,128 @@
     "slide": "Slide {{current}} af {{total}}",
     "goToSlide": "Gå til slide {{index}}",
     "empty": "Ingen elementer at vise",
-    "loading": "Indlæser karrusel"
+    "loading": "Indlæser karrusel",
+    "roleDescription": "karrusel",
+    "slideRoleDescription": "dias"
+  },
+  "datePicker": {
+    "openCalendar": "Åbn kalender",
+    "calendarLoadError": "Kalenderen kunne ikke indlæses. Indtast datoen i feltet.",
+    "date": "Dato",
+    "dateTime": "Dato og klokkeslæt"
+  },
+  "dialog": {
+    "title": "Dialog",
+    "content": "Dialogindhold"
+  },
+  "toast": {
+    "region": "Notifikationer ({hotkey})",
+    "label": "Notifikation"
+  },
+  "command": {
+    "title": "Kommandopalet",
+    "description": "Søg og naviger med tastaturgenveje",
+    "item": "Kommando"
+  },
+  "combobox": {
+    "createOption": "Opret »{{value}}«"
+  },
+  "copiedToClipboard": "Kopieret til udklipsholderen",
+  "infiniteScroll": {
+    "loadingMore": "Henter flere...",
+    "scrollForMore": "Rul ned for at hente flere..."
+  },
+  "range": {
+    "min": "Min.",
+    "max": "Maks."
+  },
+  "password": {
+    "show": "Vis adgangskode",
+    "hide": "Skjul adgangskode"
+  },
+  "pin": {
+    "show": "Vis pinkode",
+    "hide": "Skjul pinkode"
+  },
+  "stepper": {
+    "label": "Trin",
+    "goToStep": "Gå til trin {{number}}: {{title}}",
+    "stepOf": "Trin {{current}} af {{total}}"
+  },
+  "colorPicker": {
+    "label": "Farvevælger",
+    "custom": "Tilpasset",
+    "customColor": "Tilpasset farve",
+    "colors": {
+      "black": "Sort",
+      "white": "Hvid",
+      "gray": "Grå",
+      "lightGray": "Lysegrå",
+      "red": "Rød",
+      "orange": "Orange",
+      "amber": "Rav",
+      "yellow": "Gul",
+      "lime": "Lime",
+      "green": "Grøn",
+      "teal": "Blågrøn",
+      "cyan": "Cyan",
+      "blue": "Blå",
+      "purple": "Lilla",
+      "pink": "Pink",
+      "rose": "Hindbær",
+      "deepPurple": "Mørkelilla",
+      "indigo": "Indigo",
+      "lightBlue": "Lyseblå",
+      "lightGreen": "Lysegrøn",
+      "deepOrange": "Mørkeorange",
+      "pastelRose": "Pastelhindbær",
+      "pastelPink": "Pastelpink",
+      "pastelPurple": "Pastellilla",
+      "pastelIndigo": "Pastelindigo",
+      "pastelBlue": "Pastelblå",
+      "pastelCyan": "Pastelcyan",
+      "pastelTeal": "Pastelblågrøn",
+      "pastelGreen": "Pastelgrøn",
+      "pastelLime": "Pastellime",
+      "pastelYellow": "Pastelgul",
+      "pastelOrange": "Pastelorange",
+      "pastelRed": "Pastelrød",
+      "pastelGray": "Pastelgrå",
+      "pastelStone": "Pastelstengrå",
+      "pastelFuchsia": "Pastelfuchsia",
+      "pastelSky": "Pastelhimmelblå"
+    }
+  },
+  "dropdownMenu": {
+    "submenu": "Undermenu",
+    "item": "Menupunkt"
+  },
+  "skipLink": {
+    "label": "Spring over-links"
+  },
+  "crawl": {
+    "label": "Animeret rulletekst",
+    "start": "Start den animerede introduktion",
+    "resume": "Genoptag animationen"
+  },
+  "stackedCards": {
+    "label": "Stablede kort"
+  },
+  "jsonViewer": {
+    "expandAll": "Udvid alle",
+    "collapseAll": "Fold alle sammen",
+    "copy": "Kopiér"
+  },
+  "techStack": {
+    "label": "Teknologistak"
+  },
+  "callToAction": {
+    "label": "Opfordring til handling"
+  },
+  "featureFallback": {
+    "title": "{{featureName}} er ikke tilgængelig",
+    "message": "{{featureName}} er ikke tilgængelig",
+    "action": "{{featureName}} (ikke tilgængelig)",
+    "help": "Denne funktion kræver, at {{featureName}} er konfigureret."
   }
 }

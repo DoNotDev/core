@@ -28,6 +28,7 @@ import { createLogger } from '../utils/debugLog.js';
 import { detectMissingOptionalDeps } from '../utils/detectOptionalDeps.js';
 import { PathResolver } from '../utils/PathResolver.js';
 import { isDeployBuild } from '../utils/SEOGenerator.js';
+import { resolveAppTimeZone } from '../utils/timeZone.js';
 
 /**
  * Module-level cache for Next.js config.
@@ -137,6 +138,14 @@ function defineNextConfig(userOptions = {}) {
     reactCompiler,
   } = normalized;
 
+  // The app's time zone (every date the app shows is in it): the app's i18n.timeZone,
+  // validated, else the framework default (DEFAULT_APP_TIME_ZONE). Carried by discovery
+  // to the generated i18n config, so getAppTimeZone() always has a value.
+  const appI18nOptions = {
+    ...i18nOptions,
+    timeZone: resolveAppTimeZone(i18nOptions.timeZone),
+  };
+
   const logger = createLogger('next-config', debug, verbose);
 
   // CRITICAL: Resolve appRoot BEFORE creating handlers
@@ -202,7 +211,7 @@ function defineNextConfig(userOptions = {}) {
       defaultNamespace: appConfig?.seo?.defaultNamespace,
     },
     themeOptions,
-    i18nOptions,
+    i18nOptions: appI18nOptions,
     assetOptions,
     // Same cache lifetime for the sitemap / llms.txt routes as for the pages
     seoOptions: { ...seoOptions, revalidate: appConfig?.revalidate, trailingSlash },
