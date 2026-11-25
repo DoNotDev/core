@@ -652,5 +652,26 @@
     "reviewCookies": "Cookies beheren",
     "retry": "Opnieuw proberen",
     "helpText": "Als je denkt dat dit een fout is, neem dan contact op met support of vernieuw de pagina."
+  },
+  "gallery": {
+    "label": "Afbeeldingengalerij",
+    "thumbnails": "Miniaturen van afbeeldingen",
+    "previous": "Vorige afbeelding",
+    "next": "Volgende afbeelding",
+    "viewImage": "Afbeelding {{index}} bekijken",
+    "image": "Afbeelding",
+    "imageOf": "{{prefix}} {{index}} van {{total}}",
+    "empty": "Geen afbeeldingen"
+  },
+  "carousel": {
+    "label": "Carrousel",
+    "previous": "Vorige dia",
+    "next": "Volgende dia",
+    "play": "Carrousel afspelen",
+    "pause": "Carrousel pauzeren",
+    "slide": "Dia {{current}} van {{total}}",
+    "goToSlide": "Ga naar dia {{index}}",
+    "empty": "Geen items om weer te geven",
+    "loading": "Carrousel laden"
   }
 }

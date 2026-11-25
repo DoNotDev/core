@@ -652,5 +652,26 @@
     "reviewCookies": "Cookies verwalten",
     "retry": "Erneut versuchen",
     "helpText": "Falls Sie einen Fehler vermuten, wenden Sie sich an den Support oder laden Sie die Seite neu."
+  },
+  "gallery": {
+    "label": "Bildergalerie",
+    "thumbnails": "Bildminiaturen",
+    "previous": "Vorheriges Bild",
+    "next": "Nächstes Bild",
+    "viewImage": "Bild {{index}} anzeigen",
+    "image": "Bild",
+    "imageOf": "{{prefix}} {{index}} von {{total}}",
+    "empty": "Keine Bilder"
+  },
+  "carousel": {
+    "label": "Karussell",
+    "previous": "Vorherige Folie",
+    "next": "Nächste Folie",
+    "play": "Karussell starten",
+    "pause": "Karussell pausieren",
+    "slide": "Folie {{current}} von {{total}}",
+    "goToSlide": "Zu Folie {{index}} wechseln",
+    "empty": "Keine Elemente zum Anzeigen",
+    "loading": "Karussell wird geladen"
   }
 }

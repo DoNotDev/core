@@ -5,13 +5,18 @@
  * into the `headers` key of the app's vercel.json, so that file is never hand-edited.
  * On CI (CI / VERCEL env) it only checks: a stale committed file fails the build, since the
  * host reads the committed file. No vercel.json: the app is not on Vercel, nothing to do.
+ * The Turnstile sources are in the CSP only when the build's env (`loadEnv`, as the client
+ * env) sets `VITE_TURNSTILE_SITE_KEY`.
  *
  * @version 0.1.0
  * @since 0.3.1
  * @author AMBROISE PARK Consulting
  */
 
+import { loadEnv } from 'vite';
+
 import {
+  captchaSiteKeySet,
   detectHeaderProviders,
   resolveHeaderRules,
   syncVercelHeaders,
@@ -37,6 +42,10 @@ export function createViteHostHeadersPlugin({ appConfig, pwa, debug, verbose }) 
           appConfig,
           target: 'vite',
           providers: detectHeaderProviders(config.root),
+          captcha: captchaSiteKeySet(
+            loadEnv(config.mode, config.root, 'VITE_'),
+            'VITE_'
+          ),
           pwa: pwa === true,
         }),
         ci: Boolean(process.env.CI || process.env.VERCEL),

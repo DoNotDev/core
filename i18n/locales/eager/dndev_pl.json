@@ -666,5 +666,26 @@
     "reviewCookies": "Przejrzyj pliki cookie",
     "retry": "Spróbuj ponownie",
     "helpText": "Jeśli uważasz, że to błąd, skontaktuj się z pomocą techniczną lub spróbuj odświeżyć stronę."
+  },
+  "gallery": {
+    "label": "Galeria obrazów",
+    "thumbnails": "Miniatury obrazów",
+    "previous": "Poprzedni obraz",
+    "next": "Następny obraz",
+    "viewImage": "Pokaż obraz {{index}}",
+    "image": "Obraz",
+    "imageOf": "{{prefix}} {{index}} z {{total}}",
+    "empty": "Brak obrazów"
+  },
+  "carousel": {
+    "label": "Karuzela",
+    "previous": "Poprzedni slajd",
+    "next": "Następny slajd",
+    "play": "Odtwórz karuzelę",
+    "pause": "Wstrzymaj karuzelę",
+    "slide": "Slajd {{current}} z {{total}}",
+    "goToSlide": "Przejdź do slajdu {{index}}",
+    "empty": "Brak elementów do wyświetlenia",
+    "loading": "Wczytywanie karuzeli"
   }
 }

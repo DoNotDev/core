@@ -22,8 +22,9 @@
  *   `useAuth` call) gets a one-off widget rendered at the bottom of `<body>`, removed once
  *   it answered.
  * - **Script.** `api.js?render=explicit` loads from Cloudflare (never proxied or cached)
- *   on the first widget, never at page load. CSP: the framework header policy allows
- *   `https://challenges.cloudflare.com` in `script-src` and `frame-src` for Supabase apps.
+ *   on the first widget, never at page load. CSP: the framework header policy adds
+ *   `https://challenges.cloudflare.com` to `script-src` and `frame-src` only when the
+ *   build's env sets the site key (`captchaSiteKeySet`, core config `headerPolicy.js`).
  * - **Failure.** Script blocked, widget error, unsupported browser or no token within
  *   {@link CAPTCHA_TIMEOUT_MS}: the call rejects with an error coded
  *   {@link CAPTCHA_FAILED_CODE}, GoTrue's code for a refused token, so one rule turns

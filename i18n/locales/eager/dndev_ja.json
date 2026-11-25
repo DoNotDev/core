@@ -652,5 +652,26 @@
     "reviewCookies": "Cookieを確認",
     "retry": "再試行",
     "helpText": "エラーと思われる場合は、サポートにお問い合わせいただくか、ページを再読み込みしてください。"
+  },
+  "gallery": {
+    "label": "画像ギャラリー",
+    "thumbnails": "画像のサムネイル",
+    "previous": "前の画像",
+    "next": "次の画像",
+    "viewImage": "画像 {{index}} を表示",
+    "image": "画像",
+    "imageOf": "{{prefix}} {{index}} / {{total}}",
+    "empty": "画像がありません"
+  },
+  "carousel": {
+    "label": "カルーセル",
+    "previous": "前のスライド",
+    "next": "次のスライド",
+    "play": "カルーセルを再生",
+    "pause": "カルーセルを一時停止",
+    "slide": "スライド {{current}} / {{total}}",
+    "goToSlide": "スライド {{index}} に移動",
+    "empty": "表示する項目がありません",
+    "loading": "カルーセルを読み込み中"
   }
 }

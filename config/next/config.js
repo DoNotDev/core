@@ -18,6 +18,7 @@ import { migrateNextFiles } from './nextFiles.js';
 import { mergeOptions, normalizeOptions } from './options.js';
 import {
   assertNoVercelHeaders,
+  captchaSiteKeySet,
   detectHeaderProviders,
   resolveHeaderRules,
   syncVercelHeaders,
@@ -290,6 +291,8 @@ function defineNextConfig(userOptions = {}) {
           appConfig,
           target: isStaticExport ? 'next-export' : 'next',
           providers: detectHeaderProviders(pathResolver.getAppRoot()),
+          // Next loaded the app's .env files into process.env (as the client env config)
+          captcha: captchaSiteKeySet(process.env, 'NEXT_PUBLIC_'),
           pwa: pwaOptions?.enabled === true,
         })
       : [];

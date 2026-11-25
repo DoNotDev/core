@@ -258,7 +258,6 @@ function robotsContent(noindex, authOnly) {
 function routeTitle(input) {
   const { meta: routeMeta, ns, defaultNs, t, siteName } = input;
   const seo = routeMeta.seo;
-  if (!ns && !defaultNs) return { title: seo?.fullTitle || siteName };
   const pageTitle = ns
     ? resolveSeoField(seo?.title, `${ns}:title`, t)
     : (seo?.title ?? void 0);

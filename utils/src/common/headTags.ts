@@ -350,8 +350,8 @@ export interface RouteSeo {
  *   then `pageTitle` + ` | <site name>`, else the site name
  * - `pageTitle`, the page's own title without the site name: `seo.title` (`null`: none),
  *   else the page namespace's `title`. A page without its own namespace has only its
- *   `seo.title` (never the site defaults' title); the 404 document (no namespace, no site
- *   defaults) has none
+ *   `seo.title` (never the site defaults' title); so has the 404 document (no namespace,
+ *   no site defaults: AutoMetaTags passes the 404 title as `seo.title`)
  *
  * A page's label (llms.txt) is `pageTitle ?? title`: its own title, else its full title,
  * else the site name.
@@ -360,7 +360,7 @@ export interface RouteSeo {
  *   namespace (null on the 404 document), translation function, site name
  * @returns `title`, and `pageTitle` when the page has one
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.3.2
  * @author AMBROISE PARK Consulting
  */
@@ -373,8 +373,7 @@ export function routeTitle(input: {
 }): { title: string; pageTitle?: string } {
   const { meta: routeMeta, ns, defaultNs, t, siteName } = input;
   const seo = routeMeta.seo;
-  // 404 document (no namespace, no site defaults): the site name only
-  if (!ns && !defaultNs) return { title: seo?.fullTitle || siteName };
+  // No namespace (a page without one, the 404 document): its `seo.title` only
   const pageTitle = ns
     ? resolveSeoField(seo?.title, `${ns}:title`, t)
     : (seo?.title ?? undefined);
@@ -518,7 +517,7 @@ export function buildBreadcrumbJsonLd(input: {
  * site name, so the home page's title never lands on another page.
  *
  * @param input - Route metadata, the page's own namespace (null: none), the site defaults
- *   namespace (null on the 404 document: `seo.fullTitle` or the site name only),
+ *   namespace (null on the 404 document: its `seo` title only),
  *   translation function, site name, app URL (`''` when unset), canonical URL, default
  *   image (`appConfig.seo.defaultImage`), whether the route is auth-only
  * @returns The page identity

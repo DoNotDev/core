@@ -22,4 +22,11 @@ describe('DEGRADED_AUTH_API', () => {
       code: ERROR_CODES.UNAVAILABLE,
     });
   });
+
+  it('answers can.navigate without crashing (navigation filter without @donotdev/auth)', () => {
+    const { navigate } = DEGRADED_AUTH_API.can;
+    expect(navigate(false)).toBe(true);
+    expect(navigate({ tier: 'pro' })).toBe(true);
+    expect(navigate({ required: true, tier: 'pro' })).toBe(false);
+  });
 });

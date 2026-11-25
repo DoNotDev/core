@@ -6,6 +6,7 @@ vi.mock('@donotdev/utils', () => ({
   handleError: vi.fn(),
   isDev: vi.fn(() => false),
   isClient: vi.fn(() => true),
+  stripTrailingSlash: (path: string) => path.replace(/\/+$/, '') || '/',
   hasRoleAccess: vi.fn((userRole: string, requiredRole: string) => {
     const hierarchy: Record<string, number> = {
       super: 40,
@@ -53,7 +54,7 @@ beforeEach(() => {
     manifest: null,
     lastUpdated: 0,
   });
-  state.setState({ favorites: [], recent: [] });
+  state.setState({ favorites: [], recent: [], navigating: false });
   state.setLoading(false);
   state.setError(null);
   state.setReady(false);
@@ -789,6 +790,38 @@ describe('useNavigationStore', () => {
       const state = useNavigationStore.getState();
       expect(state.favorites).toEqual([]);
       expect(state.recent).toEqual([]);
+    });
+  });
+
+  describe('in-app navigation in progress', () => {
+    it('starts on a navigation to another route and ends on endNavigation', () => {
+      const store = useNavigationStore;
+      expect(store.getState().navigating).toBe(false);
+      store.getState().startNavigation('/catalogue', '/compte');
+      expect(store.getState().navigating).toBe(true);
+      store.getState().endNavigation();
+      expect(store.getState().navigating).toBe(false);
+    });
+
+    // The rendered route would not change to end it: the bar would stay on
+    it('starts nothing for the route already shown (query, hash, trailing slash ignored)', () => {
+      const { startNavigation } = useNavigationStore.getState();
+      startNavigation('/catalogue', '/catalogue');
+      startNavigation('/catalogue/?brand=urang#top', '/catalogue');
+      expect(useNavigationStore.getState().navigating).toBe(false);
+    });
+
+    it('starts without a target (language switch: same route, other language)', () => {
+      useNavigationStore.getState().startNavigation();
+      expect(useNavigationStore.getState().navigating).toBe(true);
+    });
+
+    it('is not persisted', () => {
+      useNavigationStore.getState().startNavigation();
+      const { partialize } = (useNavigationStore as unknown as {
+        persist: { getOptions: () => { partialize: (s: unknown) => object } };
+      }).persist.getOptions();
+      expect(partialize(useNavigationStore.getState())).not.toHaveProperty('navigating');
     });
   });
 });

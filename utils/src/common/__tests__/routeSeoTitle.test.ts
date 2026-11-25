@@ -46,6 +46,12 @@ describe('routeSeo title (AutoMetaTags, Vite pages, metadata manifest)', () => {
     ).toMatchObject({ title: 'Boutique' });
   });
 
+  it('the 404 document with its heading as seo.title: "<heading> | <site name>"', () => {
+    expect(
+      routeSeo({ meta: { seo: { title: 'Page non trouvée' } }, ns: null, defaultNs: null, t, siteName: 'Boutique', baseUrl: '', url: null, defaultImage: '/og.png', authOnly: false })
+    ).toMatchObject({ title: 'Page non trouvée | Boutique' });
+  });
+
   it('routeTitle: the page\'s own title (pageTitle) beside its <title>', () => {
     const titleOf = (meta: object, ns: string | null) =>
       routeTitle({ meta, ns, defaultNs: 'home', t, siteName: 'Boutique' });

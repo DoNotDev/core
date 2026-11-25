@@ -652,5 +652,26 @@
     "reviewCookies": "쿠키 설정 보기",
     "retry": "다시 시도",
     "helpText": "오류라고 생각되시면 지원팀에 문의하시거나 페이지를 새로고침해 주세요."
+  },
+  "gallery": {
+    "label": "이미지 갤러리",
+    "thumbnails": "이미지 썸네일",
+    "previous": "이전 이미지",
+    "next": "다음 이미지",
+    "viewImage": "이미지 {{index}} 보기",
+    "image": "이미지",
+    "imageOf": "{{prefix}} {{index}} / {{total}}",
+    "empty": "이미지 없음"
+  },
+  "carousel": {
+    "label": "캐러셀",
+    "previous": "이전 슬라이드",
+    "next": "다음 슬라이드",
+    "play": "캐러셀 재생",
+    "pause": "캐러셀 일시정지",
+    "slide": "슬라이드 {{current}} / {{total}}",
+    "goToSlide": "슬라이드 {{index}}(으)로 이동",
+    "empty": "표시할 항목이 없습니다",
+    "loading": "캐러셀 불러오는 중"
   }
 }

@@ -652,5 +652,26 @@
     "reviewCookies": "查看 Cookie",
     "retry": "重试",
     "helpText": "如果您认为这是错误，请联系支持团队或尝试刷新页面。"
+  },
+  "gallery": {
+    "label": "图片库",
+    "thumbnails": "图片缩略图",
+    "previous": "上一张图片",
+    "next": "下一张图片",
+    "viewImage": "查看图片 {{index}}",
+    "image": "图片",
+    "imageOf": "{{prefix}} {{index}} / {{total}}",
+    "empty": "没有图片"
+  },
+  "carousel": {
+    "label": "轮播",
+    "previous": "上一张幻灯片",
+    "next": "下一张幻灯片",
+    "play": "播放轮播",
+    "pause": "暂停轮播",
+    "slide": "第 {{current}} 张，共 {{total}} 张",
+    "goToSlide": "转到第 {{index}} 张幻灯片",
+    "empty": "没有可显示的内容",
+    "loading": "轮播加载中"
   }
 }

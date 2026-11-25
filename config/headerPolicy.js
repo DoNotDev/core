@@ -13,6 +13,10 @@
  *   `headers` key of the app's vercel.json at every dev/build start (`syncVercelHeaders`);
  *   on CI a stale file fails the build. The generator is the only writer of that key.
  *
+ * The CSP depends on one public env var: the Turnstile site key (`TURNSTILE_SITE_KEY`, CAPTCHA
+ * on) adds the Turnstile sources. A vercel.json is regenerated locally and checked on CI,
+ * so both builds must see the same key (set or unset).
+ *
  * Rule order is precedence: when two rules set the same header on a path, the later one wins
  * (Next documents it; app cache overrides are emitted last).
  *
@@ -77,15 +81,11 @@ const SCRIPT_SRC_BASELINE = Object.freeze({
 /**
  * CSP sources each backend provider's browser SDK needs, keyed by provider package.
  * Billing needs none: checkout redirects to Stripe (no Stripe.js in the browser).
- * Supabase: Cloudflare Turnstile (CAPTCHA of Supabase Auth, on when the app sets
- * `TURNSTILE_SITE_KEY`) loads its script and iframe from challenges.cloudflare.com.
- * Allowed whether or not the key is set, so the policy never depends on the build's env.
+ * Turnstile (CAPTCHA of Supabase Auth) is not a provider source: see CAPTCHA_CSP.
  */
 export const PROVIDER_CSP = Object.freeze({
   '@donotdev/supabase': {
-    'script-src': ['https://challenges.cloudflare.com'],
     'connect-src': ['https://*.supabase.co', 'wss://*.supabase.co'],
-    'frame-src': ['https://challenges.cloudflare.com'],
   },
   '@donotdev/firebase': {
     'script-src': ['https://accounts.google.com', 'https://apis.google.com'],
@@ -99,6 +99,36 @@ export const PROVIDER_CSP = Object.freeze({
     'frame-src': ['https://accounts.google.com'],
   },
 });
+
+/**
+ * CSP sources of Cloudflare Turnstile (the framework CAPTCHA of Supabase Auth): its script
+ * and iframe load from challenges.cloudflare.com. Added only when the app sets a Turnstile
+ * site key (`captchaSiteKeySet`): no key = no script, no widget, so no source.
+ */
+const CAPTCHA_CSP = Object.freeze({
+  'script-src': ['https://challenges.cloudflare.com'],
+  'frame-src': ['https://challenges.cloudflare.com'],
+});
+
+/**
+ * Public env var that turns the CAPTCHA on, without its platform prefix (`VITE_` /
+ * `NEXT_PUBLIC_`). Same name the client reads: `TURNSTILE_SITE_KEY_ENV` in
+ * `@donotdev/core` utils `client/captcha.ts`.
+ */
+const TURNSTILE_SITE_KEY_ENV = 'TURNSTILE_SITE_KEY';
+
+/**
+ * Whether the app sets a Turnstile site key, by the client's rule (`getCaptchaSiteKey`:
+ * unset or empty = CAPTCHA off).
+ *
+ * @param {Record<string, string | undefined>} env - The build's public env (Vite `loadEnv`, Next `process.env`)
+ * @param {'VITE_' | 'NEXT_PUBLIC_'} prefix - The platform's public env prefix
+ * @returns {boolean}
+ */
+export function captchaSiteKeySet(env, prefix) {
+  const siteKey = env[`${prefix}${TURNSTILE_SITE_KEY_ENV}`];
+  return typeof siteKey === 'string' && siteKey !== '';
+}
 
 /** Security headers sent on every response, besides the CSP. */
 const SECURITY_HEADERS = Object.freeze([
@@ -268,17 +298,23 @@ function readHeadersConfig(config) {
 }
 
 /**
- * Build the Content-Security-Policy value: framework baseline + provider sources + app
- * sources, deduplicated, in canonical directive order. A directive that gains sources
- * drops its `'none'` (CSP forbids mixing them).
+ * Build the Content-Security-Policy value: framework baseline + provider sources + CAPTCHA
+ * sources (Turnstile, when on) + app sources, deduplicated, in canonical directive order.
+ * A directive that gains sources drops its `'none'` (CSP forbids mixing them).
  *
  * @param {Object} [options]
  * @param {Record<string, readonly string[]>} [options.csp] - App sources per directive (`appConfig.headers.csp`)
  * @param {readonly string[]} [options.providers] - Provider packages the app depends on (keys of PROVIDER_CSP)
+ * @param {boolean} [options.captcha] - The app sets a Turnstile site key (`captchaSiteKeySet`): adds CAPTCHA_CSP
  * @param {'next' | 'next-export' | 'vite'} options.target - Who serves the build (sets the `script-src` baseline)
  * @returns {string}
  */
-export function buildContentSecurityPolicy({ csp = {}, providers = [], target }) {
+export function buildContentSecurityPolicy({
+  csp = {},
+  providers = [],
+  captcha = false,
+  target,
+}) {
   if (!(target in SCRIPT_SRC_BASELINE)) {
     throw new Error(
       `[dndev] Unknown header target '${target}' (expected next, next-export or vite).`
@@ -290,6 +326,7 @@ export function buildContentSecurityPolicy({ csp = {}, providers = [], target })
         ? SCRIPT_SRC_BASELINE[target]
         : (BASE_CSP[directive] ?? [])),
       ...providers.flatMap((pkg) => PROVIDER_CSP[pkg]?.[directive] ?? []),
+      ...(captcha ? (CAPTCHA_CSP[directive] ?? []) : []),
       ...(csp[directive] ?? []),
     ];
     const unique = [...new Set(sources)];
@@ -314,6 +351,7 @@ export function buildContentSecurityPolicy({ csp = {}, providers = [], target })
  * @param {Object} options.appConfig - App config (`headers`, `seo`)
  * @param {'next' | 'next-export' | 'vite'} options.target - Who serves the build
  * @param {readonly string[]} [options.providers] - Provider packages the app depends on
+ * @param {boolean} [options.captcha] - The app sets a Turnstile site key (`captchaSiteKeySet`)
  * @param {boolean} [options.pwa] - PWA enabled
  * @returns {Array<{ source: string, headers: Array<{ key: string, value: string }> }>}
  */
@@ -321,6 +359,7 @@ export function resolveHeaderRules({
   appConfig,
   target,
   providers = [],
+  captcha = false,
   pwa = false,
 }) {
   if (!(target in IMMUTABLE_BUILD_ASSETS)) {
@@ -333,7 +372,7 @@ export function resolveHeaderRules({
   const security = [
     {
       key: 'Content-Security-Policy',
-      value: buildContentSecurityPolicy({ csp, providers, target }),
+      value: buildContentSecurityPolicy({ csp, providers, captcha, target }),
     },
     ...(appConfig?.seo === false ? [NOINDEX_HEADER] : []),
     ...SECURITY_HEADERS,
@@ -413,7 +452,7 @@ export function syncVercelHeaders({ appRoot, rules, ci, logger }) {
   }
   if (ci) {
     throw new Error(
-      `[dndev] ${file.path}: "headers" differ from the framework header policy (appConfig.headers, appConfig.seo). The host reads the committed file, so this deploy would serve stale headers. Run the app locally (dev or build) to regenerate vercel.json, then commit it.`
+      `[dndev] ${file.path}: "headers" differ from the framework header policy (appConfig.headers, appConfig.seo, the Turnstile site key TURNSTILE_SITE_KEY). The host reads the committed file, so this deploy would serve stale headers. Run the app locally (dev or build) to regenerate vercel.json, then commit it.`
     );
   }
   const content = `${JSON.stringify({ ...file.config, headers: rules }, null, 2)}\n`;

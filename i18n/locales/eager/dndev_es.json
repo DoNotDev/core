@@ -652,5 +652,26 @@
     "reviewCookies": "Gestionar cookies",
     "retry": "Reintentar",
     "helpText": "Si cree que se trata de un error, póngase en contacto con soporte o actualice la página."
+  },
+  "gallery": {
+    "label": "Galería de imágenes",
+    "thumbnails": "Miniaturas de imágenes",
+    "previous": "Imagen anterior",
+    "next": "Imagen siguiente",
+    "viewImage": "Ver imagen {{index}}",
+    "image": "Imagen",
+    "imageOf": "{{prefix}} {{index}} de {{total}}",
+    "empty": "Sin imágenes"
+  },
+  "carousel": {
+    "label": "Carrusel",
+    "previous": "Diapositiva anterior",
+    "next": "Diapositiva siguiente",
+    "play": "Reproducir carrusel",
+    "pause": "Pausar carrusel",
+    "slide": "Diapositiva {{current}} de {{total}}",
+    "goToSlide": "Ir a la diapositiva {{index}}",
+    "empty": "No hay elementos para mostrar",
+    "loading": "Cargando carrusel"
   }
 }

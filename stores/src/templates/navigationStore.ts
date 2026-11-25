@@ -19,9 +19,15 @@
  */
 
 import type { RoutesPluginConfig, NavigationRoute } from '@donotdev/types';
-import { handleError, hasRoleAccess, isDev } from '@donotdev/utils';
+import {
+  handleError,
+  hasRoleAccess,
+  isDev,
+  stripTrailingSlash,
+} from '@donotdev/utils';
 
 import { createDoNotDevStore } from '../createDoNotDevStore';
+import { getRoutes } from './routeConfig';
 
 /**
  * Route data type - single source of truth from discovery
@@ -60,6 +66,12 @@ interface NavigationState {
   favorites: string[];
   /** Recent route paths (persisted per computer, max 8) */
   recent: string[];
+  /**
+   * An in-app navigation is in progress: set by the framework's navigation entry points
+   * (`useNavigate`, Next `InternalLink`, the Next language switch) when one starts, cleared
+   * by `DnDevLayout` when the rendered route (path or language) changes. Not persisted.
+   */
+  navigating: boolean;
 
   /** Invalidate cache and force refresh */
   invalidateCache: () => void;
@@ -86,6 +98,16 @@ interface NavigationState {
   addRecent: (path: string) => void;
   /** Get recent route paths */
   getRecent: () => string[];
+
+  /**
+   * Mark an in-app navigation as started (framework navigation entry points). With `to`
+   * (target app path, query and hash ignored) and `from` (the rendered route path,
+   * `useRoutePath()`), a navigation to the route already shown starts nothing: the
+   * rendered route would not change to end it. Without them (language switch), it starts.
+   */
+  startNavigation: (to?: string, from?: string) => void;
+  /** Mark the in-app navigation as ended: the rendered route changed (DnDevLayout) */
+  endNavigation: () => void;
 
   /** Update cache data (internal) */
   setCacheData: (data: Partial<NavigationCache>) => void;
@@ -280,7 +302,8 @@ function extractEntityFromPath(path: string): string | null {
 /**
  * Filter snapshot-owned navigation routes by auth state and menu visibility.
  * Preserves discovery order and route references without reading or mutating a store.
- * Tier and custom validation checks are not part of the navigation auth contract.
+ * Tier and custom validation are not applied here (core cannot read subscriptions):
+ * `useNavigationItems` (@donotdev/ui) applies them through `can.navigate`.
  *
  * @param routes - Discovered navigation routes
  * @param authState - Authentication status and role used for role hierarchy checks
@@ -341,8 +364,13 @@ export function filterNavigationRoutes(
  *
  * @example
  * ```typescript
- * // Select snapshot-owned data for rendering, not live imperative getters.
- * const allRoutes = useNavigationStore((state) => state.cache.allRoutes);
+ * // Render the routes through their snapshot (server render = hydration = build config),
+ * // not live imperative getters.
+ * const allRoutes = useSyncExternalStore(
+ *   useNavigationStore.subscribe,
+ *   getNavigationRoutesSnapshot,
+ *   getNavigationRoutesSnapshot
+ * );
  * const routes = filterNavigationRoutes(allRoutes, {
  *   authenticated: true,
  *   role: 'admin',
@@ -360,6 +388,7 @@ export const useNavigationStore = createDoNotDevStore<NavigationState>({
     cache: createDefaultCache(),
     favorites: [],
     recent: [],
+    navigating: false,
 
     /**
      * Invalidate cache and force refresh
@@ -569,6 +598,20 @@ export const useNavigationStore = createDoNotDevStore<NavigationState>({
       return recent;
     },
 
+    startNavigation: (to, from) => {
+      if (
+        to !== undefined &&
+        from !== undefined &&
+        stripTrailingSlash(to.replace(/[?#].*$/, '')) === from
+      ) {
+        return;
+      }
+      set({ navigating: true });
+    },
+    endNavigation: () => {
+      if (get().navigating) set({ navigating: false });
+    },
+
     // Internal state setters
     setCacheData: (data) =>
       set((state) => ({
@@ -633,9 +676,8 @@ export const useNavigationStore = createDoNotDevStore<NavigationState>({
         return true;
       }
 
-      const allRoutes = routeData
-        .map(transformRouteData)
-        .filter((route: NavigationRoute) => !isDynamicRoute(route.path));
+      // Same array as the render snapshot for the same mapping (navigationRoutesOf)
+      const allRoutes = navigationRoutesOf(routeData);
 
       const routeGroups = new Map();
       groupRoutesByEntity(allRoutes).forEach((group) => {
@@ -676,3 +718,53 @@ export const useNavigationStore = createDoNotDevStore<NavigationState>({
     }
   },
 });
+
+/** Navigation routes per route mapping: one array per mapping (see navigationRoutesOf). */
+const routesByMapping = new WeakMap<readonly RouteData[], NavigationRoute[]>();
+
+/**
+ * Navigation routes of a route mapping (discovery data): every route transformed for
+ * navigation, dynamic (`:param`) routes left out. Memoized per mapping, so the store
+ * (`initialize`) and the render snapshot ({@link getNavigationRoutesSnapshot}) of the same
+ * mapping hold the same array: the store's initialization re-renders nothing.
+ *
+ * @param mapping - Route mapping (`_DNDEV_CONFIG_.routes.mapping`)
+ * @returns The navigation routes, in discovery order
+ *
+ * @version 0.1.0
+ * @since 0.3.7
+ * @author AMBROISE PARK Consulting
+ */
+export function navigationRoutesOf(
+  mapping: readonly RouteData[]
+): NavigationRoute[] {
+  const cached = routesByMapping.get(mapping);
+  if (cached) return cached;
+  const routes = mapping
+    .map(transformRouteData)
+    .filter((route: NavigationRoute) => !isDynamicRoute(route.path));
+  routesByMapping.set(mapping, routes);
+  return routes;
+}
+
+/**
+ * The navigation routes to render: the store's once initialized, before that the
+ * build-time route mapping's (`getRoutes()`, `_DNDEV_CONFIG_`, set at module load on the
+ * server and in the browser). Pass it as both the client and the server snapshot of
+ * `useSyncExternalStore`: the server render, the hydration pass and the first client
+ * render all hold the app's routes, so navigation is in the server HTML and nothing pops
+ * in after hydration (the store fills in an effect; its array is the same one).
+ * The store's own initial state (zustand's server snapshot) has no routes.
+ *
+ * @returns The navigation routes (empty without a route mapping)
+ *
+ * @version 0.1.0
+ * @since 0.3.7
+ * @author AMBROISE PARK Consulting
+ */
+export function getNavigationRoutesSnapshot(): NavigationRoute[] {
+  const { cache } = useNavigationStore.getState();
+  if (cache.lastUpdated > 0) return cache.allRoutes;
+  const mapping = getRoutes();
+  return mapping.length > 0 ? navigationRoutesOf(mapping) : cache.allRoutes;
+}

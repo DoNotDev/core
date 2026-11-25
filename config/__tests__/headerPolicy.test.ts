@@ -8,16 +8,18 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   assertNoVercelHeaders,
   buildContentSecurityPolicy,
+  captchaSiteKeySet,
   detectHeaderProviders,
   resolveHeaderRules,
   syncVercelHeaders,
 } from '../headerPolicy.js';
 import { createHeadersConfig } from '../next/configBuilder.js';
+import { createViteHostHeadersPlugin } from '../vite/plugins/HostHeadersPlugin.js';
 
 const SUPABASE = ['@donotdev/supabase'];
 const REGISTRY = 'https://recherche-entreprises.api.gouv.fr';
@@ -61,15 +63,39 @@ const VITE_ASSETS = ['woff', 'woff2', 'ttf', 'eot', 'js', 'css'].map((ext) =>
 const FONT_FILES = cache('/fonts/:path*', 'public, max-age=31536000, immutable');
 
 const SUPABASE_CSP =
-  "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests";
+  "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests";
 const SHOP_CSP =
-  "default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://recherche-entreprises.api.gouv.fr; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests";
+  "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://recherche-entreprises.api.gouv.fr; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests";
+/** Supabase app with a Turnstile site key (CAPTCHA on). */
+const SUPABASE_CAPTCHA_CSP =
+  "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests";
+const TURNSTILE = 'https://challenges.cloudflare.com';
 
 describe('buildContentSecurityPolicy', () => {
   it('baseline + Supabase provider (admin CSP)', () => {
     expect(
       buildContentSecurityPolicy({ providers: SUPABASE, target: 'vite' })
     ).toBe(SUPABASE_CSP);
+  });
+
+  it('Turnstile site key set: Turnstile in script-src and frame-src', () => {
+    expect(
+      buildContentSecurityPolicy({
+        providers: SUPABASE,
+        captcha: true,
+        target: 'vite',
+      })
+    ).toBe(SUPABASE_CAPTCHA_CSP);
+  });
+
+  it('no Turnstile site key: no Turnstile source, frame-src stays none', () => {
+    const csp = buildContentSecurityPolicy({
+      providers: SUPABASE,
+      captcha: false,
+      target: 'next',
+    });
+    expect(csp).not.toContain(TURNSTILE);
+    expect(csp).toContain("frame-src 'none';");
   });
 
   it('app connect-src source appended after the provider (shop CSP)', () => {
@@ -130,6 +156,18 @@ describe('buildContentSecurityPolicy', () => {
     );
     expect(csp.indexOf('worker-src')).toBeLessThan(csp.indexOf('frame-src'));
     expect(csp.endsWith('; upgrade-insecure-requests')).toBe(true);
+  });
+});
+
+describe('captchaSiteKeySet', () => {
+  it.each([
+    [{ VITE_TURNSTILE_SITE_KEY: '1x00000000000000000000AA' }, 'VITE_', true],
+    [{ NEXT_PUBLIC_TURNSTILE_SITE_KEY: '1x00000000000000000000AA' }, 'NEXT_PUBLIC_', true],
+    [{ VITE_TURNSTILE_SITE_KEY: '' }, 'VITE_', false],
+    [{}, 'VITE_', false],
+    [{ VITE_TURNSTILE_SITE_KEY: '1x00000000000000000000AA' }, 'NEXT_PUBLIC_', false],
+  ] as const)('%o with prefix %s → %s', (env, prefix, expected) => {
+    expect(captchaSiteKeySet(env, prefix)).toBe(expected);
   });
 });
 
@@ -286,6 +324,41 @@ describe('host config (vercel.json)', () => {
     expect(() => assertNoVercelHeaders(dir)).not.toThrow();
     writeFileSync(vercelJson(), JSON.stringify({ headers: [] }));
     expect(() => assertNoVercelHeaders(dir)).toThrow('Remove the "headers" key');
+  });
+
+  describe('Vite plugin: Turnstile from the build env', () => {
+    beforeEach(() => {
+      vi.stubEnv('CI', '');
+      vi.stubEnv('VERCEL', '');
+      vi.stubEnv('VITE_TURNSTILE_SITE_KEY', undefined);
+      writeFileSync(
+        join(dir, 'package.json'),
+        JSON.stringify({ dependencies: { '@donotdev/supabase': '^0.3.0' } })
+      );
+      writeFileSync(vercelJson(), JSON.stringify({}));
+    });
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+    const writtenCsp = () => {
+      const plugin = createViteHostHeadersPlugin({ appConfig: ADMIN_APP });
+      (plugin.configResolved as (config: object) => void)({
+        root: dir,
+        mode: 'production',
+      });
+      const json = JSON.parse(readFileSync(vercelJson(), 'utf8'));
+      return json.headers[0].headers[0].value;
+    };
+
+    it('VITE_TURNSTILE_SITE_KEY in .env: Turnstile sources written', () => {
+      writeFileSync(join(dir, '.env'), 'VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA\n');
+      expect(writtenCsp()).toBe(SUPABASE_CAPTCHA_CSP);
+    });
+
+    it('no key (commented out): no Turnstile source', () => {
+      writeFileSync(join(dir, '.env'), '# VITE_TURNSTILE_SITE_KEY=\n');
+      expect(writtenCsp()).toBe(SUPABASE_CSP);
+    });
   });
 
   it('detects provider packages from the app package.json', () => {

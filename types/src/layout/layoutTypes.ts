@@ -452,7 +452,8 @@ export interface CacheOverride {
  * (CSP, nosniff, X-Frame-Options DENY, Referrer-Policy, Permissions-Policy, X-XSS-Protection)
  * and the cache classes (hashed build assets 1 year immutable, public images 1 day, JSON 1 hour);
  * the backend provider's CSP sources (Supabase, Firebase) are added from the app's
- * dependencies. `seo: false` adds `X-Robots-Tag: noindex`. Next serves the policy from
+ * dependencies, the Turnstile sources only when the app sets `TURNSTILE_SITE_KEY`
+ * (CAPTCHA on). `seo: false` adds `X-Robots-Tag: noindex`. Next serves the policy from
  * next.config `headers()`; Vite apps get it written into vercel.json at dev/build start.
  *
  * @example

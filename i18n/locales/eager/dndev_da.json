@@ -652,5 +652,26 @@
     "reviewCookies": "Gennemgå cookies",
     "retry": "Prøv igen",
     "helpText": "Hvis du mener, det er en fejl, kan du kontakte support eller prøve at opdatere siden."
+  },
+  "gallery": {
+    "label": "Billedgalleri",
+    "thumbnails": "Miniaturer af billeder",
+    "previous": "Forrige billede",
+    "next": "Næste billede",
+    "viewImage": "Vis billede {{index}}",
+    "image": "Billede",
+    "imageOf": "{{prefix}} {{index}} af {{total}}",
+    "empty": "Ingen billeder"
+  },
+  "carousel": {
+    "label": "Karrusel",
+    "previous": "Forrige slide",
+    "next": "Næste slide",
+    "play": "Afspil karrusel",
+    "pause": "Sæt karrusel på pause",
+    "slide": "Slide {{current}} af {{total}}",
+    "goToSlide": "Gå til slide {{index}}",
+    "empty": "Ingen elementer at vise",
+    "loading": "Indlæser karrusel"
   }
 }
