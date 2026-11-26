@@ -93,7 +93,11 @@
     "buttonActive_one": "Filtry (aktywne: {{count}})",
     "buttonActive_few": "Filtry (aktywne: {{count}})",
     "buttonActive_many": "Filtry (aktywne: {{count}})",
-    "buttonActive_other": "Filtry (aktywne: {{count}})"
+    "buttonActive_other": "Filtry (aktywne: {{count}})",
+    "count_one": "{{count}} pozycja",
+    "count_few": "{{count}} pozycje",
+    "count_many": "{{count}} pozycji",
+    "count_other": "{{count}} pozycji"
   },
   "filter": {
     "placeholder": "Filtruj...",

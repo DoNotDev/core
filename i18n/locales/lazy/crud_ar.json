@@ -362,7 +362,13 @@
     "buttonActive_two": "المرشحات (النشطة: {{count}})",
     "buttonActive_few": "المرشحات (النشطة: {{count}})",
     "buttonActive_many": "المرشحات (النشطة: {{count}})",
-    "buttonActive_other": "المرشحات (النشطة: {{count}})"
+    "buttonActive_other": "المرشحات (النشطة: {{count}})",
+    "count_zero": "لا عناصر",
+    "count_one": "عنصر واحد",
+    "count_two": "عنصران",
+    "count_few": "{{count}} عناصر",
+    "count_many": "{{count}} عنصرًا",
+    "count_other": "{{count}} عنصر"
   },
   "filter": {
     "placeholder": "تصفية...",

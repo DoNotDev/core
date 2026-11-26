@@ -318,7 +318,11 @@
     "value": "Værdi",
     "apply": "Anvend på valgte",
     "clearSelection": "Ryd markering",
-    "empty": "Ingen data"
+    "empty": "Ingen data",
+    "errors_one": "{{count}} fejl",
+    "errors_other": "{{count}} fejl",
+    "errorEntry": "Række {{row}} · {{column}}: {{message}}",
+    "invalidValue": "Ugyldig værdi"
   },
   "language": {
     "selectLanguage": "Vælg sprog",

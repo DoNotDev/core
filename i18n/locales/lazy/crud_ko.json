@@ -349,7 +349,8 @@
     "selected_other": "{{count}}개 선택됨",
     "button": "필터",
     "buttonActive_one": "필터 ({{count}}개 적용됨)",
-    "buttonActive_other": "필터 ({{count}}개 적용됨)"
+    "buttonActive_other": "필터 ({{count}}개 적용됨)",
+    "count_other": "{{count}}개"
   },
   "filter": {
     "placeholder": "필터...",

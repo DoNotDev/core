@@ -320,7 +320,13 @@
     "value": "Wartość",
     "apply": "Zastosuj do zaznaczonych",
     "clearSelection": "Wyczyść zaznaczenie",
-    "empty": "Brak danych"
+    "empty": "Brak danych",
+    "errors_one": "{{count}} błąd",
+    "errors_few": "{{count}} błędy",
+    "errors_many": "{{count}} błędów",
+    "errors_other": "{{count}} błędu",
+    "errorEntry": "Wiersz {{row}} · {{column}}: {{message}}",
+    "invalidValue": "Nieprawidłowa wartość"
   },
   "language": {
     "selectLanguage": "Wybierz język",

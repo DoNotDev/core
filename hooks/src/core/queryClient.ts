@@ -169,27 +169,31 @@ export function syncQueryCacheIdentity(
   cacheIdentity = userId;
   // Synchronous state reset (data gone before the next render), then active refetch
   void browserQueryClient?.resetQueries();
-  for (const listener of identityListeners) listener();
+  for (const listener of identityListeners) listener(userId);
 }
 
 /** Platform caches outside React Query that must follow the identity (onQueryCacheIdentityChange). */
-const identityListeners = new Set<() => void>();
+const identityListeners = new Set<(userId: string | null) => void>();
 
 /**
  * Run `listener` each time syncQueryCacheIdentity resets the browser cache for a new
  * identity (sign-in, sign-out, switch of user), synchronously, right after the reset.
  * Never on the first identity adopted, a seed or a same-user update. For platform
  * caches React Query does not own: the Next router cache (NextJsStoresInitializer
- * refreshes the router, so a redirect cached under the previous session is not replayed).
+ * refreshes the router, so a redirect cached under the previous session is not replayed),
+ * the form drafts (FormStore clears them all on sign-out).
  *
- * @param listener - Called with no argument after the reset
+ * @param listener - Called after the reset with the new identity: the user id, or `null`
+ *   on sign-out
  * @returns Unsubscribe
  *
  * @version 0.1.0
  * @since 0.2.5
  * @author AMBROISE PARK Consulting
  */
-export function onQueryCacheIdentityChange(listener: () => void): () => void {
+export function onQueryCacheIdentityChange(
+  listener: (userId: string | null) => void
+): () => void {
   identityListeners.add(listener);
   return () => {
     identityListeners.delete(listener);

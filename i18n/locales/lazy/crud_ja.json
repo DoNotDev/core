@@ -349,7 +349,8 @@
     "selected_other": "{{count}}件選択",
     "button": "フィルター",
     "buttonActive_one": "フィルター（{{count}}件適用中）",
-    "buttonActive_other": "フィルター（{{count}}件適用中）"
+    "buttonActive_other": "フィルター（{{count}}件適用中）",
+    "count_other": "{{count}}件"
   },
   "filter": {
     "placeholder": "フィルター...",

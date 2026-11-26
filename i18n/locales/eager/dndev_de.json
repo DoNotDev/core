@@ -318,7 +318,11 @@
     "value": "Wert",
     "apply": "Auf Auswahl anwenden",
     "clearSelection": "Auswahl aufheben",
-    "empty": "Keine Daten"
+    "empty": "Keine Daten",
+    "errors_one": "{{count}} Fehler",
+    "errors_other": "{{count}} Fehler",
+    "errorEntry": "Zeile {{row}} · {{column}}: {{message}}",
+    "invalidValue": "Ungültiger Wert"
   },
   "language": {
     "selectLanguage": "Sprache auswählen",

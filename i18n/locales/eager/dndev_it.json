@@ -319,7 +319,12 @@
     "value": "Valore",
     "apply": "Applica alla selezione",
     "clearSelection": "Deseleziona tutto",
-    "empty": "Nessun dato"
+    "empty": "Nessun dato",
+    "errors_one": "{{count}} errore",
+    "errors_many": "{{count}} errori",
+    "errors_other": "{{count}} errori",
+    "errorEntry": "Riga {{row}} · {{column}}: {{message}}",
+    "invalidValue": "Valore non valido"
   },
   "language": {
     "selectLanguage": "Seleziona lingua",

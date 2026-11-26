@@ -317,7 +317,10 @@
     "value": "値",
     "apply": "選択した行に適用",
     "clearSelection": "選択を解除",
-    "empty": "データがありません"
+    "empty": "データがありません",
+    "errors_other": "エラー {{count}} 件",
+    "errorEntry": "{{row}} 行目 · {{column}}: {{message}}",
+    "invalidValue": "無効な値です"
   },
   "language": {
     "selectLanguage": "言語を選択",

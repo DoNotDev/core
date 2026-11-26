@@ -317,7 +317,10 @@
     "value": "값",
     "apply": "선택 항목에 적용",
     "clearSelection": "선택 해제",
-    "empty": "데이터 없음"
+    "empty": "데이터 없음",
+    "errors_other": "오류 {{count}}개",
+    "errorEntry": "{{row}}행 · {{column}}: {{message}}",
+    "invalidValue": "잘못된 값입니다"
   },
   "language": {
     "selectLanguage": "언어 선택",

@@ -319,7 +319,12 @@
     "value": "Valor",
     "apply": "Aplicar a la selección",
     "clearSelection": "Quitar selección",
-    "empty": "Sin datos"
+    "empty": "Sin datos",
+    "errors_one": "{{count}} error",
+    "errors_many": "{{count}} errores",
+    "errors_other": "{{count}} errores",
+    "errorEntry": "Fila {{row}} · {{column}}: {{message}}",
+    "invalidValue": "Valor no válido"
   },
   "language": {
     "selectLanguage": "Seleccionar idioma",

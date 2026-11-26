@@ -89,7 +89,10 @@
     "button": "Filtros",
     "buttonActive_one": "Filtros ({{count}} ativo)",
     "buttonActive_many": "Filtros ({{count}} ativos)",
-    "buttonActive_other": "Filtros ({{count}} ativos)"
+    "buttonActive_other": "Filtros ({{count}} ativos)",
+    "count_one": "{{count}} item",
+    "count_many": "{{count}} itens",
+    "count_other": "{{count}} itens"
   },
   "filter": {
     "placeholder": "Filtrar...",

@@ -318,7 +318,11 @@
     "value": "Value",
     "apply": "Apply to selected",
     "clearSelection": "Clear selection",
-    "empty": "No data"
+    "empty": "No data",
+    "errors_one": "{{count}} error",
+    "errors_other": "{{count}} errors",
+    "errorEntry": "Row {{row}} · {{column}}: {{message}}",
+    "invalidValue": "Invalid value"
   },
   "language": {
     "selectLanguage": "Select Language",

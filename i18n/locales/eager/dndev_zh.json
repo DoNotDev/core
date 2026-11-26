@@ -317,7 +317,10 @@
     "value": "值",
     "apply": "应用到所选项",
     "clearSelection": "取消选择",
-    "empty": "暂无数据"
+    "empty": "暂无数据",
+    "errors_other": "{{count}} 个错误",
+    "errorEntry": "第 {{row}} 行 · {{column}}：{{message}}",
+    "invalidValue": "无效的值"
   },
   "language": {
     "selectLanguage": "选择语言",

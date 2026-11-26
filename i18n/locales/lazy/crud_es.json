@@ -353,7 +353,10 @@
     "button": "Filtros",
     "buttonActive_one": "Filtros ({{count}} activo)",
     "buttonActive_many": "Filtros ({{count}} activos)",
-    "buttonActive_other": "Filtros ({{count}} activos)"
+    "buttonActive_other": "Filtros ({{count}} activos)",
+    "count_one": "{{count}} artículo",
+    "count_many": "{{count}} artículos",
+    "count_other": "{{count}} artículos"
   },
   "filter": {
     "placeholder": "Filtrar...",

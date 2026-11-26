@@ -354,7 +354,10 @@
     "button": "Filtres",
     "buttonActive_one": "Filtres ({{count}} actif)",
     "buttonActive_many": "Filtres ({{count}} actifs)",
-    "buttonActive_other": "Filtres ({{count}} actifs)"
+    "buttonActive_other": "Filtres ({{count}} actifs)",
+    "count_one": "{{count}} référence",
+    "count_many": "{{count}} références",
+    "count_other": "{{count}} références"
   },
   "filter": {
     "placeholder": "Filtrer...",

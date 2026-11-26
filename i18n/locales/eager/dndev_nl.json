@@ -318,7 +318,11 @@
     "value": "Waarde",
     "apply": "Toepassen op selectie",
     "clearSelection": "Selectie wissen",
-    "empty": "Geen gegevens"
+    "empty": "Geen gegevens",
+    "errors_one": "{{count}} fout",
+    "errors_other": "{{count}} fouten",
+    "errorEntry": "Rij {{row}} · {{column}}: {{message}}",
+    "invalidValue": "Ongeldige waarde"
   },
   "language": {
     "selectLanguage": "Taal kiezen",

@@ -322,7 +322,15 @@
     "value": "القيمة",
     "apply": "تطبيق على المحدد",
     "clearSelection": "إلغاء التحديد",
-    "empty": "لا توجد بيانات"
+    "empty": "لا توجد بيانات",
+    "errors_zero": "لا أخطاء",
+    "errors_one": "خطأ واحد",
+    "errors_two": "خطآن",
+    "errors_few": "{{count}} أخطاء",
+    "errors_many": "{{count}} خطأً",
+    "errors_other": "{{count}} خطأ",
+    "errorEntry": "الصف {{row}} · {{column}}: {{message}}",
+    "invalidValue": "قيمة غير صالحة"
   },
   "language": {
     "selectLanguage": "اختر اللغة",

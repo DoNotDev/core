@@ -85,9 +85,12 @@ describe('syncQueryCacheIdentity', () => {
     expect(listener).not.toHaveBeenCalled();
     mod.syncQueryCacheIdentity(null); // sign-out
     expect(listener).toHaveBeenCalledTimes(1);
+    expect(listener).toHaveBeenLastCalledWith(null);
+    mod.syncQueryCacheIdentity('u2'); // sign-in
+    expect(listener).toHaveBeenLastCalledWith('u2');
     unsubscribe();
-    mod.syncQueryCacheIdentity('u2');
-    expect(listener).toHaveBeenCalledTimes(1);
+    mod.syncQueryCacheIdentity(null);
+    expect(listener).toHaveBeenCalledTimes(2);
   });
 
   it('tracks the identity before the browser QueryClient exists', () => {

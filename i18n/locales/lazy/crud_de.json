@@ -350,7 +350,9 @@
     "selected_other": "{{count}} ausgewählt",
     "button": "Filter",
     "buttonActive_one": "Filter ({{count}} aktiv)",
-    "buttonActive_other": "Filter ({{count}} aktiv)"
+    "buttonActive_other": "Filter ({{count}} aktiv)",
+    "count_one": "{{count}} Eintrag",
+    "count_other": "{{count}} Einträge"
   },
   "filter": {
     "placeholder": "Filtern...",
