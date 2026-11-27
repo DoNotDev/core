@@ -126,10 +126,11 @@ export interface UseViewportVisibilityReturn {
  *       {items.map((item, index) => (
  *         <div
  *           key={index}
- *           className={`transition-all duration-500 ${
- *             isItemVisible(index) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
- *           }`}
- *           style={{ transitionDelay: `${index * 100}ms` }}
+ *           style={{
+ *             opacity: isItemVisible(index) ? 1 : 0,
+ *             transition: 'opacity var(--dur-slow) var(--ease-in-out)',
+ *             transitionDelay: `${index * 100}ms`,
+ *           }}
  *         >
  *           {item}
  *         </div>
@@ -178,7 +179,7 @@ export interface UseViewportVisibilityReturn {
  *       {isVisible ? (
  *         <ExpensiveComponent />
  *       ) : (
- *         <div className="h-96 bg-gray-200 dndev-animate-pulse" />
+ *         <Skeleton height={384} />
  *       )}
  *     </div>
  *   );

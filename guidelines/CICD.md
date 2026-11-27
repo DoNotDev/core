@@ -1,6 +1,6 @@
 # CI/CD Setup
 
-**One command to set up GitHub Actions: secrets, workflows, staging.**
+**One command to set up GitHub Actions: secrets and workflows.**
 
 ---
 
@@ -19,7 +19,6 @@
    ```
 4. **Service account key** (Firebase projects):
    - `service-account-key.json` in your app directory
-   - `service-account-key.staging.json` for staging (optional)
 
 ---
 
@@ -33,7 +32,7 @@ The command will:
 1. Detect your app and providers (Firebase, Vercel, Supabase)
 2. Show a plan of secrets to upload and workflows to generate
 3. Upload all secrets to GitHub
-4. Write `.github/workflows/ci.yml`, `deploy.yml`, and optionally `deploy-staging.yml`
+4. Write `.github/workflows/ci.yml` and `deploy.yml`
 
 ---
 
@@ -54,7 +53,6 @@ dndev setup-cicd --dry-run       # Preview without uploading or writing
 |--------|--------|------|
 | `GH_PAT` | `.dndev.secrets` | Always (private dndev checkout) |
 | `FIREBASE_SERVICE_ACCOUNT` | `service-account-key.json` (base64) | Firebase projects |
-| `FIREBASE_SERVICE_ACCOUNT_STAGING` | `service-account-key.staging.json` (base64) | If staging detected |
 | `VERCEL_TOKEN` | `.dndev.secrets` | Vercel projects |
 | `VERCEL_ORG_ID` | `.env` | Vercel projects |
 | `VERCEL_PROJECT_ID` | `.env` | Vercel projects |
@@ -68,29 +66,6 @@ dndev setup-cicd --dry-run       # Preview without uploading or writing
 |------|---------|-------------|
 | `ci.yml` | Push + PR to main | Checkout, install, typecheck, test |
 | `deploy.yml` | Push to main | Build + deploy to detected providers |
-| `deploy-staging.yml` | Push to staging/develop | Same as deploy, using staging credentials |
-
----
-
-## Staging Support
-
-Staging is auto-detected if:
-- `.firebaserc` contains a `staging` project alias
-- `service-account-key.staging.json` exists
-
-To enable staging manually:
-
-1. Add staging alias to `.firebaserc`:
-   ```json
-   {
-     "projects": {
-       "default": "my-app-prod",
-       "staging": "my-app-staging"
-     }
-   }
-   ```
-2. Download the staging service account key as `service-account-key.staging.json`
-3. Re-run `dndev setup-cicd`
 
 ---
 

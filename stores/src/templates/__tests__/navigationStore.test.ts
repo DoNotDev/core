@@ -825,3 +825,34 @@ describe('useNavigationStore', () => {
     });
   });
 });
+
+describe('useNavigationStore in-app history (back navigation)', () => {
+  beforeEach(() => {
+    useNavigationStore.setState({ inAppHistory: false, landingRoute: null });
+  });
+
+  it('a direct landing has no in-app history', () => {
+    useNavigationStore.getState().recordRoute('fr:/legal/terms');
+    expect(useNavigationStore.getState().inAppHistory).toBe(false);
+  });
+
+  it('the same route recorded twice (double effect run) is still a direct landing', () => {
+    useNavigationStore.getState().recordRoute('fr:/legal/terms');
+    useNavigationStore.getState().recordRoute('fr:/legal/terms');
+    expect(useNavigationStore.getState().inAppHistory).toBe(false);
+  });
+
+  it('a route change after the landing sets in-app history, and it stays set', () => {
+    useNavigationStore.getState().recordRoute('fr:/formation');
+    useNavigationStore.getState().recordRoute('fr:/legal/terms');
+    expect(useNavigationStore.getState().inAppHistory).toBe(true);
+    useNavigationStore.getState().recordRoute('fr:/formation');
+    expect(useNavigationStore.getState().inAppHistory).toBe(true);
+  });
+
+  it('a language change is a route change', () => {
+    useNavigationStore.getState().recordRoute('fr:/about');
+    useNavigationStore.getState().recordRoute('en:/about');
+    expect(useNavigationStore.getState().inAppHistory).toBe(true);
+  });
+});

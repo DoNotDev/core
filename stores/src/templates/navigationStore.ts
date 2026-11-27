@@ -72,6 +72,15 @@ interface NavigationState {
    * by `DnDevLayout` when the rendered route (path or language) changes. Not persisted.
    */
   navigating: boolean;
+  /**
+   * The rendered route changed since the page loaded: the previous history entry is a page
+   * of this app, so a back navigation stays in the app (`useBack`, `navigate('back')`).
+   * False on a page the visitor landed on directly (link from elsewhere, typed URL, new tab).
+   * Set by `recordRoute`. Not persisted.
+   */
+  inAppHistory: boolean;
+  /** First route key rendered since the page loaded (`recordRoute`). Internal, not persisted. */
+  landingRoute: string | null;
 
   /** Invalidate cache and force refresh */
   invalidateCache: () => void;
@@ -108,6 +117,13 @@ interface NavigationState {
   startNavigation: (to?: string, from?: string) => void;
   /** Mark the in-app navigation as ended: the rendered route changed (DnDevLayout) */
   endNavigation: () => void;
+  /**
+   * Record the rendered route (DnDevLayout, on every path or language change; `route` =
+   * language + path). The first call keeps it as the landing route; a later different one
+   * sets `inAppHistory`. Calling twice with the same route changes nothing (React's double
+   * effect run in development).
+   */
+  recordRoute: (route: string) => void;
 
   /** Update cache data (internal) */
   setCacheData: (data: Partial<NavigationCache>) => void;
@@ -389,6 +405,8 @@ export const useNavigationStore = createDoNotDevStore<NavigationState>({
     favorites: [],
     recent: [],
     navigating: false,
+    inAppHistory: false,
+    landingRoute: null,
 
     /**
      * Invalidate cache and force refresh
@@ -610,6 +628,11 @@ export const useNavigationStore = createDoNotDevStore<NavigationState>({
     },
     endNavigation: () => {
       if (get().navigating) set({ navigating: false });
+    },
+    recordRoute: (route) => {
+      const { landingRoute, inAppHistory } = get();
+      if (landingRoute === null) set({ landingRoute: route });
+      else if (!inAppHistory && route !== landingRoute) set({ inAppHistory: true });
     },
 
     // Internal state setters

@@ -148,7 +148,6 @@ dndev sync-secrets --target github    # -> GitHub Secrets (for CI/CD)
 | File | Where It Goes | How To Get It |
 |------|--------------|---------------|
 | `service-account-key.json` | App root (next to firebase.json) | Firebase Console -> Settings -> Service Accounts |
-| `service-account-key.staging.json` | Same location, for staging | Same, from staging project |
 
 These files are `.gitignored`. Never commit them. For CI/CD, upload the file content as a GitHub Secret and decode it in your workflow.
 
@@ -165,7 +164,7 @@ my-project/
 +-- apps/
 |   +-- my-app/
 |       +-- .env              <-- Public keys: VITE_*, VERCEL_ORG_ID, VERCEL_PROJECT_ID
-|       +-- .env.staging      <-- Used by dndev staging
+|       +-- .env.uat          <-- UAT public values (dndev uat, dndev dev --uat)
 |       +-- .env.production   <-- Production overrides
 |       +-- service-account-key.json  <-- Firebase SA (gitignored)
 ```
@@ -190,7 +189,7 @@ my-project/
 | `dndev deploy` | **Firebase:** hosting + functions + rules. **Supabase:** deploys frontend to Vercel (via scaffolded vercel.json) and Edge Functions to Supabase. Vercel apps get their public `.env` vars (`VITE_*` / `NEXT_PUBLIC_*`) pushed to the Vercel project automatically. |
 | `dndev deploy <app> --scope <target> --yes` | Unattended deploy (CI, agents): never prompts; a missing value exits 1 naming its flag. Targets: `frontend`, `functions`, `rules`, `both`, `all`. `--skip-build` reuses builds, `--no-sync-secrets` skips the secrets sync, `--force` deletes deployed functions missing locally. |
 | `dndev deploy --dry-run` | Rehearse a deploy: validates everything and prints each command / HTTP request; builds, writes and deploys nothing. |
-| `dndev staging` | Deploy to staging environment |
+| `dndev uat <app>` | Ship the code on this machine to UAT (Supabase + Vercel apps): `apps/<app>/.env.uat`, `.dndev.uat.secrets`, never production values. Same `--scope`, `--yes`, `--skip-build`, `--dry-run` as deploy. |
 | `dndev sync-secrets` | **Firebase:** push function secrets to Secret Manager. **Vercel** (`--platform vercel --app <app>`): push only the public vars of `apps/<app>/.env`; `.dndev.secrets` never goes to Vercel. |
 | `dndev sync-secrets --target github` | Push secrets to GitHub Secrets (CI/CD) |
 | `bun run test` | Run tests (after Phase 4) |
@@ -207,7 +206,7 @@ my-project/
 | Cloud Functions | If using server logic | Before deploying functions |
 | Stripe | If using billing | When adding payment features |
 | GitHub Actions CI/CD | Optional | Phase 4 generates the workflow |
-| Staging environment | Optional | When you want a test environment |
+| UAT environment | Optional | When you want a test environment (Supabase + Vercel: `dndev uat`) |
 | Custom domain | Optional | After first deploy |
 | Sentry | Optional | When you want error tracking |
 | i18n | Optional | Phase 4 or after launch |

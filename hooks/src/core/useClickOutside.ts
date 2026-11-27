@@ -88,15 +88,9 @@ export interface UseClickOutsideReturn {
  *   const { ref } = useClickOutside(() => setIsOpen(false));
  *
  *   return (
- *     <div className="relative">
- *       <button onClick={() => setIsOpen(!isOpen)}>
- *         Toggle
- *       </button>
- *       {isOpen && (
- *         <div className="absolute top-full left-0 bg-white shadow-lg">
- *           Dropdown content
- *         </div>
- *       )}
+ *     <div ref={ref} className="dndev-relative">
+ *       <Button onClick={() => setIsOpen(!isOpen)}>Toggle</Button>
+ *       {isOpen && <Card>Dropdown content</Card>}
  *     </div>
  *   );
  * }
@@ -112,10 +106,8 @@ export interface UseClickOutsideReturn {
  *   if (!isOpen) return null;
  *
  *   return (
- *     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
- *       <div className="bg-white p-6 rounded-lg">
- *         {children}
- *       </div>
+ *     <div ref={ref}>
+ *       <Card>{children}</Card>
  *     </div>
  *   );
  * }
