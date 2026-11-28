@@ -74,3 +74,12 @@ describe('FAQSection keys mode', () => {
     expect(keys).toContain('Answer B');
   });
 });
+
+describe('FAQSection itemClassName', () => {
+  it('is added to every accordion item', () => {
+    const html = renderToString(
+      <FAQSection items={[{ question: 'Q1', answer: 'A1' }, { question: 'Q2', answer: 'A2' }]} itemClassName="faq-item" />
+    );
+    expect(html.match(/class="dndev-accordion-item faq-item"/g)).toHaveLength(2);
+  });
+});

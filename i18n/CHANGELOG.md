@@ -9,6 +9,8 @@
 
 ### Patch Changes
 
+- FAQSection: `itemClassName` is applied to each accordion item (passed to the Accordion's new `itemClassName`). It was declared and documented but never used, so passing it did nothing.
+
 - `LanguageToggleGroup`: the group frame uses `--radius-interactive` (like `ToggleGroup`); it used the undefined `--radius-lg` and drew square.
 
 ## 0.1.43

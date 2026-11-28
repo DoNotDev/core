@@ -88,7 +88,7 @@ export type FAQSectionProps = FAQSectionItemsProps | FAQSectionKeysProps;
  * />
  */
 function FAQSection(props: FAQSectionProps) {
-  const { gridCols, className = '', 'aria-label': ariaLabel = 'Frequently Asked Questions' } = props;
+  const { gridCols, className = '', itemClassName, 'aria-label': ariaLabel = 'Frequently Asked Questions' } = props;
 
   const items: FAQItem[] =
     props.items ??
@@ -121,6 +121,7 @@ function FAQSection(props: FAQSectionProps) {
         collapsible
         items={accordionItems}
         gridCols={gridCols}
+        itemClassName={itemClassName}
       />
     </Stack>
   );
